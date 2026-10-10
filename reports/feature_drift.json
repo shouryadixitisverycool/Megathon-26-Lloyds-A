@@ -13,7 +13,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.03974999999999995
+      "ks_statistic": 0.053583333333333316
     },
     {
       "feature": "fuel_spend_90d_avg",
@@ -24,7 +24,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.0854166666666667
+      "ks_statistic": 0.07241666666666668
     },
     {
       "feature": "fuel_spend_12m_avg",
@@ -33,20 +33,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 17.44875,
-      "comparison_median": 10.000833333333333,
-      "ks_statistic": 0.15333333333333335
+      "reference_median": 17.249166666666664,
+      "comparison_median": 9.195,
+      "ks_statistic": 0.137
     },
     {
       "feature": "fuel_spend_trend",
-      "reference_observed": 415,
-      "comparison_observed": 3380,
-      "reference_missing_rate": 0.30833333333333335,
-      "comparison_missing_rate": 0.155,
-      "missingness_delta": -0.15333333333333335,
-      "reference_median": -0.6280123324734159,
-      "comparison_median": -0.6641614110006793,
-      "ks_statistic": 0.0671882797462039
+      "reference_observed": 419,
+      "comparison_observed": 3284,
+      "reference_missing_rate": 0.3016666666666667,
+      "comparison_missing_rate": 0.179,
+      "missingness_delta": -0.1226666666666667,
+      "reference_median": -0.6365921597934641,
+      "comparison_median": -0.6637416279126036,
+      "ks_statistic": 0.07505835772778413
     },
     {
       "feature": "fuel_txn_freq_90d",
@@ -57,7 +57,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.08424999999999994
+      "ks_statistic": 0.07241666666666668
     },
     {
       "feature": "fuel_spend_share_12m",
@@ -66,20 +66,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 0.0508200693260649,
-      "comparison_median": 0.030679067543779158,
-      "ks_statistic": 0.15333333333333335
+      "reference_median": 0.057360620925107436,
+      "comparison_median": 0.02942384159345504,
+      "ks_statistic": 0.13191666666666663
     },
     {
       "feature": "fuel_days_since_last",
-      "reference_observed": 434,
-      "comparison_observed": 3658,
-      "reference_missing_rate": 0.27666666666666667,
-      "comparison_missing_rate": 0.0855,
-      "missingness_delta": -0.19116666666666665,
-      "reference_median": 69.0,
-      "comparison_median": 83.0,
-      "ks_statistic": 0.0808013746778099
+      "reference_observed": 440,
+      "comparison_observed": 3589,
+      "reference_missing_rate": 0.26666666666666666,
+      "comparison_missing_rate": 0.10275,
+      "missingness_delta": -0.16391666666666665,
+      "reference_median": 75.0,
+      "comparison_median": 87.0,
+      "ks_statistic": 0.07289001747764645
     },
     {
       "feature": "electricity_spend_30d",
@@ -88,9 +88,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 38.0,
+      "reference_median": 35.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.24425000000000002
+      "ks_statistic": 0.12033333333333329
     },
     {
       "feature": "electricity_spend_90d_avg",
@@ -99,9 +99,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 42.5,
+      "reference_median": 36.83333333333333,
       "comparison_median": 0.0,
-      "ks_statistic": 0.2538333333333333
+      "ks_statistic": 0.12808333333333327
     },
     {
       "feature": "electricity_spend_12m_avg",
@@ -110,20 +110,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 40.5,
+      "reference_median": 37.25,
       "comparison_median": 0.0,
-      "ks_statistic": 0.2554166666666666
+      "ks_statistic": 0.1306666666666667
     },
     {
       "feature": "electricity_spend_trend",
-      "reference_observed": 338,
-      "comparison_observed": 1238,
-      "reference_missing_rate": 0.43666666666666665,
-      "comparison_missing_rate": 0.6905,
-      "missingness_delta": 0.25383333333333336,
-      "reference_median": 0.03023272164803481,
-      "comparison_median": 0.028213166144200663,
-      "ks_statistic": 0.04360918067889613
+      "reference_observed": 339,
+      "comparison_observed": 1762,
+      "reference_missing_rate": 0.435,
+      "comparison_missing_rate": 0.5595,
+      "missingness_delta": 0.1245,
+      "reference_median": -0.016949152542372836,
+      "comparison_median": -0.016759776536312887,
+      "ks_statistic": 0.04863740921920989
     },
     {
       "feature": "electricity_txn_freq_90d",
@@ -134,7 +134,7 @@
       "missingness_delta": 0.0,
       "reference_median": 3.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.2538333333333333
+      "ks_statistic": 0.12574999999999992
     },
     {
       "feature": "electricity_spend_share_12m",
@@ -143,20 +143,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 0.1172543186472017,
+      "reference_median": 0.12103450162069698,
       "comparison_median": 0.0,
-      "ks_statistic": 0.25433333333333336
+      "ks_statistic": 0.1266666666666666
     },
     {
       "feature": "electricity_days_since_last",
-      "reference_observed": 338,
-      "comparison_observed": 1238,
-      "reference_missing_rate": 0.43666666666666665,
-      "comparison_missing_rate": 0.6905,
-      "missingness_delta": 0.25383333333333336,
-      "reference_median": 17.0,
+      "reference_observed": 339,
+      "comparison_observed": 1762,
+      "reference_missing_rate": 0.435,
+      "comparison_missing_rate": 0.5595,
+      "missingness_delta": 0.1245,
+      "reference_median": 18.0,
       "comparison_median": 17.0,
-      "ks_statistic": 0.052919865023754675
+      "ks_statistic": 0.03053649814671583
     },
     {
       "feature": "gas_spend_30d",
@@ -167,7 +167,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.025000000000000022
+      "ks_statistic": 0.03983333333333339
     },
     {
       "feature": "gas_spend_90d_avg",
@@ -178,7 +178,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.02966666666666662
+      "ks_statistic": 0.04483333333333339
     },
     {
       "feature": "gas_spend_12m_avg",
@@ -189,18 +189,18 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.032916666666666594
+      "ks_statistic": 0.04500000000000004
     },
     {
       "feature": "gas_spend_trend",
-      "reference_observed": 225,
-      "comparison_observed": 1433,
-      "reference_missing_rate": 0.625,
-      "comparison_missing_rate": 0.64175,
-      "missingness_delta": 0.016750000000000043,
-      "reference_median": 0.10545454545454547,
-      "comparison_median": 0.10447761194029859,
-      "ks_statistic": 0.06413584554547569
+      "reference_observed": 211,
+      "comparison_observed": 1586,
+      "reference_missing_rate": 0.6483333333333333,
+      "comparison_missing_rate": 0.6035,
+      "missingness_delta": -0.04483333333333328,
+      "reference_median": -0.09090909090909094,
+      "comparison_median": -0.09173349173349171,
+      "ks_statistic": 0.07304733957674675
     },
     {
       "feature": "gas_txn_freq_90d",
@@ -211,7 +211,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.02041666666666664
+      "ks_statistic": 0.04483333333333339
     },
     {
       "feature": "gas_spend_share_12m",
@@ -222,18 +222,18 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.023916666666666586
+      "ks_statistic": 0.049416666666666775
     },
     {
       "feature": "gas_days_since_last",
-      "reference_observed": 225,
-      "comparison_observed": 1433,
-      "reference_missing_rate": 0.625,
-      "comparison_missing_rate": 0.64175,
-      "missingness_delta": 0.016750000000000043,
-      "reference_median": 18.0,
+      "reference_observed": 211,
+      "comparison_observed": 1586,
+      "reference_missing_rate": 0.6483333333333333,
+      "comparison_missing_rate": 0.6035,
+      "missingness_delta": -0.04483333333333328,
+      "reference_median": 17.0,
       "comparison_median": 17.0,
-      "ks_statistic": 0.034764673955183345
+      "ks_statistic": 0.0399138193792844
     },
     {
       "feature": "public_transport_spend_30d",
@@ -244,7 +244,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.052583333333333426
+      "ks_statistic": 0.06208333333333327
     },
     {
       "feature": "public_transport_spend_90d_avg",
@@ -253,9 +253,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 2.925,
-      "comparison_median": 3.6050000000000004,
-      "ks_statistic": 0.08058333333333334
+      "reference_median": 2.083333333333333,
+      "comparison_median": 3.6449999999999996,
+      "ks_statistic": 0.08266666666666667
     },
     {
       "feature": "public_transport_spend_12m_avg",
@@ -264,20 +264,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 4.009166666666666,
-      "comparison_median": 5.616666666666666,
-      "ks_statistic": 0.09983333333333338
+      "reference_median": 3.07125,
+      "comparison_median": 6.1425,
+      "ks_statistic": 0.1374166666666667
     },
     {
       "feature": "public_transport_spend_trend",
-      "reference_observed": 432,
-      "comparison_observed": 3212,
-      "reference_missing_rate": 0.28,
-      "comparison_missing_rate": 0.197,
-      "missingness_delta": -0.08300000000000002,
-      "reference_median": -0.11887870222261432,
-      "comparison_median": -0.18217827917949175,
-      "ks_statistic": 0.0520674784373415
+      "reference_observed": 419,
+      "comparison_observed": 3211,
+      "reference_missing_rate": 0.3016666666666667,
+      "comparison_missing_rate": 0.19725,
+      "missingness_delta": -0.10441666666666669,
+      "reference_median": -0.12222156712457988,
+      "comparison_median": -0.18208216820821677,
+      "ks_statistic": 0.05245988394607143
     },
     {
       "feature": "public_transport_txn_freq_90d",
@@ -288,7 +288,7 @@
       "missingness_delta": 0.0,
       "reference_median": 1.0,
       "comparison_median": 1.0,
-      "ks_statistic": 0.04366666666666669
+      "ks_statistic": 0.07916666666666672
     },
     {
       "feature": "public_transport_spend_share_12m",
@@ -297,20 +297,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 0.010520902021320236,
-      "comparison_median": 0.01715324955131283,
-      "ks_statistic": 0.10975000000000001
+      "reference_median": 0.008808463677796025,
+      "comparison_median": 0.018303434965736005,
+      "ks_statistic": 0.15475000000000005
     },
     {
       "feature": "public_transport_days_since_last",
-      "reference_observed": 438,
-      "comparison_observed": 3314,
-      "reference_missing_rate": 0.27,
-      "comparison_missing_rate": 0.1715,
-      "missingness_delta": -0.0985,
-      "reference_median": 23.0,
+      "reference_observed": 425,
+      "comparison_observed": 3313,
+      "reference_missing_rate": 0.2916666666666667,
+      "comparison_missing_rate": 0.17175,
+      "missingness_delta": -0.11991666666666667,
+      "reference_median": 27.0,
       "comparison_median": 28.0,
-      "ks_statistic": 0.06918621153374493
+      "ks_statistic": 0.0484132028905736
     },
     {
       "feature": "home_improvement_spend_30d",
@@ -321,7 +321,7 @@
       "missingness_delta": 0.0,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.139
+      "ks_statistic": 0.124
     },
     {
       "feature": "home_improvement_spend_90d_avg",
@@ -330,9 +330,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 2.195,
-      "comparison_median": 8.459999999999999,
-      "ks_statistic": 0.19416666666666665
+      "reference_median": 0.0,
+      "comparison_median": 7.713333333333335,
+      "ks_statistic": 0.2270833333333333
     },
     {
       "feature": "home_improvement_spend_12m_avg",
@@ -341,20 +341,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 7.498750000000001,
-      "comparison_median": 12.462499999999999,
-      "ks_statistic": 0.1901666666666667
+      "reference_median": 7.556666666666667,
+      "comparison_median": 11.945416666666667,
+      "ks_statistic": 0.17475000000000004
     },
     {
       "feature": "home_improvement_spend_trend",
-      "reference_observed": 502,
-      "comparison_observed": 3843,
-      "reference_missing_rate": 0.16333333333333333,
-      "comparison_missing_rate": 0.03925,
-      "missingness_delta": -0.12408333333333332,
-      "reference_median": -0.4590084390783874,
-      "comparison_median": -0.2824921427250878,
-      "ks_statistic": 0.11862256931161641
+      "reference_observed": 507,
+      "comparison_observed": 3844,
+      "reference_missing_rate": 0.155,
+      "comparison_missing_rate": 0.039,
+      "missingness_delta": -0.11599999999999999,
+      "reference_median": -0.6750033317045,
+      "comparison_median": -0.34808406183818463,
+      "ks_statistic": 0.1689217756815612
     },
     {
       "feature": "home_improvement_txn_freq_90d",
@@ -363,9 +363,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 1.0,
+      "reference_median": 0.0,
       "comparison_median": 1.0,
-      "ks_statistic": 0.19033333333333335
+      "ks_statistic": 0.2270833333333333
     },
     {
       "feature": "home_improvement_spend_share_12m",
@@ -374,20 +374,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 0.02263079537543511,
-      "comparison_median": 0.03886575802721007,
-      "ks_statistic": 0.20083333333333334
+      "reference_median": 0.020885278344699255,
+      "comparison_median": 0.03887866850947508,
+      "ks_statistic": 0.19791666666666669
     },
     {
       "feature": "home_improvement_days_since_last",
-      "reference_observed": 534,
-      "comparison_observed": 3927,
-      "reference_missing_rate": 0.11,
-      "comparison_missing_rate": 0.01825,
-      "missingness_delta": -0.09175,
-      "reference_median": 67.0,
-      "comparison_median": 44.0,
-      "ks_statistic": 0.14732491566595995
+      "reference_observed": 532,
+      "comparison_observed": 3915,
+      "reference_missing_rate": 0.11333333333333333,
+      "comparison_missing_rate": 0.02125,
+      "missingness_delta": -0.09208333333333332,
+      "reference_median": 82.0,
+      "comparison_median": 45.0,
+      "ks_statistic": 0.1919012089611002
     },
     {
       "feature": "automotive_spend_30d",
@@ -397,8 +397,8 @@
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
       "reference_median": 11.0,
-      "comparison_median": 12.0,
-      "ks_statistic": 0.06691666666666674
+      "comparison_median": 12.71,
+      "ks_statistic": 0.10050000000000003
     },
     {
       "feature": "automotive_spend_90d_avg",
@@ -407,9 +407,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 14.700000000000001,
-      "comparison_median": 16.598333333333333,
-      "ks_statistic": 0.0857500000000001
+      "reference_median": 14.066666666666665,
+      "comparison_median": 17.008333333333333,
+      "ks_statistic": 0.08533333333333337
     },
     {
       "feature": "automotive_spend_12m_avg",
@@ -418,20 +418,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 17.81583333333333,
-      "comparison_median": 20.787499999999998,
-      "ks_statistic": 0.1153333333333334
+      "reference_median": 18.25,
+      "comparison_median": 20.46125,
+      "ks_statistic": 0.08991666666666676
     },
     {
       "feature": "automotive_spend_trend",
-      "reference_observed": 535,
-      "comparison_observed": 3724,
-      "reference_missing_rate": 0.10833333333333334,
-      "comparison_missing_rate": 0.069,
-      "missingness_delta": -0.03933333333333333,
-      "reference_median": -0.11420436570705472,
-      "comparison_median": -0.1535656348176313,
-      "ks_statistic": 0.04624060150375939
+      "reference_observed": 529,
+      "comparison_observed": 3648,
+      "reference_missing_rate": 0.11833333333333333,
+      "comparison_missing_rate": 0.088,
+      "missingness_delta": -0.030333333333333337,
+      "reference_median": -0.14231485834682844,
+      "comparison_median": -0.1236247699319743,
+      "ks_statistic": 0.03466643037177064
     },
     {
       "feature": "automotive_txn_freq_90d",
@@ -442,7 +442,7 @@
       "missingness_delta": 0.0,
       "reference_median": 3.0,
       "comparison_median": 3.0,
-      "ks_statistic": 0.0605
+      "ks_statistic": 0.05733333333333335
     },
     {
       "feature": "automotive_spend_share_12m",
@@ -451,20 +451,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 0.04759664235015086,
-      "comparison_median": 0.06047326986630195,
-      "ks_statistic": 0.11708333333333332
+      "reference_median": 0.0491770967013593,
+      "comparison_median": 0.05958700809278941,
+      "ks_statistic": 0.11216666666666664
     },
     {
       "feature": "automotive_days_since_last",
-      "reference_observed": 557,
-      "comparison_observed": 3816,
-      "reference_missing_rate": 0.07166666666666667,
-      "comparison_missing_rate": 0.046,
-      "missingness_delta": -0.02566666666666667,
-      "reference_median": 22.0,
-      "comparison_median": 22.0,
-      "ks_statistic": 0.022745578477091688
+      "reference_observed": 544,
+      "comparison_observed": 3768,
+      "reference_missing_rate": 0.09333333333333334,
+      "comparison_missing_rate": 0.058,
+      "missingness_delta": -0.035333333333333335,
+      "reference_median": 21.0,
+      "comparison_median": 21.0,
+      "ks_statistic": 0.01846040964156359
     },
     {
       "feature": "utilities_spend_30d",
@@ -473,9 +473,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 43.0,
-      "comparison_median": 85.0,
-      "ks_statistic": 0.21800000000000003
+      "reference_median": 41.295,
+      "comparison_median": 51.0,
+      "ks_statistic": 0.13824999999999998
     },
     {
       "feature": "utilities_spend_90d_avg",
@@ -484,9 +484,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 43.5,
-      "comparison_median": 89.0,
-      "ks_statistic": 0.22916666666666674
+      "reference_median": 42.0,
+      "comparison_median": 54.0,
+      "ks_statistic": 0.1450833333333334
     },
     {
       "feature": "utilities_spend_12m_avg",
@@ -495,20 +495,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 43.846666666666664,
-      "comparison_median": 85.49541666666667,
-      "ks_statistic": 0.22550000000000003
+      "reference_median": 42.0,
+      "comparison_median": 53.42916666666667,
+      "ks_statistic": 0.1507500000000001
     },
     {
       "feature": "utilities_spend_trend",
-      "reference_observed": 546,
-      "comparison_observed": 3814,
-      "reference_missing_rate": 0.09,
-      "comparison_missing_rate": 0.0465,
-      "missingness_delta": -0.0435,
+      "reference_observed": 532,
+      "comparison_observed": 3784,
+      "reference_missing_rate": 0.11333333333333333,
+      "comparison_missing_rate": 0.054,
+      "missingness_delta": -0.05933333333333333,
       "reference_median": 0.0,
-      "comparison_median": 0.01382488479262678,
-      "ks_statistic": 0.15106576695459756
+      "comparison_median": -0.01904007403205632,
+      "ks_statistic": 0.11229315360282316
     },
     {
       "feature": "utilities_txn_freq_90d",
@@ -518,8 +518,8 @@
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
       "reference_median": 3.0,
-      "comparison_median": 4.0,
-      "ks_statistic": 0.23166666666666674
+      "comparison_median": 3.0,
+      "ks_statistic": 0.17041666666666666
     },
     {
       "feature": "utilities_spend_share_12m",
@@ -528,20 +528,20 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 0.1356253636040817,
-      "comparison_median": 0.27570764046026963,
-      "ks_statistic": 0.2298333333333334
+      "reference_median": 0.13084830581701634,
+      "comparison_median": 0.1939907799894635,
+      "ks_statistic": 0.15591666666666665
     },
     {
       "feature": "utilities_days_since_last",
-      "reference_observed": 551,
-      "comparison_observed": 3855,
-      "reference_missing_rate": 0.08166666666666667,
-      "comparison_missing_rate": 0.03625,
-      "missingness_delta": -0.04541666666666667,
-      "reference_median": 15.0,
-      "comparison_median": 14.0,
-      "ks_statistic": 0.06887277229703809
+      "reference_observed": 542,
+      "comparison_observed": 3830,
+      "reference_missing_rate": 0.09666666666666666,
+      "comparison_missing_rate": 0.0425,
+      "missingness_delta": -0.05416666666666666,
+      "reference_median": 16.0,
+      "comparison_median": 15.0,
+      "ks_statistic": 0.05849045696723287
     },
     {
       "feature": "txn_months_observed",
@@ -552,7 +552,7 @@
       "missingness_delta": 0.0,
       "reference_median": 18.0,
       "comparison_median": 18.0,
-      "ks_statistic": 0.012833333333333335
+      "ks_statistic": 0.014
     },
     {
       "feature": "txn_count_12m",
@@ -561,9 +561,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 122.0,
-      "comparison_median": 119.0,
-      "ks_statistic": 0.04658333333333331
+      "reference_median": 118.0,
+      "comparison_median": 120.0,
+      "ks_statistic": 0.032999999999999974
     },
     {
       "feature": "total_spend_12m_avg",
@@ -572,9 +572,9 @@
       "reference_missing_rate": 0.0,
       "comparison_missing_rate": 0.0,
       "missingness_delta": 0.0,
-      "reference_median": 349.6983333333334,
-      "comparison_median": 334.75833333333327,
-      "ks_statistic": 0.0651666666666667
+      "reference_median": 337.53166666666664,
+      "comparison_median": 328.88041666666663,
+      "ks_statistic": 0.043333333333333335
     },
     {
       "feature": "tenure_months",
@@ -589,91 +589,91 @@
     },
     {
       "feature": "has_vehicle",
-      "reference_observed": 470,
-      "comparison_observed": 2965,
-      "reference_missing_rate": 0.21666666666666667,
-      "comparison_missing_rate": 0.25875,
-      "missingness_delta": 0.042083333333333306,
+      "reference_observed": 596,
+      "comparison_observed": 3936,
+      "reference_missing_rate": 0.006666666666666667,
+      "comparison_missing_rate": 0.016,
+      "missingness_delta": 0.009333333333333332,
       "reference_median": 1.0,
       "comparison_median": 1.0,
-      "ks_statistic": 0.0
+      "ks_statistic": 0.022594737272876114
     },
     {
       "feature": "is_ice",
       "reference_observed": 470,
-      "comparison_observed": 2965,
+      "comparison_observed": 2967,
       "reference_missing_rate": 0.21666666666666667,
-      "comparison_missing_rate": 0.25875,
-      "missingness_delta": 0.042083333333333306,
-      "reference_median": 1.0,
-      "comparison_median": 1.0,
-      "ks_statistic": 0.02049083276523983
+      "comparison_missing_rate": 0.25825,
+      "missingness_delta": 0.041583333333333306,
+      "reference_median": 0.0,
+      "comparison_median": 0.0,
+      "ks_statistic": 0.023611499544636372
     },
     {
       "feature": "is_ev",
       "reference_observed": 470,
-      "comparison_observed": 2965,
+      "comparison_observed": 2967,
       "reference_missing_rate": 0.21666666666666667,
-      "comparison_missing_rate": 0.25875,
-      "missingness_delta": 0.042083333333333306,
-      "reference_median": 0.0,
-      "comparison_median": 0.0,
-      "ks_statistic": 0.035832944637795516
+      "comparison_missing_rate": 0.25825,
+      "missingness_delta": 0.041583333333333306,
+      "reference_median": 0.5,
+      "comparison_median": 1.0,
+      "ks_statistic": 0.03555780249410179
     },
     {
       "feature": "is_hybrid",
       "reference_observed": 470,
-      "comparison_observed": 2965,
+      "comparison_observed": 2967,
       "reference_missing_rate": 0.21666666666666667,
-      "comparison_missing_rate": 0.25875,
-      "missingness_delta": 0.042083333333333306,
+      "comparison_missing_rate": 0.25825,
+      "missingness_delta": 0.041583333333333306,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.015342111872555741
+      "ks_statistic": 0.011946302949465415
     },
     {
       "feature": "vehicle_age_years",
-      "reference_observed": 461,
-      "comparison_observed": 2825,
-      "reference_missing_rate": 0.23166666666666666,
-      "comparison_missing_rate": 0.29375,
-      "missingness_delta": 0.06208333333333335,
-      "reference_median": 3.7720739219712525,
-      "comparison_median": 3.30362765229295,
-      "ks_statistic": 0.058303418885454816
+      "reference_observed": 457,
+      "comparison_observed": 2813,
+      "reference_missing_rate": 0.23833333333333334,
+      "comparison_missing_rate": 0.29675,
+      "missingness_delta": 0.05841666666666667,
+      "reference_median": 2.32539356605065,
+      "comparison_median": 2.0594113620807666,
+      "ks_statistic": 0.06926811358019702
     },
     {
       "feature": "annual_mileage_km",
-      "reference_observed": 419,
-      "comparison_observed": 2477,
-      "reference_missing_rate": 0.3016666666666667,
-      "comparison_missing_rate": 0.38075,
-      "missingness_delta": 0.07908333333333328,
-      "reference_median": 11740.0,
+      "reference_observed": 417,
+      "comparison_observed": 2464,
+      "reference_missing_rate": 0.305,
+      "comparison_missing_rate": 0.384,
+      "missingness_delta": 0.07900000000000001,
+      "reference_median": 11960.0,
       "comparison_median": 12000.0,
-      "ks_statistic": 0.03821313603047802
+      "ks_statistic": 0.044464752873026286
     },
     {
       "feature": "mileage_is_estimated",
       "reference_observed": 470,
-      "comparison_observed": 2965,
+      "comparison_observed": 2967,
       "reference_missing_rate": 0.21666666666666667,
-      "comparison_missing_rate": 0.25875,
-      "missingness_delta": 0.042083333333333306,
+      "comparison_missing_rate": 0.25825,
+      "missingness_delta": 0.041583333333333306,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.1301603817588174
+      "ks_statistic": 0.14965973223185536
     },
     {
       "feature": "vehicle_record_age_days",
       "reference_observed": 470,
-      "comparison_observed": 2965,
+      "comparison_observed": 2967,
       "reference_missing_rate": 0.21666666666666667,
-      "comparison_missing_rate": 0.25875,
-      "missingness_delta": 0.042083333333333306,
-      "reference_median": 270.5,
+      "comparison_missing_rate": 0.25825,
+      "missingness_delta": 0.041583333333333306,
+      "reference_median": 267.0,
       "comparison_median": 258.0,
-      "ks_statistic": 0.06019518495927667
+      "ks_statistic": 0.05859489849335603
     },
     {
       "feature": "has_vehicle_finance",
@@ -688,14 +688,14 @@
     },
     {
       "feature": "home_owner",
-      "reference_observed": 432,
-      "comparison_observed": 2694,
-      "reference_missing_rate": 0.28,
-      "comparison_missing_rate": 0.3265,
-      "missingness_delta": 0.046499999999999986,
+      "reference_observed": 551,
+      "comparison_observed": 3469,
+      "reference_missing_rate": 0.08166666666666667,
+      "comparison_missing_rate": 0.13275,
+      "missingness_delta": 0.05108333333333334,
       "reference_median": 1.0,
       "comparison_median": 1.0,
-      "ks_statistic": 0.016415078775880554
+      "ks_statistic": 0.0074269430198193875
     },
     {
       "feature": "has_mortgage",
@@ -721,14 +721,14 @@
     },
     {
       "feature": "has_existing_solar",
-      "reference_observed": 462,
-      "comparison_observed": 2977,
-      "reference_missing_rate": 0.23,
-      "comparison_missing_rate": 0.25575,
-      "missingness_delta": 0.025749999999999967,
+      "reference_observed": 584,
+      "comparison_observed": 3836,
+      "reference_missing_rate": 0.02666666666666667,
+      "comparison_missing_rate": 0.041,
+      "missingness_delta": 0.014333333333333333,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.01424485267280029
+      "ks_statistic": 0.0013766480494808997
     },
     {
       "feature": "has_investments",
@@ -743,36 +743,36 @@
     },
     {
       "feature": "heating_is_gas",
-      "reference_observed": 462,
-      "comparison_observed": 2953,
-      "reference_missing_rate": 0.23,
-      "comparison_missing_rate": 0.26175,
-      "missingness_delta": 0.03174999999999997,
+      "reference_observed": 585,
+      "comparison_observed": 3800,
+      "reference_missing_rate": 0.025,
+      "comparison_missing_rate": 0.05,
+      "missingness_delta": 0.025,
       "reference_median": 1.0,
       "comparison_median": 1.0,
-      "ks_statistic": 0.029081878726308102
+      "ks_statistic": 0.021954565901934314
     },
     {
       "feature": "heating_is_electric",
-      "reference_observed": 462,
-      "comparison_observed": 2953,
-      "reference_missing_rate": 0.23,
-      "comparison_missing_rate": 0.26175,
-      "missingness_delta": 0.03174999999999997,
+      "reference_observed": 585,
+      "comparison_observed": 3800,
+      "reference_missing_rate": 0.025,
+      "comparison_missing_rate": 0.05,
+      "missingness_delta": 0.025,
       "reference_median": 0.0,
       "comparison_median": 0.0,
-      "ks_statistic": 0.005841150609183221
+      "ks_statistic": 0.002013045434097971
     },
     {
       "feature": "property_is_house",
-      "reference_observed": 460,
-      "comparison_observed": 2952,
-      "reference_missing_rate": 0.23333333333333334,
-      "comparison_missing_rate": 0.262,
-      "missingness_delta": 0.028666666666666674,
+      "reference_observed": 577,
+      "comparison_observed": 3800,
+      "reference_missing_rate": 0.03833333333333333,
+      "comparison_missing_rate": 0.05,
+      "missingness_delta": 0.011666666666666672,
       "reference_median": 1.0,
       "comparison_median": 1.0,
-      "ks_statistic": 0.008630847178036971
+      "ks_statistic": 0.0014813463468029142
     },
     {
       "feature": "electricity_kwh_12m",
@@ -919,14 +919,14 @@
     },
     {
       "feature": "sustainability_preference",
-      "reference_observed": 426,
-      "comparison_observed": 2613,
-      "reference_missing_rate": 0.29,
-      "comparison_missing_rate": 0.34675,
-      "missingness_delta": 0.05675000000000002,
+      "reference_observed": 541,
+      "comparison_observed": 3333,
+      "reference_missing_rate": 0.09833333333333333,
+      "comparison_missing_rate": 0.16675,
+      "missingness_delta": 0.06841666666666668,
       "reference_median": 3.0,
       "comparison_median": 3.0,
-      "ks_statistic": 0.021102504810724287
+      "ks_statistic": 0.022347521258595515
     }
   ],
   "limitation": "Descriptive synthetic distribution changes. KS statistics are not causal effects, real-world drift alerts or eligibility checks."

@@ -15,6 +15,7 @@ from greenpath import config
 from greenpath.api.main import create_app
 from greenpath.extensions.service import prioritise
 from greenpath.impact import Product
+from greenpath.llm.service import ExplanationService
 
 
 def benchmark(mode, memory_path):
@@ -23,7 +24,9 @@ def benchmark(mode, memory_path):
     peak_rss_before = int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * rss_scale)
     benchmark_started = time.perf_counter()
     build_started = time.perf_counter()
-    application = create_app(provider_mode=mode, memory_path=memory_path)
+    # This benchmark measures the offline path. Paid evaluation is a separate opt-in.
+    application = create_app(provider_mode=mode, memory_path=memory_path,
+                             explanation_service=ExplanationService(), background_warmup=False)
     build_seconds = time.perf_counter() - build_started
     print(f"{mode}: application build {build_seconds:.2f}s", flush=True)
     started = time.perf_counter()

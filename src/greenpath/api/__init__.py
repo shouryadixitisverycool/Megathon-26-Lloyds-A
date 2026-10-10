@@ -1,1 +1,1 @@
-"""HTTP transport for the synthetic GreenPath demonstration."""
+"""HTTP transport for the synthetic Greenr demonstration."""

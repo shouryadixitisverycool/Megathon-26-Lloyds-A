@@ -94,7 +94,7 @@ MERCHANT_SHIFT_BASE: dict[str, Any] = {
 @dataclass(frozen=True)
 class GeneratorConfig:
     name: str = "base"
-    n_customers: int = 10_000
+    n_customers: int = gp_config.DEFAULT_CUSTOMERS
     seed: int = gp_config.SEED_DATA
     noise_scale: float = 1.0
     monthly_noise: float = 0.35  # extra month-to-month latent noise (times noise_scale)
@@ -112,6 +112,7 @@ class GeneratorConfig:
     late_joiner_rate: float = 0.03  # customers joining in 2026 (short history)
     stale_ev_conflict_rate: float = 0.15  # EV adopters with stale ICE record or ongoing fuel spend
     include_personas: bool = True
+    vehicle_declaration_missing_rate: float = 0.03  # unknown declaration, not a non-owner
     history_start: str = gp_config.HISTORY_START.isoformat()
     history_end: str = gp_config.HISTORY_END.isoformat()
     adoption_start: str = "2025-07-01"
@@ -126,6 +127,8 @@ class GeneratorConfig:
             raise ValueError("seed must be non-negative")
         if self.noise_scale <= 0 or self.monthly_noise < 0:
             raise ValueError("noise_scale must be positive and monthly_noise non-negative")
+        if not 0 <= self.vehicle_declaration_missing_rate <= 1:
+            raise ValueError("vehicle_declaration_missing_rate must be in [0, 1]")
         for name, probabilities in (("target_90d_rate", self.target_90d_rate),
                                     ("missingness", self.missingness)):
             if any(not 0 <= value <= 1 for value in probabilities.values()):

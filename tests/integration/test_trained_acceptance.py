@@ -4,6 +4,8 @@ from collections import Counter
 from datetime import date
 from decimal import Decimal
 
+import pandas as pd
+
 from fastapi.testclient import TestClient
 
 from greenpath import config
@@ -33,11 +35,35 @@ def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
     monkeypatch.setattr(run, "CATEGORISED_PATH", config.PROCESSED_DIR / "transactions_categorised.parquet")
     monkeypatch.setattr(run, "SPLIT_PATH", config.PROCESSED_DIR / "split_manifest.csv")
     monkeypatch.delenv("GREENPATH_LLM_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("GREENPATH_PROVIDER", "trained")
-    generate_dataset(customers=400)
+    # The four-way split needs enough rare-product positives for calibration;
+    # validation remains below the 200-row confidence minimum.
+    generate_dataset(customers=1000)
     run.stage_train()
 
-    with TestClient(create_app()) as client:
+    with TestClient(create_app(background_warmup=False)) as client:
+        repository = client.app.state.repository
+        ev_input = repository.get_impact_input("C10001", Product.EV_FINANCE)
+        ev_impact = repository.impact_calculators[Product.EV_FINANCE].calculate(ev_input)
+        assert ev_impact.status == "AVAILABLE"
+        assert any(e.basis == "SYNTHETIC_SCENARIO" for e in ev_impact.evidence)
+        assert not repository.scenario_provider.get_scenario("C200001", Product.EV_FINANCE, config.FEATURE_CUTOFF)
+        paperless_input = repository.get_impact_input("C10001", Product.PAPERLESS_BANKING)
+        from greenpath.pipelines.scenario_provider import UKImpactInput
+        # Ingestion delays leave an incomplete annual window; only an explicit forecast may fill it.
+        source = paperless_input.snapshot
+        assert source.data_quality.digital_months_present < 12
+        incomplete = repository.impact_calculators[Product.PAPERLESS_BANKING].calculate(paperless_input)
+        assert incomplete.status == "UNAVAILABLE"
+        forecast = paperless_input.scenario[0].model_copy(update={"field": "annual_statements",
+            "value": 12, "unit": "statements/year", "basis": "EXPLICIT_FORECAST",
+            "description": "Caller-selected annual statement forecast, not measured"})
+        paperless = repository.impact_calculators[Product.PAPERLESS_BANKING].calculate(
+            UKImpactInput(snapshot=source, scenario=(*paperless_input.scenario, forecast)))
+        assert paperless.status == "NOT_CLAIMED"
+        assert paperless.secondary_metrics[1].value == 24
+        assert any(e.basis == "EXPLICIT_FORECAST" for e in paperless.evidence)
         health = client.get("/health")
         assert health.status_code == 200
         assert health.json()["provider_mode"] == "trained"
@@ -45,7 +71,7 @@ def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
         customers_response = client.get("/customers")
         assert customers_response.status_code == 200
         customers = customers_response.json()
-        assert len(customers) == 400 + len(config.DEMO_PERSONA_IDS)
+        assert len(customers) == 1000 + len(config.DEMO_PERSONA_IDS)
         counts = Counter()
         by_product = {p.value: Counter() for p in Product}
         solar_reasons = Counter()
@@ -125,7 +151,9 @@ def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
         assert "not observed customer behavior" in trends["disclaimer"]
         assert len(trends["observations"]) == len(cutoffs) * len(Product)
         for point in trends["observations"]:
-            assert point["customer_count"] == sum(point["state_counts"].values()) == len(customers)
+            cutoff = next(c for c in cutoffs if c.strftime("%Y-%m") == point["month"])
+            historical_count = len(pd.read_parquet(config.PROCESSED_DIR / f"customer360_{cutoff.isoformat()}.parquet"))
+            assert point["customer_count"] == sum(point["state_counts"].values()) == historical_count
             assert point["abstained_count"] == sum(point["state_counts"][s.value] for s in (
                 State.INSUFFICIENT_INFORMATION, State.CONFLICT_REQUIRES_REVIEW, State.SUPPRESSED))
             assert point["average_validated_confidence"] is None

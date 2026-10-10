@@ -78,10 +78,11 @@ def test_http_claim_change_and_transport_error_use_template():
     assert service.explain(synthetic_recommendation()).fallback_reason == "PROVIDER_ERROR"
 
 
-def test_no_key_offline_and_partial_keyed_config_rejected(monkeypatch):
+def test_no_key_offline_and_empty_explicit_endpoint_rejected(monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("GREENPATH_LLM_API_KEY", raising=False)
     assert configured_provider() is None
     monkeypatch.setenv("GREENPATH_LLM_API_KEY", "test-key")
-    monkeypatch.delenv("GREENPATH_LLM_ENDPOINT", raising=False)
+    monkeypatch.setenv("GREENPATH_LLM_ENDPOINT", "")
     with pytest.raises(ValueError, match="require endpoint"):
         configured_provider()

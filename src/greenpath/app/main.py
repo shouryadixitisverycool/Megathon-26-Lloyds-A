@@ -6,7 +6,7 @@ from greenpath.app.client import APIClient, APIError
 from greenpath.app.views import customer_view, portfolio_view
 from greenpath.app.workspaces import governance_view, planning_view, rm_view
 
-st.set_page_config(page_title="GreenPath | Synthetic demo", page_icon=":material/forest:", layout="wide")
+st.set_page_config(page_title="Greenr | Synthetic demo", page_icon=":material/forest:", layout="wide")
 
 
 @st.cache_data(ttl=15, max_entries=128, show_spinner=False)
@@ -14,13 +14,13 @@ def load_json(base_url, path, params=()):
     return APIClient(base_url).get(path, dict(params))
 
 
-st.title("GreenPath", icon=":material/forest:")
+st.title("Greenr", icon=":material/forest:")
 st.caption("A FIELD GUIDE TO RESPONSIBLE OPPORTUNITIES")
 st.badge("Synthetic demo", color="orange", icon=":material/science:")
 st.caption("Product relevance only. This demonstration does not establish real-world predictive performance or credit eligibility.")
 
 with st.sidebar:
-    st.header("GreenPath", icon=":material/forest:")
+    st.header("Greenr", icon=":material/forest:")
     view = st.radio("Workspace", ["Customer", "Portfolio", "Relationship Manager", "Planning", "Governance"], key="workspace")
     if st.button("Refresh data", icon=":material/refresh:", key="refresh", width="stretch"):
         load_json.clear()
@@ -32,6 +32,10 @@ try:
     if health.get("status") != "ok" or health.get("synthetic_demo") is not True:
         raise APIError("This app requires a healthy synthetic-demo API.")
     st.sidebar.caption("Contract: " + health["contract_version"])
+    if health.get("provider_mode"):
+        st.sidebar.caption("Data source: " + health["provider_mode"])
+    if health.get("source_version"):
+        st.sidebar.caption("Source version: " + health["source_version"])
 
     def load(path, params=None):
         return load_json(client.base_url, path, tuple(sorted((params or {}).items())))

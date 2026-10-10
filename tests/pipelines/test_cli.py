@@ -64,6 +64,18 @@ def test_one_class_confidence_is_suppressed_and_stale_model_removed(monkeypatch,
     assert not path.exists()
 
 
+def test_400_customer_cohort_cannot_surface_confidence(monkeypatch, tmp_path):
+    monkeypatch.setattr(config, "ARTIFACT_DIR", tmp_path)
+    split = run.split_pipeline_customers([f"S{i:05d}" for i in range(400)])
+    def rows(frame, labels, split, bundle, detector, product, which):
+        n = int((split == which).sum())
+        return pd.DataFrame(index=range(n)), np.arange(n) % 2 == 0, np.zeros(n), np.zeros(n)
+    monkeypatch.setattr(run, "_confidence_rows", rows)
+    decisions = run.train_confidence(None, None, split, {p: None for p in Product}, {p: None for p in Product})
+    assert all(not d["surfaced"] and d["n_validation"] == 60 and d["n_release_selection"] == 60
+               for d in decisions.values())
+
+
 def test_suppressed_runtime_does_not_evaluate_a_meta_model():
     class ExplodingModel:
         def predict(self, frame):

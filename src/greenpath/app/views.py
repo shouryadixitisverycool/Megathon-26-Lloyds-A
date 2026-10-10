@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 import streamlit as st
 
-from greenpath.app.client import APIError
+from greenpath.app.client import APIError, APIPreparing
 from greenpath.app.presentation import (
     PRODUCTS, STATES, decimal_number, groups_chart, impact_label,
     opportunities_chart, percentage, trends_chart,
@@ -24,19 +24,52 @@ def bullets(items):
 
 def customer_view(customers, load, save=None, provider_mode=None):
     lookup = {item["customer_id"]: item for item in customers}
+    if st.session_state.get("customer_id") not in lookup and "C10001" in lookup:
+        st.session_state["customer_id"] = "C10001"
     with st.sidebar:
         st.caption("CUSTOMER FIELD NOTES")
-        abstention_id = "C10004" if "C10004" in lookup else "GP-002" if "GP-002" in lookup else None
+        try:
+            readiness = load("/demo/readiness")
+        except APIError:
+            readiness = {"products": {}, "examples": {}, "missing_features": ["Readiness report is not served by this API."]}
+        st.caption("SHOWCASE READINESS")
+        if readiness.get("status"):
+            st.caption(f"{readiness['status']} · {readiness.get('population_customers', 'Unknown')} scored customers")
+        shortcuts = {}
+        for product, entry in readiness.get("products", {}).items():
+            candidate = entry.get("candidate")
+            st.caption(f"{PRODUCTS.get(product, product)}: {entry['status']}")
+            if candidate and candidate["customer_id"] in lookup:
+                name = f"{PRODUCTS.get(product, product)} · {candidate['state']} · {candidate['customer_id']}"
+                shortcuts[name] = candidate
+            for missing in entry.get("missing_features", []):
+                st.caption(missing)
+        for label, candidate in readiness.get("examples", {}).items():
+            if candidate["customer_id"] in lookup:
+                shortcuts[f"{label.replace('_', ' ').title()} · {candidate['customer_id']}"] = candidate
+        if shortcuts:
+            def showcase():
+                chosen = shortcuts[st.session_state["showcase_choice"]]
+                st.session_state["customer_id"] = chosen["customer_id"]
+                st.session_state["why_product"] = chosen["product"]
+            safe_select("Showcase evidence", list(shortcuts), "showcase_choice")
+            st.button("Open showcase customer", on_click=showcase, key="open_showcase", width="stretch")
+        for missing in readiness.get("missing_features", []):
+            st.caption(missing)
+        if readiness.get("limitation"):
+            st.caption(readiness["limitation"])
+        abstention_candidate = readiness.get("examples", {}).get("abstention")
+        abstention_id = "C10005" if "C10005" in lookup else "GP-002" if "GP-002" in lookup else None
+        if abstention_candidate:
+            abstention_id = abstention_candidate["customer_id"]
+        elif readiness.get("status"):
+            abstention_id = None
         if abstention_id:
             def abstention():
                 st.session_state["customer_id"] = abstention_id
             st.button("See responsible abstention", on_click=abstention, key="abstention", width="stretch")
         customer_id = safe_select("Customer", list(lookup), "customer_id",
                                   format_func=lambda key: f"{key} · {lookup[key]['display_name']}")
-        if "C10001" in lookup:
-            st.caption("C10001 EV candidate · C10002 solar candidate · C10004 sparse evidence · C10005 conflicting records · C10006 already green")
-        elif "GP-001" in lookup:
-            st.caption("GP-001 supported · GP-002 missing evidence · GP-003 conflict · GP-004 adopted · GP-005 suppressed · GP-006 low propensity")
     customer = load(f"/customers/{customer_id}")
     recommendations = load(f"/customers/{customer_id}/recommendations")["recommendations"]
     st.header(customer["display_name"], icon=":material/person:")
@@ -65,7 +98,11 @@ def customer_view(customers, load, save=None, provider_mode=None):
                 label = "Calibrated propensity · synthetic model" if provider_mode in {"artifacts", "trained"} else "Propensity · synthetic demo"
                 st.metric(label, percentage(propensity.get("probability")))
                 confidence = percentage(propensity.get("confidence")) if propensity.get("confidence_validated") is True else "Unavailable"
-                st.caption(f"Model confidence: {confidence}. Validation is required before display.")
+                limitation = propensity.get("confidence_limitation") or (propensity.get("source_result") or {}).get("confidence", {}).get("limitation")
+                if propensity.get("confidence_validated") is True:
+                    st.caption(f"Model confidence: {confidence}. Validated on synthetic release-selection evidence, not real-world performance.")
+                else:
+                    st.caption(f"Model confidence: {confidence} (suppressed). {limitation or 'No validated confidence source was supplied for this product.'}")
                 st.markdown(f"Potential impact: **{impact_label(row['impact'])}**")
                 if row["impact"]["status"] == "AVAILABLE":
                     st.caption("Baseline minus scenario; this is a modeled opportunity, not a realized reduction.")
@@ -76,6 +113,7 @@ def customer_view(customers, load, save=None, provider_mode=None):
                 st.button(f"Explore {PRODUCTS.get(product, product)}", key=f"explore_{product}",
                           on_click=inspect_product, width="stretch")
                 st.caption("Explore the product evidence, not financial eligibility or approval.")
+    optional_cards(customer_id, load)
     if not recommendations:
         st.info("The API returned no product decisions for this customer.")
         return
@@ -119,6 +157,8 @@ def customer_view(customers, load, save=None, provider_mode=None):
                      "Freshness": value["freshness"], "Reference": value["reference"],
                      "Conflicts": "; ".join(value.get("conflicts", []))} for name, value in customer["features"].items()]
         st.dataframe(features, hide_index=True, alt="Approved customer evidence with freshness and conflicts")
+        if customer.get("source_snapshot"):
+            st.json(customer["source_snapshot"])
     with st.expander("Versions and decision exclusions"):
         propensity = row.get("propensity") or {}
         st.text(f"Cutoff: {row['feature_cutoff']}\nDecision timestamp: {row['timestamp']}\nRules: {row['rules_version']}\nModel: {propensity.get('model_version', 'Unavailable')}\nCalibration: {propensity.get('calibration_version') or 'Unavailable'}\nTrust: {row['trust'].get('version', 'Unavailable')}\nContract: {row['contract_version']}")
@@ -130,6 +170,44 @@ def customer_view(customers, load, save=None, provider_mode=None):
             journey_tools(customer_id, product, load, save)
         if st.toggle("Explore a what-if scenario", key="scenario_open"):
             scenario_tools(customer_id, product, load, save)
+
+
+def optional_cards(customer_id, load):
+    st.subheader("Optional opportunities")
+    st.caption("Experimental synthetic signals, separate from the four core products. Not investment advice, suitability or credit approval.")
+    purpose = safe_select("Declared green loan purpose", ["Not declared", "INSULATION", "HEAT_PUMP", "EV_CHARGING"],
+                          f"optional_purpose_{customer_id}")
+    params = {} if purpose == "Not declared" else {"purpose": purpose}
+    try:
+        payload = load(f"/customers/{customer_id}/optional-opportunities", params)
+    except (APIError, KeyError, IndexError):
+        payload = {"opportunities": [{"product": name, "status": "NOT_AVAILABLE", "probability": None}
+                                     for name in ("GREEN_INVESTMENTS", "GREEN_LOANS")]}
+    columns = st.columns(2)
+    for column, row in zip(columns, payload["opportunities"]):
+        with column, st.container(border=True):
+            investment = row["product"] == "GREEN_INVESTMENTS"
+            st.subheader("Optional Green Investments" if investment else "Optional Green Loans")
+            st.caption("Experimental · " + row["status"])
+            st.metric("Calibrated propensity · synthetic optional model", percentage(row.get("probability")))
+            if row["status"] == "LOW_RELEVANCE":
+                st.write("The experimental model shows low relevance. This is not a financial recommendation.")
+            elif row.get("probability") is not None:
+                st.write("Your existing investment activity and stated sustainability preference support exploring this optional signal."
+                         if investment else "Your existing borrowing relationship and declared green purpose support exploring this optional signal. Your credit eligibility has not been assessed.")
+            elif row["status"] == "NOT_RELEVANT":
+                st.write("The required existing investment activity is not confirmed." if investment
+                         else "The required existing borrowing relationship is not confirmed.")
+            elif not investment and purpose == "Not declared":
+                st.write("Declare a supported green purpose to explore this signal. We do not infer your intended use from spending.")
+            else:
+                st.write("There is not enough verified evidence or a current trained model to show this optional signal.")
+            st.caption("Confidence: suppressed. Impact: not claimed. Eligibility: NOT_ASSESSED.")
+            st.caption(row.get("confidence_limitation", "No validated optional confidence is available."))
+            st.caption("Reasons: " + ", ".join(row.get("reason_codes", [])))
+            if row.get("reason_evidence"):
+                st.json(row["reason_evidence"])
+            st.caption(f"Model: {row.get('model_version') or 'Unavailable'} · Calibration: {row.get('calibration_version') or 'Unavailable'} · Features: {row.get('feature_version') or 'Unavailable'} · Cutoff: {row.get('cutoff') or 'Unavailable'}")
 
 
 def impact_details(impact):
@@ -189,8 +267,12 @@ def portfolio_view(customers, load):
     params = {key: value for key, value in {"region": region, "segment": segment, "product": product}.items() if value != "All"}
     st.header("Portfolio opportunities", icon=":material/forest:")
     st.caption(f"Synthetic demo · Region: {region} · Segment: {segment} · Product: {PRODUCTS.get(product, product)}")
-    summary = load("/portfolio/summary", params)
-    trends = load("/portfolio/trends", params)
+    try:
+        summary = load("/portfolio/summary", params)
+    except APIPreparing as error:
+        st.info(str(error))
+        st.caption("Use Refresh data in the sidebar to check again. Customer results remain available in the Customer workspace.")
+        return
     st.caption(summary["disclaimer"])
     with st.container(horizontal=True):
         st.metric("Customers", summary["total_customers"], border=True)
@@ -225,6 +307,12 @@ def portfolio_view(customers, load):
                 st.dataframe(summary[key], hide_index=True, alt=f"Customer and supported opportunity counts {title.lower()}")
     with st.container(border=True):
         st.subheader("Monthly trend")
+        try:
+            trends = load("/portfolio/trends", params)
+        except APIPreparing as error:
+            st.info(str(error))
+            st.caption("Monthly history is preparing. Use Refresh data in the sidebar to check again; the portfolio summary above is ready.")
+            return
         st.caption(trends["disclaimer"])
         historical = trends.get("analytics", {})
         if historical:

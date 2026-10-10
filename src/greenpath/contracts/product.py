@@ -80,6 +80,7 @@ class PropensityResult(Model):
     reason_codes: tuple[str, ...] = ()
     confidence: Decimal | None = Field(default=None, ge=0, le=1)
     confidence_validated: StrictBool = False
+    confidence_limitation: str | None = None
     synthetic_demo: Literal[True] = True
     in_model_population: StrictBool = True
     population_exclusion: str | None = None
@@ -89,6 +90,10 @@ class PropensityResult(Model):
     @model_validator(mode="after")
     def matching_scoring_evidence(self):
         source = self.source_result
+        limitation = None if self.confidence_validated else (
+            source.confidence.limitation if source is not None else
+            "Fixture or injected propensity has no validated confidence model.")
+        object.__setattr__(self, "confidence_limitation", limitation)
         if source is not None:
             if (source.product != self.product or source.model_version != self.model_version
                     or source.calibration_version != self.calibration_version

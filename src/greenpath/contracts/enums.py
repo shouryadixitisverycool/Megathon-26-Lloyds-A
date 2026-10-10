@@ -1,4 +1,4 @@
-"""Controlled vocabularies shared by every GreenPath workstream.
+"""Controlled vocabularies shared by every Greenr workstream.
 
 Values are part of the frozen contract: add members only through a documented
 contract-version bump (see CONTRACTS.md).

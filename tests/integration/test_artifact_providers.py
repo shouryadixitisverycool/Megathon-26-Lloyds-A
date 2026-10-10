@@ -85,6 +85,156 @@ def test_real_monthly_cutoffs_and_cached_batches():
     assert len(runtime.calls) == 16
 
 
+def test_current_preparation_does_not_prepare_history():
+    runtime = FakeRuntime()
+    repository = ArtifactRepository(runtime)
+    repository.prepare_current()
+    assert len(runtime.calls) == 8
+    assert {call[1] for call in runtime.calls} == {runtime.snapshots.default_cutoff}
+    assert repository.history_status["phase"] == "pending"
+    assert repository._history is None
+    repository.prepare_current()
+    assert len(runtime.calls) == 8
+
+
+def cached_repository(tmp_path, monkeypatch, runtime=None):
+    for setting, directory in (("ARTIFACT_DIR", "artifacts"), ("RAW_DIR", "raw"),
+                               ("REPORTS_DIR", "reports")):
+        path = tmp_path / directory
+        path.mkdir(exist_ok=True)
+        monkeypatch.setattr(config, setting, path)
+    repository = ArtifactRepository(runtime or FakeRuntime())
+    from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
+    monkeypatch.setattr(Customer360SnapshotProvider, "from_parquet",
+                        lambda *paths, **kwargs: repository.runtime.snapshots)
+    repository._history_cache_dir = config.ARTIFACT_DIR / "history_cache"
+    repository._historical_paths = {}
+    for cutoff in repository.history_cutoffs:
+        path = tmp_path / f"customer360_{cutoff}.parquet"
+        if not path.exists():
+            path.write_bytes(str(cutoff).encode())
+        repository._historical_paths[cutoff] = path
+    return repository
+
+
+def test_history_cache_roundtrip_keeps_real_monthly_decisions_and_impact(tmp_path, monkeypatch):
+    first = cached_repository(tmp_path, monkeypatch)
+    expected = first.list_history()
+    fresh = cached_repository(tmp_path, monkeypatch)
+    def forbidden(*args):
+        pytest.fail("Persisted history must not rescore or load historical frames")
+    fresh._at = forbidden
+    assert fresh.list_history() == expected
+    assert fresh.history_status == {"phase": "ready", "cutoff": None, "completed_cutoffs": 2}
+    solar = {r.month: r.state for r in expected if r.product == Product.SOLAR_FINANCE}
+    assert solar["2026-05"] != solar["2026-06"]
+    assert all(r.impact.feature_cutoff.month == int(r.month[-2:]) for r in expected)
+    assert all(r.propensity == Decimal("0.8") and r.trust_score == Decimal("0.91") for r in expected)
+
+
+@pytest.mark.parametrize("changed", ["frame", "model", "confidence", "ood", "scenario", "rules", "threshold", "trust", "outcome"])
+def test_history_cache_provenance_invalidates(tmp_path, monkeypatch, changed):
+    repository = cached_repository(tmp_path, monkeypatch)
+    cutoff = repository.history_cutoffs[0]
+    before = repository._history_key(cutoff)
+    if changed == "threshold":
+        repository.runtime.bundles[Product.EV_FINANCE].threshold = .9
+    elif changed == "rules":
+        from pathlib import Path
+        path = tmp_path / "rules.py"
+        path.write_text("changed rules")
+        original = Path.rglob
+        monkeypatch.setattr(Path, "rglob", lambda root, pattern:
+                            iter([*original(root, pattern), path]) if pattern == "*.py"
+                            else original(root, pattern))
+    else:
+        path = {
+            "frame": repository._historical_paths[cutoff],
+            "model": config.ARTIFACT_DIR / "models" / "ev.joblib",
+            "confidence": config.ARTIFACT_DIR / "confidence" / "decisions.json",
+            "ood": config.ARTIFACT_DIR / "ood" / "ev.joblib",
+            "scenario": config.RAW_DIR / "scenario_evidence.parquet",
+            "trust": config.ARTIFACT_DIR / "trust_thresholds.json",
+            "outcome": config.ARTIFACT_DIR / "portfolio_scores.parquet",
+        }[changed]
+        path.parent.mkdir(exist_ok=True)
+        path.write_bytes(b"changed content")
+    assert repository._history_key(cutoff) != before
+
+
+def test_truncated_history_cache_is_recomputed(tmp_path, monkeypatch):
+    repository = cached_repository(tmp_path, monkeypatch)
+    expected = repository.list_history()
+    path = next(repository._history_cache_dir.glob("*.jsonl"))
+    lines = path.read_bytes().splitlines(keepends=True)
+    path.write_bytes(b"".join(lines[:-1]))
+    fresh = cached_repository(tmp_path, monkeypatch)
+    actual = fresh.list_history()
+    # A recomputation has a new calculation time; persisted cache hits retain the old one.
+    assert [r.model_dump(exclude={"impact": {"timestamp"}}) for r in actual] == [
+        r.model_dump(exclude={"impact": {"timestamp"}}) for r in expected]
+    assert len(fresh.runtime.calls) == 8
+    assert not list(fresh._history_cache_dir.glob("tmp*"))
+
+
+def test_history_cache_threshold_change_recomputes_rules(tmp_path, monkeypatch):
+    original = cached_repository(tmp_path, monkeypatch)
+    original.list_history()
+    fresh = cached_repository(tmp_path, monkeypatch)
+    for bundle in fresh.runtime.bundles.values():
+        bundle.threshold = .9
+    history = fresh.list_history()
+    assert len(fresh.runtime.calls) == 16
+    assert all(row.state != RecommendationState.RECOMMEND for row in history)
+    assert all(row.propensity == Decimal("0.8") for row in history)
+
+
+def test_history_cache_failed_atomic_publish_does_not_break_history(tmp_path, monkeypatch):
+    import os
+    repository = cached_repository(tmp_path, monkeypatch)
+    def fail(*args):
+        raise OSError("cache publish unavailable")
+    monkeypatch.setattr(os, "replace", fail)
+    assert len(repository.list_history()) == 8
+    assert repository.history_status["phase"] == "ready"
+    assert not list(repository._history_cache_dir.iterdir())
+
+
+def test_default_runtime_loads_only_current_frame_then_loads_history_lazily(tmp_path, monkeypatch):
+    from greenpath.pipelines import runtime as runtime_module
+    from greenpath.pipelines import snapshot_provider
+    current = date(2026, 6, 30)
+    earlier = date(2026, 5, 31)
+    monkeypatch.setattr(config, "FEATURE_CUTOFF", current)
+    monkeypatch.setattr(config, "TREND_CUTOFFS", [earlier, current])
+    for setting in ("ARTIFACT_DIR", "RAW_DIR", "REPORTS_DIR"):
+        monkeypatch.setattr(config, setting, tmp_path / setting)
+    paths = {c: tmp_path / f"customer360_{c}.parquet" for c in (earlier, current)}
+    for path in paths.values():
+        path.write_bytes(b"test frame provenance")
+    monkeypatch.setattr(snapshot_provider, "customer360_path", lambda cutoff: paths[cutoff])
+    runtime = FakeRuntime()
+    runtime.snapshots.cutoffs = [current]
+    loads = []
+    def load_runtime(*, cutoffs):
+        loads.append(tuple(cutoffs))
+        return runtime
+    monkeypatch.setattr(runtime_module, "load_runtime", load_runtime)
+    historical_loads = []
+    def from_parquet(path, *, default_cutoff):
+        historical_loads.append((path, default_cutoff))
+        return FakeRuntime().snapshots
+    monkeypatch.setattr(snapshot_provider.Customer360SnapshotProvider, "from_parquet", from_parquet)
+    repository = ArtifactRepository()
+    repository.prepare_current()
+    assert loads == [(current,)]
+    assert historical_loads == []
+    assert repository.history_cutoffs == (earlier, current)
+    repository.list_history()
+    assert historical_loads == [(paths[earlier], earlier)]
+    assert set(repository._cache) == {current}
+
+
 def test_impact_inputs_and_history_use_each_cutoffs_physical_evidence():
     runtime = FakeRuntime()
     original_sources = runtime.snapshots.snapshots
@@ -136,12 +286,13 @@ def test_explicit_trained_scenario_exposes_available_co2e_through_api():
     from greenpath.contracts.impact_detail import ImpactResult
 
     runtime = FakeRuntime()
-    # Explicit scenario snapshot only: do not add efficiencies to production
-    # generation, model predictors, or adapter defaults.
-    runtime.source = runtime.source.model_copy(update={"features": {**runtime.source.features,
-        "ice_litres_per_100km": 6.5, "ev_kwh_per_100km": 18.0, "charging_efficiency": 0.9}})
-    repository = ArtifactRepository(runtime)
-    expected = repository.impact_calculators[Product.EV_FINANCE].calculate(runtime.source)
+    from greenpath.data_generation.scenarios import generate_scenario_table
+    from greenpath.pipelines.scenario_provider import ScenarioProvider
+    table = generate_scenario_table([runtime.source.customer_id],
+        effective_on=runtime.source.feature_cutoff, available_on=runtime.source.feature_cutoff)
+    scenarios = ScenarioProvider(table[table["product"] == Product.EV_FINANCE])
+    repository = ArtifactRepository(runtime, scenario_provider=scenarios)
+    expected = repository.impact_calculators[Product.EV_FINANCE].calculate(scenarios.attach(runtime.source, Product.EV_FINANCE))
     with TestClient(create_app(repository)) as client:
         rows = client.get("/customers/C10001/recommendations").json()["recommendations"]
         ev = next(row for row in rows if row["product"] == "EV_FINANCE")
@@ -159,6 +310,21 @@ def test_explicit_trained_scenario_exposes_available_co2e_through_api():
         assert explanation["units"] == "kg CO2e/year"
         assert "kg CO2e/year" in explanation["text"]
         assert client.get("/portfolio/summary").json()["available_impact_count"] == 1
+
+
+def test_injected_scenarios_use_historical_cutoff_without_reading_raw(monkeypatch):
+    import pandas as pd
+    from greenpath.data_generation.scenarios import generate_scenario_table
+    from greenpath.pipelines.scenario_provider import ScenarioProvider
+    runtime = FakeRuntime()
+    scenarios = ScenarioProvider(generate_scenario_table(["C10001"],
+        effective_on=date(2026, 6, 30), available_on=date(2026, 6, 30)))
+    monkeypatch.setattr(pd, "read_parquet", lambda *a, **kw: pytest.fail("Injected runtime must not load raw tables"))
+    repository = ArtifactRepository(runtime, scenario_provider=scenarios)
+    assert repository.get_impact_input("C10001", Product.EV_FINANCE).scenario
+    history = {row.month: row for row in repository.list_history() if row.product == Product.EV_FINANCE}
+    assert history["2026-05"].impact_status == "UNAVAILABLE"
+    assert history["2026-06"].impact_status == "AVAILABLE"
 
 
 def test_auto_fixture_and_partial_artifacts_fail_visibly(tmp_path, monkeypatch):

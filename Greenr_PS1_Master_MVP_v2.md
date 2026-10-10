@@ -1,4 +1,4 @@
-# GreenPath Intelligence — PS1 Master MVP Specification
+# Greenr Intelligence — PS1 Master MVP Specification
 
 **Problem Statement:** Lloyds — Green Customer Insights Platform  
 **Document purpose:** Build specification, scope-control document, evaluation plan, demo plan, and submission checklist  
@@ -8,7 +8,7 @@
 
 ## 0. Executive summary
 
-GreenPath Intelligence is an explainable green-finance decision platform that identifies relevant sustainability opportunities for each customer, estimates the potential impact using auditable deterministic calculations, explains why the opportunity exists, knows when *not* to recommend, and helps Lloyds decide the next best action across both individual customers and the wider portfolio.
+Greenr Intelligence is an explainable green-finance decision platform that identifies relevant sustainability opportunities for each customer, estimates the potential impact using auditable deterministic calculations, explains why the opportunity exists, knows when *not* to recommend, and helps Lloyds decide the next best action across both individual customers and the wider portfolio.
 
 The platform must answer four questions reliably:
 
@@ -22,7 +22,7 @@ The core operating principle is non-negotiable:
 - **ML models predict propensity.**
 - **A deterministic rules-based sustainability/carbon engine computes impact.**
 - **The LLM explains structured outputs; it never predicts propensity, calculates impact, or determines financial eligibility.**
-- **Financial eligibility remains outside GreenPath and follows Lloyds' authorised product-specific processes.**
+- **Financial eligibility remains outside Greenr and follows Lloyds' authorised product-specific processes.**
 
 The project deliberately optimises for **depth before breadth**. Features are tiered into Must / Should / Could, and a feature may not be demoed unless it meets its Definition of Done.
 
@@ -111,7 +111,7 @@ No half-working feature appears in the final demo.
 
 # 2. Original problem coverage
 
-GreenPath must support the complete required brief and preserve the optional extensions.
+Greenr must support the complete required brief and preserve the optional extensions.
 
 ## 2.1 Required product opportunities
 
@@ -126,7 +126,7 @@ GreenPath must support the complete required brief and preserve the optional ext
 
 ## 2.2 Functional requirements traceability
 
-| Requirement | GreenPath implementation |
+| Requirement | Greenr implementation |
 |---|---|
 | FR1 Customer 360 | governed customer feature view built from all source tables |
 | FR2 Transaction categorisation | exactly one mutually exclusive sustainability category per transaction |
@@ -138,7 +138,7 @@ GreenPath must support the complete required brief and preserve the optional ext
 
 ## 2.3 Required submission outputs
 
-GreenPath must ship:
+Greenr must ship:
 
 A. Working prototype  
 B. Source code + run instructions  
@@ -167,7 +167,7 @@ Additional voluntary artefacts:
 
 # 3. Product surfaces
 
-GreenPath has three user-facing surfaces.
+Greenr has three user-facing surfaces.
 
 ## 3.1 Customer Green Hub
 
@@ -277,7 +277,7 @@ Feedback / Outcome / Memory
 | guardrails | suppress irrelevant/contradicted recommendations | alter model score invisibly |
 | carbon engine | deterministic calculations | behavioural prediction |
 | LLM | explain structured outputs | invent numbers, predict, calculate, approve |
-| eligibility process | institution-authorised decision | be replaced by GreenPath |
+| eligibility process | institution-authorised decision | be replaced by Greenr |
 
 ---
 
@@ -553,7 +553,7 @@ No post-cutoff data may leak into features.
 
 # 8. Synthetic data generation and circularity controls
 
-Synthetic-label circularity is the single largest ML credibility risk. GreenPath therefore treats synthetic-data validation as a first-class deliverable.
+Synthetic-label circularity is the single largest ML credibility risk. Greenr therefore treats synthetic-data validation as a first-class deliverable.
 
 ## 8.1 Prohibited generator design
 
@@ -2920,7 +2920,7 @@ customer data
 → dashboard
 ```
 
-GreenPath becomes:
+Greenr becomes:
 
 ```text
 customer data
@@ -2966,7 +2966,7 @@ The seven strongest differentiators remain:
 
 ### One sentence
 
-> **GreenPath is an explainable green-finance decision platform that identifies the right sustainability opportunity for each customer, quantifies potential impact with auditable calculations, knows when not to recommend, and helps Lloyds choose the next best action across both individual customers and the wider portfolio.**
+> **Greenr is an explainable green-finance decision platform that identifies the right sustainability opportunity for each customer, quantifies potential impact with auditable calculations, knows when not to recommend, and helps Lloyds choose the next best action across both individual customers and the wider portfolio.**
 
 ### Judge-demo version
 

@@ -11,7 +11,7 @@ Protocol
 - Compared models: the hybrid (rules, then TF-IDF + logistic regression), the same model without
   rules, and the plain TF-IDF + logistic regression on raw text.
 
-Synthetic-data caveat: the merchant catalogue and noise come from the GreenPath generator.
+Synthetic-data caveat: the merchant catalogue and noise come from the Greenr generator.
 Results show generalisation within that generator, not performance on real bank data.
 """
 
@@ -242,7 +242,7 @@ def _render_markdown(results: dict[str, Any]) -> str:
 
     add("# Transaction categorisation evaluation")
     add("")
-    add("> Synthetic data only. These figures describe generalisation within the GreenPath generator's "
+    add("> Synthetic data only. These figures describe generalisation within the Greenr generator's "
         "merchant catalogue. They do not establish categorisation accuracy on real bank transactions.")
     add("")
     sample_note = " (seeded sample)" if rows["sampled"] else ""

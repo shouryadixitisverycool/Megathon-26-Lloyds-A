@@ -1,8 +1,8 @@
-# GreenPath Submission Narrative
+# Greenr Submission Narrative
 
 ## Outcome
 
-GreenPath integrates synthetic Customer 360 and calibrated opportunity models for EV Finance, Green Home, Solar Finance and Paperless Banking with evidence-aware relevance rules, transparent impact and grounded explanations. The demonstration includes successful abstention, not only positive recommendations. See [README.md](README.md) for the mode-specific five-minute walkthrough and [ARCHITECTURE.md](ARCHITECTURE.md) for the diagram.
+Greenr integrates synthetic Customer 360 and calibrated opportunity models for EV Finance, Green Home, Solar Finance and Paperless Banking with evidence-aware relevance rules, transparent impact and grounded explanations. The demonstration includes successful abstention, not only positive recommendations. See [README.md](README.md) for the mode-specific five-minute walkthrough and [ARCHITECTURE.md](ARCHITECTURE.md) for the diagram.
 
 ## Evaluation Evidence
 

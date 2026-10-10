@@ -106,10 +106,10 @@ def product_section(name: str, r: dict, level: str = "##") -> list[str]:
 
 
 def evaluation_report(results: dict) -> str:
-    md = ["# GreenPath — Agent A evaluation report (data, ML, reliability)", "",
+    md = ["# Greenr — Agent A evaluation report (data, ML, reliability)", "",
           f"> {results['notice']}", "",
           f"Feature cutoff {config.FEATURE_CUTOFF}; outcome = adoption within 90 days (to {config.OUTCOME_WINDOW_END}); "
-           f"prediction timestamp {config.PREDICTION_TIMESTAMP:%Y-%m-%d}. Customer-level 70/15/15 split; one third of validation reserved for confidence release selection before tuning/calibration; demo personas excluded from training.", "",
+           f"prediction timestamp {config.PREDICTION_TIMESTAMP:%Y-%m-%d}. Customer-level 55/15/15/15 train/validation/confidence-release/test split; release customers reserved before tuning/calibration; demo personas excluded from all fitting and selection. Cohort counts are recorded in reports/dataset_quality.json.", "",
           "## Summary", ""]
     rows = []
     for p, r in results["products"].items():
@@ -191,7 +191,7 @@ def leakage_audit(results: dict) -> str:
           "| Area | Control | Result |", "|---|---|---|",
           f"| Feature provenance | Feature registry records source table, event-time column and availability for each feature (DATA_CARD.md) | documented |",
           f"| Cutoff timing | Customer 360 rebuilt from inputs truncated at {config.FEATURE_CUTOFF} equals production build ({pit['features_compared']} features × {pit['customers_compared']} customers) | **{pit['status']}** |",
-          "| Customer split integrity | No customer in more than one of train/validation/test/demo | see below |",
+           "| Customer split integrity | No customer in more than one of train/validation/confidence-release/test/demo | see below |",
           "| Label construction | Labels = adoption in (cutoff, cutoff+90d] from `customer_outcomes`, a truth table never read by the feature pipeline | by construction + tests |",
           "| Latent-variable leakage | Generator latent traits are never written to any raw table | by construction |",
           "| Target-derived features | No feature name matching adopt/label/target/take_up/outcome | see below |",

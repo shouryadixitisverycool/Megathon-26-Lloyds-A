@@ -1,6 +1,6 @@
-# GreenPath Implementation Status
+# Greenr Implementation Status
 
-Basis: `GreenPath_PS1_Master_MVP_v2.md`. Source/documentation inspection updated on 2026-10-10. Agent A and Agent B are integrated in this repository. Final full gates are in progress with the main owner; no final counts are certified here. Historical independent-workstream instructions are not current runtime requirements. The original specification and design/handoff documents remain design history, not rewritten acceptance evidence.
+Basis: `Greenr_PS1_Master_MVP_v2.md`. Source/documentation inspection updated on 2026-10-10. Agent A and Agent B are integrated in this repository. Final full gates are in progress with the main owner; no final counts are certified here. Historical independent-workstream instructions are not current runtime requirements. The original specification and design/handoff documents remain design history, not rewritten acceptance evidence.
 
 ## Implemented Core
 

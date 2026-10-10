@@ -11,7 +11,7 @@ from greenpath.data_generation.config import BASE_CONFIG
 from greenpath.data_generation.generator import generate, write_dataset
 from greenpath.data_generation.perturbation import PERTURBED_CONFIG
 
-DEFAULT_CUSTOMERS = 4_000
+DEFAULT_CUSTOMERS = config.DEFAULT_CUSTOMERS
 
 
 def generate_dataset(*, customers: int = DEFAULT_CUSTOMERS, perturbed: bool = False,

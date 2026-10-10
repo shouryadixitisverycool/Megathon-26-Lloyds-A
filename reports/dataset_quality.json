@@ -1,0 +1,403 @@
+{
+  "integrity": {
+    "status": "PASS",
+    "checks": [
+      "schemas",
+      "primary_keys",
+      "foreign_keys",
+      "truth_bijection",
+      "merchant_truth"
+    ]
+  },
+  "optional_sources": {
+    "customer_history": "PRESENT",
+    "outcome_observation": "PRESENT",
+    "scenario_evidence": "PRESENT",
+    "vehicle_ownership": "PRESENT"
+  },
+  "missingness": {
+    "customers": {
+      "customer_id": 0.0,
+      "customer_since": 0.0,
+      "age_band": 0.0,
+      "income_band": 0.0,
+      "region": 0.01489255372313843,
+      "postcode_sector": 0.02418790604697651,
+      "segment": 0.0,
+      "home_owner": 0.07966016991504248,
+      "property_type": 0.03023488255872064,
+      "heating_type": 0.030584707646176913,
+      "has_solar_pv": 0.021689155422288855,
+      "solar_installed_at": 0.5994002998500749,
+      "sustainability_preference": 0.10084957521239381,
+      "record_updated_at": 0.0,
+      "available_at": 0.0
+    },
+    "transactions": {
+      "transaction_id": 0.0,
+      "customer_id": 0.0,
+      "date": 0.0,
+      "merchant_description": 0.0,
+      "amount": 0.0,
+      "debit_credit": 0.0,
+      "available_at": 0.0
+    },
+    "financial_products": {
+      "customer_id": 0.0,
+      "product": 0.0,
+      "start_date": 0.0,
+      "end_date": 0.9714746557543534,
+      "balance": 0.0017324292840287941,
+      "status": 0.0,
+      "available_at": 0.0
+    },
+    "vehicles": {
+      "customer_id": 0.0,
+      "vehicle_type": 0.0,
+      "fuel_type": 0.0,
+      "vehicle_age": 0.031556948798328106,
+      "annual_mileage": 0.10311389759665622,
+      "mileage_source": 0.10311389759665622,
+      "record_updated_at": 0.0,
+      "available_at": 0.0
+    },
+    "energy_usage": {
+      "customer_id": 0.0,
+      "month": 0.0,
+      "electricity_kwh": 0.009775506118945836,
+      "gas_kwh": 0.0,
+      "source_quality": 0.0,
+      "available_at": 0.0
+    },
+    "digital_usage": {
+      "customer_id": 0.0,
+      "month": 0.0,
+      "digital_statements": 0.0,
+      "paperless_effective_at": 0.3111160257650734,
+      "paper_statements": 0.0,
+      "digital_transactions": 0.0,
+      "app_logins": 0.0,
+      "branch_visits": 0.0,
+      "available_at": 0.0
+    },
+    "green_product_catalogue": {
+      "product_id": 0.0,
+      "product": 0.0,
+      "category": 0.0,
+      "intended_use_case": 0.0,
+      "eligibility_reference": 0.0,
+      "sustainability_metric": 0.0
+    },
+    "transaction_truth": {
+      "transaction_id": 0.0,
+      "merchant_id": 0.0,
+      "true_category": 0.0
+    },
+    "merchants": {
+      "merchant_id": 0.0,
+      "brand": 0.0,
+      "true_category": 0.0,
+      "is_shift_only": 0.0
+    },
+    "customer_outcomes": {
+      "customer_id": 0.0,
+      "product": 0.0,
+      "adoption_date": 0.0
+    },
+    "customer_history": {
+      "customer_id": 0.0,
+      "customer_since": 0.0,
+      "age_band": 0.0,
+      "income_band": 0.0,
+      "region": 0.015051641615584851,
+      "postcode_sector": 0.024036443026282644,
+      "segment": 0.0,
+      "home_owner": 0.07941472835670502,
+      "property_type": 0.030397178604416826,
+      "heating_type": 0.030817029137627006,
+      "has_solar_pv": 0.028088000671760854,
+      "solar_installed_at": 0.723969266940969,
+      "sustainability_preference": 0.10095306071038711,
+      "record_updated_at": 0.0,
+      "available_at": 0.0
+    },
+    "vehicle_ownership": {
+      "customer_id": 0.0,
+      "has_vehicle": 0.022032768480510823,
+      "record_updated_at": 0.0,
+      "available_at": 0.0
+    },
+    "outcome_observation": {
+      "customer_id": 0.0,
+      "product": 0.0,
+      "observation_end": 0.0,
+      "outcome_available_at": 0.0,
+      "complete_followup": 0.0
+    },
+    "scenario_evidence": {
+      "customer_id": 0.0,
+      "product": 0.0,
+      "field": 0.0,
+      "value": 0.0,
+      "unit": 0.2,
+      "assumption_id": 0.0,
+      "source_id": 0.0,
+      "effective_on": 0.0,
+      "available_on": 0.0,
+      "basis": 0.0,
+      "description": 0.0
+    }
+  },
+  "source_customer_coverage": {
+    "transactions": {
+      "customers_with_rows": 20010,
+      "customers_without_rows": 0
+    },
+    "financial_products": {
+      "customers_with_rows": 20010,
+      "customers_without_rows": 0
+    },
+    "vehicles": {
+      "customers_with_rows": 15226,
+      "customers_without_rows": 4784
+    },
+    "energy_usage": {
+      "customers_with_rows": 18411,
+      "customers_without_rows": 1599
+    },
+    "digital_usage": {
+      "customers_with_rows": 19620,
+      "customers_without_rows": 390
+    },
+    "customer_outcomes": {
+      "customers_with_rows": 17239,
+      "customers_without_rows": 2771
+    },
+    "customer_history": {
+      "customers_with_rows": 20010,
+      "customers_without_rows": 0
+    },
+    "vehicle_ownership": {
+      "customers_with_rows": 20010,
+      "customers_without_rows": 0
+    },
+    "outcome_observation": {
+      "customers_with_rows": 20010,
+      "customers_without_rows": 0
+    },
+    "scenario_evidence": {
+      "customers_with_rows": 10,
+      "customers_without_rows": 20000
+    }
+  },
+  "vehicle_missingness_per_fuel": {
+    "DIESEL": {
+      "status": "SUPPORTED",
+      "rows": 4072,
+      "missingness": {
+        "customer_id": 0.0,
+        "vehicle_type": 0.0,
+        "fuel_type": 0.0,
+        "vehicle_age": 0.03241650294695481,
+        "annual_mileage": 0.10338899803536346,
+        "mileage_source": 0.10338899803536346,
+        "record_updated_at": 0.0,
+        "available_at": 0.0
+      }
+    },
+    "EV": {
+      "status": "SUPPORTED",
+      "rows": 11022,
+      "missingness": {
+        "customer_id": 0.0,
+        "vehicle_type": 0.0,
+        "fuel_type": 0.0,
+        "vehicle_age": 0.03130103429504627,
+        "annual_mileage": 0.10188713482126656,
+        "mileage_source": 0.10188713482126656,
+        "record_updated_at": 0.0,
+        "available_at": 0.0
+      }
+    },
+    "HYBRID": {
+      "status": "SUPPORTED",
+      "rows": 1388,
+      "missingness": {
+        "customer_id": 0.0,
+        "vehicle_type": 0.0,
+        "fuel_type": 0.0,
+        "vehicle_age": 0.027377521613832854,
+        "annual_mileage": 0.10230547550432277,
+        "mileage_source": 0.10230547550432277,
+        "record_updated_at": 0.0,
+        "available_at": 0.0
+      }
+    },
+    "PETROL": {
+      "status": "SUPPORTED",
+      "rows": 7443,
+      "missingness": {
+        "customer_id": 0.0,
+        "vehicle_type": 0.0,
+        "fuel_type": 0.0,
+        "vehicle_age": 0.032245062474808545,
+        "annual_mileage": 0.10493080747010614,
+        "mileage_source": 0.10493080747010614,
+        "record_updated_at": 0.0,
+        "available_at": 0.0
+      }
+    }
+  },
+  "outcome_coverage": {
+    "status": "SUPPORTED",
+    "rows": 80040,
+    "expected_customer_product_pairs": 80040,
+    "missing_customer_product_pairs": 0,
+    "complete_followup_rows": 80040,
+    "detail": "Observed negatives require complete coverage of the requested label window."
+  },
+  "label_window": {
+    "cutoff": "2026-06-30",
+    "window_days": 90,
+    "coverage_mode": "EXPLICIT",
+    "products": {
+      "EV_FINANCE": {
+        "observed_positive": 769,
+        "observed_negative": 19241,
+        "unsupported": 0
+      },
+      "GREEN_HOME": {
+        "observed_positive": 744,
+        "observed_negative": 19266,
+        "unsupported": 0
+      },
+      "SOLAR_FINANCE": {
+        "observed_positive": 760,
+        "observed_negative": 19250,
+        "unsupported": 0
+      },
+      "PAPERLESS_BANKING": {
+        "observed_positive": 468,
+        "observed_negative": 19542,
+        "unsupported": 0
+      }
+    }
+  },
+  "split_counts": {
+    "train": 11000,
+    "test": 3000,
+    "validation": 3000,
+    "confidence_release": 3000,
+    "demo": 10
+  },
+  "product_cohorts": {
+    "EV_FINANCE": {
+      "train": {
+        "customers": 11000,
+        "eligible": 6538,
+        "eligible_observed": 6538
+      },
+      "validation": {
+        "customers": 3000,
+        "eligible": 1740,
+        "eligible_observed": 1740
+      },
+      "confidence_release": {
+        "customers": 3000,
+        "eligible": 1800,
+        "eligible_observed": 1800
+      },
+      "test": {
+        "customers": 3000,
+        "eligible": 1762,
+        "eligible_observed": 1762
+      },
+      "demo": {
+        "customers": 10,
+        "eligible": 9,
+        "eligible_observed": 9
+      }
+    },
+    "GREEN_HOME": {
+      "train": {
+        "customers": 11000,
+        "eligible": 5456,
+        "eligible_observed": 5456
+      },
+      "validation": {
+        "customers": 3000,
+        "eligible": 1459,
+        "eligible_observed": 1459
+      },
+      "confidence_release": {
+        "customers": 3000,
+        "eligible": 1455,
+        "eligible_observed": 1455
+      },
+      "test": {
+        "customers": 3000,
+        "eligible": 1444,
+        "eligible_observed": 1444
+      },
+      "demo": {
+        "customers": 10,
+        "eligible": 9,
+        "eligible_observed": 9
+      }
+    },
+    "SOLAR_FINANCE": {
+      "train": {
+        "customers": 11000,
+        "eligible": 6934,
+        "eligible_observed": 6934
+      },
+      "validation": {
+        "customers": 3000,
+        "eligible": 1874,
+        "eligible_observed": 1874
+      },
+      "confidence_release": {
+        "customers": 3000,
+        "eligible": 1889,
+        "eligible_observed": 1889
+      },
+      "test": {
+        "customers": 3000,
+        "eligible": 1885,
+        "eligible_observed": 1885
+      },
+      "demo": {
+        "customers": 10,
+        "eligible": 9,
+        "eligible_observed": 9
+      }
+    },
+    "PAPERLESS_BANKING": {
+      "train": {
+        "customers": 11000,
+        "eligible": 2134,
+        "eligible_observed": 2134
+      },
+      "validation": {
+        "customers": 3000,
+        "eligible": 583,
+        "eligible_observed": 583
+      },
+      "confidence_release": {
+        "customers": 3000,
+        "eligible": 563,
+        "eligible_observed": 563
+      },
+      "test": {
+        "customers": 3000,
+        "eligible": 556,
+        "eligible_observed": 556
+      },
+      "demo": {
+        "customers": 10,
+        "eligible": 7,
+        "eligible_observed": 7
+      }
+    }
+  }
+}

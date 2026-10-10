@@ -28,11 +28,11 @@ def _require_free_port(port):
             raise RuntimeError(f"Port {port} is already in use; choose another port") from exc
 
 
-def _wait_for_api(process, base_url, timeout=180):
+def _wait_for_api(process, base_url, timeout=300):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            raise RuntimeError("GreenPath API exited during startup")
+            raise RuntimeError("Greenr API exited during startup")
         try:
             with urlopen(base_url + "/health", timeout=1) as response:
                 health = json.load(response)
@@ -41,7 +41,7 @@ def _wait_for_api(process, base_url, timeout=180):
         except (URLError, OSError, ValueError):
             pass
         time.sleep(0.15)
-    raise RuntimeError("GreenPath API did not become healthy within the startup timeout")
+    raise RuntimeError("Greenr API did not become healthy within the startup timeout")
 
 
 def _stop(process):
@@ -55,11 +55,11 @@ def _stop(process):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Run the synthetic GreenPath API and UI")
+    parser = argparse.ArgumentParser(description="Run the synthetic Greenr API and UI")
     parser.add_argument("--api-port", type=_port, default=8000)
     parser.add_argument("--ui-port", type=_port, default=8501)
-    parser.add_argument("--startup-timeout", type=int, default=180,
-                        help="Seconds allowed for trained model and monthly-history warmup")
+    parser.add_argument("--startup-timeout", type=int, default=300,
+                         help="Seconds allowed for API health readiness (default: 300; historical preparation may run separately)")
     args = parser.parse_args(argv)
     processes = []
     try:
@@ -84,7 +84,7 @@ def main(argv=None):
             "--server.headless", "true", "--browser.gatherUsageStats", "false",
         ], env=environment)
         processes.append(ui)
-        print(f"GreenPath UI: http://127.0.0.1:{args.ui_port} | API: {base_url}", flush=True)
+        print(f"Greenr UI: http://127.0.0.1:{args.ui_port} | API: {base_url}", flush=True)
         while all(process.poll() is None for process in processes):
             time.sleep(0.2)
         return 1

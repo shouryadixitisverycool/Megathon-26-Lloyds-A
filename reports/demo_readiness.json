@@ -1,0 +1,2174 @@
+{
+  "schema_version": "demo-readiness-v1",
+  "artifact_signature": "760f74cee37d84c5d97deddb035eac69",
+  "provider_mode": "trained",
+  "source_version": "trained:ev_finance_gbm_v1,green_home_logreg_v1,solar_finance_logreg_v1,paperless_banking_logreg_v1",
+  "feature_cutoff": "2026-06-30",
+  "population_customers": 20010,
+  "coverage_source": "served current score cache",
+  "confidence_decisions_sha256": "0a0b0a26e54c8127639917c9585493f48d73ec590244bcfa7c12511a8d0b0f73",
+  "confidence_source": "Loaded confidence release decisions and live source_result.confidence; never trust or propensity.",
+  "selection": "Stable customer-ID order, validated scores first; bounded live search per product/category.",
+  "live_checked_customers": 41,
+  "products": {
+    "EV_FINANCE": {
+      "status": "BLOCKED",
+      "coverage": {
+        "scored_customers": 20010,
+        "in_model_population": 11849,
+        "validated_confidence": 0,
+        "above_threshold": 2198
+      },
+      "candidate": {
+        "customer_id": "C10001",
+        "product": "EV_FINANCE",
+        "state": "RECOMMEND",
+        "feature_cutoff": "2026-06-30T00:00:00+00:00",
+        "propensity": {
+          "product": "EV_FINANCE",
+          "probability": "0.10550930467162417",
+          "model_version": "ev_finance_gbm_v1",
+          "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+          "reason_codes": [
+            "HIGH_FUEL_SPEND",
+            "ICE_VEHICLE_OWNER",
+            "EXISTING_VEHICLE_FINANCE",
+            "STATED_SUSTAINABILITY_PREFERENCE"
+          ],
+          "confidence": null,
+          "confidence_validated": false,
+          "confidence_limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200",
+          "synthetic_demo": true,
+          "in_model_population": true,
+          "population_exclusion": null,
+          "decision_threshold": "0.09994737816989047",
+          "source_result": {
+            "contract_version": "1.0.0",
+            "customer_id": "C10001",
+            "product": "EV_FINANCE",
+            "propensity": 0.10550930467162417,
+            "raw_score": 0.10159597545862198,
+            "model_type": "GRADIENT_BOOSTING",
+            "model_version": "ev_finance_gbm_v1",
+            "calibration_method": "platt",
+            "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+            "feature_version": "feature_v1",
+            "feature_cutoff": "2026-06-30",
+            "outcome_window_end": "2026-09-28",
+            "in_model_population": true,
+            "population_exclusion": null,
+            "reason_codes": [
+              "HIGH_FUEL_SPEND",
+              "ICE_VEHICLE_OWNER",
+              "EXISTING_VEHICLE_FINANCE",
+              "STATED_SUSTAINABILITY_PREFERENCE"
+            ],
+            "evidence": {
+              "monthly_fuel_spend": 313.61999999999995,
+              "vehicle_fuel_type": "PETROL",
+              "has_vehicle_finance": true,
+              "sustainability_preference": 4.0
+            },
+            "confidence": {
+              "status": "SUPPRESSED",
+              "value": null,
+              "bucket": null,
+              "method_version": "conf_meta_v1",
+              "limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200"
+            }
+          }
+        },
+        "reason_codes": [
+          "RELEVANCE_SUPPORTED",
+          "PROPENSITY_THRESHOLD_MET"
+        ],
+        "evidence": [
+          {
+            "code": "RELEVANCE_SUPPORTED",
+            "message": "Current product-specific evidence supports the relevance of this opportunity.",
+            "fields": [
+              "already_has_ev",
+              "owns_vehicle",
+              "fuel_supported"
+            ],
+            "references": [
+              "customer360:feature_v1:2026-06-30:C10001:already_has_ev",
+              "customer360:feature_v1:2026-06-30:C10001:owns_vehicle",
+              "customer360:feature_v1:2026-06-30:C10001:fuel_supported"
+            ]
+          },
+          {
+            "code": "PROPENSITY_THRESHOLD_MET",
+            "message": "The synthetic propensity probability meets the demo relevance threshold.",
+            "fields": [],
+            "references": []
+          }
+        ],
+        "impact": {
+          "contract_version": "1.0.0",
+          "product": "EV_FINANCE",
+          "status": "AVAILABLE",
+          "value": "2063.6143200",
+          "units": "kg CO2e/year",
+          "baseline": {
+            "description": "UK annual forecast baseline; full source coverage where required; synthetic scenario quantities are not measured",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": "2624.0687200"
+          },
+          "scenario": {
+            "description": "Explicit UK annual physical scenario",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": "560.454400"
+          },
+          "period": {
+            "start": "2026-06-30",
+            "end": "2027-06-30"
+          },
+          "feature_cutoff": "2026-06-30T00:00:00Z",
+          "synthetic_demo": true,
+          "factors": [
+            {
+              "factor_id": "electricity_kwh",
+              "value": "0.13096",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.13096",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 2: UK electricity",
+              "applicability": "Electricity: UK",
+              "source_id": "7_400_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3066",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "electricity_td_kwh",
+              "value": "0.01299",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.01299",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: Transmission and distribution",
+              "applicability": "Electricity: UK",
+              "source_id": "13_402_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3627",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "electricity_wtt_generation_kwh",
+              "value": "0.03682",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.03682",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: WTT- UK electricity",
+              "applicability": "Electricity: UK",
+              "source_id": "15_917_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3939",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "electricity_wtt_td_kwh",
+              "value": "0.00359",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.00359",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: WTT- UK electricity",
+              "applicability": "Electricity: UK",
+              "source_id": "15_918_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3940",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "petrol_litre",
+              "value": "2.07500",
+              "unit": "kg CO2e/litres",
+              "original_value": "2.07500",
+              "original_unit": "kg CO2e/litres",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 1: Fuels",
+              "applicability": "Petrol (average biofuel blend)",
+              "source_id": "1_101_1017_8_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 283",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "petrol_wtt_litre",
+              "value": "0.58094",
+              "unit": "kg CO2e/litres",
+              "original_value": "0.58094",
+              "original_unit": "kg CO2e/litres",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: WTT- fuels",
+              "applicability": "Petrol (average biofuel blend)",
+              "source_id": "11_101_1017_8_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3527",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            }
+          ],
+          "factor_catalogue_version": "desnz_2026_v1",
+          "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+          "boundary": "CO2e: Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded",
+          "assumptions": [
+            "Synthetic Customer360 data; forecast assumptions must be explicit.",
+            "2026 UK factors held constant; this is not a measured historical reduction.",
+            "Source annual activities are held constant for the annual forecast comparison.",
+            "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+            "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+          ],
+          "exclusions": [
+            "No conversion of CO2e to CO2 or inferred physical efficiencies.",
+            "Modelled annual scenario, not a measured outcome or a guarantee.",
+            "Physical assumptions are supplied by the caller; their accuracy is not independently verified.",
+            "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+            "Reviewed 2026 factors are held constant; no future grid decarbonisation is assumed.",
+            "Official reporting convention excludes outside-of-scopes biogenic combustion CO2."
+          ],
+          "method_version": "uk-physical-scenarios-v1",
+          "method_release": "reviewed-desnz-2026-subset",
+          "evidence": [
+            {
+              "field": "annual_mileage_km",
+              "value": "15200.0",
+              "unit": "km/year",
+              "reference": "customer360:feature_v1:2026-06-30:C10001:vehicle.annual_mileage_km",
+              "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+              "observed_at": "2026-05-15T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "fuel_type",
+              "value": "PETROL",
+              "unit": null,
+              "reference": "customer360:feature_v1:2026-06-30:C10001:vehicle.fuel_type",
+              "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+              "observed_at": "2026-05-15T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "ice_litres_per_100km",
+              "value": "6.5",
+              "unit": "litres/100km",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ice_litres_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "ev_kwh_per_100km",
+              "value": "18.0",
+              "unit": "kWh/100km",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ev_kwh_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "charging_efficiency",
+              "value": "0.9",
+              "unit": "fraction",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:charging_efficiency:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "mileage_evidence",
+              "value": "OBSERVED",
+              "unit": null,
+              "reference": "customer360:feature_v1:2026-06-30:C10001:vehicle.mileage_is_estimated",
+              "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+              "observed_at": "2026-05-15T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            }
+          ],
+          "issues": [],
+          "secondary_metrics": [],
+          "passport_id": "GP-8bc6526b96cc728f5864a896f62f245dbf838dcafa6e55d6d8a874de1d978f53"
+        },
+        "rules_version": "trained-relevance-rules-v1"
+      },
+      "missing_features": [
+        "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200",
+        "No live-checked customer meets all trained confidence, evidence and impact gates."
+      ],
+      "confidence_limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200",
+      "live_checked_customers": 26,
+      "confidence_release_evidence": {
+        "surfaced": false,
+        "limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200",
+        "validation": {
+          "n": 128,
+          "passed": false,
+          "reasons": [
+            "insufficient data: 128 rows < 200"
+          ],
+          "spearman": null,
+          "top30_error": null,
+          "bottom30_error": null,
+          "error_ratio": null,
+          "overall_error": null,
+          "deciles": [],
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          }
+        },
+        "ablation": [
+          {
+            "variant": "full",
+            "dropped": null,
+            "features": "margin,local_cal_error,ood_score,instability,recency_days",
+            "test_auc": 0.8989764129951046,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_margin",
+            "dropped": "margin",
+            "features": "local_cal_error,ood_score,instability,recency_days",
+            "test_auc": 0.894971072541166,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_local_cal_error",
+            "dropped": "local_cal_error",
+            "features": "margin,ood_score,instability,recency_days",
+            "test_auc": 0.8851802403204271,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_ood_score",
+            "dropped": "ood_score",
+            "features": "margin,local_cal_error,instability,recency_days",
+            "test_auc": 0.8985313751668891,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_instability",
+            "dropped": "instability",
+            "features": "margin,local_cal_error,ood_score,recency_days",
+            "test_auc": 0.8429016466399644,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_recency_days",
+            "dropped": "recency_days",
+            "features": "margin,local_cal_error,ood_score,instability",
+            "test_auc": 0.8985313751668892,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          }
+        ],
+        "coefficients": {
+          "margin": 0.14761491239297544,
+          "local_cal_error": -0.28370510459409387,
+          "ood_score": 0.03248587473969984,
+          "instability": -1.143345278924488,
+          "recency_days": -0.19345060597520616,
+          "intercept": 1.954148474412199
+        },
+        "bucket_thresholds": {
+          "low_below": 0.7851702488931456,
+          "high_at_or_above": 0.9354063929977048
+        },
+        "n_validation": 230,
+        "n_release_selection": 128,
+        "release_selection_split": "confidence_release",
+        "test_used_for_release_selection": false
+      }
+    },
+    "GREEN_HOME": {
+      "status": "BLOCKED",
+      "coverage": {
+        "scored_customers": 20010,
+        "in_model_population": 9823,
+        "validated_confidence": 0,
+        "above_threshold": 1942
+      },
+      "candidate": {
+        "customer_id": "C10001",
+        "product": "GREEN_HOME",
+        "state": "RECOMMEND",
+        "feature_cutoff": "2026-06-30T00:00:00+00:00",
+        "propensity": {
+          "product": "GREEN_HOME",
+          "probability": "0.1473656848027416",
+          "model_version": "green_home_logreg_v1",
+          "calibration_version": "green_home_logreg_platt_v2_499192a15c57436c",
+          "reason_codes": [
+            "MORTGAGE_CUSTOMER",
+            "STATED_SUSTAINABILITY_PREFERENCE",
+            "HIGH_GAS_USE"
+          ],
+          "confidence": null,
+          "confidence_validated": false,
+          "confidence_limitation": "Confidence suppressed: validation has 198 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+          "synthetic_demo": true,
+          "in_model_population": true,
+          "population_exclusion": null,
+          "decision_threshold": "0.12163256624151807",
+          "source_result": {
+            "contract_version": "1.0.0",
+            "customer_id": "C10001",
+            "product": "GREEN_HOME",
+            "propensity": 0.1473656848027416,
+            "raw_score": 0.1602438116446628,
+            "model_type": "LOGISTIC",
+            "model_version": "green_home_logreg_v1",
+            "calibration_method": "platt",
+            "calibration_version": "green_home_logreg_platt_v2_499192a15c57436c",
+            "feature_version": "feature_v1",
+            "feature_cutoff": "2026-06-30",
+            "outcome_window_end": "2026-09-28",
+            "in_model_population": true,
+            "population_exclusion": null,
+            "reason_codes": [
+              "MORTGAGE_CUSTOMER",
+              "STATED_SUSTAINABILITY_PREFERENCE",
+              "HIGH_GAS_USE"
+            ],
+            "evidence": {
+              "has_mortgage": true,
+              "sustainability_preference": 4.0,
+              "gas_kwh_12m": 12560.400000000001
+            },
+            "confidence": {
+              "status": "SUPPRESSED",
+              "value": null,
+              "bucket": null,
+              "method_version": "conf_meta_v1",
+              "limitation": "Confidence suppressed: validation has 198 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required."
+            }
+          }
+        },
+        "reason_codes": [
+          "RELEVANCE_SUPPORTED",
+          "PROPENSITY_THRESHOLD_MET"
+        ],
+        "evidence": [
+          {
+            "code": "RELEVANCE_SUPPORTED",
+            "message": "Current product-specific evidence supports the relevance of this opportunity.",
+            "fields": [
+              "owns_home"
+            ],
+            "references": [
+              "customer360:feature_v1:2026-06-30:C10001:owns_home"
+            ]
+          },
+          {
+            "code": "PROPENSITY_THRESHOLD_MET",
+            "message": "The synthetic propensity probability meets the demo relevance threshold.",
+            "fields": [],
+            "references": []
+          }
+        ],
+        "impact": {
+          "contract_version": "1.0.0",
+          "product": "GREEN_HOME",
+          "status": "AVAILABLE",
+          "value": "493.1633663999999976536",
+          "units": "kg CO2e/year",
+          "baseline": {
+            "description": "UK annual forecast baseline; explicit estimated activity",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": "2806.433663999999976536"
+          },
+          "scenario": {
+            "description": "Explicit UK annual physical scenario",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": "2313.2702975999999788824"
+          },
+          "period": {
+            "start": "2026-06-30",
+            "end": "2027-06-30"
+          },
+          "feature_cutoff": "2026-06-30T00:00:00Z",
+          "synthetic_demo": true,
+          "factors": [
+            {
+              "factor_id": "electricity_kwh",
+              "value": "0.13096",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.13096",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 2: UK electricity",
+              "applicability": "Electricity: UK",
+              "source_id": "7_400_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3066",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "electricity_td_kwh",
+              "value": "0.01299",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.01299",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: Transmission and distribution",
+              "applicability": "Electricity: UK",
+              "source_id": "13_402_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3627",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "electricity_wtt_generation_kwh",
+              "value": "0.03682",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.03682",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: WTT- UK electricity",
+              "applicability": "Electricity: UK",
+              "source_id": "15_917_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3939",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "electricity_wtt_td_kwh",
+              "value": "0.00359",
+              "unit": "kg CO2e/kWh",
+              "original_value": "0.00359",
+              "original_unit": "kg CO2e/kWh",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: WTT- UK electricity",
+              "applicability": "Electricity: UK",
+              "source_id": "15_918_4000_5_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3940",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "gas_gross_kwh",
+              "value": "0.18231",
+              "unit": "kg CO2e/kWh (Gross CV)",
+              "original_value": "0.18231",
+              "original_unit": "kg CO2e/kWh (Gross CV)",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 1: Fuels",
+              "applicability": "Natural gas",
+              "source_id": "1_100_1004_6_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 83",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            },
+            {
+              "factor_id": "gas_wtt_gross_kwh",
+              "value": "0.03021",
+              "unit": "kg CO2e/kWh (Gross CV)",
+              "original_value": "0.03021",
+              "original_unit": "kg CO2e/kWh (Gross CV)",
+              "geography": "United Kingdom",
+              "fuel": null,
+              "activity_period": "2026",
+              "boundary": "Scope 3: WTT- fuels",
+              "applicability": "Natural gas",
+              "source_id": "11_100_1004_6_1",
+              "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+              "source_title": "Greenhouse gas reporting conversion factors 2026",
+              "source_publisher": "DESNZ",
+              "source_edition": "2026",
+              "source_locator": "Factors by Category row 3477",
+              "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+              "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts. Subset SHA-256: 2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+              "source_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+              "source_published_on": "2026-06-11",
+              "source_checked_on": "2026-10-10",
+              "current_edition": "2026",
+              "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+            }
+          ],
+          "factor_catalogue_version": "desnz_2026_v1",
+          "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+          "boundary": "CO2e: Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded",
+          "assumptions": [
+            "Synthetic Customer360 data; forecast assumptions must be explicit.",
+            "2026 UK factors held constant; this is not a measured historical reduction.",
+            "Source annual activities are held constant for the annual forecast comparison.",
+            "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+            "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+          ],
+          "exclusions": [
+            "No conversion of CO2e to CO2 or inferred physical efficiencies.",
+            "Modelled annual scenario, not a measured outcome or a guarantee.",
+            "Physical assumptions are supplied by the caller; their accuracy is not independently verified.",
+            "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+            "Reviewed 2026 factors are held constant; no future grid decarbonisation is assumed.",
+            "Official reporting convention excludes outside-of-scopes biogenic combustion CO2."
+          ],
+          "method_version": "uk-physical-scenarios-v1",
+          "method_release": "reviewed-desnz-2026-subset",
+          "evidence": [
+            {
+              "field": "intervention",
+              "value": "INSULATION",
+              "unit": null,
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:GREEN_HOME:intervention:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "annual_electricity_kwh",
+              "value": "3695.1272727272726",
+              "unit": "kWh/year",
+              "reference": "customer360:feature_v1:2026-06-30:C10001:energy.electricity_kwh_12m",
+              "basis": "SYNTHETIC_SOURCE_ESTIMATED",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2025-06-01",
+                "end": "2026-06-01"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "annual_gas_kwh_gross",
+              "value": "10000.0",
+              "unit": "kWh/year (Gross CV)",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:GREEN_HOME:annual_gas_kwh_gross:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "electricity_saving_fraction",
+              "value": "0.1",
+              "unit": "fraction",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:GREEN_HOME:electricity_saving_fraction:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "gas_saving_fraction",
+              "value": "0.2",
+              "unit": "fraction",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:GREEN_HOME:gas_saving_fraction:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "savings_evidence",
+              "value": "Chosen hypothetical insulation savings, not measured",
+              "unit": null,
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:GREEN_HOME:savings_evidence:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            }
+          ],
+          "issues": [],
+          "secondary_metrics": [],
+          "passport_id": "GP-4c2c7e7de1cc4f3583acda6a3f71518dad69085ad6b0957895eb8ab2a8cc48a0"
+        },
+        "rules_version": "trained-relevance-rules-v1"
+      },
+      "missing_features": [
+        "Confidence suppressed: validation has 198 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+        "No live-checked customer meets all trained confidence, evidence and impact gates."
+      ],
+      "confidence_limitation": "Confidence suppressed: validation has 198 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+      "live_checked_customers": 26,
+      "confidence_release_evidence": {
+        "surfaced": false,
+        "limitation": "Confidence suppressed: validation has 198 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+        "validation": {
+          "n": 95,
+          "passed": false,
+          "reasons": [
+            "Confidence suppressed: validation has 198 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required."
+          ],
+          "spearman": null,
+          "top30_error": null,
+          "bottom30_error": null,
+          "error_ratio": null,
+          "overall_error": null,
+          "deciles": [],
+          "criteria": {}
+        },
+        "ablation": [],
+        "coefficients": {},
+        "bucket_thresholds": {},
+        "n_validation": 198,
+        "n_release_selection": 95,
+        "release_selection_split": "confidence_release",
+        "test_used_for_release_selection": false
+      }
+    },
+    "SOLAR_FINANCE": {
+      "status": "BLOCKED",
+      "coverage": {
+        "scored_customers": 20010,
+        "in_model_population": 12591,
+        "validated_confidence": 0,
+        "above_threshold": 1868
+      },
+      "candidate": {
+        "customer_id": "C10002",
+        "product": "SOLAR_FINANCE",
+        "state": "RECOMMEND",
+        "feature_cutoff": "2026-06-30T00:00:00+00:00",
+        "propensity": {
+          "product": "SOLAR_FINANCE",
+          "probability": "0.22665967191045014",
+          "model_version": "solar_finance_logreg_v1",
+          "calibration_version": "solar_finance_logreg_platt_v2_f629e13f268d1f5d",
+          "reason_codes": [
+            "HOMEOWNER",
+            "HIGH_ELECTRICITY_USE",
+            "STATED_SUSTAINABILITY_PREFERENCE",
+            "RECENT_HOME_IMPROVEMENT_SPEND"
+          ],
+          "confidence": null,
+          "confidence_validated": false,
+          "confidence_limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 114 rows < 200",
+          "synthetic_demo": true,
+          "in_model_population": true,
+          "population_exclusion": null,
+          "decision_threshold": "0.13402650998439472",
+          "source_result": {
+            "contract_version": "1.0.0",
+            "customer_id": "C10002",
+            "product": "SOLAR_FINANCE",
+            "propensity": 0.22665967191045014,
+            "raw_score": 0.17322963381070045,
+            "model_type": "LOGISTIC",
+            "model_version": "solar_finance_logreg_v1",
+            "calibration_method": "platt",
+            "calibration_version": "solar_finance_logreg_platt_v2_f629e13f268d1f5d",
+            "feature_version": "feature_v1",
+            "feature_cutoff": "2026-06-30",
+            "outcome_window_end": "2026-09-28",
+            "in_model_population": true,
+            "population_exclusion": null,
+            "reason_codes": [
+              "HOMEOWNER",
+              "HIGH_ELECTRICITY_USE",
+              "STATED_SUSTAINABILITY_PREFERENCE",
+              "RECENT_HOME_IMPROVEMENT_SPEND"
+            ],
+            "evidence": {
+              "home_owner": true,
+              "electricity_kwh_12m": 5257.745454545455,
+              "sustainability_preference": 4.0,
+              "monthly_home_improvement_spend": 50.32333333333333
+            },
+            "confidence": {
+              "status": "SUPPRESSED",
+              "value": null,
+              "bucket": null,
+              "method_version": "conf_meta_v1",
+              "limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 114 rows < 200"
+            }
+          }
+        },
+        "reason_codes": [
+          "RELEVANCE_SUPPORTED",
+          "PROPENSITY_THRESHOLD_MET"
+        ],
+        "evidence": [
+          {
+            "code": "RELEVANCE_SUPPORTED",
+            "message": "Current product-specific evidence supports the relevance of this opportunity.",
+            "fields": [
+              "solar_installed",
+              "owns_home"
+            ],
+            "references": [
+              "customer360:feature_v1:2026-06-30:C10002:solar_installed",
+              "customer360:feature_v1:2026-06-30:C10002:owns_home"
+            ]
+          },
+          {
+            "code": "PROPENSITY_THRESHOLD_MET",
+            "message": "The synthetic propensity probability meets the demo relevance threshold.",
+            "fields": [],
+            "references": []
+          }
+        ],
+        "impact": {
+          "contract_version": "1.0.0",
+          "product": "SOLAR_FINANCE",
+          "status": "UNAVAILABLE",
+          "value": null,
+          "units": "kg CO2e/year",
+          "baseline": {
+            "description": "UK annual forecast baseline; explicit estimated activity",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": null
+          },
+          "scenario": {
+            "description": "Explicit UK annual physical scenario",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": null
+          },
+          "period": {
+            "start": "2026-06-30",
+            "end": "2027-06-30"
+          },
+          "feature_cutoff": "2026-06-30T00:00:00Z",
+          "synthetic_demo": true,
+          "factors": [],
+          "factor_catalogue_version": "desnz_2026_v1",
+          "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+          "boundary": "CO2e: Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded",
+          "assumptions": [
+            "Synthetic Customer360 data; forecast assumptions must be explicit.",
+            "2026 UK factors held constant; this is not a measured historical reduction.",
+            "Source annual activities are held constant for the annual forecast comparison.",
+            "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+            "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+          ],
+          "exclusions": [
+            "No conversion of CO2e to CO2 or inferred physical efficiencies."
+          ],
+          "method_version": "uk-physical-scenarios-v1",
+          "method_release": "reviewed-desnz-2026-subset",
+          "evidence": [
+            {
+              "field": "annual_electricity_kwh",
+              "value": "5257.745454545455",
+              "unit": "kWh/year",
+              "reference": "customer360:feature_v1:2026-06-30:C10002:energy.electricity_kwh_12m",
+              "basis": "SYNTHETIC_SOURCE_ESTIMATED",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2025-06-01",
+                "end": "2026-06-01"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "region",
+              "value": "South West",
+              "unit": null,
+              "reference": "customer360:feature_v1:2026-06-30:C10002:home.region",
+              "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            }
+          ],
+          "issues": [
+            {
+              "code": "MISSING_INPUT",
+              "field": "annual_generation_kwh",
+              "message": "Field required"
+            },
+            {
+              "code": "MISSING_INPUT",
+              "field": "self_consumption_fraction",
+              "message": "Field required"
+            },
+            {
+              "code": "MISSING_INPUT",
+              "field": "generation_evidence",
+              "message": "Field required"
+            },
+            {
+              "code": "MISSING_INPUT",
+              "field": "proposed_capacity_kw",
+              "message": "Field required"
+            }
+          ],
+          "secondary_metrics": [],
+          "passport_id": "GP-a076d54bbc22260f7d8deb06b05175b7dbf7811d8a9a8e353177bcf881199a8e"
+        },
+        "rules_version": "trained-relevance-rules-v1"
+      },
+      "missing_features": [
+        "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 114 rows < 200",
+        "Field required",
+        "Field required",
+        "Field required",
+        "Field required"
+      ],
+      "confidence_limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 114 rows < 200",
+      "live_checked_customers": 28,
+      "confidence_release_evidence": {
+        "surfaced": false,
+        "limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 114 rows < 200",
+        "validation": {
+          "n": 114,
+          "passed": false,
+          "reasons": [
+            "insufficient data: 114 rows < 200"
+          ],
+          "spearman": null,
+          "top30_error": null,
+          "bottom30_error": null,
+          "error_ratio": null,
+          "overall_error": null,
+          "deciles": [],
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          }
+        },
+        "ablation": [
+          {
+            "variant": "full",
+            "dropped": null,
+            "features": "margin,local_cal_error,ood_score,instability,recency_days",
+            "test_auc": 0.8641581632653061,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_margin",
+            "dropped": "margin",
+            "features": "local_cal_error,ood_score,instability,recency_days",
+            "test_auc": 0.8558673469387754,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_local_cal_error",
+            "dropped": "local_cal_error",
+            "features": "margin,ood_score,instability,recency_days",
+            "test_auc": 0.8654336734693877,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_ood_score",
+            "dropped": "ood_score",
+            "features": "margin,local_cal_error,instability,recency_days",
+            "test_auc": 0.8603316326530612,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_instability",
+            "dropped": "instability",
+            "features": "margin,local_cal_error,ood_score,recency_days",
+            "test_auc": 0.7838010204081632,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          },
+          {
+            "variant": "drop_recency_days",
+            "dropped": "recency_days",
+            "features": "margin,local_cal_error,ood_score,instability",
+            "test_auc": 0.8692602040816326,
+            "passed": false,
+            "spearman": null,
+            "top30_error": null,
+            "bottom30_error": null
+          }
+        ],
+        "coefficients": {
+          "margin": 0.33463581344529464,
+          "local_cal_error": -0.44175742817440217,
+          "ood_score": -0.05920108945216602,
+          "instability": -1.3516245141537326,
+          "recency_days": 0.126118642490295,
+          "intercept": 2.6377383308482805
+        },
+        "bucket_thresholds": {
+          "low_below": 0.8829260412316068,
+          "high_at_or_above": 0.9734813576833877
+        },
+        "n_validation": 249,
+        "n_release_selection": 114,
+        "release_selection_split": "confidence_release",
+        "test_used_for_release_selection": false
+      }
+    },
+    "PAPERLESS_BANKING": {
+      "status": "BLOCKED",
+      "coverage": {
+        "scored_customers": 20010,
+        "in_model_population": 3843,
+        "validated_confidence": 0,
+        "above_threshold": 2252
+      },
+      "candidate": {
+        "customer_id": "C10001",
+        "product": "PAPERLESS_BANKING",
+        "state": "RECOMMEND",
+        "feature_cutoff": "2026-06-30T00:00:00+00:00",
+        "propensity": {
+          "product": "PAPERLESS_BANKING",
+          "probability": "0.27137958034126414",
+          "model_version": "paperless_banking_logreg_v1",
+          "calibration_version": "paperless_banking_logreg_platt_v2_0096b0e8b327dad0",
+          "reason_codes": [
+            "HIGH_DIGITAL_ENGAGEMENT",
+            "STATED_SUSTAINABILITY_PREFERENCE"
+          ],
+          "confidence": null,
+          "confidence_validated": false,
+          "confidence_limitation": "Confidence suppressed: validation has 60 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+          "synthetic_demo": true,
+          "in_model_population": true,
+          "population_exclusion": null,
+          "decision_threshold": "0.1500423350194938",
+          "source_result": {
+            "contract_version": "1.0.0",
+            "customer_id": "C10001",
+            "product": "PAPERLESS_BANKING",
+            "propensity": 0.27137958034126414,
+            "raw_score": 0.20995827922653634,
+            "model_type": "LOGISTIC",
+            "model_version": "paperless_banking_logreg_v1",
+            "calibration_method": "platt",
+            "calibration_version": "paperless_banking_logreg_platt_v2_0096b0e8b327dad0",
+            "feature_version": "feature_v1",
+            "feature_cutoff": "2026-06-30",
+            "outcome_window_end": "2026-09-28",
+            "in_model_population": true,
+            "population_exclusion": null,
+            "reason_codes": [
+              "HIGH_DIGITAL_ENGAGEMENT",
+              "STATED_SUSTAINABILITY_PREFERENCE"
+            ],
+            "evidence": {
+              "app_logins_3m_avg": 13.5,
+              "sustainability_preference": 4.0
+            },
+            "confidence": {
+              "status": "SUPPRESSED",
+              "value": null,
+              "bucket": null,
+              "method_version": "conf_meta_v1",
+              "limitation": "Confidence suppressed: validation has 60 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required."
+            }
+          }
+        },
+        "reason_codes": [
+          "RELEVANCE_SUPPORTED",
+          "PROPENSITY_THRESHOLD_MET"
+        ],
+        "evidence": [
+          {
+            "code": "RELEVANCE_SUPPORTED",
+            "message": "Current product-specific evidence supports the relevance of this opportunity.",
+            "fields": [
+              "paperless_active",
+              "paper_statements"
+            ],
+            "references": [
+              "customer360:feature_v1:2026-06-30:C10001:paperless_active",
+              "customer360:feature_v1:2026-06-30:C10001:paper_statements"
+            ]
+          },
+          {
+            "code": "PROPENSITY_THRESHOLD_MET",
+            "message": "The synthetic propensity probability meets the demo relevance threshold.",
+            "fields": [],
+            "references": []
+          }
+        ],
+        "impact": {
+          "contract_version": "1.0.0",
+          "product": "PAPERLESS_BANKING",
+          "status": "UNAVAILABLE",
+          "value": null,
+          "units": "kg CO2e/year",
+          "baseline": {
+            "description": "UK annual forecast baseline; full source coverage where required; synthetic scenario quantities are not measured",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": null
+          },
+          "scenario": {
+            "description": "Explicit UK annual physical scenario",
+            "emissions_kg_co2": null,
+            "emissions_kg_co2e": null
+          },
+          "period": {
+            "start": "2026-06-30",
+            "end": "2027-06-30"
+          },
+          "feature_cutoff": "2026-06-30T00:00:00Z",
+          "synthetic_demo": true,
+          "factors": [],
+          "factor_catalogue_version": "desnz_2026_v1",
+          "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+          "boundary": "paper_statement_and_digital_delivery_comparison_not_established",
+          "assumptions": [
+            "Synthetic Customer360 data; forecast assumptions must be explicit.",
+            "2026 UK factors held constant; this is not a measured historical reduction.",
+            "Source annual activities are held constant for the annual forecast comparison.",
+            "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+            "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+          ],
+          "exclusions": [
+            "No conversion of CO2e to CO2 or inferred physical efficiencies."
+          ],
+          "method_version": "uk-physical-scenarios-v1",
+          "method_release": "reviewed-desnz-2026-subset",
+          "evidence": [
+            {
+              "field": "annual_statements",
+              "value": "11",
+              "unit": "statements/year",
+              "reference": "customer360:feature_v1:2026-06-30:C10001:digital.paper_statements_12m",
+              "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2025-06-01",
+                "end": "2026-06-01"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "sheets_per_statement",
+              "value": "2",
+              "unit": "sheets/statement",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:PAPERLESS_BANKING:sheets_per_statement:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            },
+            {
+              "field": "avoided_fraction",
+              "value": "1.0",
+              "unit": "fraction",
+              "reference": "synthetic-engineering-design-v1:engineering-demo-v1:PAPERLESS_BANKING:avoided_fraction:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+              "basis": "SYNTHETIC_SCENARIO",
+              "observed_at": "2026-06-30T00:00:00Z",
+              "period": {
+                "start": "2026-06-30",
+                "end": "2027-06-30"
+              },
+              "freshness": "point-in-time",
+              "conflicts": []
+            }
+          ],
+          "issues": [
+            {
+              "code": "INCOMPARABLE_BASELINE",
+              "field": "data_quality.digital_months_present",
+              "message": "Annual statement baseline requires all 12 months."
+            }
+          ],
+          "secondary_metrics": [],
+          "passport_id": "GP-590f1e62a7ca542917874f4d43b8b2a14a66159845b0fc988e8b85f8147a22c8"
+        },
+        "rules_version": "trained-relevance-rules-v1"
+      },
+      "missing_features": [
+        "Confidence suppressed: validation has 60 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+        "Annual statement baseline requires all 12 months."
+      ],
+      "confidence_limitation": "Confidence suppressed: validation has 60 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+      "live_checked_customers": 22,
+      "confidence_release_evidence": {
+        "surfaced": false,
+        "limitation": "Confidence suppressed: validation has 60 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.",
+        "validation": {
+          "n": 39,
+          "passed": false,
+          "reasons": [
+            "Confidence suppressed: validation has 60 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required."
+          ],
+          "spearman": null,
+          "top30_error": null,
+          "bottom30_error": null,
+          "error_ratio": null,
+          "overall_error": null,
+          "deciles": [],
+          "criteria": {}
+        },
+        "ablation": [],
+        "coefficients": {},
+        "bucket_thresholds": {},
+        "n_validation": 60,
+        "n_release_selection": 39,
+        "release_selection_split": "confidence_release",
+        "test_used_for_release_selection": false
+      }
+    }
+  },
+  "examples": {
+    "abstention": {
+      "customer_id": "C200002",
+      "product": "EV_FINANCE",
+      "state": "INSUFFICIENT_INFORMATION",
+      "feature_cutoff": "2026-06-30T00:00:00+00:00",
+      "propensity": {
+        "product": "EV_FINANCE",
+        "probability": null,
+        "model_version": "ev_finance_gbm_v1",
+        "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+        "reason_codes": [],
+        "confidence": null,
+        "confidence_validated": false,
+        "confidence_limitation": "Customer is outside the model population",
+        "synthetic_demo": true,
+        "in_model_population": false,
+        "population_exclusion": "ALREADY_HOLDS_PRODUCT",
+        "decision_threshold": "0.09994737816989047",
+        "source_result": {
+          "contract_version": "1.0.0",
+          "customer_id": "C200002",
+          "product": "EV_FINANCE",
+          "propensity": 0.0,
+          "raw_score": 0.0,
+          "model_type": "GRADIENT_BOOSTING",
+          "model_version": "ev_finance_gbm_v1",
+          "calibration_method": "platt",
+          "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+          "feature_version": "feature_v1",
+          "feature_cutoff": "2026-06-30",
+          "outcome_window_end": "2026-09-28",
+          "in_model_population": false,
+          "population_exclusion": "ALREADY_HOLDS_PRODUCT",
+          "reason_codes": [],
+          "evidence": {},
+          "confidence": {
+            "status": "SUPPRESSED",
+            "value": null,
+            "bucket": null,
+            "method_version": "none",
+            "limitation": "Customer is outside the model population"
+          }
+        }
+      },
+      "reason_codes": [
+        "OUT_OF_DISTRIBUTION"
+      ],
+      "evidence": [
+        {
+          "code": "OUT_OF_DISTRIBUTION",
+          "message": "The snapshot is outside the supported model population; relevance is not determined.",
+          "fields": [],
+          "references": []
+        }
+      ],
+      "impact": {
+        "contract_version": "1.0.0",
+        "product": "EV_FINANCE",
+        "status": "UNAVAILABLE",
+        "value": null,
+        "units": "kg CO2e/year",
+        "baseline": {
+          "description": "UK annual forecast baseline; full source coverage where required; synthetic scenario quantities are not measured",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "scenario": {
+          "description": "Explicit UK annual physical scenario",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "period": {
+          "start": "2026-06-30",
+          "end": "2027-06-30"
+        },
+        "feature_cutoff": "2026-06-30T00:00:00Z",
+        "synthetic_demo": true,
+        "factors": [],
+        "factor_catalogue_version": "desnz_2026_v1",
+        "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+        "boundary": "CO2e: Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded",
+        "assumptions": [
+          "Synthetic Customer360 data; forecast assumptions must be explicit.",
+          "2026 UK factors held constant; this is not a measured historical reduction.",
+          "Source annual activities are held constant for the annual forecast comparison.",
+          "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+          "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+        ],
+        "exclusions": [
+          "No conversion of CO2e to CO2 or inferred physical efficiencies."
+        ],
+        "method_version": "uk-physical-scenarios-v1",
+        "method_release": "reviewed-desnz-2026-subset",
+        "evidence": [
+          {
+            "field": "annual_mileage_km",
+            "value": "15480.0",
+            "unit": "km/year",
+            "reference": "customer360:feature_v1:2026-06-30:C200002:vehicle.annual_mileage_km",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2026-02-22T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "fuel_type",
+            "value": "EV",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C200002:vehicle.fuel_type",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2026-02-22T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "mileage_evidence",
+            "value": "OBSERVED",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C200002:vehicle.mileage_is_estimated",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2026-02-22T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          }
+        ],
+        "issues": [
+          {
+            "code": "INVALID_INPUT",
+            "field": "fuel_type",
+            "message": "Input should be 'PETROL' or 'DIESEL'"
+          },
+          {
+            "code": "MISSING_INPUT",
+            "field": "ice_litres_per_100km",
+            "message": "Field required"
+          },
+          {
+            "code": "MISSING_INPUT",
+            "field": "ev_kwh_per_100km",
+            "message": "Field required"
+          },
+          {
+            "code": "MISSING_INPUT",
+            "field": "charging_efficiency",
+            "message": "Field required"
+          }
+        ],
+        "secondary_metrics": [],
+        "passport_id": "GP-cb72ee7b0acb1dfe8f948062840a7970f37344e6e6afc87c66070fc2cdc5b6da"
+      },
+      "rules_version": "trained-relevance-rules-v1"
+    },
+    "conflict": {
+      "customer_id": "C10004",
+      "product": "EV_FINANCE",
+      "state": "CONFLICT_REQUIRES_REVIEW",
+      "feature_cutoff": "2026-06-30T00:00:00+00:00",
+      "propensity": {
+        "product": "EV_FINANCE",
+        "probability": "0.08896571858444673",
+        "model_version": "ev_finance_gbm_v1",
+        "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+        "reason_codes": [
+          "HIGH_FUEL_SPEND",
+          "HIGH_ANNUAL_MILEAGE"
+        ],
+        "confidence": null,
+        "confidence_validated": false,
+        "confidence_limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200",
+        "synthetic_demo": true,
+        "in_model_population": true,
+        "population_exclusion": null,
+        "decision_threshold": "0.09994737816989047",
+        "source_result": {
+          "contract_version": "1.0.0",
+          "customer_id": "C10004",
+          "product": "EV_FINANCE",
+          "propensity": 0.08896571858444673,
+          "raw_score": 0.0715717226266861,
+          "model_type": "GRADIENT_BOOSTING",
+          "model_version": "ev_finance_gbm_v1",
+          "calibration_method": "platt",
+          "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+          "feature_version": "feature_v1",
+          "feature_cutoff": "2026-06-30",
+          "outcome_window_end": "2026-09-28",
+          "in_model_population": true,
+          "population_exclusion": null,
+          "reason_codes": [
+            "HIGH_FUEL_SPEND",
+            "HIGH_ANNUAL_MILEAGE"
+          ],
+          "evidence": {
+            "monthly_fuel_spend": 183.88333333333333,
+            "annual_mileage_km": 16000.0
+          },
+          "confidence": {
+            "status": "SUPPRESSED",
+            "value": null,
+            "bucket": null,
+            "method_version": "conf_meta_v1",
+            "limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200"
+          }
+        }
+      },
+      "reason_codes": [
+        "EVIDENCE_CONFLICT"
+      ],
+      "evidence": [
+        {
+          "code": "EVIDENCE_CONFLICT",
+          "message": "Relevant evidence has an unresolved conflict and requires review.",
+          "fields": [],
+          "references": []
+        }
+      ],
+      "impact": {
+        "contract_version": "1.0.0",
+        "product": "EV_FINANCE",
+        "status": "UNAVAILABLE",
+        "value": null,
+        "units": "kg CO2e/year",
+        "baseline": {
+          "description": "UK annual forecast baseline; full source coverage where required; synthetic scenario quantities are not measured",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "scenario": {
+          "description": "Explicit UK annual physical scenario",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "period": {
+          "start": "2026-06-30",
+          "end": "2027-06-30"
+        },
+        "feature_cutoff": "2026-06-30T00:00:00Z",
+        "synthetic_demo": true,
+        "factors": [],
+        "factor_catalogue_version": "desnz_2026_v1",
+        "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+        "boundary": "CO2e: Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded",
+        "assumptions": [
+          "Synthetic Customer360 data; forecast assumptions must be explicit.",
+          "2026 UK factors held constant; this is not a measured historical reduction.",
+          "Source annual activities are held constant for the annual forecast comparison.",
+          "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+          "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+        ],
+        "exclusions": [
+          "No conversion of CO2e to CO2 or inferred physical efficiencies."
+        ],
+        "method_version": "uk-physical-scenarios-v1",
+        "method_release": "reviewed-desnz-2026-subset",
+        "evidence": [
+          {
+            "field": "annual_mileage_km",
+            "value": "16000.0",
+            "unit": "km/year",
+            "reference": "customer360:feature_v1:2026-06-30:C10004:vehicle.annual_mileage_km",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2025-09-14T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "fuel_type",
+            "value": "EV",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C10004:vehicle.fuel_type",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2025-09-14T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "ice_litres_per_100km",
+            "value": "6.5",
+            "unit": "litres/100km",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ice_litres_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "ev_kwh_per_100km",
+            "value": "18.0",
+            "unit": "kWh/100km",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ev_kwh_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "charging_efficiency",
+            "value": "0.9",
+            "unit": "fraction",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:charging_efficiency:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "mileage_evidence",
+            "value": "OBSERVED",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C10004:vehicle.mileage_is_estimated",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2025-09-14T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          }
+        ],
+        "issues": [
+          {
+            "code": "INVALID_INPUT",
+            "field": "fuel_type",
+            "message": "Input should be 'PETROL' or 'DIESEL'"
+          }
+        ],
+        "secondary_metrics": [],
+        "passport_id": "GP-0ac5ee9ba6490eb848fa0aff10aad83e08b8f0c4c711ddc1e071fbf781394279"
+      },
+      "rules_version": "trained-relevance-rules-v1"
+    },
+    "already_adopted": {
+      "customer_id": "C10006",
+      "product": "EV_FINANCE",
+      "state": "NOT_APPLICABLE",
+      "feature_cutoff": "2026-06-30T00:00:00+00:00",
+      "propensity": {
+        "product": "EV_FINANCE",
+        "probability": null,
+        "model_version": "ev_finance_gbm_v1",
+        "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+        "reason_codes": [],
+        "confidence": null,
+        "confidence_validated": false,
+        "confidence_limitation": "Customer is outside the model population",
+        "synthetic_demo": true,
+        "in_model_population": false,
+        "population_exclusion": "ALREADY_HOLDS_PRODUCT",
+        "decision_threshold": "0.09994737816989047",
+        "source_result": {
+          "contract_version": "1.0.0",
+          "customer_id": "C10006",
+          "product": "EV_FINANCE",
+          "propensity": 0.0,
+          "raw_score": 0.0,
+          "model_type": "GRADIENT_BOOSTING",
+          "model_version": "ev_finance_gbm_v1",
+          "calibration_method": "platt",
+          "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+          "feature_version": "feature_v1",
+          "feature_cutoff": "2026-06-30",
+          "outcome_window_end": "2026-09-28",
+          "in_model_population": false,
+          "population_exclusion": "ALREADY_HOLDS_PRODUCT",
+          "reason_codes": [],
+          "evidence": {},
+          "confidence": {
+            "status": "SUPPRESSED",
+            "value": null,
+            "bucket": null,
+            "method_version": "none",
+            "limitation": "Customer is outside the model population"
+          }
+        }
+      },
+      "reason_codes": [
+        "ALREADY_ADOPTED"
+      ],
+      "evidence": [
+        {
+          "code": "ALREADY_ADOPTED",
+          "message": "Current evidence records that the customer already uses this product or improvement.",
+          "fields": [],
+          "references": []
+        }
+      ],
+      "impact": {
+        "contract_version": "1.0.0",
+        "product": "EV_FINANCE",
+        "status": "UNAVAILABLE",
+        "value": null,
+        "units": "kg CO2e/year",
+        "baseline": {
+          "description": "UK annual forecast baseline; full source coverage where required; synthetic scenario quantities are not measured",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "scenario": {
+          "description": "Explicit UK annual physical scenario",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "period": {
+          "start": "2026-06-30",
+          "end": "2027-06-30"
+        },
+        "feature_cutoff": "2026-06-30T00:00:00Z",
+        "synthetic_demo": true,
+        "factors": [],
+        "factor_catalogue_version": "desnz_2026_v1",
+        "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+        "boundary": "CO2e: Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded",
+        "assumptions": [
+          "Synthetic Customer360 data; forecast assumptions must be explicit.",
+          "2026 UK factors held constant; this is not a measured historical reduction.",
+          "Source annual activities are held constant for the annual forecast comparison.",
+          "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+          "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+        ],
+        "exclusions": [
+          "No conversion of CO2e to CO2 or inferred physical efficiencies."
+        ],
+        "method_version": "uk-physical-scenarios-v1",
+        "method_release": "reviewed-desnz-2026-subset",
+        "evidence": [
+          {
+            "field": "annual_mileage_km",
+            "value": "12000.0",
+            "unit": "km/year",
+            "reference": "customer360:feature_v1:2026-06-30:C10006:vehicle.annual_mileage_km",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2024-03-10T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "fuel_type",
+            "value": "EV",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C10006:vehicle.fuel_type",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2024-03-10T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "ice_litres_per_100km",
+            "value": "6.5",
+            "unit": "litres/100km",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ice_litres_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "ev_kwh_per_100km",
+            "value": "18.0",
+            "unit": "kWh/100km",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ev_kwh_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "charging_efficiency",
+            "value": "0.9",
+            "unit": "fraction",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:charging_efficiency:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "mileage_evidence",
+            "value": "OBSERVED",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C10006:vehicle.mileage_is_estimated",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2024-03-10T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          }
+        ],
+        "issues": [
+          {
+            "code": "INVALID_INPUT",
+            "field": "fuel_type",
+            "message": "Input should be 'PETROL' or 'DIESEL'"
+          }
+        ],
+        "secondary_metrics": [],
+        "passport_id": "GP-bb1a0a62f1160bc9cbb79664fbac0ebe2075b49aac3118bdc29576e466e7a5a3"
+      },
+      "rules_version": "trained-relevance-rules-v1"
+    },
+    "below_threshold": {
+      "customer_id": "C10002",
+      "product": "EV_FINANCE",
+      "state": "DO_NOT_RECOMMEND",
+      "feature_cutoff": "2026-06-30T00:00:00+00:00",
+      "propensity": {
+        "product": "EV_FINANCE",
+        "probability": "0.08974995414739942",
+        "model_version": "ev_finance_gbm_v1",
+        "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+        "reason_codes": [
+          "STATED_SUSTAINABILITY_PREFERENCE"
+        ],
+        "confidence": null,
+        "confidence_validated": false,
+        "confidence_limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200",
+        "synthetic_demo": true,
+        "in_model_population": true,
+        "population_exclusion": null,
+        "decision_threshold": "0.09994737816989047",
+        "source_result": {
+          "contract_version": "1.0.0",
+          "customer_id": "C10002",
+          "product": "EV_FINANCE",
+          "propensity": 0.08974995414739942,
+          "raw_score": 0.07288188487291336,
+          "model_type": "GRADIENT_BOOSTING",
+          "model_version": "ev_finance_gbm_v1",
+          "calibration_method": "platt",
+          "calibration_version": "ev_finance_gbm_platt_v2_6c65431d4157428a",
+          "feature_version": "feature_v1",
+          "feature_cutoff": "2026-06-30",
+          "outcome_window_end": "2026-09-28",
+          "in_model_population": true,
+          "population_exclusion": null,
+          "reason_codes": [
+            "STATED_SUSTAINABILITY_PREFERENCE"
+          ],
+          "evidence": {
+            "sustainability_preference": 4.0
+          },
+          "confidence": {
+            "status": "SUPPRESSED",
+            "value": null,
+            "bucket": null,
+            "method_version": "conf_meta_v1",
+            "limitation": "Confidence did not show materially lower held-out error at higher confidence; not shown. insufficient data: 128 rows < 200"
+          }
+        }
+      },
+      "reason_codes": [
+        "PROPENSITY_BELOW_THRESHOLD"
+      ],
+      "evidence": [
+        {
+          "code": "PROPENSITY_BELOW_THRESHOLD",
+          "message": "The synthetic propensity probability is below the demo relevance threshold.",
+          "fields": [],
+          "references": []
+        }
+      ],
+      "impact": {
+        "contract_version": "1.0.0",
+        "product": "EV_FINANCE",
+        "status": "UNAVAILABLE",
+        "value": null,
+        "units": "kg CO2e/year",
+        "baseline": {
+          "description": "UK annual forecast baseline; full source coverage where required; synthetic scenario quantities are not measured",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "scenario": {
+          "description": "Explicit UK annual physical scenario",
+          "emissions_kg_co2": null,
+          "emissions_kg_co2e": null
+        },
+        "period": {
+          "start": "2026-06-30",
+          "end": "2027-06-30"
+        },
+        "feature_cutoff": "2026-06-30T00:00:00Z",
+        "synthetic_demo": true,
+        "factors": [],
+        "factor_catalogue_version": "desnz_2026_v1",
+        "factor_catalogue_sha256": "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d",
+        "boundary": "CO2e: Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded",
+        "assumptions": [
+          "Synthetic Customer360 data; forecast assumptions must be explicit.",
+          "2026 UK factors held constant; this is not a measured historical reduction.",
+          "Source annual activities are held constant for the annual forecast comparison.",
+          "Electricity baseline is an estimated annual forecast from 11 completed available months; annualisation factor 1.0909090909090908; not measured annual consumption.",
+          "Source snapshot generated at 2026-10-10T09:00:00; feature version feature_v1."
+        ],
+        "exclusions": [
+          "No conversion of CO2e to CO2 or inferred physical efficiencies."
+        ],
+        "method_version": "uk-physical-scenarios-v1",
+        "method_release": "reviewed-desnz-2026-subset",
+        "evidence": [
+          {
+            "field": "annual_mileage_km",
+            "value": "7000.0",
+            "unit": "km/year",
+            "reference": "customer360:feature_v1:2026-06-30:C10002:vehicle.annual_mileage_km",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2025-11-03T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "fuel_type",
+            "value": "HYBRID",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C10002:vehicle.fuel_type",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2025-11-03T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "ice_litres_per_100km",
+            "value": "6.5",
+            "unit": "litres/100km",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ice_litres_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "ev_kwh_per_100km",
+            "value": "18.0",
+            "unit": "kWh/100km",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:ev_kwh_per_100km:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "charging_efficiency",
+            "value": "0.9",
+            "unit": "fraction",
+            "reference": "synthetic-engineering-design-v1:engineering-demo-v1:EV_FINANCE:charging_efficiency:effective=2026-06-30:available=2026-06-30:Explicit chosen hypothetical engineering assumption; not measured or inferred from spend.",
+            "basis": "SYNTHETIC_SCENARIO",
+            "observed_at": "2026-06-30T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          },
+          {
+            "field": "mileage_evidence",
+            "value": "OBSERVED",
+            "unit": null,
+            "reference": "customer360:feature_v1:2026-06-30:C10002:vehicle.mileage_is_estimated",
+            "basis": "SYNTHETIC_SOURCE_ACTIVITY",
+            "observed_at": "2025-11-03T00:00:00Z",
+            "period": {
+              "start": "2026-06-30",
+              "end": "2027-06-30"
+            },
+            "freshness": "point-in-time",
+            "conflicts": []
+          }
+        ],
+        "issues": [
+          {
+            "code": "INVALID_INPUT",
+            "field": "fuel_type",
+            "message": "Input should be 'PETROL' or 'DIESEL'"
+          }
+        ],
+        "secondary_metrics": [],
+        "passport_id": "GP-67734e1cb92e732dd4c3ad8f74aa5e90e923d61b2ba1ef864f655d386b2b17a5"
+      },
+      "rules_version": "trained-relevance-rules-v1"
+    }
+  },
+  "missing_features": [
+    "No live-checked suppressed example found."
+  ],
+  "limitation": "Synthetic model evidence only. No credit eligibility, approval, marketing permission or realized carbon saving is established.",
+  "status": "BLOCKED",
+  "report_sha256": "a57bb0effa2ca19b6d8d31146b73b61794706c4a84094b3a186b1793a7d1b55f"
+}

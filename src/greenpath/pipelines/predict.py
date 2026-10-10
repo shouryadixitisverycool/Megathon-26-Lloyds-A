@@ -21,7 +21,7 @@ import pandas as pd
 
 from greenpath import config
 from greenpath.contracts import ConfidenceStatus, CustomerSnapshot, Product
-from greenpath.pipelines.run import load_tables, log, write_json
+from greenpath.pipelines.run import cutoff_context, load_tables, log, write_json
 from greenpath.pipelines.runtime import PRODUCTS, Runtime, load_runtime
 from greenpath.pipelines.split import make_labels
 from greenpath.trust.provider import trust_frame
@@ -59,9 +59,9 @@ def score_snapshots(rt: Runtime, snaps: list[CustomerSnapshot], cutoff: date) ->
     return pd.concat(parts, ignore_index=True)
 
 
-def _context(tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
+def _context(tables: dict[str, pd.DataFrame], cutoff: date) -> pd.DataFrame:
     """Aggregate-only context. age_band is used for portfolio aggregates/fairness audit, never as a feature."""
-    return tables["customers"].set_index("customer_id")[["region", "segment", "age_band", "home_owner"]]
+    return cutoff_context(tables, cutoff)[["region", "segment", "age_band", "home_owner"]]
 
 
 def stage_predict() -> None:
@@ -69,20 +69,39 @@ def stage_predict() -> None:
     tables = load_tables(config.RAW_DIR)
     rt = load_runtime(cutoffs=sorted(set(config.TREND_CUTOFFS) | {config.FEATURE_CUTOFF}))
     split = pd.read_csv(config.PROCESSED_DIR / "split_manifest.csv", dtype=str).set_index("customer_id")["split"]
-    ctx = _context(tables)
 
     # 1. portfolio + monthly trend scores (every customer, each month-end cutoff)
     frames = []
     for cutoff in config.TREND_CUTOFFS:
-        snaps = rt.snapshots.snapshots(cutoff)
+        ctx = _context(tables, cutoff)
+        snaps = [s for s in rt.snapshots.snapshots(cutoff) if s.customer_id in ctx.index]
         scored = score_snapshots(rt, snaps, cutoff)
-        labels = make_labels(tables["customer_outcomes"], [s.customer_id for s in snaps], cutoff)
+        labels = make_labels(tables["customer_outcomes"], [s.customer_id for s in snaps], cutoff,
+                             coverage=tables.get("outcome_observation"))
         long = labels.reset_index().melt(id_vars="customer_id", var_name="product", value_name="observed_adoption_90d")
-        frames.append(scored.merge(long, on=["customer_id", "product"], how="left"))
+        cohort = scored.merge(long, on=["customer_id", "product"], how="left")
+        cohort["outcome_observed"] = cohort["observed_adoption_90d"].notna()
+        cohort["outcome_coverage_mode"] = ("EXPLICIT" if "outcome_observation" in tables
+                                           else "COMPLETE_SIMULATION_ASSUMPTION")
+        frames.append(cohort.merge(ctx, left_on="customer_id", right_index=True, how="left"))
         log(f"scored {len(snaps)} customers at {cutoff}")
-    portfolio = pd.concat(frames, ignore_index=True).merge(ctx, left_on="customer_id", right_index=True, how="left")
+    portfolio = pd.concat(frames, ignore_index=True)
     portfolio["split"] = portfolio["customer_id"].map(split)
     portfolio.to_parquet(PORTFOLIO_PATH)
+    canonical = portfolio[portfolio["cutoff"] == pd.Timestamp(config.FEATURE_CUTOFF)]
+    availability = {}
+    for cohort, rows in (("population", canonical), ("demo", canonical[canonical["split"] == "demo"])):
+        availability[cohort] = {}
+        for product, group in [("ALL", rows), *list(rows.groupby("product"))]:
+            eligible = group[group["in_model_population"]]
+            validated = int((eligible["confidence_status"] == ConfidenceStatus.VALIDATED.value).sum())
+            availability[cohort][product] = {
+                "n_total": len(group), "n_eligible": len(eligible), "n_validated": validated,
+                "validated_share_eligible": validated / len(eligible) if len(eligible) else None,
+                "validated_share_total": validated / len(group) if len(group) else None,
+                "status_counts": group["confidence_status"].value_counts().to_dict(),
+            }
+    write_json(config.REPORTS_DIR / "confidence_availability.json", availability)
 
     # 2. held-out test predictions at the canonical cutoff
     current = portfolio[(portfolio["cutoff"] == pd.Timestamp(config.FEATURE_CUTOFF)) & (portfolio["split"] == "test")]
@@ -127,7 +146,7 @@ def _to_sql(df: pd.DataFrame, name: str, con) -> None:
 def stage_demo() -> None:
     """Terminal walk-through of the demo personas (Agent A has no UI; Agent B owns the app)."""
     rt = load_runtime()
-    print("GreenPath - Agent A structured outputs for demo personas (synthetic data)\n")
+    print("Greenr - Agent A structured outputs for demo personas (synthetic data)\n")
     print(f"Data cutoff {config.FEATURE_CUTOFF} | outcome window to {config.OUTCOME_WINDOW_END} | "
           f"prediction {config.PREDICTION_TIMESTAMP:%Y-%m-%d}\n")
     for cid in config.DEMO_PERSONA_IDS:

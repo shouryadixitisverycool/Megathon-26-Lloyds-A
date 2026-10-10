@@ -280,6 +280,32 @@
           ],
           "default": null,
           "title": "Paper Statements 3M"
+        },
+        "paper_statements_post_paperless_3m": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Paper Statements Post Paperless 3M"
+        },
+        "paperless_effective_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Paperless Effective At"
         }
       },
       "title": "DigitalFacts",
@@ -287,8 +313,33 @@
     },
     "EnergyFacts": {
       "additionalProperties": false,
-      "description": "Metered household energy over the 12 months up to the cutoff.",
+      "description": "Annualised household energy from observed months, not necessarily metered 12m totals.",
       "properties": {
+        "electricity_annualisation_factor": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Electricity Annualisation Factor"
+        },
+        "electricity_is_estimated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Electricity Is Estimated"
+        },
         "electricity_kwh_12m": {
           "anyOf": [
             {
@@ -301,6 +352,33 @@
           ],
           "default": null,
           "title": "Electricity Kwh 12M"
+        },
+        "electricity_kwh_observed": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Electricity Kwh Observed"
+        },
+        "electricity_months_present": {
+          "anyOf": [
+            {
+              "maximum": 12,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Electricity Months Present"
         },
         "electricity_trend": {
           "anyOf": [
@@ -321,6 +399,31 @@
           "title": "Energy Months Present",
           "type": "integer"
         },
+        "gas_annualisation_factor": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gas Annualisation Factor"
+        },
+        "gas_is_estimated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gas Is Estimated"
+        },
         "gas_kwh_12m": {
           "anyOf": [
             {
@@ -333,6 +436,33 @@
           ],
           "default": null,
           "title": "Gas Kwh 12M"
+        },
+        "gas_kwh_observed": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gas Kwh Observed"
+        },
+        "gas_months_present": {
+          "anyOf": [
+            {
+              "maximum": 12,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gas Months Present"
         }
       },
       "title": "EnergyFacts",
@@ -619,6 +749,32 @@
           "default": null,
           "title": "Fuel Spend 90D Monthly Avg"
         },
+        "fuel_spend_post_vehicle_state_90d": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fuel Spend Post Vehicle State 90D"
+        },
+        "fuel_txn_count_post_vehicle_state_90d": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fuel Txn Count Post Vehicle State 90D"
+        },
         "fuel_txn_frequency_90d": {
           "anyOf": [
             {
@@ -798,6 +954,19 @@
           ],
           "default": null,
           "title": "Record Updated At"
+        },
+        "state_effective_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "State Effective At"
         },
         "vehicle_age_years": {
           "anyOf": [

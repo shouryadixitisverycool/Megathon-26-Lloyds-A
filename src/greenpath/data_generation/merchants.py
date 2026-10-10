@@ -52,7 +52,6 @@ _CATALOGUE: list[tuple[str, str, str, bool]] = [
     ("SSE ELECTRICITY", "ELECTRICITY", "dd", False),
     ("EON NEXT ELEC", "ELECTRICITY", "dd", False),
     ("OVO ELECTRICITY", "ELECTRICITY", "dd", False),
-    ("GOOD ENERGY", "ELECTRICITY", "dd", False),
     ("ECOTRICITY ELEC", "ELECTRICITY", "dd", False),
     ("BRIGHTSIDE ELECTRIC CO", "ELECTRICITY", "dd", False),
     ("RIVERSIDE POWER SUPPLY", "ELECTRICITY", "dd", True),
@@ -65,7 +64,8 @@ _CATALOGUE: list[tuple[str, str, str, bool]] = [
     ("CALOR GAS", "GAS", "dd", False),
     ("FLOGAS", "GAS", "dd", False),
     ("NORTHERN GAS SUPPLY", "GAS", "dd", True),
-    # ---- UTILITIES (dual fuel + water) ----
+    # ---- UTILITIES (unspecified supply, dual fuel + water) ----
+    ("GOOD ENERGY", "UTILITIES", "dd", False),
     ("OCTOPUS ENERGY", "UTILITIES", "dd", False),
     ("OVO ENERGY", "UTILITIES", "dd", False),
     ("EDF ENERGY DUAL FUEL", "UTILITIES", "dd", False),

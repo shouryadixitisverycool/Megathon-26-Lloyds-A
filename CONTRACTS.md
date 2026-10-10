@@ -1,4 +1,4 @@
-# GreenPath contracts — v1.0.0 (canonical, owned by Agent A)
+# Greenr contracts — v1.0.0 (canonical, owned by Agent A)
 
 Source of truth: `src/greenpath/contracts/` (Pydantic v2, frozen, `extra="forbid"`) and `src/greenpath/ports.py`.
 JSON Schemas: `src/greenpath/contracts/schemas/*.json` (regenerate with `make schemas`).

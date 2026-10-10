@@ -150,7 +150,8 @@ def make_tables() -> tuple[dict[str, pd.DataFrame], pd.DataFrame]:
     txn_df["available_at"] = txn_df["date"]
     tables["transactions"] = txn_df[list(schemas.TRANSACTIONS.columns)].copy()
     for name, schema in schemas.RAW_TABLES.items():
-        schemas.validate_table(tables[name], schema)
+        if name in tables:
+            schemas.validate_table(tables[name], schema)
     return tables, txn_df
 
 

@@ -18,6 +18,7 @@ from greenpath.extensions.contracts import (
 )
 from greenpath.extensions.service import ExtensionService, communication, dump, prioritise
 from greenpath.extensions.store import MemoryStore
+from greenpath.extensions.optional_models import GreenPurpose, OPPORTUNITIES, OptionalModelLoader, unavailable
 
 SENSITIVITY_FIELDS = {
     "annual_mileage_km": (0, 200000, "contextual"),
@@ -36,6 +37,8 @@ def attach_extensions(application, memory_path: Path | None = None):
                                state.memory_store if memory_path is None else MemoryStore(memory_path))
     state.extension_service = service
     router = APIRouter()
+    optional_loader = OptionalModelLoader()
+    state.optional_model_loader = optional_loader
 
     def row(customer_id, product):
         try:
@@ -52,6 +55,29 @@ def attach_extensions(application, memory_path: Path | None = None):
     @router.post("/recommend")
     def recommend(request: CustomerRequest):
         return row(request.customer_id, request.product)
+
+    @router.get("/customers/{customer_id}/optional-opportunities")
+    def optional_opportunities(customer_id: str, purpose: GreenPurpose | None = None):
+        with service.store.transaction():
+            snap = customer(customer_id)
+            if snap is None:
+                raise HTTPException(404, "Customer not found")
+            source = snap.source_snapshot
+            provider, status = (None, "NOT_AVAILABLE") if source is None else optional_loader.load()
+            conflict = snap.trust.status in {"CONFLICT", "OOD"} or any(
+                evidence.conflicts for evidence in snap.features.values()) or any(
+                issue.severity == "HIGH" for issue in snap.trust.issues)
+            outputs = []
+            for name in OPPORTUNITIES:
+                declared = purpose.value if purpose is not None and name == "GREEN_LOANS" else None
+                if provider is None:
+                    result = unavailable(name, status, "TRAINED_SOURCE_REQUIRED" if source is None else "OPTIONAL_" + status, declared)
+                elif conflict:
+                    result = unavailable(name, "INSUFFICIENT_INFORMATION", "TRUSTED_RECORD_CONFLICT", declared)
+                else:
+                    result = provider.score(source, name, declared)
+                outputs.append(result)
+            return {"customer_id": customer_id, "experimental": True, "opportunities": outputs}
 
     @router.post("/explain")
     def explain(request: CustomerRequest):

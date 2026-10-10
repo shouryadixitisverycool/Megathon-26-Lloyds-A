@@ -57,6 +57,8 @@ class MemoryStore:
                 yield
             # Entries are known durable only after the outer transaction commits.
             self._recommendations.update(pending)
+            while len(self._recommendations) > 256:
+                self._recommendations.pop(next(iter(self._recommendations)))
         finally:
             self._local.connection = None
             self._local.recommendations = None
@@ -122,19 +124,26 @@ class MemoryStore:
         if cached is not None:
             if cached[0] != evidence:
                 raise ValueError("Decision ID already belongs to different immutable evidence")
-            return cached[1].model_copy(deep=True)
+            return recommendation.__class__.model_validate(cached[1].model_dump(mode="python"))
         with self.connect() as db:
-            db.execute("INSERT OR IGNORE INTO decisions VALUES (?,?,?,?,?)", (
+            inserted = db.execute("INSERT OR IGNORE INTO decisions VALUES (?,?,?,?,?)", (
                 payload["decision_id"], payload["customer_id"], payload["product"],
                 payload["timestamp"], json.dumps(payload, sort_keys=True),
-            ))
-            stored = db.execute("SELECT payload FROM decisions WHERE id=?", (payload["decision_id"],)).fetchone()
-            if decision_evidence(json.loads(stored[0])) != evidence:
-                raise ValueError("Decision ID already belongs to different immutable evidence")
-            result = recommendation.__class__.model_validate_json(stored[0])
+            )).rowcount
+            if inserted:
+                # The exact serialized payload was just inserted; detach cache ownership.
+                result = recommendation.__class__.model_validate(payload)
+            else:
+                stored = db.execute("SELECT payload FROM decisions WHERE id=?", (payload["decision_id"],)).fetchone()
+                if decision_evidence(json.loads(stored[0])) != evidence:
+                    raise ValueError("Decision ID already belongs to different immutable evidence")
+                result = recommendation.__class__.model_validate_json(stored[0])
         target = pending if pending is not None else self._recommendations
         target[payload["decision_id"]] = (evidence, result)
-        return result.model_copy(deep=True)
+        # Provenance can include large source snapshots; do not retain the full cohort.
+        if len(target) > 256:
+            target.pop(next(iter(target)))
+        return recommendation.__class__.model_validate(result.model_dump(mode="python"))
 
     def get_recommendation(self, decision_id):
         with self.connect() as db:

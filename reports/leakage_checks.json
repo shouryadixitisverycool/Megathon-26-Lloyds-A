@@ -2,7 +2,7 @@
   "point_in_time_rebuild": {
     "status": "PASS",
     "features_compared": 84,
-    "customers_compared": 4010,
+    "customers_compared": 20010,
     "differences": [],
     "detail": "Customer 360 rebuilt from inputs truncated at the cutoff equals the production build"
   },
@@ -10,42 +10,42 @@
     "2026-01-31": {
       "status": "PASS",
       "features_compared": 84,
-      "customers_compared": 3919,
+      "customers_compared": 19496,
       "differences": [],
       "detail": "Customer 360 rebuilt from inputs truncated at the cutoff equals the production build"
     },
     "2026-02-28": {
       "status": "PASS",
       "features_compared": 84,
-      "customers_compared": 3938,
+      "customers_compared": 19598,
       "differences": [],
       "detail": "Customer 360 rebuilt from inputs truncated at the cutoff equals the production build"
     },
     "2026-03-31": {
       "status": "PASS",
       "features_compared": 84,
-      "customers_compared": 3957,
+      "customers_compared": 19731,
       "differences": [],
       "detail": "Customer 360 rebuilt from inputs truncated at the cutoff equals the production build"
     },
     "2026-04-30": {
       "status": "PASS",
       "features_compared": 84,
-      "customers_compared": 3976,
+      "customers_compared": 19854,
       "differences": [],
       "detail": "Customer 360 rebuilt from inputs truncated at the cutoff equals the production build"
     },
     "2026-05-31": {
       "status": "PASS",
       "features_compared": 84,
-      "customers_compared": 4002,
+      "customers_compared": 19950,
       "differences": [],
       "detail": "Customer 360 rebuilt from inputs truncated at the cutoff equals the production build"
     },
     "2026-06-30": {
       "status": "PASS",
       "features_compared": 84,
-      "customers_compared": 4010,
+      "customers_compared": 20010,
       "differences": [],
       "detail": "Customer 360 rebuilt from inputs truncated at the cutoff equals the production build"
     }
@@ -53,7 +53,7 @@
   "EV_FINANCE": {
     "cutoff": "2026-06-30",
     "passed": true,
-    "n_checks": 16,
+    "n_checks": 20,
     "n_failed": 0,
     "n_not_run": 0,
     "checks": [
@@ -61,79 +61,103 @@
         "check": "customer_split_disjoint",
         "target": "split",
         "status": "PASS",
-        "detail": "5 splits, 4010 customers, no customer in more than one split"
+        "detail": "5 splits, 20010 customers, no customer in more than one split"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with event time on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with event time on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "no_target_features",
@@ -158,7 +182,7 @@
   "GREEN_HOME": {
     "cutoff": "2026-06-30",
     "passed": true,
-    "n_checks": 16,
+    "n_checks": 20,
     "n_failed": 0,
     "n_not_run": 0,
     "checks": [
@@ -166,79 +190,103 @@
         "check": "customer_split_disjoint",
         "target": "split",
         "status": "PASS",
-        "detail": "5 splits, 4010 customers, no customer in more than one split"
+        "detail": "5 splits, 20010 customers, no customer in more than one split"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with event time on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with event time on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "no_target_features",
@@ -263,7 +311,7 @@
   "SOLAR_FINANCE": {
     "cutoff": "2026-06-30",
     "passed": true,
-    "n_checks": 16,
+    "n_checks": 20,
     "n_failed": 0,
     "n_not_run": 0,
     "checks": [
@@ -271,79 +319,103 @@
         "check": "customer_split_disjoint",
         "target": "split",
         "status": "PASS",
-        "detail": "5 splits, 4010 customers, no customer in more than one split"
+        "detail": "5 splits, 20010 customers, no customer in more than one split"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with event time on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with event time on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "no_target_features",
@@ -368,7 +440,7 @@
   "PAPERLESS_BANKING": {
     "cutoff": "2026-06-30",
     "passed": true,
-    "n_checks": 16,
+    "n_checks": 20,
     "n_failed": 0,
     "n_not_run": 0,
     "checks": [
@@ -376,79 +448,103 @@
         "check": "customer_split_disjoint",
         "target": "split",
         "status": "PASS",
-        "detail": "5 splits, 4010 customers, no customer in more than one split"
+        "detail": "5 splits, 20010 customers, no customer in more than one split"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "transactions",
         "status": "PASS",
-        "detail": "transactions: 745317 rows with event time on or before cutoff 2026-06-30"
+        "detail": "transactions: 3739407 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "financial_products",
         "status": "PASS",
-        "detail": "financial_products: 12698 rows with event time on or before cutoff 2026-06-30"
+        "detail": "financial_products: 64622 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "vehicles",
         "status": "PASS",
-        "detail": "vehicles: 4526 rows with event time on or before cutoff 2026-06-30"
+        "detail": "vehicles: 22835 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "energy_usage",
         "status": "PASS",
-        "detail": "energy_usage: 58436 rows with event time on or before cutoff 2026-06-30"
+        "detail": "energy_usage: 292821 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with month-end availability on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "digital_usage",
         "status": "PASS",
-        "detail": "digital_usage: 64339 rows with event time on or before cutoff 2026-06-30"
+        "detail": "digital_usage: 319423 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "customer_history",
+        "status": "PASS",
+        "detail": "customer_history: 43175 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "event_times_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
+      },
+      {
+        "check": "source_available_within_cutoff",
+        "target": "vehicle_ownership",
+        "status": "PASS",
+        "detail": "vehicle_ownership: 27719 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "event_times_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "source_available_within_cutoff",
         "target": "customers_available_profiles",
         "status": "PASS",
-        "detail": "customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30"
+        "detail": "customers_available_profiles: 15703 rows with event time on or before cutoff 2026-06-30"
       },
       {
         "check": "no_target_features",

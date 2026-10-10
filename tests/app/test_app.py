@@ -36,6 +36,29 @@ def test_customer_cards_and_http_only_why(api_fixture):
     assert any("Missing defensible activity" in row.value for row in app.warning)
 
 
+def test_trained_source_and_default_customer_do_not_depend_on_api_order(api_fixture, monkeypatch):
+    customer = api_fixture["customers"][0]
+    customer["customer_id"] = "C10001"
+    api_fixture["decisions"]["C10001"] = api_fixture["decisions"].pop("GP-001")
+    api_fixture["customers"].reverse()
+    def get(url, **kwargs):
+        response = api_fixture["get"](url, **kwargs)
+        if url.endswith("/health"):
+            body = response.json()
+            body.update(provider_mode="trained", source_version="trained:current-model")
+            return httpx.Response(200, json=body, request=response.request)
+        return response
+    monkeypatch.setattr(httpx, "get", get)
+    app = start()
+    assert app.selectbox(key="customer_id").value == "C10001"
+    assert any(metric.label == "Calibrated propensity · synthetic model" for metric in app.metric)
+    assert "Data source: trained" in displayed(app.sidebar)
+    assert "Source version: trained:current-model" in displayed(app.sidebar)
+    app.selectbox(key="customer_id").select("GP-003").run()
+    assert not app.exception
+    assert app.selectbox(key="customer_id").value == "GP-003"
+
+
 def test_responsible_abstention_shortcut_replaces_customer(api_fixture):
     app = start()
     app.button(key="abstention").click().run()

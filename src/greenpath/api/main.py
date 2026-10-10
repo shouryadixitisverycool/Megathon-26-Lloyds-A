@@ -3,6 +3,9 @@
 from contextlib import asynccontextmanager
 from typing import Protocol
 from pathlib import Path
+import logging
+from threading import Thread
+from time import perf_counter
 
 from fastapi import FastAPI, HTTPException
 
@@ -25,6 +28,8 @@ from greenpath.impact import Product
 
 from .portfolio import historical_trends, summarize
 
+logger = logging.getLogger("uvicorn.error")
+
 
 class RecommendationServicePort(Protocol):
     def recommendations(self, customer_id: str) -> tuple[Recommendation, ...]: ...
@@ -45,6 +50,7 @@ def create_app(
     recommendation_service: RecommendationServicePort | None = None,
     explanation_service: ExplanationServicePort | None = None,
     memory_path: Path | None = None,
+    background_warmup: bool | None = None,
 ) -> FastAPI:
     """Use explicit overrides first, repository ports second, demo defaults last."""
     needs_repository = (
@@ -55,7 +61,10 @@ def create_app(
     if repository is None and needs_repository:
         from greenpath.demo.artifacts import default_repository
 
+        started = perf_counter()
+        logger.info("Startup phase=repository start provider=%s", provider_mode or "environment")
         repository = default_repository(provider_mode)
+        logger.info("Startup phase=repository complete seconds=%.2f", perf_counter() - started)
     if snapshot_provider is None:
         snapshot_provider = repository
     if history_provider is None:
@@ -117,18 +126,59 @@ def create_app(
     served_recommendations = PersistedRecommendations()
     served_explanations = PersistedExplanations()
     summary_cache = {}
+    readiness_cache = {}
+    use_background = (bool(getattr(repository, "background_warmup", False))
+                      if background_warmup is None else background_warmup)
+    warmup = {"history": "pending", "summary": "pending"}
+
+    def prepare_portfolio():
+        try:
+            started = perf_counter()
+            logger.info("Portfolio preparation phase=history start")
+            history_provider.list_history()
+            warmup["history"] = "ready"
+            logger.info("Portfolio preparation phase=history complete seconds=%.2f", perf_counter() - started)
+            started = perf_counter()
+            logger.info("Portfolio preparation phase=summary start")
+            compute_portfolio_summary()
+            warmup["summary"] = "ready"
+            logger.info("Portfolio preparation phase=summary complete seconds=%.2f", perf_counter() - started)
+        except Exception:
+            for resource in ("history", "summary"):
+                if warmup[resource] != "ready":
+                    warmup[resource] = "failed"
+            logger.exception("Portfolio preparation failed")
+
+    def require_portfolio(resource):
+        if not use_background or warmup[resource] == "ready":
+            return
+        failed = warmup[resource] == "failed"
+        raise HTTPException(status_code=503, headers={"Retry-After": "2"}, detail={
+            "code": "PORTFOLIO_FAILED" if failed else "PORTFOLIO_PREPARING",
+            "resource": resource,
+            "message": ("Portfolio preparation failed. Check the API logs."
+                        if failed else "Portfolio data is preparing in the background. Customer views are available; use Refresh data shortly."),
+            "progress": dict(getattr(history_provider, "history_status", {})),
+        })
 
     @asynccontextmanager
     async def lifespan(application):
-        # Warm immutable trained evidence before accepting requests. A large first
-        # trend calculation should not become a client timeout.
+        # Current scoring must be ready, but a full multi-month portfolio must
+        # not prevent the customer UI and health endpoint from becoming usable.
         if getattr(repository, "mode", None) == "trained":
-            repository.list_history()
-            with store.transaction():
-                portfolio_summary()
+            if use_background:
+                started = perf_counter()
+                logger.info("Startup phase=current-evidence start")
+                repository.prepare_current()
+                logger.info("Startup phase=current-evidence complete seconds=%.2f", perf_counter() - started)
+                Thread(target=prepare_portfolio, name="greenpath-portfolio", daemon=True).start()
+            else:
+                prepare_portfolio()
+                if "failed" in warmup.values():
+                    raise RuntimeError("Trained portfolio preparation failed; check API logs")
         yield
 
-    application = FastAPI(title="GreenPath decision platform", version=CONTRACT_VERSION, lifespan=lifespan)
+    application = FastAPI(title="Greenr decision platform", version=CONTRACT_VERSION, lifespan=lifespan)
     application.state.repository = repository
     application.state.snapshot_provider = snapshot_provider
     application.state.history_provider = history_provider
@@ -136,6 +186,7 @@ def create_app(
     application.state.explanation_service = served_explanations
     application.state.memory_store = store
     application.state.invalidate_summary = summary_cache.clear
+    application.state.portfolio_warmup = warmup
 
     def snapshot(customer_id: str) -> CustomerSnapshot:
         try:
@@ -160,10 +211,57 @@ def create_app(
         )
 
     @application.get("/health")
-    def health() -> dict[str, str | bool]:
-        return {"status": "ok", "synthetic_demo": True, "contract_version": CONTRACT_VERSION,
+    def health() -> dict:
+        result = {"status": "ok", "synthetic_demo": True, "contract_version": CONTRACT_VERSION,
                 "provider_mode": getattr(snapshot_provider, "mode", "injected"),
                 "source_version": getattr(snapshot_provider, "version", "injected-provider")}
+        if use_background:
+            result["portfolio_warmup"] = dict(warmup)
+        return result
+
+    @application.get("/demo/readiness")
+    def demo_readiness():
+        from greenpath.demo.readiness import (
+            REPORT_PATH, _candidate, artifact_signature, confidence_decisions_hash, generate_readiness, read_report,
+        )
+        from greenpath.recommendation.service import decision_evidence
+        import joblib
+
+        if repository is None or snapshot_provider is not repository:
+            return {"status": "BLOCKED", "products": {}, "examples": {},
+                    "missing_features": ["Readiness requires the served repository's model and source evidence."],
+                    "provider_mode": "injected"}
+        # Loaded artifacts are immutable. Source overrides invalidate the scan,
+        # without adding another population-sized task to startup or persistence.
+        if "signature" not in readiness_cache:
+            readiness_cache["signature"] = artifact_signature(repository)
+        key = joblib.hash((getattr(repository, "_overrides", {}), confidence_decisions_hash()))
+        report = readiness_cache.get(key)
+        if report is None:
+            report = read_report(REPORT_PATH, readiness_cache["signature"]) if not getattr(repository, "_overrides", {}) else None
+            if report is not None:
+                candidates = [p["candidate"] for p in report["products"].values() if p.get("candidate")]
+                candidates.extend(report["examples"].values())
+                live = {}
+                for candidate in candidates:
+                    cid = candidate["customer_id"]
+                    if cid not in live:
+                        try:
+                            live[cid] = recommendation_service.recommendations(cid)
+                        except KeyError:
+                            report = None
+                            break
+                    current = next((r for r in live[cid] if r.product.value == candidate["product"]), None)
+                    if current is None or decision_evidence(_candidate(current)) != decision_evidence(candidate):
+                        report = None
+                        break
+            if report is None:
+                report = generate_readiness(repository, service=recommendation_service,
+                                            signature=readiness_cache["signature"])
+            readiness_cache.clear()
+            readiness_cache["signature"] = report["artifact_signature"]
+            readiness_cache[key] = report
+        return report
 
     @application.get("/explanations/metrics")
     def explanation_metrics():
@@ -191,21 +289,29 @@ def create_app(
                 return served_explanations.explain(recommendation)
         raise HTTPException(status_code=404, detail="Product recommendation not found")
 
-    @application.get("/portfolio/summary", response_model=PortfolioSummary)
-    def portfolio_summary(region: str | None = None, segment: str | None = None, product: Product | None = None):
+    def compute_portfolio_summary(region=None, segment=None, product=None):
         key = (region, segment, product)
         cacheable = getattr(repository, "mode", None) == "trained"
         if cacheable and key in summary_cache:
             return summary_cache[key]
         selected = filtered_snapshots(region, segment)
-        decisions = {item.customer_id: served_recommendations.recommendations(item.customer_id) for item in selected}
+        # Persist complete evidence, but aggregation does not need another cohort-sized
+        # copy of source provenance in memory.
+        decisions = {item.customer_id: tuple(r.model_copy(update={"provenance": {}})
+                     for r in served_recommendations.recommendations(item.customer_id)) for item in selected}
         result = summarize(selected, decisions, product)
         if cacheable:
             summary_cache[key] = result
         return result
 
+    @application.get("/portfolio/summary", response_model=PortfolioSummary)
+    def portfolio_summary(region: str | None = None, segment: str | None = None, product: Product | None = None):
+        require_portfolio("summary")
+        return compute_portfolio_summary(region, segment, product)
+
     @application.get("/portfolio/trends", response_model=PortfolioTrends)
     def portfolio_trends(region: str | None = None, segment: str | None = None, product: Product | None = None):
+        require_portfolio("history")
         return historical_trends(filtered_snapshots(region, segment), history_provider.list_history(), product)
 
     from greenpath.extensions.api import attach_extensions

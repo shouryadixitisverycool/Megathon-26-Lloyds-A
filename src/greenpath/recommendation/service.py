@@ -110,11 +110,13 @@ class RecommendationService:
         impact_input_provider: ImpactInputProvider, *,
         calculators: Mapping[Product, ImpactCalculator] | None = None,
         clock: Clock = utc_now,
+        include_provenance: bool = True,
     ):
         self.snapshot_provider = snapshot_provider
         self.propensity_provider = propensity_provider
         self.impact_input_provider = impact_input_provider
         self.clock = clock
+        self.include_provenance = include_provenance
         self.explanation_context = {}
         self._decision_cache = {} if getattr(snapshot_provider, "mode", None) == "trained" else None
         selected_calculators = calculators if calculators is not None else getattr(snapshot_provider, "impact_calculators", None)
@@ -138,13 +140,17 @@ class RecommendationService:
         if self._decision_cache is not None and customer_id in self._decision_cache:
             cached_snapshot, decisions = self._decision_cache[customer_id]
             if cached_snapshot == snapshot:
-                return decisions
+                return tuple(Recommendation.model_validate(r.model_dump(mode="python")) for r in decisions)
         now = self.clock()
         if now.tzinfo is None or now.utcoffset() is None:
             raise ValueError("Decision clock must return a timezone-aware datetime")
         decisions = tuple(self._recommendation(snapshot, product, now) for product in Product)
         if self._decision_cache is not None:
-            self._decision_cache[customer_id] = (snapshot.model_copy(deep=True), decisions)
+            # Validation above owns a detached snapshot; callers never receive cache objects.
+            self._decision_cache[customer_id] = (snapshot, decisions)
+            if len(self._decision_cache) > 256:
+                self._decision_cache.pop(next(iter(self._decision_cache)))
+            return tuple(Recommendation.model_validate(r.model_dump(mode="python")) for r in decisions)
         return decisions
 
     def _recommendation(self, snapshot: CustomerSnapshot, product: Product, now: datetime) -> Recommendation:
@@ -196,10 +202,11 @@ class RecommendationService:
                 "calibration_version": propensity.calibration_version if propensity else None,
                 "decision_timestamp": now.isoformat(),
                 **self.explanation_context,
-            },
+            } if self.include_provenance else {},
         )
         # Identity represents evidence and versions, not repeated wall-clock generation.
-        return recommendation.model_copy(update={"decision_id": decision_identity(recommendation)})
+        return (recommendation.model_copy(update={"decision_id": decision_identity(recommendation)})
+                if self.include_provenance else recommendation)
 
     @staticmethod
     def _clean_propensity(result: PropensityResult | None, product: Product) -> PropensityResult | None:

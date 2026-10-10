@@ -69,9 +69,11 @@ class ExplanationService:
     """
 
     def __init__(self, provider: ExplanationProvider | None = None, *,
-                 timeout_seconds: float = 2.0, provider_version: str | None = None,
+                 timeout_seconds: float | None = None, provider_version: str | None = None,
                  max_inflight: int = 2, prompt_version: str = "grounded-selection-v1",
                  locale: str = "en", cache_size: int = 512):
+        if timeout_seconds is None:
+            timeout_seconds = getattr(provider, "timeout_seconds", 2.0)
         if isinstance(timeout_seconds, bool) or not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive and finite")
         if isinstance(max_inflight, bool) or not isinstance(max_inflight, int) or max_inflight < 1:

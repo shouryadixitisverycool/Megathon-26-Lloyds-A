@@ -25,7 +25,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 1.196
+      "local_latency_ms": 1.911
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:reverse:clean",
@@ -49,7 +49,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 1.04
+      "local_latency_ms": 1.646
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:product:clean",
@@ -74,7 +74,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.951
+      "local_latency_ms": 1.487
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:state:clean",
@@ -99,7 +99,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.917
+      "local_latency_ms": 1.448
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:reason:clean",
@@ -124,7 +124,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.904
+      "local_latency_ms": 1.446
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:number:clean",
@@ -149,7 +149,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 1.045
+      "local_latency_ms": 1.425
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:units:clean",
@@ -174,7 +174,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.97
+      "local_latency_ms": 1.407
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:eligibility:clean",
@@ -200,7 +200,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.934
+      "local_latency_ms": 1.401
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:free_text:clean",
@@ -227,7 +227,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SCHEMA_REJECTED",
-      "local_latency_ms": 0.94
+      "local_latency_ms": 1.381
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:omit:clean",
@@ -252,7 +252,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SENTENCES_REJECTED",
-      "local_latency_ms": 1.002
+      "local_latency_ms": 1.369
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:duplicate:clean",
@@ -277,7 +277,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SENTENCES_REJECTED",
-      "local_latency_ms": 0.968
+      "local_latency_ms": 1.421
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:invent_sentence:clean",
@@ -302,7 +302,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SENTENCES_REJECTED",
-      "local_latency_ms": 0.944
+      "local_latency_ms": 1.424
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:malformed:clean",
@@ -327,7 +327,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SCHEMA_REJECTED",
-      "local_latency_ms": 0.934
+      "local_latency_ms": 1.399
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:error:clean",
@@ -352,7 +352,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "PROVIDER_ERROR",
-      "local_latency_ms": 1.033
+      "local_latency_ms": 1.384
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:timeout:clean",
@@ -377,7 +377,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "PROVIDER_TIMEOUT",
-      "local_latency_ms": 105.027
+      "local_latency_ms": 106.638
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:wrong_null:clean",
@@ -402,7 +402,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 1.064
+      "local_latency_ms": 2.129
     },
     {
       "case": "EV_FINANCE:RECOMMEND:negative:sign:clean",
@@ -428,7 +428,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.941
+      "local_latency_ms": 1.817
     },
     {
       "case": "EV_FINANCE:RECOMMEND:missing:number:clean",
@@ -454,7 +454,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.602
+      "local_latency_ms": 0.973
     },
     {
       "case": "EV_FINANCE:RECOMMEND:missing:valid:clean",
@@ -479,7 +479,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.506
+      "local_latency_ms": 0.925
     },
     {
       "case": "EV_FINANCE:RECOMMEND:missing:product:clean",
@@ -505,7 +505,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.455
+      "local_latency_ms": 0.904
     },
     {
       "case": "EV_FINANCE:RECOMMEND:missing:state:clean",
@@ -531,7 +531,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.509
+      "local_latency_ms": 0.907
     },
     {
       "case": "EV_FINANCE:RECOMMEND:missing:units:clean",
@@ -557,7 +557,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.481
+      "local_latency_ms": 0.892
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:missing:valid:clean",
@@ -581,7 +581,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.468
+      "local_latency_ms": 0.927
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:missing:product:clean",
@@ -606,7 +606,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.46
+      "local_latency_ms": 0.909
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:missing:state:clean",
@@ -631,7 +631,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.449
+      "local_latency_ms": 0.892
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:missing:units:clean",
@@ -656,7 +656,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.565
+      "local_latency_ms": 0.867
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:missing:valid:clean",
@@ -681,7 +681,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.511
+      "local_latency_ms": 0.794
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:missing:product:clean",
@@ -707,7 +707,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.456
+      "local_latency_ms": 0.797
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:missing:state:clean",
@@ -733,7 +733,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.484
+      "local_latency_ms": 0.777
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:missing:units:clean",
@@ -759,7 +759,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.478
+      "local_latency_ms": 0.776
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:valid:clean",
@@ -784,7 +784,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.458
+      "local_latency_ms": 0.802
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:product:clean",
@@ -810,7 +810,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.457
+      "local_latency_ms": 0.772
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:state:clean",
@@ -836,7 +836,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.455
+      "local_latency_ms": 0.794
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:units:clean",
@@ -862,7 +862,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.448
+      "local_latency_ms": 0.8
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:missing:valid:clean",
@@ -887,7 +887,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.462
+      "local_latency_ms": 0.776
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:missing:product:clean",
@@ -913,7 +913,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.441
+      "local_latency_ms": 0.766
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:missing:state:clean",
@@ -939,7 +939,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.436
+      "local_latency_ms": 0.759
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:missing:units:clean",
@@ -965,7 +965,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.445
+      "local_latency_ms": 0.762
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:missing:valid:clean",
@@ -990,7 +990,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.443
+      "local_latency_ms": 0.745
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:missing:product:clean",
@@ -1016,7 +1016,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.454
+      "local_latency_ms": 0.673
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:missing:state:clean",
@@ -1042,7 +1042,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.431
+      "local_latency_ms": 0.677
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:missing:units:clean",
@@ -1068,7 +1068,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.467
+      "local_latency_ms": 0.664
     },
     {
       "case": "GREEN_HOME:RECOMMEND:missing:valid:clean",
@@ -1093,7 +1093,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.431
+      "local_latency_ms": 0.671
     },
     {
       "case": "GREEN_HOME:RECOMMEND:missing:product:clean",
@@ -1119,7 +1119,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.424
+      "local_latency_ms": 0.677
     },
     {
       "case": "GREEN_HOME:RECOMMEND:missing:state:clean",
@@ -1145,7 +1145,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.44
+      "local_latency_ms": 0.65
     },
     {
       "case": "GREEN_HOME:RECOMMEND:missing:units:clean",
@@ -1171,7 +1171,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.426
+      "local_latency_ms": 0.643
     },
     {
       "case": "GREEN_HOME:DO_NOT_RECOMMEND:missing:valid:clean",
@@ -1195,7 +1195,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.45
+      "local_latency_ms": 0.659
     },
     {
       "case": "GREEN_HOME:DO_NOT_RECOMMEND:missing:product:clean",
@@ -1220,7 +1220,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.434
+      "local_latency_ms": 0.649
     },
     {
       "case": "GREEN_HOME:DO_NOT_RECOMMEND:missing:state:clean",
@@ -1245,7 +1245,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.441
+      "local_latency_ms": 0.648
     },
     {
       "case": "GREEN_HOME:DO_NOT_RECOMMEND:missing:units:clean",
@@ -1270,7 +1270,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.437
+      "local_latency_ms": 0.664
     },
     {
       "case": "GREEN_HOME:INSUFFICIENT_INFORMATION:missing:valid:clean",
@@ -1295,7 +1295,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.447
+      "local_latency_ms": 0.667
     },
     {
       "case": "GREEN_HOME:INSUFFICIENT_INFORMATION:missing:product:clean",
@@ -1321,7 +1321,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.437
+      "local_latency_ms": 0.666
     },
     {
       "case": "GREEN_HOME:INSUFFICIENT_INFORMATION:missing:state:clean",
@@ -1347,7 +1347,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.489
+      "local_latency_ms": 0.661
     },
     {
       "case": "GREEN_HOME:INSUFFICIENT_INFORMATION:missing:units:clean",
@@ -1373,7 +1373,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.428
+      "local_latency_ms": 0.66
     },
     {
       "case": "GREEN_HOME:CONFLICT_REQUIRES_REVIEW:missing:valid:clean",
@@ -1398,7 +1398,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.434
+      "local_latency_ms": 0.674
     },
     {
       "case": "GREEN_HOME:CONFLICT_REQUIRES_REVIEW:missing:product:clean",
@@ -1424,7 +1424,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.424
+      "local_latency_ms": 0.687
     },
     {
       "case": "GREEN_HOME:CONFLICT_REQUIRES_REVIEW:missing:state:clean",
@@ -1450,7 +1450,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.42
+      "local_latency_ms": 0.663
     },
     {
       "case": "GREEN_HOME:CONFLICT_REQUIRES_REVIEW:missing:units:clean",
@@ -1476,7 +1476,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.424
+      "local_latency_ms": 0.692
     },
     {
       "case": "GREEN_HOME:NOT_APPLICABLE:missing:valid:clean",
@@ -1501,7 +1501,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.442
+      "local_latency_ms": 0.665
     },
     {
       "case": "GREEN_HOME:NOT_APPLICABLE:missing:product:clean",
@@ -1527,7 +1527,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.439
+      "local_latency_ms": 0.651
     },
     {
       "case": "GREEN_HOME:NOT_APPLICABLE:missing:state:clean",
@@ -1553,7 +1553,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.421
+      "local_latency_ms": 0.672
     },
     {
       "case": "GREEN_HOME:NOT_APPLICABLE:missing:units:clean",
@@ -1579,7 +1579,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.435
+      "local_latency_ms": 0.647
     },
     {
       "case": "GREEN_HOME:SUPPRESSED:missing:valid:clean",
@@ -1604,7 +1604,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.441
+      "local_latency_ms": 0.664
     },
     {
       "case": "GREEN_HOME:SUPPRESSED:missing:product:clean",
@@ -1630,7 +1630,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.438
+      "local_latency_ms": 0.658
     },
     {
       "case": "GREEN_HOME:SUPPRESSED:missing:state:clean",
@@ -1656,7 +1656,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.427
+      "local_latency_ms": 0.657
     },
     {
       "case": "GREEN_HOME:SUPPRESSED:missing:units:clean",
@@ -1682,7 +1682,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.443
+      "local_latency_ms": 0.649
     },
     {
       "case": "SOLAR_FINANCE:RECOMMEND:missing:valid:clean",
@@ -1707,7 +1707,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.436
+      "local_latency_ms": 0.643
     },
     {
       "case": "SOLAR_FINANCE:RECOMMEND:missing:product:clean",
@@ -1733,7 +1733,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.433
+      "local_latency_ms": 0.621
     },
     {
       "case": "SOLAR_FINANCE:RECOMMEND:missing:state:clean",
@@ -1759,7 +1759,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.413
+      "local_latency_ms": 0.616
     },
     {
       "case": "SOLAR_FINANCE:RECOMMEND:missing:units:clean",
@@ -1785,7 +1785,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.426
+      "local_latency_ms": 0.608
     },
     {
       "case": "SOLAR_FINANCE:DO_NOT_RECOMMEND:missing:valid:clean",
@@ -1809,7 +1809,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.428
+      "local_latency_ms": 0.635
     },
     {
       "case": "SOLAR_FINANCE:DO_NOT_RECOMMEND:missing:product:clean",
@@ -1834,7 +1834,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.409
+      "local_latency_ms": 0.62
     },
     {
       "case": "SOLAR_FINANCE:DO_NOT_RECOMMEND:missing:state:clean",
@@ -1859,7 +1859,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.395
+      "local_latency_ms": 0.612
     },
     {
       "case": "SOLAR_FINANCE:DO_NOT_RECOMMEND:missing:units:clean",
@@ -1884,7 +1884,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.414
+      "local_latency_ms": 0.619
     },
     {
       "case": "SOLAR_FINANCE:INSUFFICIENT_INFORMATION:missing:valid:clean",
@@ -1909,7 +1909,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.43
+      "local_latency_ms": 0.628
     },
     {
       "case": "SOLAR_FINANCE:INSUFFICIENT_INFORMATION:missing:product:clean",
@@ -1935,7 +1935,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.408
+      "local_latency_ms": 0.636
     },
     {
       "case": "SOLAR_FINANCE:INSUFFICIENT_INFORMATION:missing:state:clean",
@@ -1961,7 +1961,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.414
+      "local_latency_ms": 0.628
     },
     {
       "case": "SOLAR_FINANCE:INSUFFICIENT_INFORMATION:missing:units:clean",
@@ -1987,7 +1987,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.419
+      "local_latency_ms": 0.617
     },
     {
       "case": "SOLAR_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:valid:clean",
@@ -2012,7 +2012,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.421
+      "local_latency_ms": 0.633
     },
     {
       "case": "SOLAR_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:product:clean",
@@ -2038,7 +2038,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.418
+      "local_latency_ms": 0.631
     },
     {
       "case": "SOLAR_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:state:clean",
@@ -2064,7 +2064,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.42
+      "local_latency_ms": 0.63
     },
     {
       "case": "SOLAR_FINANCE:CONFLICT_REQUIRES_REVIEW:missing:units:clean",
@@ -2090,7 +2090,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.417
+      "local_latency_ms": 0.621
     },
     {
       "case": "SOLAR_FINANCE:NOT_APPLICABLE:missing:valid:clean",
@@ -2115,7 +2115,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.424
+      "local_latency_ms": 0.622
     },
     {
       "case": "SOLAR_FINANCE:NOT_APPLICABLE:missing:product:clean",
@@ -2141,7 +2141,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.41
+      "local_latency_ms": 0.616
     },
     {
       "case": "SOLAR_FINANCE:NOT_APPLICABLE:missing:state:clean",
@@ -2167,7 +2167,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.41
+      "local_latency_ms": 0.617
     },
     {
       "case": "SOLAR_FINANCE:NOT_APPLICABLE:missing:units:clean",
@@ -2193,7 +2193,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.409
+      "local_latency_ms": 0.615
     },
     {
       "case": "SOLAR_FINANCE:SUPPRESSED:missing:valid:clean",
@@ -2218,7 +2218,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.416
+      "local_latency_ms": 0.644
     },
     {
       "case": "SOLAR_FINANCE:SUPPRESSED:missing:product:clean",
@@ -2244,7 +2244,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.411
+      "local_latency_ms": 0.614
     },
     {
       "case": "SOLAR_FINANCE:SUPPRESSED:missing:state:clean",
@@ -2270,7 +2270,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.415
+      "local_latency_ms": 0.686
     },
     {
       "case": "SOLAR_FINANCE:SUPPRESSED:missing:units:clean",
@@ -2296,7 +2296,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.413
+      "local_latency_ms": 0.627
     },
     {
       "case": "PAPERLESS_BANKING:RECOMMEND:missing:valid:clean",
@@ -2322,7 +2322,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.314
+      "local_latency_ms": 0.47
     },
     {
       "case": "PAPERLESS_BANKING:RECOMMEND:missing:product:clean",
@@ -2349,7 +2349,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.282
+      "local_latency_ms": 0.441
     },
     {
       "case": "PAPERLESS_BANKING:RECOMMEND:missing:state:clean",
@@ -2376,7 +2376,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.273
+      "local_latency_ms": 0.439
     },
     {
       "case": "PAPERLESS_BANKING:RECOMMEND:missing:units:clean",
@@ -2403,7 +2403,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.266
+      "local_latency_ms": 0.425
     },
     {
       "case": "PAPERLESS_BANKING:DO_NOT_RECOMMEND:missing:valid:clean",
@@ -2428,7 +2428,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.274
+      "local_latency_ms": 0.43
     },
     {
       "case": "PAPERLESS_BANKING:DO_NOT_RECOMMEND:missing:product:clean",
@@ -2454,7 +2454,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.273
+      "local_latency_ms": 0.439
     },
     {
       "case": "PAPERLESS_BANKING:DO_NOT_RECOMMEND:missing:state:clean",
@@ -2480,7 +2480,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.275
+      "local_latency_ms": 0.443
     },
     {
       "case": "PAPERLESS_BANKING:DO_NOT_RECOMMEND:missing:units:clean",
@@ -2506,7 +2506,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.277
+      "local_latency_ms": 0.438
     },
     {
       "case": "PAPERLESS_BANKING:INSUFFICIENT_INFORMATION:missing:valid:clean",
@@ -2532,7 +2532,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.282
+      "local_latency_ms": 0.454
     },
     {
       "case": "PAPERLESS_BANKING:INSUFFICIENT_INFORMATION:missing:product:clean",
@@ -2559,7 +2559,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.281
+      "local_latency_ms": 0.437
     },
     {
       "case": "PAPERLESS_BANKING:INSUFFICIENT_INFORMATION:missing:state:clean",
@@ -2586,7 +2586,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.271
+      "local_latency_ms": 0.446
     },
     {
       "case": "PAPERLESS_BANKING:INSUFFICIENT_INFORMATION:missing:units:clean",
@@ -2613,7 +2613,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.273
+      "local_latency_ms": 0.438
     },
     {
       "case": "PAPERLESS_BANKING:CONFLICT_REQUIRES_REVIEW:missing:valid:clean",
@@ -2639,7 +2639,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.279
+      "local_latency_ms": 0.444
     },
     {
       "case": "PAPERLESS_BANKING:CONFLICT_REQUIRES_REVIEW:missing:product:clean",
@@ -2666,7 +2666,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.273
+      "local_latency_ms": 0.434
     },
     {
       "case": "PAPERLESS_BANKING:CONFLICT_REQUIRES_REVIEW:missing:state:clean",
@@ -2693,7 +2693,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.269
+      "local_latency_ms": 0.475
     },
     {
       "case": "PAPERLESS_BANKING:CONFLICT_REQUIRES_REVIEW:missing:units:clean",
@@ -2720,7 +2720,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.308
+      "local_latency_ms": 0.452
     },
     {
       "case": "PAPERLESS_BANKING:NOT_APPLICABLE:missing:valid:clean",
@@ -2746,7 +2746,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.29
+      "local_latency_ms": 0.452
     },
     {
       "case": "PAPERLESS_BANKING:NOT_APPLICABLE:missing:product:clean",
@@ -2773,7 +2773,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.289
+      "local_latency_ms": 0.431
     },
     {
       "case": "PAPERLESS_BANKING:NOT_APPLICABLE:missing:state:clean",
@@ -2800,7 +2800,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.281
+      "local_latency_ms": 0.433
     },
     {
       "case": "PAPERLESS_BANKING:NOT_APPLICABLE:missing:units:clean",
@@ -2827,7 +2827,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.283
+      "local_latency_ms": 0.419
     },
     {
       "case": "PAPERLESS_BANKING:SUPPRESSED:missing:valid:clean",
@@ -2853,7 +2853,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.29
+      "local_latency_ms": 0.428
     },
     {
       "case": "PAPERLESS_BANKING:SUPPRESSED:missing:product:clean",
@@ -2880,7 +2880,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.275
+      "local_latency_ms": 0.425
     },
     {
       "case": "PAPERLESS_BANKING:SUPPRESSED:missing:state:clean",
@@ -2907,7 +2907,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.285
+      "local_latency_ms": 0.422
     },
     {
       "case": "PAPERLESS_BANKING:SUPPRESSED:missing:units:clean",
@@ -2934,7 +2934,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.284
+      "local_latency_ms": 0.422
     },
     {
       "case": "EV_FINANCE:RECOMMEND:negative:valid:clean",
@@ -2959,7 +2959,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 1.0
+      "local_latency_ms": 1.535
     },
     {
       "case": "EV_FINANCE:RECOMMEND:negative:reverse:clean",
@@ -2984,7 +2984,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.917
+      "local_latency_ms": 1.427
     },
     {
       "case": "EV_FINANCE:RECOMMEND:negative:wrong_null:clean",
@@ -3010,7 +3010,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.88
+      "local_latency_ms": 1.384
     },
     {
       "case": "EV_FINANCE:RECOMMEND:negative:units:clean",
@@ -3036,7 +3036,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.877
+      "local_latency_ms": 1.357
     },
     {
       "case": "EV_FINANCE:RECOMMEND:zero:valid:clean",
@@ -3061,7 +3061,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.879
+      "local_latency_ms": 1.376
     },
     {
       "case": "EV_FINANCE:RECOMMEND:zero:reverse:clean",
@@ -3086,7 +3086,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.896
+      "local_latency_ms": 1.4
     },
     {
       "case": "EV_FINANCE:RECOMMEND:zero:wrong_null:clean",
@@ -3112,7 +3112,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.879
+      "local_latency_ms": 1.366
     },
     {
       "case": "EV_FINANCE:RECOMMEND:zero:units:clean",
@@ -3138,7 +3138,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.88
+      "local_latency_ms": 1.372
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:positive:valid:clean",
@@ -3160,7 +3160,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.9
+      "local_latency_ms": 1.389
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:positive:reverse:clean",
@@ -3182,7 +3182,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.885
+      "local_latency_ms": 1.38
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:positive:wrong_null:clean",
@@ -3206,7 +3206,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.883
+      "local_latency_ms": 1.359
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:positive:units:clean",
@@ -3230,7 +3230,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.867
+      "local_latency_ms": 1.39
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:negative:valid:clean",
@@ -3254,7 +3254,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.872
+      "local_latency_ms": 1.388
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:negative:reverse:clean",
@@ -3278,7 +3278,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.876
+      "local_latency_ms": 1.371
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:negative:wrong_null:clean",
@@ -3303,7 +3303,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.864
+      "local_latency_ms": 1.348
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:negative:units:clean",
@@ -3328,7 +3328,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.877
+      "local_latency_ms": 1.356
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:zero:valid:clean",
@@ -3352,7 +3352,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.883
+      "local_latency_ms": 1.407
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:zero:reverse:clean",
@@ -3376,7 +3376,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.941
+      "local_latency_ms": 1.389
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:zero:wrong_null:clean",
@@ -3401,7 +3401,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.99
+      "local_latency_ms": 1.37
     },
     {
       "case": "EV_FINANCE:DO_NOT_RECOMMEND:zero:units:clean",
@@ -3426,7 +3426,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.929
+      "local_latency_ms": 1.348
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:positive:valid:clean",
@@ -3450,7 +3450,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.92
+      "local_latency_ms": 1.394
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:positive:reverse:clean",
@@ -3474,7 +3474,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.898
+      "local_latency_ms": 1.388
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:positive:wrong_null:clean",
@@ -3499,7 +3499,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.89
+      "local_latency_ms": 1.372
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:positive:units:clean",
@@ -3524,7 +3524,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.888
+      "local_latency_ms": 1.361
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:negative:valid:clean",
@@ -3549,7 +3549,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.943
+      "local_latency_ms": 1.369
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:negative:reverse:clean",
@@ -3574,7 +3574,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.917
+      "local_latency_ms": 1.398
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:negative:wrong_null:clean",
@@ -3600,7 +3600,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.885
+      "local_latency_ms": 1.366
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:negative:units:clean",
@@ -3626,7 +3626,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.883
+      "local_latency_ms": 1.379
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:zero:valid:clean",
@@ -3651,7 +3651,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.886
+      "local_latency_ms": 1.368
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:zero:reverse:clean",
@@ -3676,7 +3676,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.893
+      "local_latency_ms": 1.387
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:zero:wrong_null:clean",
@@ -3702,7 +3702,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.873
+      "local_latency_ms": 1.349
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:zero:units:clean",
@@ -3728,7 +3728,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.887
+      "local_latency_ms": 1.367
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:positive:valid:clean",
@@ -3752,7 +3752,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.889
+      "local_latency_ms": 1.4
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:positive:reverse:clean",
@@ -3776,7 +3776,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.904
+      "local_latency_ms": 1.408
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:positive:wrong_null:clean",
@@ -3801,7 +3801,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.875
+      "local_latency_ms": 1.391
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:positive:units:clean",
@@ -3826,7 +3826,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.874
+      "local_latency_ms": 1.381
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:negative:valid:clean",
@@ -3851,7 +3851,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.953
+      "local_latency_ms": 1.372
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:negative:reverse:clean",
@@ -3876,7 +3876,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.921
+      "local_latency_ms": 1.402
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:negative:wrong_null:clean",
@@ -3902,7 +3902,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.883
+      "local_latency_ms": 1.378
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:negative:units:clean",
@@ -3928,7 +3928,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.887
+      "local_latency_ms": 1.35
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:zero:valid:clean",
@@ -3953,7 +3953,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.888
+      "local_latency_ms": 1.357
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:zero:reverse:clean",
@@ -3978,7 +3978,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.887
+      "local_latency_ms": 1.376
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:zero:wrong_null:clean",
@@ -4004,7 +4004,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.884
+      "local_latency_ms": 1.352
     },
     {
       "case": "EV_FINANCE:CONFLICT_REQUIRES_REVIEW:zero:units:clean",
@@ -4030,7 +4030,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.885
+      "local_latency_ms": 1.35
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:positive:valid:clean",
@@ -4054,7 +4054,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.892
+      "local_latency_ms": 1.354
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:positive:reverse:clean",
@@ -4078,7 +4078,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.895
+      "local_latency_ms": 1.384
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:positive:wrong_null:clean",
@@ -4103,7 +4103,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.887
+      "local_latency_ms": 1.381
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:positive:units:clean",
@@ -4128,7 +4128,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.923
+      "local_latency_ms": 1.37
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:negative:valid:clean",
@@ -4153,7 +4153,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.904
+      "local_latency_ms": 1.366
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:negative:reverse:clean",
@@ -4178,7 +4178,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.887
+      "local_latency_ms": 1.374
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:negative:wrong_null:clean",
@@ -4204,7 +4204,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.921
+      "local_latency_ms": 1.417
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:negative:units:clean",
@@ -4230,7 +4230,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.923
+      "local_latency_ms": 1.356
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:zero:valid:clean",
@@ -4255,7 +4255,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.902
+      "local_latency_ms": 1.364
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:zero:reverse:clean",
@@ -4280,7 +4280,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.916
+      "local_latency_ms": 1.385
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:zero:wrong_null:clean",
@@ -4306,7 +4306,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.904
+      "local_latency_ms": 1.348
     },
     {
       "case": "EV_FINANCE:NOT_APPLICABLE:zero:units:clean",
@@ -4332,7 +4332,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 1.033
+      "local_latency_ms": 1.354
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:positive:valid:clean",
@@ -4356,7 +4356,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 1.072
+      "local_latency_ms": 1.381
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:positive:reverse:clean",
@@ -4380,7 +4380,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.938
+      "local_latency_ms": 1.369
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:positive:wrong_null:clean",
@@ -4405,7 +4405,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.954
+      "local_latency_ms": 1.342
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:positive:units:clean",
@@ -4430,7 +4430,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.91
+      "local_latency_ms": 1.371
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:negative:valid:clean",
@@ -4455,7 +4455,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.907
+      "local_latency_ms": 1.365
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:negative:reverse:clean",
@@ -4480,7 +4480,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.893
+      "local_latency_ms": 1.381
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:negative:wrong_null:clean",
@@ -4506,7 +4506,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.874
+      "local_latency_ms": 1.351
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:negative:units:clean",
@@ -4532,7 +4532,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.879
+      "local_latency_ms": 1.35
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:zero:valid:clean",
@@ -4557,7 +4557,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.897
+      "local_latency_ms": 1.363
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:zero:reverse:clean",
@@ -4582,7 +4582,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.92
+      "local_latency_ms": 1.374
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:zero:wrong_null:clean",
@@ -4608,7 +4608,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.88
+      "local_latency_ms": 1.361
     },
     {
       "case": "EV_FINANCE:SUPPRESSED:zero:units:clean",
@@ -4634,7 +4634,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.887
+      "local_latency_ms": 1.354
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:customer_id",
@@ -4659,7 +4659,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.891
+      "local_latency_ms": 1.387
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:rules_version",
@@ -4684,7 +4684,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.889
+      "local_latency_ms": 1.356
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:eligibility_disclaimer",
@@ -4709,7 +4709,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.891
+      "local_latency_ms": 1.375
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:exclusions",
@@ -4734,7 +4734,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.886
+      "local_latency_ms": 1.385
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:evidence",
@@ -4759,7 +4759,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.907
+      "local_latency_ms": 1.414
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:trust",
@@ -4784,7 +4784,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.904
+      "local_latency_ms": 1.422
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:propensity",
@@ -4809,7 +4809,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.941
+      "local_latency_ms": 1.473
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:impact_boundary",
@@ -4834,7 +4834,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.889
+      "local_latency_ms": 1.36
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:impact_assumptions",
@@ -4859,7 +4859,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.878
+      "local_latency_ms": 1.349
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:impact_exclusions",
@@ -4884,7 +4884,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.877
+      "local_latency_ms": 1.382
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:unknown_reason:reason_codes",
@@ -4910,7 +4910,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "UNRECOGNIZED_REASON_CODE",
-      "local_latency_ms": 0.803
+      "local_latency_ms": 1.276
     },
     {
       "case": "GREEN_HOME:RECOMMEND:missing:unknown_reason:reason_codes",
@@ -4937,7 +4937,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "UNRECOGNIZED_REASON_CODE",
-      "local_latency_ms": 0.389
+      "local_latency_ms": 0.604
     },
     {
       "case": "SOLAR_FINANCE:RECOMMEND:missing:unknown_reason:reason_codes",
@@ -4964,7 +4964,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "UNRECOGNIZED_REASON_CODE",
-      "local_latency_ms": 0.34
+      "local_latency_ms": 0.55
     },
     {
       "case": "PAPERLESS_BANKING:RECOMMEND:missing:unknown_reason:reason_codes",
@@ -4992,7 +4992,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "UNRECOGNIZED_REASON_CODE",
-      "local_latency_ms": 0.225
+      "local_latency_ms": 0.365
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:positive:valid:confidence_low",
@@ -5017,7 +5017,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 2783.503
+      "local_latency_ms": 1985.687
     },
     {
       "case": "EV_FINANCE:INSUFFICIENT_INFORMATION:positive:valid:confidence_suppressed",
@@ -5042,7 +5042,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 3.695
+      "local_latency_ms": 1.841
     },
     {
       "case": "EV_FINANCE:RECOMMEND:positive:valid:multiple_opportunities",
@@ -5067,7 +5067,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 1.722
+      "local_latency_ms": 1.514
     },
     {
       "case": "GREEN_HOME:RECOMMEND:missing:valid:multiple_opportunities",
@@ -5093,7 +5093,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 1.443
+      "local_latency_ms": 0.745
     }
   ],
   "summary": {
@@ -5103,7 +5103,7 @@
     "numeric_consistency_rate": 1.0,
     "unsupported_claims": 0,
     "fallback_rate": 0.63,
-    "local_mean_latency_ms": 15.112,
+    "local_mean_latency_ms": 11.465,
     "live_provider_latency_ms": null,
     "live_provider_cost": null
   },

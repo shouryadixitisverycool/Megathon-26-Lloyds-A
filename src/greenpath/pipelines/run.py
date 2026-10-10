@@ -45,9 +45,9 @@ from greenpath.pipelines import runtime
 from greenpath.pipelines.customer360 import build_customer360
 from greenpath.pipelines.feature_registry import PROPENSITY_FEATURES
 from greenpath.pipelines.leakage_checks import EventSource, LeakageError, run_all_checks
-from greenpath.pipelines.schemas import ALL_TABLES, RAW_TABLES, validate_table
+from greenpath.pipelines.schemas import ALL_TABLES, OPTIONAL_TABLES, RAW_TABLES, validate_dataset
 from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
-from greenpath.pipelines.split import make_labels, split_customers, write_split_manifest
+from greenpath.pipelines.split import make_labels, split_pipeline_customers, write_split_manifest
 from greenpath.trust.ood import OODDetector
 
 PRODUCTS = list(Product)
@@ -100,7 +100,7 @@ def json_value(o):
 # ---- data loading ------------------------------------------------------------------------------
 
 def load_tables(directory: Path) -> dict[str, pd.DataFrame]:
-    missing = [n for n in ALL_TABLES if not (directory / f"{n}.parquet").exists()]
+    missing = [n for n in ALL_TABLES if n not in OPTIONAL_TABLES and not (directory / f"{n}.parquet").exists()]
     if missing:
         raise FileNotFoundError(f"{directory}: missing {missing}; run `make data`/`make perturbed` first")
     manifest_path = directory / "generator_config.json"
@@ -111,15 +111,27 @@ def load_tables(directory: Path) -> dict[str, pd.DataFrame]:
         path = directory / name
         if path.name != name or not path.exists() or sha256_file(path) != expected:
             raise ValueError(f"{path}: dataset hash differs from generator manifest; regenerate the dataset")
-    tables = {n: pd.read_parquet(directory / f"{n}.parquet") for n in ALL_TABLES}
-    for name, df in tables.items():
-        validate_table(df, ALL_TABLES[name])
+    tables = {n: pd.read_parquet(directory / f"{n}.parquet") for n in ALL_TABLES
+              if (directory / f"{n}.parquet").exists()}
+    validate_dataset(tables)
     return tables
 
 
 def raw_only(tables: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
     """Feature-pipeline inputs: truth tables are never passed on."""
-    return {n: tables[n] for n in RAW_TABLES}
+    return {n: tables[n] for n in RAW_TABLES if n in tables}
+
+
+def cutoff_context(tables: dict[str, pd.DataFrame], cutoff: date) -> pd.DataFrame:
+    """Latest profile actually available at cutoff, with future joiners excluded."""
+    ts = pd.Timestamp(cutoff)
+    source = tables.get("customer_history", tables["customers"])
+    visible = source[(source["record_updated_at"] <= ts) & (source["available_at"] <= ts)
+                     & (source["customer_since"] <= ts)]
+    visible = visible.sort_values(["customer_id", "record_updated_at", "available_at"], kind="stable")
+    visible = visible.drop_duplicates("customer_id", keep="last").set_index("customer_id")
+    ids = tables["customers"].loc[tables["customers"]["customer_since"] <= ts, "customer_id"]
+    return visible.reindex(ids)[["region", "segment", "age_band", "income_band", "home_owner"]]
 
 
 def categorise(categoriser: TransactionCategoriser, txns: pd.DataFrame) -> pd.DataFrame:
@@ -206,12 +218,28 @@ def stage_train() -> None:
     log(f"point-in-time check: {pit['status']}")
 
     # 4. labels + customer-level split
-    labels = make_labels(tables["customer_outcomes"], frame.index, config.FEATURE_CUTOFF)
-    split = split_customers(frame.index)
-    # Reserve release-selection customers before propensity tuning/calibration or meta fitting.
-    validation_ids = split.index[split == "validation"].sort_values()
-    release_ids = np.random.default_rng(config.SEED_SPLIT).permutation(validation_ids)[::3]
-    split.loc[release_ids] = "confidence_release"
+    labels = make_labels(tables["customer_outcomes"], frame.index, config.FEATURE_CUTOFF,
+                         coverage=tables.get("outcome_observation"))
+    quality = validate_dataset(tables)
+    quality["label_window"] = {
+        "cutoff": config.FEATURE_CUTOFF, "window_days": config.OUTCOME_WINDOW_DAYS,
+        "coverage_mode": "EXPLICIT" if "outcome_observation" in tables else "COMPLETE_SIMULATION_ASSUMPTION",
+        "products": {p.value: {"observed_positive": int((labels[p.value] == 1).sum()),
+                                "observed_negative": int((labels[p.value] == 0).sum()),
+                                "unsupported": int(labels[p.value].isna().sum())} for p in PRODUCTS},
+    }
+    split = split_pipeline_customers(frame.index)
+    quality["split_counts"] = split.value_counts().to_dict()
+    quality["product_cohorts"] = {}
+    for p in PRODUCTS:
+        eligible, _ = population_mask(frame, p)
+        quality["product_cohorts"][p.value] = {
+            cohort: {"customers": int((split == cohort).sum()),
+                     "eligible": int((eligible & (split == cohort)).sum()),
+                     "eligible_observed": int((eligible & (split == cohort) & labels[p.value].notna()).sum())}
+            for cohort in ("train", "validation", "confidence_release", "test", "demo")
+        }
+    write_json(config.REPORTS_DIR / "dataset_quality.json", quality)
     split_hash = write_split_manifest(split, SPLIT_PATH)
     labels.to_parquet(config.PROCESSED_DIR / "labels.parquet")
 
@@ -231,12 +259,15 @@ def stage_train() -> None:
     timings["point_in_time_and_leakage_seconds"] = time.perf_counter() - start
 
     # 6. propensity models (+ proxy ablation variants), calibrated on validation only
-    audit = tables["customers"].set_index("customer_id")[["income_band", "region", "age_band"]]
+    audit = cutoff_context(tables, config.FEATURE_CUTOFF)[["income_band", "region", "age_band"]]
     start = time.perf_counter()
     bundles = {}
     for p in PRODUCTS:
-        bundles[p] = train_product(frame, labels, split, p)
-        proxy = train_product(add_proxy_features(frame, audit), labels, split, p,
+        observed = labels[p.value].notna()
+        product_frame = frame.loc[observed]
+        product_labels = labels.loc[observed]
+        bundles[p] = train_product(product_frame, product_labels, split, p)
+        proxy = train_product(add_proxy_features(product_frame, audit), product_labels, split, p,
                               extra_features=PROXY_ABLATION_FEATURES, variant="proxy")
         save_bundle(proxy)
         log(f"{p.value}: selected {bundles[p].selected_model_type.value} "
@@ -259,7 +290,7 @@ def stage_train() -> None:
     select_thresholds(frame, split, bundles, detectors, config.ARTIFACT_DIR / "trust_thresholds.json")
     timings["ood_and_trust_selection_seconds"] = time.perf_counter() - start
 
-    # 8. Fit confidence on validation, select release on reserved validation customers, never test.
+    # 8. Fit confidence on validation, select release on an independent cohort, never test.
     start = time.perf_counter()
     decisions = train_confidence(frame, labels, split, bundles, detectors)
     timings["confidence_training_seconds"] = time.perf_counter() - start
@@ -286,6 +317,9 @@ def feature_inputs_at_cutoff(raw, txns, cutoff: date):
     for name in ("financial_products", "vehicles", "energy_usage", "digital_usage"):
         if "available_at" in trunc[name]:
             trunc[name] = trunc[name][trunc[name]["available_at"] <= ts]
+    for name in ("customer_history", "vehicle_ownership"):
+        if name in raw:
+            trunc[name] = raw[name][(raw[name]["record_updated_at"] <= ts) & (raw[name]["available_at"] <= ts)]
     txns = txns[txns["date"] <= ts]
     if "available_at" in txns:
         txns = txns[txns["available_at"] <= ts]
@@ -299,6 +333,9 @@ def feature_event_sources(raw, txns, cutoff: date) -> list[EventSource]:
         schema = RAW_TABLES[name]
         sources.append(EventSource(name, trunc[name], schema.event_time_column,
                                     monthly=name in {"energy_usage", "digital_usage"}, availability_col="available_at"))
+    for name in ("customer_history", "vehicle_ownership"):
+        if name in trunc:
+            sources.append(EventSource(name, trunc[name], "record_updated_at", availability_col="available_at"))
     # A current customer profile is not a historical event: future profiles are masked by
     # Customer 360 rather than dropping the customer identity and its past transactions.
     customers = raw["customers"]
@@ -326,7 +363,7 @@ def point_in_time_check(raw, txns, frame, cutoff: date) -> dict:
 
 def _confidence_rows(frame, labels, split, bundle, detector, product, which: str):
     mask, _ = population_mask(frame, product)
-    rows = frame[mask & (split.reindex(frame.index) == which)]
+    rows = frame[mask & (split.reindex(frame.index) == which) & labels[product.value].reindex(frame.index).notna()]
     y = labels.loc[rows.index, product.value].to_numpy()
     p = predict_calibrated(bundle, rows) if len(rows) else np.array([], dtype=float)
     feats = runtime.confidence_features(bundle, rows, p, detector)
@@ -421,7 +458,7 @@ def main(argv: list[str] | None = None) -> None:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", nargs="?", default="all",
-                        choices=("env", "data", "train", "evaluate", "predict", "demo", "all"))
+                        choices=("env", "data", "train", "evaluate", "predict", "demo", "manifest", "all"))
     parser.add_argument("--customers", type=int, default=DEFAULT_CUSTOMERS,
                         help="synthetic customers per dataset, excluding base demo personas")
     args = parser.parse_args(argv)
@@ -445,6 +482,8 @@ def main(argv: list[str] | None = None) -> None:
     if stage == "demo":
         from greenpath.pipelines.predict import stage_demo
         stage_demo()
+    if stage == "manifest":
+        write_run_manifest()
     if stage in ("train", "evaluate", "predict", "all"):
         update_timings(**{f"{stage}_command_seconds": time.perf_counter() - started,
                           "command_process_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss

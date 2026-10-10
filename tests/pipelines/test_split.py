@@ -17,6 +17,7 @@ from greenpath.pipelines.split import (
     adopted_before,
     make_labels,
     split_customers,
+    split_pipeline_customers,
     write_split_manifest,
 )
 
@@ -100,6 +101,20 @@ def test_split_fractions_are_respected():
     assert counts["train"] == 1400
     assert counts["validation"] == 300
     assert counts["test"] == 300
+
+
+def test_pipeline_reserves_independent_release_cohort_without_changing_default_split(tmp_path):
+    ids = [f"S{i:05d}" for i in range(20_000)] + list(DEMO_PERSONA_IDS)
+    split = split_pipeline_customers(ids)
+    assert split.value_counts().to_dict() == {
+        "train": 11_000, "validation": 3_000, "confidence_release": 3_000,
+        "test": 3_000, "demo": len(DEMO_PERSONA_IDS),
+    }
+    assert split.index.is_unique and set(split.index) == set(ids)
+    assert split.loc[DEMO_PERSONA_IDS].eq("demo").all()
+    assert split.to_dict() == split_pipeline_customers(reversed(ids)).to_dict()
+    assert split.to_dict() != split_pipeline_customers(ids, seed=SEED_SPLIT + 1).to_dict()
+    assert write_split_manifest(split, tmp_path / "split.csv")
 
 
 def test_demo_personas_present_are_labelled_demo_and_absent_ones_are_ignored():
