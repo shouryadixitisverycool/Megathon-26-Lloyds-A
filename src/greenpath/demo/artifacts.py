@@ -5,6 +5,9 @@ from decimal import Decimal
 from pathlib import Path
 import os
 import json
+import hashlib
+import logging
+from time import perf_counter
 
 from greenpath import config
 from greenpath.contracts.enums import ConfidenceStatus, FuelType, Severity, TrustIssueCategory
@@ -13,6 +16,8 @@ from greenpath.contracts.product import (
 )
 from greenpath.impact import Product
 from greenpath.impact.uk_adapter import build_uk_registry
+
+logger = logging.getLogger("uvicorn.error")
 
 
 def _adapt_trust(source):
@@ -73,8 +78,19 @@ class ArtifactRepository:
         self._overrides = {}
         self._source_history = {}
         manifest = config.REPORTS_DIR / "RUN_MANIFEST.json"
-        self.run_identity = (getattr(runtime, "run_identity", None) if injected_runtime else
-                             json.loads(manifest.read_text()) if manifest.is_file() else None)
+        self.run_identity = getattr(runtime, "run_identity", None) if injected_runtime else None
+        if not injected_runtime and manifest.is_file():
+            raw = manifest.read_bytes()
+            summary = json.loads(raw)
+            self.run_identity = {
+                "schema_version": "manifest-reference-v1",
+                "manifest_path": str(manifest.resolve()),
+                "manifest_sha256": hashlib.sha256(raw).hexdigest(),
+                "feature_version": summary.get("feature_version"),
+                "seeds": summary.get("seeds"),
+                "timeline": summary.get("timeline"),
+                "n_customers": summary.get("generator", {}).get("config", {}).get("n_customers"),
+            }
 
     def bind_store(self, store):
         from greenpath.contracts.customer import CustomerSnapshot as SourceSnapshot
@@ -156,22 +172,24 @@ class ArtifactRepository:
 
     def get_snapshot(self, customer_id):
         result = self._at(self.runtime.snapshots.default_cutoff)[0].get(customer_id)
-        return result.model_copy(deep=True) if result else None
+        return CustomerSnapshot.model_validate(result.model_dump(mode="python")) if result else None
 
     def list_snapshots(self):
-        return tuple(s.model_copy(deep=True) for s in self._at(self.runtime.snapshots.default_cutoff)[0].values())
+        return tuple(CustomerSnapshot.model_validate(s.model_dump(mode="python"))
+                     for s in self._at(self.runtime.snapshots.default_cutoff)[0].values())
 
     def get_propensity(self, customer_id, product):
         result = self._at(self.runtime.snapshots.default_cutoff)[1].get((customer_id, Product(product)))
-        return result.model_copy(deep=True) if result else None
+        return PropensityResult.model_validate(result.model_dump(mode="python")) if result else None
 
     def get_impact_input(self, customer_id, product):
         Product(product)
-        snapshot = self.get_snapshot(customer_id)
+        snapshot = self._at(self.runtime.snapshots.default_cutoff)[0].get(customer_id)
         if snapshot is None:
             return None
-        return (self.scenario_provider.attach(snapshot.source_snapshot, product)
-                if self.scenario_provider is not None else snapshot.source_snapshot)
+        source = type(snapshot.source_snapshot).model_validate(snapshot.source_snapshot.model_dump(mode="python"))
+        return (self.scenario_provider.attach(source, product)
+                if self.scenario_provider is not None else source)
 
     def list_history(self):
         if self._history is None:
@@ -185,6 +203,8 @@ class ArtifactRepository:
                 outcomes = {(pd.Timestamp(row.cutoff).date(), row.customer_id, Product(row.product)): int(row.observed_adoption_90d)
                             for row in frame.itertuples(index=False) if pd.notna(row.observed_adoption_90d)}
             for cutoff in self.runtime.snapshots.cutoffs:
+                started = perf_counter()
+                logger.info("Startup history cutoff=%s phase=start", cutoff)
                 snapshots, propensities = self._at(cutoff)
                 class CutoffProvider:
                     impact_calculators = self.impact_calculators
@@ -197,14 +217,15 @@ class ArtifactRepository:
                         snapshot = snapshots.get(customer_id)
                         if snapshot is None:
                             return None
-                        source = snapshot.source_snapshot.model_copy(deep=True)
+                        source = type(snapshot.source_snapshot).model_validate(snapshot.source_snapshot.model_dump(mode="python"))
                         return (self.scenario_provider.attach(source, product)
                                 if self.scenario_provider is not None else source)
                     scenario_provider = self.scenario_provider
                 provider = CutoffProvider()
                 # Evaluate against that month's evidence, never copy current decisions.
                 service = RecommendationService(provider, provider, provider,
-                    clock=lambda c=cutoff: datetime.combine(c, time.max, tzinfo=timezone.utc))
+                    clock=lambda c=cutoff: datetime.combine(c, time.max, tzinfo=timezone.utc),
+                    include_provenance=False)
                 for customer_id in snapshots:
                     records.extend(HistoryRecord(customer_id=customer_id, month=cutoff.strftime("%Y-%m"),
                                                  product=r.product, state=r.state,
@@ -224,6 +245,7 @@ class ArtifactRepository:
                                    for r in service.recommendations(customer_id))
                 if cutoff != self.runtime.snapshots.default_cutoff:
                     del self._cache[cutoff]
+                logger.info("Startup history cutoff=%s customers=%d seconds=%.2f", cutoff, len(snapshots), perf_counter() - started)
             self._history = tuple(records)
         return self._history
 

@@ -4,43 +4,43 @@
   "runs": [
     {
       "provider_mode": "fixture",
-      "startup_seconds": 0.013837374979630113,
+      "startup_seconds": 0.012448334135115147,
       "api": {
         "/health": {
           "n": 5,
-          "p50_ms": 0.6042919121682644,
-          "p95_ms": 1.3979254756122825,
-          "max_ms": 1.596083864569664
+          "p50_ms": 0.6739171221852303,
+          "p95_ms": 1.88595843501389,
+          "max_ms": 2.161625074222684
         },
         "/customers/GP-001": {
           "n": 5,
-          "p50_ms": 0.6121669430285692,
-          "p95_ms": 0.833125552162528,
-          "max_ms": 0.8622088935226202
+          "p50_ms": 0.8358750492334366,
+          "p95_ms": 1.1362498626112938,
+          "max_ms": 1.2107498478144407
         },
         "/customers/GP-001/recommendations": {
           "n": 5,
-          "p50_ms": 10.880500078201294,
-          "p95_ms": 20.312432758510113,
-          "max_ms": 21.431915927678347
+          "p50_ms": 7.6471250504255295,
+          "p95_ms": 12.066266825422645,
+          "max_ms": 13.135500019416213
         },
         "/customers/GP-001/explanations/EV_FINANCE": {
           "n": 5,
-          "p50_ms": 7.44804204441607,
-          "p95_ms": 8.185166912153363,
-          "max_ms": 8.250166894868016
+          "p50_ms": 9.642582852393389,
+          "p95_ms": 10.497158532962203,
+          "max_ms": 10.700750164687634
         },
         "/portfolio/summary": {
           "n": 5,
-          "p50_ms": 28.448583092540503,
-          "p95_ms": 35.69805007427931,
-          "max_ms": 37.39825007505715
+          "p50_ms": 38.550375029444695,
+          "p95_ms": 52.4637081194669,
+          "max_ms": 55.77895790338516
         },
         "/portfolio/trends": {
           "n": 5,
-          "p50_ms": 1.4764158986508846,
-          "p95_ms": 1.723858481273055,
-          "max_ms": 1.7834168393164873
+          "p50_ms": 1.9598330836743116,
+          "p95_ms": 2.3133914452046156,
+          "max_ms": 2.3833748418837786
         }
       },
       "explanation_cache": {
@@ -48,7 +48,7 @@
         "cache_hits": 4,
         "cache_misses": 1,
         "cache_hit_rate": 0.8,
-        "average_latency_ms": 0.4582333844155073,
+        "average_latency_ms": 0.6185250356793404,
         "provider_attempts": 0,
         "provider_completed": 0,
         "live_provider_latency_ms": null,
@@ -558,59 +558,59 @@
       },
       "portfolio_measurement_boundary": "Full-cohort scoring/ranking and audits read startup/summary-persisted decisions from isolated SQLite, omitting unused provenance snapshots. Includes cohort validation and the normal priority formula; excludes redundant inference/persistence. Not a fresh opportunities API latency measurement.",
       "stage_seconds": {
-        "application_build": 0.014183166902512312,
-        "lifespan_startup": 0.013837374979630113,
-        "portfolio_scoring_and_ranking": 0.003675958840176463,
-        "distributions": 0.0004027090035378933,
-        "fairness_and_ablation": 2.919696271419525e-07,
-        "total": 0.2971702499780804
+        "application_build": 0.02082550013437867,
+        "lifespan_startup": 0.012448334135115147,
+        "portfolio_scoring_and_ranking": 0.0039751247968524694,
+        "distributions": 0.0005062080454081297,
+        "fairness_and_ablation": 4.1606836020946503e-07,
+        "total": 0.3617271250113845
       },
       "memory": {
-        "process_peak_rss_bytes": 285458432,
-        "process_peak_rss_before_bytes": 279789568,
+        "process_peak_rss_bytes": 284049408,
+        "process_peak_rss_before_bytes": 277676032,
         "boundary": "resource.getrusage(RUSAGE_SELF).ru_maxrss in bytes; process lifetime high-water RSS including native buffers, not current RSS or an isolated per-mode peak. Fixture and trained runs share a process."
       },
       "measurement_boundary": "Local in-process FastAPI TestClient without evaluator allocation tracing; includes full provider startup and normal SQLite decision persistence; excludes network transport, Streamlit render and live LLM latency."
     },
     {
       "provider_mode": "trained",
-      "startup_seconds": 216.65902316686697,
+      "startup_seconds": 302.8440399169922,
       "api": {
         "/health": {
           "n": 5,
-          "p50_ms": 0.7523749954998493,
-          "p95_ms": 11.712575051933525,
-          "max_ms": 14.449625043198466
+          "p50_ms": 0.7980829104781151,
+          "p95_ms": 40.44853299856185,
+          "max_ms": 50.08658301085234
         },
         "/customers/C10001": {
           "n": 5,
-          "p50_ms": 1.1219580192118883,
-          "p95_ms": 3.9217413868755093,
-          "max_ms": 4.618457984179258
+          "p50_ms": 1.8735420890152454,
+          "p95_ms": 7.848049793392419,
+          "max_ms": 9.142583003267646
         },
         "/customers/C10001/recommendations": {
           "n": 5,
-          "p50_ms": 6.95287506096065,
-          "p95_ms": 33.56040040962397,
-          "max_ms": 39.34566699899733
+          "p50_ms": 10.886125033721328,
+          "p95_ms": 56.37444965541361,
+          "max_ms": 67.68820784054697
         },
         "/customers/C10001/explanations/EV_FINANCE": {
           "n": 5,
-          "p50_ms": 9.303874801844358,
-          "p95_ms": 12.759332824498415,
-          "max_ms": 13.491916004568338
+          "p50_ms": 12.826666934415698,
+          "p95_ms": 22.962491307407614,
+          "max_ms": 25.440666126087308
         },
         "/portfolio/summary": {
           "n": 5,
-          "p50_ms": 0.5503748543560505,
-          "p95_ms": 0.9814161341637372,
-          "max_ms": 1.0726659093052149
+          "p50_ms": 1.0900839697569609,
+          "p95_ms": 1.6903916839510202,
+          "max_ms": 1.7608751077204943
         },
         "/portfolio/trends": {
           "n": 5,
-          "p50_ms": 1487.6140421256423,
-          "p95_ms": 13486.09824217856,
-          "max_ms": 13650.130833964795
+          "p50_ms": 2233.3522920962423,
+          "p95_ms": 14553.799158660693,
+          "max_ms": 17295.033917063847
         }
       },
       "explanation_cache": {
@@ -618,7 +618,7 @@
         "cache_hits": 4,
         "cache_misses": 1,
         "cache_hit_rate": 0.8,
-        "average_latency_ms": 1.4798167627304792,
+        "average_latency_ms": 3.328549861907959,
         "provider_attempts": 0,
         "provider_completed": 0,
         "live_provider_latency_ms": null,
@@ -2190,16 +2190,16 @@
       },
       "portfolio_measurement_boundary": "Full-cohort scoring/ranking and audits read startup/summary-persisted decisions from isolated SQLite, omitting unused provenance snapshots. Includes cohort validation and the normal priority formula; excludes redundant inference/persistence. Not a fresh opportunities API latency measurement.",
       "stage_seconds": {
-        "application_build": 0.07505575008690357,
-        "lifespan_startup": 216.65902316686697,
-        "portfolio_scoring_and_ranking": 9.465667707845569,
-        "distributions": 0.08567520813085139,
-        "fairness_and_ablation": 0.33021616586484015,
-        "total": 257.4848134999629
+        "application_build": 0.09743379103019834,
+        "lifespan_startup": 302.8440399169922,
+        "portfolio_scoring_and_ranking": 21.879042625194415,
+        "distributions": 0.07668599998578429,
+        "fairness_and_ablation": 0.3970472081564367,
+        "total": 352.61196770798415
       },
       "memory": {
-        "process_peak_rss_bytes": 1743290368,
-        "process_peak_rss_before_bytes": 285458432,
+        "process_peak_rss_bytes": 1791541248,
+        "process_peak_rss_before_bytes": 284049408,
         "boundary": "resource.getrusage(RUSAGE_SELF).ru_maxrss in bytes; process lifetime high-water RSS including native buffers, not current RSS or an isolated per-mode peak. Fixture and trained runs share a process."
       },
       "measurement_boundary": "Local in-process FastAPI TestClient without evaluator allocation tracing; includes full provider startup and normal SQLite decision persistence; excludes network transport, Streamlit render and live LLM latency."

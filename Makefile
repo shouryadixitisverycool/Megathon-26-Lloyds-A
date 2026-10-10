@@ -7,10 +7,10 @@ setup:
 	uv sync --locked
 
 test:
-	GREENPATH_PROVIDER=fixture uv run --locked pytest
+	OPENAI_API_KEY= GREENPATH_LLM_API_KEY= GREENPATH_PROVIDER=fixture uv run --locked pytest
 
 test-trained:
-	GREENPATH_LLM_API_KEY= GREENPATH_PROVIDER=fixture uv run --locked pytest \
+	OPENAI_API_KEY= GREENPATH_LLM_API_KEY= GREENPATH_PROVIDER=fixture uv run --locked pytest \
 		tests/integration/test_trained_acceptance.py tests/integration/test_trained_safety.py \
 		tests/integration/test_artifact_providers.py tests/integration/test_demo_providers.py \
 		tests/api/test_api.py::test_default_demo_wires_real_services_and_explicit_history

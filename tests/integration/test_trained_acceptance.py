@@ -33,6 +33,7 @@ def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
     monkeypatch.setattr(run, "CATEGORISED_PATH", config.PROCESSED_DIR / "transactions_categorised.parquet")
     monkeypatch.setattr(run, "SPLIT_PATH", config.PROCESSED_DIR / "split_manifest.csv")
     monkeypatch.delenv("GREENPATH_LLM_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("GREENPATH_PROVIDER", "trained")
     generate_dataset(customers=400)
     run.stage_train()

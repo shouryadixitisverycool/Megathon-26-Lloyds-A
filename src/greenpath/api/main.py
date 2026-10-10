@@ -3,6 +3,8 @@
 from contextlib import asynccontextmanager
 from typing import Protocol
 from pathlib import Path
+import logging
+from time import perf_counter
 
 from fastapi import FastAPI, HTTPException
 
@@ -24,6 +26,8 @@ from greenpath.ports import (
 from greenpath.impact import Product
 
 from .portfolio import historical_trends, summarize
+
+logger = logging.getLogger("uvicorn.error")
 
 
 class RecommendationServicePort(Protocol):
@@ -55,7 +59,10 @@ def create_app(
     if repository is None and needs_repository:
         from greenpath.demo.artifacts import default_repository
 
+        started = perf_counter()
+        logger.info("Startup phase=repository start provider=%s", provider_mode or "environment")
         repository = default_repository(provider_mode)
+        logger.info("Startup phase=repository complete seconds=%.2f", perf_counter() - started)
     if snapshot_provider is None:
         snapshot_provider = repository
     if history_provider is None:
@@ -123,9 +130,15 @@ def create_app(
         # Warm immutable trained evidence before accepting requests. A large first
         # trend calculation should not become a client timeout.
         if getattr(repository, "mode", None) == "trained":
+            started = perf_counter()
+            logger.info("Startup phase=history start")
             repository.list_history()
+            logger.info("Startup phase=history complete seconds=%.2f", perf_counter() - started)
+            started = perf_counter()
+            logger.info("Startup phase=summary-persistence start")
             with store.transaction():
                 portfolio_summary()
+            logger.info("Startup phase=summary-persistence complete seconds=%.2f", perf_counter() - started)
         yield
 
     application = FastAPI(title="GreenPath decision platform", version=CONTRACT_VERSION, lifespan=lifespan)
@@ -198,7 +211,10 @@ def create_app(
         if cacheable and key in summary_cache:
             return summary_cache[key]
         selected = filtered_snapshots(region, segment)
-        decisions = {item.customer_id: served_recommendations.recommendations(item.customer_id) for item in selected}
+        # Persist complete evidence, but aggregation does not need another cohort-sized
+        # copy of source provenance in memory.
+        decisions = {item.customer_id: tuple(r.model_copy(update={"provenance": {}})
+                     for r in served_recommendations.recommendations(item.customer_id)) for item in selected}
         result = summarize(selected, decisions, product)
         if cacheable:
             summary_cache[key] = result

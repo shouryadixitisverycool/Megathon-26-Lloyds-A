@@ -70,7 +70,7 @@ def _to_dt(days: np.ndarray) -> np.ndarray:
     days = np.asarray(days, dtype=np.int64)
     bad = (days >= NONE_DAY) | (days < -50_000)
     out = np.where(bad, 0, days).astype("datetime64[D]").astype("datetime64[ns]")
-    out[bad] = np.datetime64("NaT")
+    out[bad] = np.datetime64("NaT", "ns")
     return out
 
 
