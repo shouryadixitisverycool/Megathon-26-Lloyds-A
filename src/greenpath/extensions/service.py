@@ -112,13 +112,17 @@ def prioritise(rows):
         result.append({**row, "priority": {
             "score": score, "components": components, "weights": weights, "version": PRIORITY_VERSION,
             "normalisation": "Nonnegative impact divided by maximum in the same product/method/boundary/period/factor group",
-            "limitation": None if score is not None else "Priority unavailable because validated confidence or comparable impact is missing. Ranked by calibrated propensity instead.",
+            "ordering_basis": "composite_priority" if score is not None else ("calibrated_propensity" if probability is not None else "deterministic_tie_break"),
+            "limitation": None if score is not None else (
+                "Priority unavailable because a required calibrated propensity, validated confidence or comparable impact component is missing. "
+                + ("Ordered by calibrated propensity instead; this is not composite priority." if probability is not None
+                   else "Calibrated propensity is unavailable; customer ID is only a deterministic tie-break, not a priority ranking.")),
         }})
         result[-1]["expected_sustainability_impact"] = expected_impact(row)
     result.sort(key=lambda r: (r["priority"]["score"] is not None, r["priority"]["score"] or 0,
                                float((r.get("propensity") or {}).get("probability") or 0), r["customer_id"]), reverse=True)
     for rank, row in enumerate(result, 1):
-        row["priority"]["rank"] = rank
+        row["priority"]["rank"] = rank if row["priority"]["score"] is not None else None
     return result
 
 

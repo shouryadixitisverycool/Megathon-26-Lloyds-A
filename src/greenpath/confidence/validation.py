@@ -62,6 +62,12 @@ class ConfidenceValidation:
     overall_error: float = float("nan")
     deciles: list[dict] = field(default_factory=list)  # bin, n, mean_confidence, error_rate, accuracy, calibration_gap
     criteria: dict = field(default_factory=dict)
+    n_correct: int = 0
+    n_incorrect: int = 0
+    brier: float = float("nan")
+    ece: float = float("nan")  # ten fixed-width probability bins
+    calibration_gap: float = float("nan")  # mean probability minus accuracy
+    correctness_auc: float = float("nan")
 
     def to_dict(self) -> dict:
         return _clean(
@@ -71,6 +77,9 @@ class ConfidenceValidation:
                 "bottom30_error": self.bottom30_error, "error_ratio": self.error_ratio,
                 "overall_error": self.overall_error, "deciles": self.deciles,
                 "criteria": self.criteria,
+                "n_correct": self.n_correct, "n_incorrect": self.n_incorrect,
+                "brier": self.brier, "ece": self.ece,
+                "calibration_gap": self.calibration_gap, "correctness_auc": self.correctness_auc,
             }
         )
 
@@ -91,10 +100,11 @@ def validate_confidence(confidence, correct, n_bins: int = 10) -> ConfidenceVali
     }
     if n_bins < 3:
         raise ValueError("confidence validation needs at least three bins")
-    if n < MIN_ROWS or not np.isfinite(conf).all() or ((conf < 0) | (conf > 1)).any():
+    support = correctness_support(ok)
+    if not n or not np.isfinite(conf).all() or ((conf < 0) | (conf > 1)).any():
         why = (f"insufficient data: {n} rows < {MIN_ROWS}" if n < MIN_ROWS else
                "confidence values must be finite probabilities in [0, 1]")
-        return ConfidenceValidation(n=n, passed=False, reasons=[why], criteria=criteria)
+        return ConfidenceValidation(**support, passed=False, reasons=[why], criteria=criteria)
 
     err = (~ok).astype(float)
     rank = pd.Series(conf).rank(method="average").to_numpy() - 1
@@ -120,7 +130,7 @@ def validate_confidence(confidence, correct, n_bins: int = 10) -> ConfidenceVali
         if len(set(er)) > 1:
             rho = float(spearmanr([r["bin"] for r in rows], er).statistic)
 
-    reasons = []
+    reasons = [f"insufficient data: {n} rows < {MIN_ROWS}"] if n < MIN_ROWS else []
     if (bottom & top).any():
         reasons.append("tied scores do not separate low- and high-confidence groups")
     if not (rho <= SPEARMAN_MAX):
@@ -130,11 +140,45 @@ def validate_confidence(confidence, correct, n_bins: int = 10) -> ConfidenceVali
         reasons.append(f"bottom-30% error {bottom_err:.3f} < {MIN_BOTTOM_ERROR}")
     if not (top_err <= RATIO_MAX * bottom_err):
         reasons.append(f"top-30% error {top_err:.3f} is not <= {RATIO_MAX} x bottom-30% error {bottom_err:.3f}")
+    probability_bins = np.minimum((conf * 10).astype(int), 9)
+    ece = sum(float((probability_bins == b).mean()) *
+              abs(float(conf[probability_bins == b].mean() - ok[probability_bins == b].mean()))
+              for b in np.unique(probability_bins))
     return ConfidenceValidation(
-        n=n, passed=not reasons, reasons=reasons, spearman=rho, top30_error=top_err,
-        bottom30_error=bottom_err, error_ratio=ratio, overall_error=float(err.mean()),
+        **support, passed=not reasons, reasons=reasons, spearman=rho, top30_error=top_err,
+        bottom30_error=bottom_err, error_ratio=ratio,
         deciles=rows, criteria=criteria,
+        brier=float(np.mean((conf - ok) ** 2)), ece=ece,
+        calibration_gap=float(conf.mean() - ok.mean()),
+        correctness_auc=float(roc_auc_score(ok, conf)) if len(np.unique(ok)) == 2 else float("nan"),
     )
+
+
+def correctness_support(correct) -> dict:
+    """Counts remain available even when fitting or release validation cannot run."""
+    ok = np.asarray(correct).astype(bool).reshape(-1)
+    return {"n": len(ok), "n_correct": int(ok.sum()), "n_incorrect": int((~ok).sum()),
+            "overall_error": float((~ok).mean()) if len(ok) else float("nan")}
+
+
+def baseline_diagnostics(correct, propensity, threshold: float, constant_correctness: float | None) -> dict:
+    """Fixed baselines only: callers estimate the constant on fitting validation, never here.
+
+    The propensity baseline follows the deployed decision, not max(p, 1-p): the
+    operational threshold need not be 0.5. These diagnostics never change release.
+    """
+    p = np.asarray(propensity, dtype=float)
+    out = {"deployed_propensity_correctness": {
+        "formula": "where(p >= operational_threshold, p, 1-p)",
+        "operational_threshold": float(threshold),
+        "validation": validate_confidence(np.where(p >= threshold, p, 1 - p), correct).to_dict(),
+    }}
+    if constant_correctness is not None:
+        out["constant_correctness"] = {
+            "probability": float(constant_correctness), "estimated_on": "validation",
+            "validation": validate_confidence(np.full(len(p), constant_correctness), correct).to_dict(),
+        }
+    return out
 
 
 def ablation(features_df_val, correct_val, features_df_test, correct_test) -> pd.DataFrame:
@@ -189,13 +233,38 @@ def write_confidence_report(results: dict, path_md, path_json) -> None:
         val = _as_dict(res["validation"])
         decision = "SURFACED" if val["passed"] else "SUPPRESSED"
         entry = {"decision": decision, "validation": val}
+        for key in ("n_validation", "n_release_selection", "release_selection_split",
+                    "test_used_for_release_selection", "held_out_test_diagnostic",
+                    "held_out_test_baselines", "cohorts", "fitting_status", "release_status", "baselines"):
+            if key in res:
+                entry[key] = _clean(res[key])
         md += [f"## {product}", "", f"**Decision: {decision}**  (n={val['n']})", ""]
+        if res.get("cohorts"):
+            md += ["### Cohort support", "", "| cohort | rows | correct | incorrect |", "|---|---|---|---|"]
+            md += [f"| {name} | {s['n']} | {s['n_correct']} | {s['n_incorrect']} |"
+                   for name, s in res["cohorts"].items()]
+            md += ["", f"Fitting: {res.get('fitting_status', 'unknown')}; release: {res.get('release_status', 'unknown')}.",
+                   f"Release split: {res.get('release_selection_split', 'unknown')}; test used for release selection: "
+                   f"{res.get('test_used_for_release_selection', 'unknown')}.", ""]
         if val["reasons"]:
             md += ["Reasons:"] + [f"- {r}" for r in val["reasons"]] + [""]
         sp, t, b = val["spearman"], val["top30_error"], val["bottom30_error"]
         fmt = lambda x: "n/a" if x is None else f"{x:.3f}"  # noqa: E731
         md += [f"- Spearman(bin, error): {fmt(sp)} (need <= {SPEARMAN_MAX})",
                f"- Error top 30% confidence: {fmt(t)}; bottom 30%: {fmt(b)} (need top <= {RATIO_MAX} x bottom, bottom >= {MIN_BOTTOM_ERROR})", ""]
+        md += ["### Held-out correctness diagnostics (do not alter release)", "",
+               "ECE uses ten fixed-width probability bins; calibration gap is mean probability minus accuracy.", "",
+               "| predictor | Brier | ECE | calibration gap | correctness AUC |", "|---|---|---|---|---|"]
+        diagnostic_rows = [("confidence meta-model", val)] + [
+            (name, baseline["validation"]) for name, baseline in res.get("baselines", {}).items()]
+        md += [f"| {name} | {fmt(v.get('brier'))} | {fmt(v.get('ece'))} | "
+               f"{fmt(v.get('calibration_gap'))} | {fmt(v.get('correctness_auc'))} |"
+               for name, v in diagnostic_rows]
+        md += ["", "Constant baseline is estimated on fitting validation only. Propensity baseline is "
+               "q = where(p >= operational threshold, p, 1-p); neither baseline is tuned on release or test.", ""]
+        if res.get("held_out_test_diagnostic"):
+            md += ["### Held-out test diagnostic (not release selection)", "",
+                   "```json", json.dumps(_clean(res["held_out_test_diagnostic"]), indent=2), "```", ""]
         if val["deciles"]:
             md += ["| bin | n | mean confidence | error rate | calibration gap |", "|---|---|---|---|---|"]
             md += [f"| {d['bin']} | {d['n']} | {d['mean_confidence']:.3f} | {d['error_rate']:.3f} | {d['calibration_gap']:+.3f} |"
@@ -208,6 +277,8 @@ def write_confidence_report(results: dict, path_md, path_json) -> None:
             entry["bucket_thresholds"] = _clean(res["bucket_thresholds"])
         if res.get("ablation") is not None:
             ab = res["ablation"]
+            if not isinstance(ab, pd.DataFrame):
+                ab = pd.DataFrame(ab)
             entry["ablation"] = _clean(ab.to_dict(orient="records"))
             md += ["### Ablation", "", "| variant | held-out AUC | passed |", "|---|---|---|"]
             md += [f"| {r['variant']} | {r['test_auc']:.3f} | {r['passed']} |" for r in ab.to_dict(orient="records")]

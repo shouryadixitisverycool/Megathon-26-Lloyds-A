@@ -29,7 +29,9 @@ import pandas as pd
 
 from greenpath import config
 from greenpath.confidence.meta_model import ConfidenceModel
-from greenpath.confidence.validation import ConfidenceValidation, ablation, validate_confidence
+from greenpath.confidence.validation import (
+    ConfidenceValidation, ablation, baseline_diagnostics, correctness_support, validate_confidence,
+)
 from greenpath.contracts import Product
 from greenpath.models.propensity import (
     PROXY_ABLATION_FEATURES,
@@ -371,7 +373,15 @@ def train_confidence(frame, labels, split, bundles, detectors) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     for p in PRODUCTS:
         fv, cv, _, _ = _confidence_rows(frame, labels, split, bundles[p], detectors[p], p, "validation")
-        ft, ct, _, _ = _confidence_rows(frame, labels, split, bundles[p], detectors[p], p, "confidence_release")
+        ft, ct, pt, _ = _confidence_rows(frame, labels, split, bundles[p], detectors[p], p, "confidence_release")
+        evidence = {
+            "n_validation": int(len(cv)), "n_release_selection": int(len(ct)),
+            "release_selection_split": "confidence_release", "test_used_for_release_selection": False,
+            "cohorts": {"fitting_validation": correctness_support(cv),
+                        "release_selection": correctness_support(ct)},
+            "baselines": baseline_diagnostics(ct, pt, bundles[p].threshold, float(np.mean(cv)) if len(cv) else None)
+                         if hasattr(bundles[p], "threshold") else {},
+        }
         path = out_dir / f"{p.value.lower()}.joblib"
         if len(cv) < MIN_CONFIDENCE_ROWS or len(np.unique(cv)) < 2:
             limitation = (f"Confidence suppressed: validation has {len(cv)} rows and "
@@ -380,10 +390,10 @@ def train_confidence(frame, labels, split, bundles, detectors) -> dict:
             path.unlink(missing_ok=True)
             decisions[p.value] = {
                 "surfaced": False, "limitation": limitation,
-                "validation": ConfidenceValidation(n=len(ct), passed=False, reasons=[limitation]).to_dict(),
+                "validation": ConfidenceValidation(**correctness_support(ct), passed=False, reasons=[limitation]).to_dict(),
                 "ablation": [], "coefficients": {}, "bucket_thresholds": {},
-                 "n_validation": len(cv), "n_release_selection": len(ct),
-                 "release_selection_split": "confidence_release", "test_used_for_release_selection": False,
+                **evidence, "fitting_status": "FAILED_INSUFFICIENT_SUPPORT",
+                "release_status": "NOT_RUN_FITTING_FAILED",
             }
             continue
         model = ConfidenceModel().fit(fv, cv)
@@ -397,8 +407,8 @@ def train_confidence(frame, labels, split, bundles, detectors) -> dict:
             "surfaced": bool(val.passed), "limitation": limitation,
             "validation": val.to_dict(), "ablation": abl.to_dict("records"),
             "coefficients": model.coefficients(), "bucket_thresholds": model.bucket_thresholds,
-            "n_validation": int(len(cv)), "n_release_selection": int(len(ct)),
-            "release_selection_split": "confidence_release", "test_used_for_release_selection": False,
+            **evidence, "fitting_status": "FITTED",
+            "release_status": "PASSED" if val.passed else "FAILED",
         }
     return decisions
 

@@ -322,13 +322,17 @@ def validate_dataset(tables: dict[str, pd.DataFrame]) -> dict:
         validate_table(df, ALL_TABLES[name])
     customers = set(tables["customers"]["customer_id"])
     for name, df in tables.items():
-        if "customer_id" in df and not set(df["customer_id"]).issubset(customers):
+        if "customer_id" in df and not df["customer_id"].isin(customers).all():
             raise SchemaError(f"{name}: orphan customer_id")
     truth = tables["transaction_truth"]
-    if set(truth["transaction_id"]) != set(tables["transactions"]["transaction_id"]):
+    # Primary keys have already been checked for uniqueness. Equal counts plus
+    # one-way membership therefore establish the same bijection without making
+    # two enormous Python sets (millions of copied strings for larger cohorts).
+    transactions = tables["transactions"]
+    if len(truth) != len(transactions) or not truth["transaction_id"].isin(transactions["transaction_id"]).all():
         raise SchemaError("transaction_truth: transaction_id must be bijective with transactions")
     merchants = tables["merchants"].set_index("merchant_id")["true_category"]
-    if not set(truth["merchant_id"]).issubset(set(merchants.index)):
+    if not truth["merchant_id"].isin(merchants.index).all():
         raise SchemaError("transaction_truth: orphan merchant_id")
     if (truth["merchant_id"].map(merchants).to_numpy() != truth["true_category"].to_numpy()).any():
         raise SchemaError("transaction_truth: category disagrees with merchant catalogue")

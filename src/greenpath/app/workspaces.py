@@ -318,7 +318,11 @@ def planning_view(customers, load, save):
     rows = response["opportunities"]
     table = [{"Customer": r["customer_id"], "State": r["state"], "Propensity": percentage((r.get("propensity") or {}).get("probability")),
               "Trust": percentage(r["trust"]["score"]), "Impact": impact_label(r["impact"]),
-              "Priority": percentage(r["priority"]["score"]), "Rank": r["priority"]["rank"],
+              "Priority": percentage(r["priority"]["score"]),
+              "Priority rank": str(r["priority"]["rank"]) if r["priority"]["score"] is not None and r["priority"]["rank"] is not None else "Unavailable",
+              "Ordering basis": ("Composite priority" if r["priority"]["score"] is not None else
+                                 "Calibrated propensity (not composite priority)" if (r.get("propensity") or {}).get("probability") is not None else
+                                 "Deterministic tie-break (propensity unavailable)"),
               "Expected sustainability impact": ((r.get("expected_sustainability_impact") or {}).get("value") or "Unavailable") + " " + r["impact"]["units"]} for r in rows]
     st.dataframe(table, hide_index=True)
     points = [{"Customer": r["customer_id"], "Propensity": float(r["propensity"]["probability"]),
