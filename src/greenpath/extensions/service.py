@@ -2,8 +2,8 @@
 
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-
-from greenpath.contracts.enums import Product
+from itertools import islice, product as combinations
+import math
 
 PLANNING_DISCLAIMER = "Synthetic portfolio planning scenario, not an observed outcome or guaranteed reduction. Relevance does not establish eligibility."
 PRIORITY_VERSION = "priority-v1-p40-c25-i20-t15"
@@ -11,6 +11,15 @@ FEEDBACK_STATES = {
     "SHOWN": "SHOWN", "INTERESTED": "ENGAGED", "NOT_INTERESTED": "DECLINED",
     "LATER": "WITHHELD", "ALREADY_COMPLETED": "COMPLETED",
     "DO_NOT_SHOW_AGAIN": "SUPPRESSED", "ACCEPTED": "ACCEPTED", "CLOSED": "CLOSED",
+}
+
+SEARCH_FIELDS = {
+    "annual_mileage_km": (0, 200000, "contextual"),
+    "fuel_spend_90d_avg": (0, 10000, "contextual"),
+    "electricity_kwh_12m": (0, 200000, "contextual"),
+    "gas_kwh_12m": (0, 500000, "contextual"),
+    "paper_statements_12m": (0, 1000, "actionable"),
+    "app_logins_3m_avg": (0, 10000, "contextual"),
 }
 
 
@@ -68,6 +77,18 @@ def impact_group(row):
     )
 
 
+def expected_impact(row):
+    key = impact_group(row)
+    probability = (row.get("propensity") or {}).get("probability")
+    return {
+        "status": "AVAILABLE" if key and probability is not None else "UNAVAILABLE",
+        "value": str(Decimal(str(probability)) * Decimal(str(row["impact"]["value"]))) if key and probability is not None else None,
+        "units": row["impact"].get("units"),
+        "compatibility_group": list(key) if key else None,
+        "limitation": "Calibrated propensity times modelled physical impact; not an observed reduction or a causal estimate.",
+    }
+
+
 def prioritise(rows):
     maxima = {}
     for row in rows:
@@ -93,6 +114,7 @@ def prioritise(rows):
             "normalisation": "Nonnegative impact divided by maximum in the same product/method/boundary/period/factor group",
             "limitation": None if score is not None else "Priority unavailable because validated confidence or comparable impact is missing. Ranked by calibrated propensity instead.",
         }})
+        result[-1]["expected_sustainability_impact"] = expected_impact(row)
     result.sort(key=lambda r: (r["priority"]["score"] is not None, r["priority"]["score"] or 0,
                                float((r.get("propensity") or {}).get("probability") or 0), r["customer_id"]), reverse=True)
     for rank, row in enumerate(result, 1):
@@ -125,7 +147,8 @@ class ExtensionService:
         events = [e for e in self.store.history(customer_id) if e["kind"] == "preferences"]
         return events[-1]["preferences"] if events else {"do_not_contact": False, "channel_consent": {}}
 
-    def opportunities(self, region=None, segment=None, product=None, state=None, min_propensity=0, min_trust=0):
+    def opportunities(self, region=None, segment=None, product=None, state=None, min_propensity=0, min_trust=0,
+                      *, min_confidence=None, min_impact=None, data_quality=None):
         rows = []
         for snap in self.snapshots.list_snapshots():
             if (region and snap.region != region) or (segment and snap.segment != segment):
@@ -136,9 +159,52 @@ class ExtensionService:
                     continue
                 if float(probability or 0) < min_propensity or float(row["trust"]["score"]) < min_trust:
                     continue
+                propensity = row.get("propensity") or {}
+                if min_confidence is not None and (not propensity.get("confidence_validated")
+                        or propensity.get("confidence") is None or float(propensity["confidence"]) < min_confidence):
+                    continue
+                if min_impact is not None and (impact_group(row) is None or Decimal(str(row["impact"]["value"])) < Decimal(str(min_impact))):
+                    continue
+                if data_quality is not None and row["trust"]["status"] != data_quality:
+                    continue
                 row.update(region=snap.region, segment=snap.segment)
                 rows.append(row)
         return prioritise(rows)
+
+    def counterfactual_search(self, customer_id, request):
+        snapshot = self.snapshot(customer_id)
+        runtime = getattr(self.repository, "runtime", None)
+        if runtime is None or snapshot.source_snapshot is None:
+            raise ValueError("Counterfactual search requires trained inference, not fixture probabilities")
+        bundle = runtime.bundles[request.product]
+        candidates = request.candidates
+        for field, values in candidates.items():
+            if field not in SEARCH_FIELDS or field not in bundle.features:
+                raise ValueError(f"{field} is not an approved search feature")
+            lo, hi, _ = SEARCH_FIELDS[field]
+            if not values or len(values) > 16 or any(not math.isfinite(v) or not lo <= v <= hi for v in values):
+                raise ValueError(f"{field} requires 1 to 16 finite values between {lo} and {hi}")
+        source = snapshot.source_snapshot
+        baseline = runtime.propensity.score(source, request.product)
+        fields = list(candidates)
+        evaluated = []
+        total = math.prod(len(values) for values in candidates.values())
+        for values in islice(combinations(*(candidates[field] for field in fields)), request.max_evaluations):
+            changes = dict(zip(fields, values))
+            changed = source.model_copy(update={"features": {**source.features, **changes}})
+            score = runtime.propensity.score(changed, request.product)
+            probability = score.propensity if score.in_model_population else None
+            distance = sum(abs(value - source.features[field]) / (SEARCH_FIELDS[field][1] - SEARCH_FIELDS[field][0])
+                           for field, value in changes.items() if source.features.get(field) is not None)
+            evaluated.append({"changes": changes, "probability": probability, "normalised_distance": distance,
+                              "target_met": probability is not None and probability >= request.target_probability})
+        evaluated.sort(key=lambda row: (not row["target_met"], row["normalised_distance"], -(row["probability"] or 0)))
+        return {"baseline_probability": baseline.propensity if baseline.in_model_population else None,
+                "model_version": baseline.model_version, "calibration_version": baseline.calibration_version,
+                "feature_classes": {field: SEARCH_FIELDS[field][2] for field in fields},
+                "evaluated_count": len(evaluated), "candidate_count": total, "truncated": total > len(evaluated),
+                "results": evaluated, "best": next((row for row in evaluated if row["target_met"]), None),
+                "limitation": "Bounded model sensitivity search, not causal advice or eligibility. Contextual changes are not recommended actions; distance excludes unknown baselines."}
 
     def feedback(self, request):
         with self.store.transaction():
@@ -168,18 +234,27 @@ class ExtensionService:
             with self.store.transaction():
                 replay = self.store.replay("PORTFOLIO", str(request.product), "campaign", request.model_dump(mode="json"))
                 if replay:
-                    return replay["result"]
+                    return {**replay["result"], "campaign_event_id": replay["id"]}
                 result = self._plan(request, campaign)
-                self.store.append("PORTFOLIO", str(request.product), "campaign", request.model_dump(mode="json"), {"result": result})
-                return result
+                event = self.store.append("PORTFOLIO", str(request.product), "campaign", request.model_dump(mode="json"), {"result": result})
+                return {**result, "campaign_event_id": event["id"]}
         return self._plan(request, campaign)
 
     def _plan(self, request, campaign=False):
         rows = self.opportunities(request.region, request.segment, request.product, "RECOMMEND")
-        channel = request.channel if campaign else "app"
+        channel = request.channel
+        active_campaigns = self.store.active_campaigns() if campaign else []
+        remaining_capacity = self.store.remaining_campaign_capacity(channel, request.channel_capacity,
+                                                                    request.max_active_campaigns) if campaign else None
+        used_capacity = request.channel_capacity - self.store.remaining_campaign_capacity(channel, request.channel_capacity) if campaign else 0
+        active_customers = {selection["customer_id"] for event in active_campaigns
+                            for selection in event.get("result", {}).get("selected", [])}
         selected, excluded = [], {}
         for row in rows:
-            action, reason = communication(row, self.store.history(row["customer_id"]), self.preferences(row["customer_id"]), channel)
+            history = self.store.history(row["customer_id"])
+            action, reason = communication(row, history, self.preferences(row["customer_id"]), channel)
+            if campaign and row["customer_id"] in active_customers:
+                action, reason = "DEFER", "Customer already selected in an active campaign"
             if action not in {"SHOW_EDUCATION", "RM_DISCUSSION"}:
                 excluded[reason] = excluded.get(reason, 0) + 1
             else:
@@ -194,10 +269,13 @@ class ExtensionService:
                     else:
                         eligible.append(row)
                 selected = eligible
-                selected.sort(key=lambda row: row["priority"]["score"] if request.objective == "balanced" else Decimal(row["impact"]["value"]), reverse=True)
+                selected.sort(key=lambda row: row["priority"]["score"] if request.objective == "balanced" else row["priority"]["components"]["normalised_impact"], reverse=True)
             else:
                 selected.sort(key=lambda row: Decimal(row["propensity"]["probability"]), reverse=True)
-        selected = selected[:min(request.target_count, request.channel_capacity) if campaign else request.target_count]
+        limit = min(request.target_count, remaining_capacity) if campaign else request.target_count
+        if len(selected) > limit:
+            excluded["Target or remaining channel capacity limit"] = len(selected) - limit
+        selected = selected[:limit]
         groups = {}
         for row in selected:
             key = impact_group(row)
@@ -211,10 +289,17 @@ class ExtensionService:
             "high_confidence_share": sum((r["propensity"].get("source_result") or {}).get("confidence", {}).get("bucket") == "HIGH" and r["propensity"].get("confidence_validated") is True for r in selected) / len(selected) if selected else None,
             "validated_confidence_share": sum(r["propensity"].get("confidence_validated") is True for r in selected) / len(selected) if selected else None,
             "impact_groups": [{"product": key[0], "units": key[1], "boundary": key[2], "period": key[3], "method_version": key[4], "factor_version": key[5], "scenario_impact": str(value)} for key, value in groups.items()],
+            "impact_status": "AVAILABLE" if groups else "UNAVAILABLE",
+            "impact_unavailable_count": sum(impact_group(row) is None for row in selected),
             "selected": [{"customer_id": r["customer_id"], "product": r["product"], "priority": r["priority"]} for r in selected],
             "excluded": excluded, "disclaimer": PLANNING_DISCLAIMER,
-            "constraint_version": "campaign-v1-consent-cap2-30d-fatigue7d-decline60d-single-offer",
+            "constraint_version": "campaign-v2-channel-consent-active-budget-single-offer",
             "executed": False,
+            "channel": channel,
+            "capacity_budget": {"boundary": "Active campaigns until explicitly closed", "limit": request.channel_capacity,
+                                "used": used_capacity, "remaining_before": remaining_capacity,
+                                "active_campaign_count": len(active_campaigns), "max_active_campaigns": request.max_active_campaigns} if campaign else None,
+            "impact_ranking_limitation": "Impact ranking uses within-compatible-group normalisation, never compares raw incompatible units.",
         }
         if campaign and request.execute:
             # Local demo contact records only; this service never sends messages.
@@ -222,6 +307,6 @@ class ExtensionService:
                 event_request = {**request.model_dump(mode="json"), "request_id": f"{request.request_id}:{row['customer_id']}" if request.request_id else None}
                 self.store.append(row["customer_id"], row["product"], "contact", event_request,
                                   {"channel": channel, "recommendation": row, "action": "SIMULATED_CONTACT", "sent": False})
-            result["executed"] = True
+            result["executed"] = bool(selected)
             result["execution_note"] = "Simulated contact audit records only; no messages sent."
         return result

@@ -322,6 +322,14 @@ def build_customer360(tables: Mapping[str, pd.DataFrame], categorised_txns: pd.D
     Truth tables must not be passed (ValueError).
     """
     cutoff = _as_date(cutoff)
+    # Older caller-supplied frames without ingestion metadata retain event-time semantics;
+    # persisted generated tables require available_at through schema validation.
+    tables = dict(tables)
+    for name in ("financial_products", "vehicles", "energy_usage", "digital_usage"):
+        if name in tables and "available_at" in tables[name]:
+            tables[name] = tables[name].loc[tables[name]["available_at"] <= pd.Timestamp(cutoff)]
+    if "available_at" in categorised_txns:
+        categorised_txns = categorised_txns.loc[categorised_txns["available_at"] <= pd.Timestamp(cutoff)]
     leaked = sorted(set(tables) & set(TRUTH_TABLES))
     if leaked:
         raise ValueError(f"truth/evaluation tables must not reach the feature pipeline: {leaked}")
@@ -333,6 +341,9 @@ def build_customer360(tables: Mapping[str, pd.DataFrame], categorised_txns: pd.D
 
     cust = tables["customers"]
     base = cust.loc[cust["customer_since"] <= pd.Timestamp(cutoff)].set_index("customer_id")
+    if "available_at" in base:
+        base = base.copy()
+        base.loc[base["available_at"].isna() | (base["available_at"] > pd.Timestamp(cutoff)), "record_updated_at"] = pd.NaT
     idx = base.index
 
     txn = _transaction_features(idx, categorised_txns, cutoff)

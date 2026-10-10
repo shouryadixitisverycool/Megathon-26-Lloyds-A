@@ -840,6 +840,15 @@ def generate(cfg: GeneratorConfig, verbose: bool = False) -> dict[str, pd.DataFr
     tables["transaction_truth"] = truth
     tables["merchants"] = cat.table.drop(columns=["kind"])
     tables["customers"] = tables["customers"].sort_values("customer_id", ignore_index=True)
+    availability_rng = np.random.default_rng(np.random.SeedSequence([cfg.seed, 917]))
+    for name in ("customers", "transactions", "financial_products", "vehicles", "energy_usage", "digital_usage"):
+        schema = ALL_TABLES[name]
+        event = tables[name][schema.event_time_column or "record_updated_at"]
+        monthly = name in {"energy_usage", "digital_usage"}
+        completed = event + pd.offsets.MonthEnd(0) if monthly else event
+        # Explicitly synthetic ingestion delays, never represented as public-source observations.
+        delay = availability_rng.integers(1 if monthly else 0, 15 if monthly else 8, len(event))
+        tables[name]["available_at"] = completed + pd.to_timedelta(delay, unit="D")
     tables = _ensure_dtypes(tables)
     for name, df in tables.items():
         validate_table(df, ALL_TABLES[name])

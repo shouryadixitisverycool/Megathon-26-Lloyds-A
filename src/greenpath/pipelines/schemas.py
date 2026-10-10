@@ -196,6 +196,10 @@ TRUTH_TABLES: dict[str, TableSchema] = {s.name: s for s in (
 )}
 ALL_TABLES = RAW_TABLES | TRUTH_TABLES
 
+# Source ingestion time is distinct from event time, including completed monthly records.
+for _schema in (CUSTOMERS, TRANSACTIONS, FINANCIAL_PRODUCTS, VEHICLES, ENERGY_USAGE, DIGITAL_USAGE):
+    _schema.columns["available_at"] = "date"
+
 
 class SchemaError(ValueError):
     pass
@@ -210,6 +214,13 @@ def validate_table(df: pd.DataFrame, schema: TableSchema) -> None:
     for col in expected - schema.nullable:
         if df[col].isna().any():
             raise SchemaError(f"{schema.name}.{col}: unexpected nulls")
+    if "available_at" in expected:
+        event_col = schema.event_time_column or "record_updated_at"
+        earliest = df[event_col]
+        if schema.name in {"energy_usage", "digital_usage"}:
+            earliest = earliest + pd.offsets.MonthEnd(0)
+        if (df["available_at"] < earliest).any():
+            raise SchemaError(f"{schema.name}: available_at precedes event completion")
     if df.duplicated(list(schema.primary_key)).any():
         raise SchemaError(f"{schema.name}: duplicate primary key {schema.primary_key}")
     for col, allowed in schema.allowed_values.items():

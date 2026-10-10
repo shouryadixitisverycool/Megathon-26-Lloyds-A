@@ -82,12 +82,24 @@ class ProductSnapshotProvider(Protocol):
     def list_snapshots(self) -> tuple[ProductSnapshot, ...]: ...
 
 
+class SourceSnapshotOverrideProvider(Protocol):
+    """Governed local source updates must rerun scoring, never patch probabilities."""
+
+    def override_source_snapshot(self, snapshot: CustomerSnapshot) -> None: ...
+
+    def restore_source_snapshot(self, snapshot: CustomerSnapshot) -> None:
+        """Restore an uncommitted override if inference or persistence fails."""
+        ...
+
+    def source_snapshot_history(self, customer_id: str) -> tuple[CustomerSnapshot, ...]: ...
+
+
 class ProductPropensityProvider(Protocol):
     def get_propensity(self, customer_id: str, product: Product) -> ProductPropensityResult | None: ...
 
 
 class ImpactInputProvider(Protocol):
-    def get_impact_input(self, customer_id: str, product: Product) -> Mapping[str, object] | None: ...
+    def get_impact_input(self, customer_id: str, product: Product) -> Mapping[str, object] | CustomerSnapshot | None: ...
 
 
 class PortfolioHistoryProvider(Protocol):

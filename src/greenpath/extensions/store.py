@@ -21,6 +21,12 @@ class MemoryStore:
                 product TEXT NOT NULL, kind TEXT NOT NULL, timestamp TEXT NOT NULL,
                 request TEXT NOT NULL, payload TEXT NOT NULL)""")
             db.execute("CREATE INDEX IF NOT EXISTS events_customer ON events(customer_id, timestamp)")
+            db.execute("""CREATE TABLE IF NOT EXISTS decisions (
+                id TEXT PRIMARY KEY, customer_id TEXT NOT NULL, product TEXT NOT NULL,
+                timestamp TEXT NOT NULL, payload TEXT NOT NULL)""")
+            db.execute("""CREATE TABLE IF NOT EXISTS explanations (
+                decision_id TEXT NOT NULL, digest TEXT NOT NULL, payload TEXT NOT NULL,
+                PRIMARY KEY (decision_id, digest))""")
 
     @contextmanager
     def connect(self):
@@ -38,6 +44,9 @@ class MemoryStore:
 
     @contextmanager
     def transaction(self):
+        if getattr(self._local, "connection", None) is not None:
+            yield
+            return
         with self.connect() as db:
             db.execute("BEGIN IMMEDIATE")
             self._local.connection = db
@@ -95,3 +104,74 @@ class MemoryStore:
         with self.connect() as db:
             row = db.execute("SELECT payload FROM events WHERE id=?", (event_id,)).fetchone()
             return json.loads(row[0]) if row else None
+
+    def save_recommendation(self, recommendation):
+        from greenpath.recommendation.service import decision_evidence, decision_identity
+        if recommendation.decision_id is None:
+            recommendation = recommendation.model_copy(update={"decision_id": decision_identity(recommendation)})
+        payload = recommendation.model_dump(mode="json")
+        with self.connect() as db:
+            db.execute("INSERT OR IGNORE INTO decisions VALUES (?,?,?,?,?)", (
+                payload["decision_id"], payload["customer_id"], payload["product"],
+                payload["timestamp"], json.dumps(payload, sort_keys=True),
+            ))
+            stored = db.execute("SELECT payload FROM decisions WHERE id=?", (payload["decision_id"],)).fetchone()
+            if decision_evidence(json.loads(stored[0])) != decision_evidence(payload):
+                raise ValueError("Decision ID already belongs to different immutable evidence")
+        return recommendation.__class__.model_validate_json(stored[0])
+
+    def get_recommendation(self, decision_id):
+        with self.connect() as db:
+            row = db.execute("SELECT payload FROM decisions WHERE id=?", (decision_id,)).fetchone()
+            if row is None:
+                return None
+            result = json.loads(row[0])
+            result["explanations"] = [json.loads(r[0]) for r in db.execute(
+                "SELECT payload FROM explanations WHERE decision_id=? ORDER BY rowid", (decision_id,))]
+            result["unified_provenance"] = {"decision": result.get("provenance", {}),
+                "explanation_runs": [{"prompt_version": e["prompt_version"], "llm_version": e["llm_version"],
+                                      "timestamp": e["timestamp"], "source": e["explanation"]["source"],
+                                      "validation_passed": e["explanation"]["validation_passed"],
+                                      "fallback_reason": e["explanation"].get("fallback_reason")}
+                                     for e in result["explanations"]]}
+            return result
+
+    def recommendation_history(self, customer_id, product=None):
+        with self.connect() as db:
+            rows = db.execute("SELECT payload FROM decisions WHERE customer_id=? ORDER BY rowid", (customer_id,))
+            return [p for row in rows if (p := json.loads(row[0])) and (product is None or p["product"] == product)]
+
+    def save_explanation(self, decision_id, explanation, prompt_version=None):
+        import hashlib
+        payload = {"explanation": explanation.model_dump(mode="json"), "prompt_version": prompt_version,
+                   "llm_version": explanation.provider_version, "timestamp": datetime.now(timezone.utc).isoformat()}
+        digest = hashlib.sha256(json.dumps(payload["explanation"], sort_keys=True).encode() + str(prompt_version).encode()).hexdigest()
+        with self.connect() as db:
+            db.execute("INSERT OR IGNORE INTO explanations VALUES (?,?,?)", (decision_id, digest, json.dumps(payload, sort_keys=True)))
+
+    def source_updates(self, customer_id=None):
+        with self.connect() as db:
+            sql = "SELECT payload FROM events WHERE kind='source_update'"
+            args = ()
+            if customer_id is not None:
+                sql += " AND customer_id=?"
+                args = (customer_id,)
+            return [json.loads(row[0]) for row in db.execute(sql + " ORDER BY rowid", args)]
+
+    def active_campaigns(self):
+        with self.connect() as db:
+            events = [json.loads(r[0]) for r in db.execute("SELECT payload FROM events WHERE kind IN ('campaign', 'campaign_closed') ORDER BY rowid")]
+        closed = {e.get("campaign_id") for e in events if e["kind"] == "campaign_closed"}
+        return [e for e in events if e["kind"] == "campaign" and e["id"] not in closed and e.get("result", {}).get("executed")]
+
+    def remaining_campaign_capacity(self, channel, capacity, max_active_campaigns=None):
+        active = self.active_campaigns()
+        if max_active_campaigns is not None and len(active) >= max_active_campaigns:
+            return 0
+        used = sum(e.get("result", {}).get("selected_count", 0) for e in active
+                   if json.loads(self._event_request(e["id"])).get("channel") == channel)
+        return max(0, capacity - used)
+
+    def _event_request(self, event_id):
+        with self.connect() as db:
+            return db.execute("SELECT request FROM events WHERE id=?", (event_id,)).fetchone()[0]

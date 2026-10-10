@@ -18,7 +18,7 @@ def report():
 
 def test_fixed_suite_is_unique_and_preserves_original_cases(report):
     cases = evaluation_cases()
-    assert len(cases) == 196
+    assert len(cases) == 200
     assert 100 <= len(cases) <= 200
     signatures = [(attack, rec.model_dump_json()) for attack, rec, _, _, _ in cases.values()]
     assert len(set(signatures)) == len(signatures)
@@ -88,10 +88,10 @@ def test_summary_schema_and_offline_limitations_are_unchanged(report):
         "total", "passed", "groundedness_rate", "numeric_consistency_rate", "unsupported_claims",
         "fallback_rate", "local_mean_latency_ms", "live_provider_latency_ms", "live_provider_cost",
     }
-    assert summary["total"] == summary["passed"] == 196
+    assert summary["total"] == summary["passed"] == 200
     assert summary["live_provider_latency_ms"] is summary["live_provider_cost"] is None
     assert "no live LLM called" in report["provider"]
-    assert summary["fallback_rate"] == sum(not row["accepted"] for row in report["cases"]) / 196
+    assert summary["fallback_rate"] == sum(not row["accepted"] for row in report["cases"]) / 200
     unknown = [row for row in report["cases"] if row["attack"] == "unknown_reason"]
     assert len(unknown) == 4
     assert all(row["fallback_reason"] == "UNRECOGNIZED_REASON_CODE" for row in unknown)

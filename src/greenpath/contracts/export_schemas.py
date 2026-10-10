@@ -24,6 +24,8 @@ from greenpath.contracts.recommendation import (
     SegmentRow,
 )
 from greenpath.contracts.trust import TrustAssessment
+from greenpath.contracts import product
+from greenpath.contracts.lifecycle import SourceUpdateRequest
 
 __all__ = ["SCHEMA_DIR", "TOP_LEVEL_CONTRACTS", "build_schemas", "render_schema", "write_schemas"]
 
@@ -41,6 +43,11 @@ TOP_LEVEL_CONTRACTS: dict[str, type[Contract]] = {
     "portfolio_summary": PortfolioSummary,
     "segment_row": SegmentRow,
     "portfolio_trends": PortfolioTrends,
+    "product_customer_snapshot": product.CustomerSnapshot,
+    "product_recommendation": product.Recommendation,
+    "product_explanation": product.Explanation,
+    "product_history_record": product.HistoryRecord,
+    "source_update_request": SourceUpdateRequest,
 }
 
 

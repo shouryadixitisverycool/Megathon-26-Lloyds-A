@@ -106,7 +106,7 @@ def write_split_manifest(split: pd.Series, path: str | Path) -> str:
     labels = pd.Series(split.to_numpy(dtype=object), index=split.index.astype(str))
     if labels.index.has_duplicates:
         raise ValueError("split manifest requires one row per customer_id")
-    unknown = sorted(set(labels.unique().tolist()) - set(SPLIT_LABELS))
+    unknown = sorted(set(labels.unique().tolist()) - (set(SPLIT_LABELS) | {"confidence_release"}))
     if unknown:
         raise ValueError(f"unknown split labels: {unknown}")
     frame = pd.DataFrame({"customer_id": labels.index.to_numpy(dtype=object),

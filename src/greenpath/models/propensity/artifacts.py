@@ -7,6 +7,7 @@ aggregate ``<root>/models/manifest.json``; ``root`` defaults to ``config.ARTIFAC
 from __future__ import annotations
 
 import json
+import math
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 
@@ -44,6 +45,11 @@ def bundle_manifest(b: ProductModelBundle) -> dict:
         "threshold_rule": "max F1 on validation calibrated probabilities (in-sample)",
         "features": b.features,
         "logistic_c": b.logistic_c,
+        "gradient_boosting_implementation": "xgboost.XGBClassifier",
+        "gradient_boosting_parameters": {
+            k: None if isinstance(v, float) and not math.isfinite(v) else v
+            for k, v in b.gbm.get_params().items()},
+        "shap_background_rows": b.shap_background_rows,
         "heuristic_rules": b.heuristic.describe(),
         "reason_thresholds": b.reason_thresholds,
         "reason_version": "reasons_v1",

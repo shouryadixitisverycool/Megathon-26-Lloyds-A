@@ -17,7 +17,7 @@ from greenpath.contracts.enums import ImpactStatus, Product
 from greenpath.contracts.impact import ImpactAssumption, ImpactMetric, ImpactResult as ScoringImpactResult
 from greenpath.contracts.impact_detail import (
     ActivityEvidence, EmissionsScenario, FactorReference, ImpactIssue, ImpactResult,
-    IssueCode, Period,
+    IssueCode, Period, SecondaryActivityMetric,
 )
 from greenpath.extensions import uk_impact
 from greenpath.impact.common import utc_now
@@ -159,7 +159,11 @@ class UKImpactCalculator:
                 source_locator=f"{catalogue['source_sheet']} row {record['source_row']}",
                 source_sha256=catalogue["source_sha256"],
                 verification_basis="Reviewed subset pinned by SHA-256: " + uk_impact.FACTOR_SUBSET_SHA256,
-                source_limitation="2025 factors held constant for a modelled annual scenario; not a historical measured outcome.",
+                 source_limitation=catalogue["current_vintage_limitation"],
+                 source_published_on=catalogue["published_on"],
+                 source_checked_on=catalogue["source_checked_on"],
+                 current_edition=catalogue["current_edition"],
+                 current_edition_url=catalogue["current_edition_url"],
             ) for key, record in passport["factor_records"].items())
         available = passport is not None and passport["status"] != "NOT_CLAIMED" and not issues
         not_claimed = passport is not None and passport["status"] == "NOT_CLAIMED" and not issues
@@ -184,17 +188,25 @@ class UKImpactCalculator:
             period=period, feature_cutoff=cutoff, synthetic_demo=True if source else None,
             factors=factors, factor_catalogue_version=catalogue["version"] if catalogue else "unverified",
             factor_catalogue_sha256=uk_impact.FACTOR_SUBSET_SHA256,
-            boundary="CO2e: " + uk_impact.BOUNDARY,
+             boundary="paper_statement_and_digital_delivery_comparison_not_established"
+                 if self.product == Product.PAPERLESS_BANKING else "CO2e: " + uk_impact.BOUNDARY,
             assumptions=("Synthetic Customer360 data; forecast assumptions must be explicit.",
                          "2025 UK factors held constant; this is not a measured historical reduction.",
                          "Source annual activities are held constant for the annual forecast comparison.",
                          *((f"Source snapshot generated at {source.generated_at.isoformat()}; feature version {source.feature_version}.",)
                            if source else ())),
-            exclusions=("No conversion of CO2e to CO2 or inferred physical efficiencies.",
-                        *(passport.get("limitations", ()) if passport else ())),
+             exclusions=("No conversion of CO2e to CO2 or inferred physical efficiencies.",
+                         *(passport.get("limitations", ()) if passport else ()),
+                         *((passport["limitation"],) if not_claimed else ())),
             method_version=passport["method_version"] if passport else uk_impact.METHOD_VERSION,
             method_release="reviewed-desnz-2025-subset", timestamp=self.clock(),
             evidence=evidence, issues=issues,
+            secondary_metrics=tuple(SecondaryActivityMetric(
+                name=key, value=Decimal(passport[key]), unit=unit,
+                method_version=passport["method_version"],
+                evidence_references=tuple(item.reference for item in evidence),
+            ) for key, unit in (("paper_statements_avoided", "statements/year"),
+                               ("paper_sheets_avoided", "sheets/year"))) if not_claimed else (),
         )
 
     def calculate_scoring(self, payload) -> ScoringImpactResult:

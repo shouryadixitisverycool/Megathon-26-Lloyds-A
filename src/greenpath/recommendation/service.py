@@ -4,6 +4,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from datetime import datetime
 from decimal import Decimal
+import hashlib
+import json
 from types import MappingProxyType
 
 from pydantic import ValidationError
@@ -28,6 +30,21 @@ OOD_CODES = frozenset({"OOD", "OUT_OF_DISTRIBUTION", "OOD_DETECTED"})
 MISSING_CODES = frozenset({"MISSING_EVIDENCE", "MISSING_INPUT", "COMPLETENESS", "INCOMPLETE_EVIDENCE"})
 STALE_CODES = frozenset({"STALE_EVIDENCE", "STALE_INPUT", "FRESHNESS", "UNKNOWN_FRESHNESS"})
 FUTURE_CODES = frozenset({"FUTURE_EVIDENCE", "FUTURE_INPUT", "FUTURE_FEATURE_CUTOFF"})
+
+
+def decision_evidence(payload):
+    """Canonical identity excludes generation times, but retains factual observation times."""
+    if isinstance(payload, dict):
+        return {k: decision_evidence(v) for k, v in payload.items()
+                if k not in {"decision_id", "timestamp", "decision_timestamp", "prediction_timestamp", "generated_at"}}
+    if isinstance(payload, list):
+        return [decision_evidence(v) for v in payload]
+    return payload
+
+
+def decision_identity(recommendation):
+    canonical = json.dumps(decision_evidence(recommendation.model_dump(mode="json")), sort_keys=True, separators=(",", ":"))
+    return "decision-" + hashlib.sha256(canonical.encode()).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -98,6 +115,7 @@ class RecommendationService:
         self.propensity_provider = propensity_provider
         self.impact_input_provider = impact_input_provider
         self.clock = clock
+        self.explanation_context = {}
         self._decision_cache = {} if getattr(snapshot_provider, "mode", None) == "trained" else None
         selected_calculators = calculators if calculators is not None else getattr(snapshot_provider, "impact_calculators", None)
         self.calculators = dict(selected_calculators) if selected_calculators is not None else build_registry(clock=clock)
@@ -161,14 +179,27 @@ class RecommendationService:
             exclusions.append("Model confidence is suppressed because its reliability has not been validated.")
         if impact.value is None:
             exclusions.append("Sustainability impact is unavailable; it does not determine product relevance.")
-        return Recommendation(
+        recommendation = Recommendation(
             customer_id=snapshot.customer_id, product=product, propensity=propensity,
             state=state, reason_codes=tuple(item.code for item in evidence),
             evidence=evidence, exclusions=tuple(exclusions), impact=impact,
             trust=snapshot.trust, feature_cutoff=snapshot.feature_cutoff,
             rules_version="trained-relevance-rules-v1" if snapshot.decision_profile == "trained" else RULES_VERSION,
             timestamp=now,
+            provenance={
+                "snapshot": snapshot.model_dump(mode="json"),
+                "source_version": getattr(self.snapshot_provider, "version", "injected-provider"),
+                "run_identity": getattr(self.snapshot_provider, "run_identity", None),
+                "reason_version": "reasons_v1" if snapshot.decision_profile == "trained" else RULES_VERSION,
+                "prompt_version": None, "llm_version": None,
+                "explanation_status": "NOT_RUN",
+                "calibration_version": propensity.calibration_version if propensity else None,
+                "decision_timestamp": now.isoformat(),
+                **self.explanation_context,
+            },
         )
+        # Identity represents evidence and versions, not repeated wall-clock generation.
+        return recommendation.model_copy(update={"decision_id": decision_identity(recommendation)})
 
     @staticmethod
     def _clean_propensity(result: PropensityResult | None, product: Product) -> PropensityResult | None:

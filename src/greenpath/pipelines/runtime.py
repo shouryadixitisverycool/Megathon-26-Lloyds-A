@@ -143,10 +143,12 @@ def load_runtime(cutoffs: list[date] | None = None, root: Path | None = None) ->
     if missing:
         raise FileNotFoundError("Incomplete trained artifacts: " + "; ".join(missing) + "; rerun train")
     confidence = load_confidence(bundles, detectors, root)
+    from greenpath.trust.selection import load_thresholds
+    thresholds = load_thresholds(root / "trust_thresholds.json")
     return Runtime(
         snapshots=snapshots,
         propensity=ModelPropensityProvider(bundles, confidence_scorer=confidence),
-        trust=TrustScorer(ood_detectors=detectors),
+        trust=TrustScorer(ood_detectors=detectors, thresholds=thresholds),
         bundles=bundles,
         detectors=detectors,
         confidence=confidence,

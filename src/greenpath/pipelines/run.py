@@ -19,6 +19,7 @@ import math
 import platform
 import sys
 import time
+import resource
 from datetime import date
 from importlib import metadata
 from pathlib import Path
@@ -145,7 +146,7 @@ def labelled_reference(tables: dict[str, pd.DataFrame], seed: int,
     truth = tables["transaction_truth"]
     cutoff = cutoff or min(config.TREND_CUTOFFS + [config.TEMPORAL_HOLDOUT_CUTOFF, config.FEATURE_CUTOFF])
     txns = tables["transactions"]
-    txns = txns[txns["date"] <= pd.Timestamp(cutoff)]
+    txns = txns[(txns["date"] <= pd.Timestamp(cutoff)) & (txns["available_at"] <= pd.Timestamp(cutoff))]
     ref = txns[["transaction_id", "merchant_description"]].merge(
         truth[["transaction_id", "merchant_id", "true_category"]], on="transaction_id")
     ref = ref[ref["merchant_id"].astype(str).isin(labelled)]
@@ -160,7 +161,7 @@ def stage_env() -> dict:
     if sys.version_info[:2] != (3, 12):
         raise SystemExit(f"Python 3.12 required, found {platform.python_version()}")
     pkgs = {p: metadata.version(p) for p in
-            ("numpy", "pandas", "scikit-learn", "scipy", "pydantic", "pyarrow", "joblib")}
+             ("numpy", "pandas", "scikit-learn", "scipy", "pydantic", "pyarrow", "joblib", "xgboost")}
     info = {"python": platform.python_version(), "packages": pkgs}
     log(f"environment ok: {info}")
     return info
@@ -171,7 +172,9 @@ def stage_train() -> None:
     timings = {}
     for d in (config.PROCESSED_DIR, config.ARTIFACT_DIR, config.REPORTS_DIR):
         d.mkdir(parents=True, exist_ok=True)
+    start = time.perf_counter()
     tables = load_tables(config.RAW_DIR)
+    timings["data_loading_seconds"] = time.perf_counter() - start
     log(f"loaded {len(tables['customers'])} customers, {len(tables['transactions'])} transactions")
 
     # 1. transaction categorisation (rules + TF-IDF/LogReg) trained on the labelled reference only
@@ -197,6 +200,7 @@ def stage_train() -> None:
     log(f"built Customer 360 for {len(cutoffs)} cutoffs ({len(frame)} customers at {config.FEATURE_CUTOFF})")
 
     # 3. point-in-time verification: rebuilding from data truncated at the cutoff must be identical
+    start = time.perf_counter()
     pit = point_in_time_check(raw, txns, frame, config.FEATURE_CUTOFF)
     historical_pit = {c.isoformat(): point_in_time_check(raw, txns, frames[c], c) for c in cutoffs}
     log(f"point-in-time check: {pit['status']}")
@@ -204,6 +208,10 @@ def stage_train() -> None:
     # 4. labels + customer-level split
     labels = make_labels(tables["customer_outcomes"], frame.index, config.FEATURE_CUTOFF)
     split = split_customers(frame.index)
+    # Reserve release-selection customers before propensity tuning/calibration or meta fitting.
+    validation_ids = split.index[split == "validation"].sort_values()
+    release_ids = np.random.default_rng(config.SEED_SPLIT).permutation(validation_ids)[::3]
+    split.loc[release_ids] = "confidence_release"
     split_hash = write_split_manifest(split, SPLIT_PATH)
     labels.to_parquet(config.PROCESSED_DIR / "labels.parquet")
 
@@ -220,6 +228,7 @@ def stage_train() -> None:
     if failed:
         raise LeakageError(f"point-in-time rebuild differs: {failed}")
     log("leakage checks passed")
+    timings["point_in_time_and_leakage_seconds"] = time.perf_counter() - start
 
     # 6. propensity models (+ proxy ablation variants), calibrated on validation only
     audit = tables["customers"].set_index("customer_id")[["income_band", "region", "age_band"]]
@@ -238,6 +247,7 @@ def stage_train() -> None:
 
     # 7. OOD detectors fitted on training rows of each product population
     detectors = {}
+    start = time.perf_counter()
     for p in PRODUCTS:
         mask, _ = population_mask(frame, p)
         train_rows = frame[mask & (split.reindex(frame.index) == "train")]
@@ -245,8 +255,11 @@ def stage_train() -> None:
         path = config.ARTIFACT_DIR / runtime.OOD_DIR / f"{p.value.lower()}.joblib"
         path.parent.mkdir(parents=True, exist_ok=True)
         detectors[p].save(path)
+    from greenpath.trust.selection import select_thresholds
+    select_thresholds(frame, split, bundles, detectors, config.ARTIFACT_DIR / "trust_thresholds.json")
+    timings["ood_and_trust_selection_seconds"] = time.perf_counter() - start
 
-    # 8. confidence meta-model: fit on validation, validate on held-out test, surface only if it passes
+    # 8. Fit confidence on validation, select release on reserved validation customers, never test.
     start = time.perf_counter()
     decisions = train_confidence(frame, labels, split, bundles, detectors)
     timings["confidence_training_seconds"] = time.perf_counter() - start
@@ -255,6 +268,7 @@ def stage_train() -> None:
         log(f"confidence {p}: {'SURFACED' if d['surfaced'] else 'SUPPRESSED'}")
 
     timings["train_seconds"] = time.time() - t0
+    timings["process_peak_rss_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (1 if sys.platform == "darwin" else 1024)
     write_json(config.REPORTS_DIR / "pipeline_timings.json", timings)
     write_run_manifest(split_hash)
     log(f"train finished in {time.time() - t0:.0f}s")
@@ -269,22 +283,29 @@ def feature_inputs_at_cutoff(raw, txns, cutoff: date):
     trunc["vehicles"] = raw["vehicles"][raw["vehicles"]["record_updated_at"] <= ts]
     trunc["energy_usage"] = raw["energy_usage"][month_ok(raw["energy_usage"]["month"])]
     trunc["digital_usage"] = raw["digital_usage"][month_ok(raw["digital_usage"]["month"])]
-    return trunc, txns[txns["date"] <= ts]
+    for name in ("financial_products", "vehicles", "energy_usage", "digital_usage"):
+        if "available_at" in trunc[name]:
+            trunc[name] = trunc[name][trunc[name]["available_at"] <= ts]
+    txns = txns[txns["date"] <= ts]
+    if "available_at" in txns:
+        txns = txns[txns["available_at"] <= ts]
+    return trunc, txns
 
 
 def feature_event_sources(raw, txns, cutoff: date) -> list[EventSource]:
     trunc, txns = feature_inputs_at_cutoff(raw, txns, cutoff)
-    sources = [EventSource("transactions", txns, "date")]
+    sources = [EventSource("transactions", txns, "date", availability_col="available_at")]
     for name in ("financial_products", "vehicles", "energy_usage", "digital_usage"):
         schema = RAW_TABLES[name]
         sources.append(EventSource(name, trunc[name], schema.event_time_column,
-                                   monthly=name in {"energy_usage", "digital_usage"}))
+                                    monthly=name in {"energy_usage", "digital_usage"}, availability_col="available_at"))
     # A current customer profile is not a historical event: future profiles are masked by
     # Customer 360 rather than dropping the customer identity and its past transactions.
     customers = raw["customers"]
     sources.append(EventSource("customers_available_profiles",
-                               customers[customers["record_updated_at"] <= pd.Timestamp(cutoff)],
-                               "record_updated_at"))
+                                customers[(customers["record_updated_at"] <= pd.Timestamp(cutoff))
+                                          & (customers["available_at"] <= pd.Timestamp(cutoff))],
+                                "record_updated_at", availability_col="available_at"))
     return sources
 
 
@@ -319,7 +340,7 @@ def train_confidence(frame, labels, split, bundles, detectors) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     for p in PRODUCTS:
         fv, cv, _, _ = _confidence_rows(frame, labels, split, bundles[p], detectors[p], p, "validation")
-        ft, ct, _, _ = _confidence_rows(frame, labels, split, bundles[p], detectors[p], p, "test")
+        ft, ct, _, _ = _confidence_rows(frame, labels, split, bundles[p], detectors[p], p, "confidence_release")
         path = out_dir / f"{p.value.lower()}.joblib"
         if len(cv) < MIN_CONFIDENCE_ROWS or len(np.unique(cv)) < 2:
             limitation = (f"Confidence suppressed: validation has {len(cv)} rows and "
@@ -330,7 +351,8 @@ def train_confidence(frame, labels, split, bundles, detectors) -> dict:
                 "surfaced": False, "limitation": limitation,
                 "validation": ConfidenceValidation(n=len(ct), passed=False, reasons=[limitation]).to_dict(),
                 "ablation": [], "coefficients": {}, "bucket_thresholds": {},
-                "n_validation": len(cv), "n_test": len(ct),
+                 "n_validation": len(cv), "n_release_selection": len(ct),
+                 "release_selection_split": "confidence_release", "test_used_for_release_selection": False,
             }
             continue
         model = ConfidenceModel().fit(fv, cv)
@@ -344,7 +366,8 @@ def train_confidence(frame, labels, split, bundles, detectors) -> dict:
             "surfaced": bool(val.passed), "limitation": limitation,
             "validation": val.to_dict(), "ablation": abl.to_dict("records"),
             "coefficients": model.coefficients(), "bucket_thresholds": model.bucket_thresholds,
-            "n_validation": int(len(cv)), "n_test": int(len(ct)),
+            "n_validation": int(len(cv)), "n_release_selection": int(len(ct)),
+            "release_selection_split": "confidence_release", "test_used_for_release_selection": False,
         }
     return decisions
 
@@ -371,8 +394,9 @@ def write_run_manifest(split_hash: str | None = None) -> None:
                     if folder.exists() for p in sorted(folder.rglob("*"))
                     if p.is_file() and p.suffix in {".yaml", ".yml", ".json", ".csv", ".xlsx"}}
     package_root = Path(__file__).resolve().parents[1]
-    for path in (package_root / "extensions" / "uk_factors_2025.json",
-                 package_root / "data_generation" / "public_energy_anchor.json"):
+    for path in sorted(package_root.rglob("*")):
+        if path.suffix not in {".json", ".yaml", ".yml", ".csv", ".xlsx"}:
+            continue
         if path.is_file():
             factor_files["greenpath/" + str(path.relative_to(package_root))] = sha256_file(path)
     write_json(config.REPORTS_DIR / "RUN_MANIFEST.json", {
@@ -422,7 +446,9 @@ def main(argv: list[str] | None = None) -> None:
         from greenpath.pipelines.predict import stage_demo
         stage_demo()
     if stage in ("train", "evaluate", "predict", "all"):
-        update_timings(**{f"{stage}_command_seconds": time.perf_counter() - started})
+        update_timings(**{f"{stage}_command_seconds": time.perf_counter() - started,
+                          "command_process_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+                          * (1 if sys.platform == "darwin" else 1024)})
         write_run_manifest()
 
 

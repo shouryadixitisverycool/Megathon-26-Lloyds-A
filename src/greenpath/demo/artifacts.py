@@ -4,6 +4,7 @@ from datetime import datetime, time, timezone
 from decimal import Decimal
 from pathlib import Path
 import os
+import json
 
 from greenpath import config
 from greenpath.contracts.enums import ConfidenceStatus, FuelType, Severity, TrustIssueCategory
@@ -43,6 +44,7 @@ class ArtifactRepository:
     mode = "trained"
 
     def __init__(self, runtime=None):
+        injected_runtime = runtime is not None
         self._outcome_path = config.ARTIFACT_DIR / "portfolio_scores.parquet" if runtime is None else None
         if runtime is None:
             from greenpath.pipelines.runtime import load_runtime
@@ -61,10 +63,46 @@ class ArtifactRepository:
         self.impact_calculators = build_uk_registry()
         self._cache = {}
         self._history = None
+        self._overrides = {}
+        self._source_history = {}
+        manifest = config.REPORTS_DIR / "RUN_MANIFEST.json"
+        self.run_identity = (getattr(runtime, "run_identity", None) if injected_runtime else
+                             json.loads(manifest.read_text()) if manifest.is_file() else None)
+
+    def bind_store(self, store):
+        from greenpath.contracts.customer import CustomerSnapshot as SourceSnapshot
+        for event in store.source_updates():
+            self.override_source_snapshot(SourceSnapshot.model_validate(event["source_snapshot"]))
+
+    def override_source_snapshot(self, snapshot):
+        from greenpath.contracts.customer import CustomerSnapshot as SourceSnapshot
+        snapshot = SourceSnapshot.model_validate(snapshot.model_dump(mode="python"))
+        previous = self.get_snapshot(snapshot.customer_id)
+        if previous is None:
+            raise KeyError(snapshot.customer_id)
+        self.list_history()
+        if snapshot.customer_id not in self._source_history:
+            self._source_history[snapshot.customer_id] = [previous.source_snapshot.model_copy(deep=True)]
+        self._overrides[snapshot.customer_id] = snapshot.model_copy(deep=True)
+        self._source_history.setdefault(snapshot.customer_id, []).append(snapshot.model_copy(deep=True))
+        self._cache.pop(self.runtime.snapshots.default_cutoff, None)
+
+    def source_snapshot_history(self, customer_id):
+        return tuple(s.model_copy(deep=True) for s in self._source_history.get(customer_id, ()))
+
+    def restore_source_snapshot(self, snapshot):
+        """Undo an uncommitted local override without invoking the failed scorer again."""
+        self._overrides[snapshot.customer_id] = snapshot.model_copy(deep=True)
+        history = self._source_history.get(snapshot.customer_id, [])
+        if len(history) > 1:
+            history.pop()
+        self._cache.pop(self.runtime.snapshots.default_cutoff, None)
 
     def _at(self, cutoff):
         if cutoff not in self._cache:
             sources = self.runtime.snapshots.snapshots(cutoff)
+            if cutoff == self.runtime.snapshots.default_cutoff:
+                sources = [self._overrides.get(s.customer_id, s) for s in sources]
             propensities, trusts = {}, {}
             for product in Product:
                 results = self.runtime.propensity.score_many(sources, product)
@@ -82,7 +120,8 @@ class ArtifactRepository:
                     trusts[(source.customer_id, product)] = _adapt_trust(assessment)
             snapshots = {}
             for source in sources:
-                observed = datetime.combine(cutoff, time.min, tzinfo=timezone.utc)
+                observed = (source.source_events[-1].feature_cutoff if source.source_events
+                            else datetime.combine(source.feature_cutoff, time.min, tzinfo=timezone.utc))
                 fuel = source.vehicle.fuel_type
                 values = {
                     "owns_vehicle": source.vehicle.has_vehicle,
@@ -98,7 +137,8 @@ class ArtifactRepository:
                     customer_id=source.customer_id, display_name=f"Synthetic customer {source.customer_id}",
                     region=source.home.region or "Unknown", segment=source.segment or "Unknown",
                     feature_cutoff=observed, features={
-                        key: FeatureEvidence(value=value, reference=f"customer360:{source.feature_version}:{cutoff}:{source.customer_id}:{key}",
+                         key: FeatureEvidence(value=value, reference=f"customer360:{source.feature_version}:{source.feature_cutoff}:{source.customer_id}:{key}" +
+                                              (f":source-update:{source.source_events[-1].request_id}" if source.source_events else ""),
                                              observed_at=observed, freshness="current")
                         for key, value in values.items()
                     }, trust=min(per_product.values(), key=lambda t: t.score), product_trust=per_product,
@@ -156,6 +196,10 @@ class ArtifactRepository:
                                                  propensity=r.propensity.probability if r.propensity else None,
                                                  confidence=r.propensity.confidence if r.propensity and r.propensity.confidence_validated else None,
                                                  trust_score=r.trust.score,
+                                                  impact_value=r.impact.value, impact_status=r.impact.status.value,
+                                                  impact_units=str(r.impact.units),
+                                                  impact=r.impact, data_quality=r.trust.status,
+                                                  missing_fields=tuple(snapshots[customer_id].source_snapshot.data_quality.missing_fields),
                                                  observed_adoption_90d=outcomes.get((cutoff, customer_id, r.product)),
                                                  confidence_high=(r.propensity.source_result.confidence.bucket.value == "HIGH"
                                                      if r.propensity and r.propensity.confidence_validated and r.propensity.source_result

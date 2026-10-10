@@ -62,7 +62,7 @@ class PaperlessInputs(PhysicalInputs):
 
 
 FACTOR_PATH = Path(__file__).with_name("uk_factors_2025.json")
-FACTOR_SUBSET_SHA256 = "d4fcc4996c54a286a5c66c6c952f69894392a46f682a3eb206c6f9562d03d2cd"
+FACTOR_SUBSET_SHA256 = "a1c1f18e1c1fa6a66bb50d36cf7245bc0236964c994c045e4fc0d726dfc4a3b8"
 BOUNDARY = "Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded"
 METHOD_VERSION = "uk-physical-scenarios-v1"
 
@@ -89,7 +89,8 @@ def calculate(product: Product | str, inputs: dict) -> dict:
     used = list(grid_keys)
     limitations = ["Modelled annual scenario, not a measured outcome or a guarantee.",
                   "Physical assumptions are supplied by the caller; their accuracy is not independently verified.",
-                  "Current 2025 factors are held constant; no future grid decarbonisation is assumed.",
+                  catalogue["current_vintage_limitation"],
+                  "Reviewed 2025 factors are held constant; no future grid decarbonisation is assumed.",
                   "Official reporting convention excludes outside-of-scopes biogenic combustion CO2."]
     if product == Product.EV_FINANCE:
         request = EVInputs.model_validate(inputs)
@@ -134,17 +135,23 @@ def calculate(product: Product | str, inputs: dict) -> dict:
     else:
         request = PaperlessInputs.model_validate(inputs)
         avoided_statements = number(request.annual_statements) * number(request.avoided_fraction)
-        return {"product": product.value, "status": "NOT_CLAIMED", "carbon_status": "NOT_CLAIMED",
+        passport = {"product": product.value, "status": "NOT_CLAIMED", "carbon_status": "NOT_CLAIMED",
                 "paper_statements_avoided": str(avoided_statements),
                 "paper_sheets_avoided": str(avoided_statements * request.sheets_per_statement),
                 "method_version": "PAPERLESS_ACTIVITY_V1", "inputs": request.model_dump(mode="json"),
                 "limitation": "Paper avoidance is an activity scenario. No reviewed lifecycle carbon method is implemented."}
+        identity = json.dumps(passport, sort_keys=True).encode()
+        passport["passport_id"] = "UK-" + hashlib.sha256(identity).hexdigest()[:24]
+        return passport
     passport = {"product": product.value, "status": "MODELLED_ESTIMATE", "units": "kg CO2e/year",
                 "baseline_emissions": str(baseline), "scenario_emissions": str(scenario),
                 "potential_reduction": str(baseline - scenario), "method": method,
                 "method_version": METHOD_VERSION, "boundary": BOUNDARY,
                 "time_horizon": "annual", "factor_vintage": catalogue["version"],
                 "factor_source": catalogue["source_url"], "factor_source_sha256": catalogue["source_sha256"],
+                "factor_source_published_on": catalogue["published_on"],
+                "current_edition": catalogue["current_edition"],
+                "current_edition_url": catalogue["current_edition_url"],
                 "factor_subset_sha256": hashlib.sha256(FACTOR_PATH.read_bytes()).hexdigest(),
                 "factor_records": {key: factors[key] for key in used},
                 "inputs": request.model_dump(mode="json"), "formula": formula,

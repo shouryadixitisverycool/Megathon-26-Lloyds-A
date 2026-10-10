@@ -138,6 +138,24 @@ def model_sensitivity_tools(customer_id, product, save):
                     cols = st.columns(2)
                     cols[0].metric("Baseline propensity", percentage(result["baseline_probability"]))
                     cols[1].metric("Scenario propensity", percentage(result["scenario_probability"]))
+        with st.form("counterfactual_" + customer_id + product):
+            st.caption("Bounded search evaluates user-supplied feature combinations through trained inference. Protected fields are excluded. Contextual inputs are not recommended actions.")
+            candidates = st.text_area("Candidate values as JSON", value=json.dumps({fields[0]: [0.0]}))
+            target = st.slider("Target model propensity", 0.0, 1.0, 0.6, step=0.01)
+            if st.form_submit_button("Search model scenarios"):
+                try:
+                    parsed = json.loads(candidates)
+                except ValueError:
+                    st.error("Candidate values must be valid JSON.")
+                else:
+                    result = submit(save, path + "/counterfactual-search", {"product": product, "candidates": parsed,
+                                                                          "target_probability": target, "max_evaluations": 64})
+                    if result:
+                        st.caption(result["limitation"])
+                        st.write("Feature classes", result["feature_classes"])
+                        st.dataframe(result["results"], hide_index=True)
+                        if result["truncated"]:
+                            st.warning("The candidate grid exceeded the evaluation budget; results are a bounded partial search.")
 
 
 def uk_scenario_tools(customer_id, product, template, save):
@@ -285,10 +303,13 @@ def planning_view(customers, load, save):
         probability = cols[0].slider("Minimum propensity", 0.0, 1.0, 0.0, key="min_probability")
         trust = cols[1].slider("Minimum Trust", 0.0, 1.0, 0.0, key="min_trust")
         confidence = cols[2].slider("Minimum validated confidence", 0.0, 1.0, 0.0, key="min_confidence")
+        quality = st.selectbox("Data quality", ["All", "TRUSTED", "LIMITED", "CONFLICT", "OOD"])
         impact = st.number_input("Minimum available annual impact, displayed units", min_value=0.0, value=0.0, key="min_impact")
         st.caption("A positive confidence filter excludes unvalidated confidence. A positive impact filter excludes unavailable estimates. These filters apply to the opportunity table and matrix.")
     if state != "All":
         params["status"] = state
+    if quality != "All":
+        params["data_quality"] = quality
     for key, value in (("min_propensity", probability), ("min_trust", trust), ("min_confidence", confidence), ("min_impact", impact)):
         if value > 0:
             params[key] = str(value)
@@ -298,17 +319,20 @@ def planning_view(customers, load, save):
     table = [{"Customer": r["customer_id"], "State": r["state"], "Propensity": percentage((r.get("propensity") or {}).get("probability")),
               "Trust": percentage(r["trust"]["score"]), "Impact": impact_label(r["impact"]),
               "Priority": percentage(r["priority"]["score"]), "Rank": r["priority"]["rank"],
-              "Expected sustainability impact": str((r.get("expected_sustainability_impact") or {}).get("value", "Unavailable"))} for r in rows]
+              "Expected sustainability impact": ((r.get("expected_sustainability_impact") or {}).get("value") or "Unavailable") + " " + r["impact"]["units"]} for r in rows]
     st.dataframe(table, hide_index=True)
     points = [{"Customer": r["customer_id"], "Propensity": float(r["propensity"]["probability"]),
-               "Impact": float(r["impact"]["value"]), "State": r["state"], "Units": r["impact"]["units"]}
+               "Impact": float(r["impact"]["value"]), "State": r["state"], "Units": r["impact"]["units"],
+               "Compatibility": json.dumps((r.get("expected_sustainability_impact") or {}).get("compatibility_group") or
+                                            [r["product"], r["impact"]["units"], r["impact"]["boundary"], r["impact"].get("period"),
+                                             r["impact"]["method_version"], r["impact"]["factor_catalogue_version"]])}
               for r in rows if r.get("propensity") and r["propensity"].get("probability") is not None and r["impact"]["status"] == "AVAILABLE" and r["impact"].get("value") is not None]
     if points:
         data = pd.DataFrame(points)
-        units = sorted(data["Units"].unique())
-        for unit in units:
-            st.plotly_chart(px.scatter(data[data["Units"] == unit], x="Propensity", y="Impact", color="State", hover_name="Customer",
-                                      labels={"Impact": "Potential impact, " + unit}), key="scatter_" + unit)
+        for group, compatible in data.groupby("Compatibility"):
+            st.caption("Comparable impact group: " + group)
+            st.plotly_chart(px.scatter(compatible, x="Propensity", y="Impact", color="State", hover_name="Customer",
+                                      labels={"Impact": "Potential impact, " + compatible["Units"].iloc[0]}), key="scatter_" + group)
     else:
         st.info("No comparable propensity and physical-impact pairs are available for this product.")
     with st.form("campaign_planner"):
@@ -324,7 +348,8 @@ def planning_view(customers, load, save):
         campaign = st.form_submit_button("Optimise simulated campaign")
     if planning or campaign:
         payload = {"product": product, "target_count": count, "conversion_rate": conversion,
-                   "region": None if region == "All" else region, "segment": None if segment == "All" else segment}
+                   "region": None if region == "All" else region, "segment": None if segment == "All" else segment,
+                   "channel": channel}
         if campaign:
             payload.update(channel=channel, objective=objective, channel_capacity=capacity, execute=execute)
         result = submit(save, "/campaigns/optimise" if campaign else "/portfolio/scenarios", payload)
@@ -335,11 +360,17 @@ def planning_view(customers, load, save):
             cols[2].metric("Average propensity", percentage(result["average_propensity"]))
             st.caption(result["disclaimer"])
             st.caption("Impact totals are separated by product, boundary, period and factor version.")
+            if result.get("impact_status") == "UNAVAILABLE":
+                st.info("Physical impact is unavailable for this selection. No carbon total is inferred.")
+            if result.get("capacity_budget"):
+                st.write("Persistent channel capacity", result["capacity_budget"])
             st.dataframe(result["impact_groups"], hide_index=True)
             st.write("Exclusions", result["excluded"])
             st.dataframe(result["selected"], hide_index=True)
             if result.get("execution_note"):
                 st.info(result["execution_note"])
+            if result.get("campaign_event_id"):
+                st.caption("Campaign event ID: " + result["campaign_event_id"])
 
 
 def governance_view(load):
@@ -387,6 +418,7 @@ def governance_view(load):
                     labels={"bin": "Confidence bucket, low to high", "error_rate": "Held-out error rate"}), key="confidence_error")
                 st.dataframe(deciles, hide_index=True)
     names = {"ml_evaluation": "Model evaluation and fairness", "confidence_validation": "Confidence reliability",
+             "feature_drift": "Feature drift monitoring",
              "leakage_checks": "Leakage audit", "explanation_evaluation": "Explanation grounding",
              "scenario_evaluation": "Scenario suite", "run_manifest": "Reproducibility", "system_performance": "System performance"}
     for key, title in names.items():

@@ -12,6 +12,8 @@ out-of-fold calibrated validation predictions when CV is possible, otherwise in-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import hashlib
+import joblib
 
 import numpy as np
 import pandas as pd
@@ -101,7 +103,8 @@ class Calibrator:
         model = _fit_method(method, raw, y)
         p_for_bins = oof[method] if method in oof else _apply(method, model, raw)
         short = "iso" if method == "isotonic" else "platt"
-        return cls(method, f"{name}_{short}_v1", model, _reliability_bins(p_for_bins, y, n_bins),
+        identity = hashlib.sha256((joblib.hash(model) + joblib.hash((raw, y, seed, n_bins))).encode()).hexdigest()[:16]
+        return cls(method, f"{name}_{short}_v2_{identity}", model, _reliability_bins(p_for_bins, y, n_bins),
                    len(raw), n_pos, cv_brier)
 
     def transform(self, raw: np.ndarray) -> np.ndarray:

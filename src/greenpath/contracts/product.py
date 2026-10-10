@@ -5,6 +5,7 @@ validated Boolean relevance evidence and deterministic impact provenance.
 """
 
 from decimal import Decimal
+from typing import Any
 from typing import Literal
 
 from pydantic import AwareDatetime, Field, StrictBool, model_validator
@@ -109,6 +110,8 @@ class DecisionEvidence(Model):
 
 
 class Recommendation(Model):
+    decision_id: str | None = None
+    provenance: dict[str, Any] = Field(default_factory=dict)
     customer_id: str
     product: Product
     propensity: PropensityResult | None
@@ -140,6 +143,13 @@ class Explanation(Model):
     fallback_reason: str | None = None
     eligibility_disclaimer: str = ELIGIBILITY_DISCLAIMER
     contract_version: str = CONTRACT_VERSION
+    headline: str | None = None
+    explanation: str | None = None
+    why_recommended: tuple[str, ...] = ()
+    estimated_impact_text: str | None = None
+    confidence_text: str | None = None
+    action_text: str | None = None
+    missing_information: tuple[str, ...] = ()
 
 
 class RecommendationsResponse(Model):
@@ -162,6 +172,7 @@ class GroupSummary(Model):
 
 
 class PortfolioSummary(Model):
+    analytics: dict[str, Any] = Field(default_factory=dict)
     total_customers: int
     total_recommendations: int
     recommended_count: int
@@ -191,6 +202,25 @@ class HistoryRecord(Model):
     observed_adoption_90d: int | None = Field(default=None, ge=0, le=1)
     confidence_high: StrictBool | None = None
     is_paperless: StrictBool | None = None
+    impact_value: Decimal | None = None
+    impact_status: str | None = None
+    impact_units: str | None = None
+    impact: ImpactResult | None = None
+    data_quality: Literal["TRUSTED", "LIMITED", "CONFLICT", "OOD"] | None = None
+    missing_fields: tuple[str, ...] = ()
+    observed_adoption_rate: Decimal | None = Field(default=None, ge=0, le=1)
+    observed_outcome_count: int | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def matching_historical_impact(self):
+        if self.impact is not None:
+            if self.impact.product != self.product:
+                raise ValueError("Historical impact must match the recorded product")
+            if (self.impact_value is not None and self.impact_value != self.impact.value
+                    or self.impact_status is not None and self.impact_status != self.impact.status
+                    or self.impact_units is not None and self.impact_units != self.impact.units):
+                raise ValueError("Historical physical summary must match its full impact provenance")
+        return self
 
 
 class TrendPoint(Model):
@@ -217,6 +247,7 @@ class TrendPoint(Model):
 
 
 class PortfolioTrends(Model):
+    analytics: dict[str, Any] = Field(default_factory=dict)
     observations: tuple[TrendPoint, ...]
     synthetic_demo: Literal[True] = True
     disclaimer: str = "Historical states use synthetic evidence. Trained trends retrospectively apply the current model to each monthly feature cutoff; they are not observed customer behavior."

@@ -109,7 +109,7 @@ def evaluation_report(results: dict) -> str:
     md = ["# GreenPath — Agent A evaluation report (data, ML, reliability)", "",
           f"> {results['notice']}", "",
           f"Feature cutoff {config.FEATURE_CUTOFF}; outcome = adoption within 90 days (to {config.OUTCOME_WINDOW_END}); "
-          f"prediction timestamp {config.PREDICTION_TIMESTAMP:%Y-%m-%d}. Customer-level 70/15/15 split; demo personas excluded from training.", "",
+           f"prediction timestamp {config.PREDICTION_TIMESTAMP:%Y-%m-%d}. Customer-level 70/15/15 split; one third of validation reserved for confidence release selection before tuning/calibration; demo personas excluded from training.", "",
           "## Summary", ""]
     rows = []
     for p, r in results["products"].items():

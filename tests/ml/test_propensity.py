@@ -251,7 +251,7 @@ def test_calibrator_method_choice_and_local_error():
     raw = rng.random(2000)
     yv = (rng.random(2000) < raw**2).astype(int)  # miscalibrated raw score
     cal = Calibrator.fit(raw, yv, name="x")
-    assert cal.method in ("isotonic", "platt") and cal.version in ("x_iso_v1", "x_platt_v1")
+    assert cal.method in ("isotonic", "platt") and cal.version.startswith(("x_iso_v2_", "x_platt_v2_"))
     assert set(cal.cv_brier) == {"isotonic", "platt"}
     assert {"mean_predicted", "observed_rate", "n"} <= set(cal.reliability_bins.columns)
     err = cal.local_calibration_error(np.array([0.01, 0.5, 0.99]))
@@ -284,6 +284,35 @@ def test_training_is_deterministic(data):
     f, y, s = data
     a, b = train_product(f, y, s, Product.GREEN_HOME), train_product(f, y, s, Product.GREEN_HOME)
     np.testing.assert_allclose(predict_raw(a, f), predict_raw(b, f))
+
+
+@pytest.mark.parametrize("model_type", [ModelType.LOGISTIC, ModelType.GRADIENT_BOOSTING])
+def test_deployed_shap_additivity_background_and_persistence(bundles, data, tmp_path, model_type):
+    from dataclasses import replace
+    import json
+    from greenpath.models.propensity.shap_audit import audit_shap
+    b = replace(bundles[Product.EV_FINANCE], selected_model_type=model_type)
+    f = data[0].iloc[:30].copy()
+    f.iloc[0] = np.nan
+    result = audit_shap(b, f, tmp_path / "shap.json")
+    assert result == json.loads((tmp_path / "shap.json").read_text())
+    assert result["background"]["rows"] == b.n_train
+    assert result["output_space"] == "raw_uncalibrated_log_odds"
+    for row in result["rows"]:
+        assert row["base_value"] + sum(row["shap_values"].values()) == pytest.approx(row["raw_margin"], abs=2e-5)
+    if model_type is ModelType.LOGISTIC:
+        assert any(n.startswith("missingindicator_") for n in result["feature_names"])
+        assert result["rows"][0]["base_value"] == pytest.approx(
+            b.logistic[-1].intercept_[0] + b.shap_background_mean @ b.logistic[-1].coef_[0])
+
+
+def test_calibration_identity_includes_candidate_and_fitted_data(bundles):
+    b = bundles[Product.EV_FINANCE]
+    assert len({c.version for c in b.calibrators.values()}) == 3
+    raw, y = np.linspace(.01, .99, 100), np.tile([0, 1], 50)
+    a = Calibrator.fit(raw, y, "candidate")
+    assert a.version == Calibrator.fit(raw, y, "candidate").version
+    assert a.version != Calibrator.fit(raw ** 2, y, "candidate").version
 
 
 def test_excluded_rows_not_used_in_training(data):

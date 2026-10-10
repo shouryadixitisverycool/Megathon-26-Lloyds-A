@@ -81,6 +81,37 @@ def test_portfolio_filters_reset_and_plots(api_fixture):
     assert "No cross-product carbon total" in displayed(app)
 
 
+def test_portfolio_renders_compatible_impact_conversion_and_quality(api_fixture, monkeypatch):
+    group = {"units": "kg CO2e/year", "boundary": "Operational", "period": "2025",
+             "method_version": "method-v1", "factor_catalogue_version": "factor-v1", "value": "123.45"}
+    def get(url, **kwargs):
+        response = api_fixture["get"](url, **kwargs)
+        body = response.json()
+        if url.endswith("/portfolio/summary"):
+            body["analytics"] = {"physical_impact": {"groups": [{"product": "EV_FINANCE", **group}],
+                                                    "limitation": "Modelled potential, not realised savings."},
+                                 "quality_counts": {"TRUSTED": 4}, "missingness": {"validated_confidence": 24}}
+        elif url.endswith("/portfolio/trends"):
+            body["analytics"] = {"limitation": "Recorded outcomes only; missing evidence remains unavailable.",
+                                 "observations": [{"month": "2025-12", "product": "EV_FINANCE",
+                                                   "observed_conversion_rate": "0.5", "observed_outcome_count": 2,
+                                                   "quality_counts": {"TRUSTED": 1}, "quality_missing_count": 5,
+                                                   "physical_impact_groups": [group]}]}
+        return httpx.Response(response.status_code, json=body, request=response.request)
+    monkeypatch.setattr(httpx, "get", get)
+    app = start()
+    app.radio(key="workspace").set_value("Portfolio").run()
+    assert not app.exception
+    assert "Modelled potential, not realised savings." in displayed(app)
+    frames = [frame.value for frame in app.dataframe]
+    conversions = next(frame for frame in frames if "observed_conversion_rate" in frame)
+    assert conversions.iloc[0]["observed_conversion_rate"] == "50.0%"
+    assert conversions.iloc[0]["quality_missing_count"] == 5
+    physical = [frame for frame in frames if "units" in frame]
+    assert len(physical) == 2
+    assert all(frame.iloc[0]["units"] == "kg CO2e/year" for frame in physical)
+
+
 def test_health_failure_clears_prior_customer_results(api_fixture, monkeypatch):
     app = start()
     def offline(url, **kwargs):
@@ -123,6 +154,22 @@ def test_co2e_baseline_and_scenario_keep_api_units(api_fixture):
     assert "100.00 kg CO2e/year" in text
     assert "112.50 kg CO2e/year" in text
     assert "100.00 kg CO2/year" not in text
+
+
+def test_paperless_secondary_metrics_are_not_carbon_claims(api_fixture):
+    impact = api_fixture["decisions"]["GP-001"][3]["impact"]
+    impact["status"] = "NOT_CLAIMED"
+    impact["secondary_metrics"] = [{"name": "paper_statements_avoided", "value": "12",
+                                    "unit": "statements/year", "method_version": "paper-action-v1",
+                                    "evidence_references": ["source:statements"]}]
+    app = start()
+    app.selectbox(key="why_product").select("PAPERLESS_BANKING").run()
+    assert not app.exception
+    assert "Physical actions are not carbon savings" in displayed(app)
+    frames = [frame.value for frame in app.dataframe if "Metric" in frame.value]
+    assert len(frames) == 1
+    assert frames[0].iloc[0]["Value"] == "12"
+    assert frames[0].iloc[0]["Unit"] == "statements/year"
 
 
 def test_empty_customer_list(api_fixture):

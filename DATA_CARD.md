@@ -15,12 +15,12 @@ Generator config hash: `5b189503ed5002a61e17e2f25cd384774a6d2455c5a218f2f6ffbbf1
 
 | table | rows | sha256 |
 |---|---|---|
-| customers | 4010 | `2e018260e5ae73d6` |
-| transactions | 874498 | `39d52a0955e5e65a` |
-| financial_products | 13182 | `92dea03962ebd1a2` |
-| vehicles | 4744 | `acc858b262cac69b` |
-| energy_usage | 72752 | `6b04e6739e11dc96` |
-| digital_usage | 80119 | `5653fb4acbeb3927` |
+| customers | 4010 | `ddd99568535e92dc` |
+| transactions | 874498 | `fd04669e19c6c078` |
+| financial_products | 13182 | `06feb0686caba491` |
+| vehicles | 4744 | `aa23c6c01f1b95ba` |
+| energy_usage | 72752 | `d0baf2f1b0f20ada` |
+| digital_usage | 80119 | `9f935754ac884e37` |
 | green_product_catalogue | 4 | `21c19a60e8e5438f` |
 | transaction_truth | 874498 | `528550173d46d5ff` |
 | merchants | 146 | `33520abe59bb2d33` |

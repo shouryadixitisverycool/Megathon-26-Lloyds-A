@@ -18,50 +18,50 @@ Population: customers not already holding the product at the cutoff. Heuristic b
 
 ## Evaluation
 
-Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `paperless_banking_logreg_v1`; calibration **platt** `paperless_banking_platt_v1` fitted on validation only.
-Train 497 (67 positive), validation 93 (14), held-out test 99 (20).
+Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `paperless_banking_logreg_v1`; calibration **platt** `paperless_banking_logreg_platt_v2_7ab04ddfcfcb17a4` fitted on validation only.
+Train 530 (67 positive), validation 60 (10), held-out test 105 (20).
 
 **Held-out test metrics** (calibrated probabilities; confusion metrics at each model's validation-chosen F1 threshold):
 
 | model | ROC-AUC | PR-AUC | Brier | ECE | P@10% | R@10% | Lift@10% | precision | recall | F1 | threshold |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HEURISTIC | 0.642 | 0.316 | 0.160 | 0.052 | 0.500 | 0.250 | 2.475 | 0.271 | 0.650 | 0.382 | 0.161 |
-| LOGISTIC | 0.640 | 0.385 | 0.152 | 0.084 | 0.300 | 0.150 | 1.485 | 0.243 | 0.850 | 0.378 | 0.116 |
-| GRADIENT_BOOSTING | 0.658 | 0.383 | 0.162 | 0.054 | 0.300 | 0.150 | 1.485 | 0.283 | 0.750 | 0.411 | 0.146 |
+| HEURISTIC | 0.534 | 0.209 | 0.173 | 0.046 | 0.091 | 0.050 | 0.477 | 0.192 | 0.950 | 0.319 | 0.151 |
+| LOGISTIC | 0.612 | 0.313 | 0.150 | 0.053 | 0.182 | 0.100 | 0.955 | 0.214 | 0.150 | 0.176 | 0.198 |
+| GRADIENT_BOOSTING | 0.681 | 0.437 | 0.149 | 0.043 | 0.545 | 0.300 | 2.864 | 0.239 | 0.850 | 0.374 | 0.153 |
 
-Calibration effect (selected model, test): Brier 0.157 → 0.152, ECE 0.101 → 0.084.
+Calibration effect (selected model, test): Brier 0.155 → 0.150, ECE 0.083 → 0.053.
 
-Baseline comparison: the selected model's ROC-AUC 0.640 is only marginally different from the heuristic baseline (0.642); logistic baseline 0.640.
+Baseline comparison: the selected model's ROC-AUC 0.612 is materially better than the heuristic baseline (0.534); logistic baseline 0.612.
 
 **Generator shift** (models trained on generator A, scored on perturbed generator B):
 
 | model | ROC-AUC A | ROC-AUC B | PR-AUC A | PR-AUC B | ΔBrier | ΔECE (calibration shift) | ΔLift@10% |
 |---|---|---|---|---|---|---|---|
-| HEURISTIC | 0.642 | 0.735 | 0.316 | 0.267 | -0.054 | -0.026 | 0.474 |
-| LOGISTIC | 0.640 | 0.716 | 0.385 | 0.258 | -0.046 | -0.058 | 1.095 |
-| GRADIENT_BOOSTING | 0.658 | 0.647 | 0.383 | 0.239 | -0.050 | -0.033 | 0.604 |
+| HEURISTIC | 0.534 | 0.707 | 0.209 | 0.228 | -0.066 | 0.000 | 2.092 |
+| LOGISTIC | 0.612 | 0.692 | 0.313 | 0.209 | -0.045 | 0.004 | 1.003 |
+| GRADIENT_BOOSTING | 0.681 | 0.627 | 0.437 | 0.176 | -0.042 | 0.005 | -1.273 |
 
 **Missing-data stress** (selected model, held-out test):
 
 | scenario | ROC-AUC | PR-AUC | Brier | ECE | Lift@10% |
 |---|---|---|---|---|---|
-| mileage_missing | 0.640 | 0.385 | 0.152 | 0.084 | 1.485 |
-| energy_missing | 0.640 | 0.385 | 0.152 | 0.084 | 1.485 |
-| home_ownership_unknown | 0.640 | 0.385 | 0.152 | 0.084 | 1.485 |
-| sustainability_preference_missing | 0.629 | 0.380 | 0.152 | 0.062 | 1.485 |
-| digital_missing | 0.615 | 0.372 | 0.176 | 0.140 | 1.485 |
-| random_30pct_cells | 0.596 | 0.345 | 0.163 | 0.085 | 1.485 |
+| mileage_missing | 0.612 | 0.313 | 0.150 | 0.053 | 0.955 |
+| energy_missing | 0.612 | 0.313 | 0.150 | 0.053 | 0.955 |
+| home_ownership_unknown | 0.612 | 0.313 | 0.150 | 0.053 | 0.955 |
+| sustainability_preference_missing | 0.622 | 0.312 | 0.150 | 0.054 | 0.955 |
+| digital_missing | 0.601 | 0.361 | 0.158 | 0.088 | 1.432 |
+| random_30pct_cells | 0.582 | 0.312 | 0.153 | 0.052 | 1.432 |
 
-**Temporal holdout:** retrained at 2026-03-31, tested at 2026-06-30 on held-out customers: ROC-AUC 0.633, Brier 0.152, ECE 0.030.
+**Temporal holdout:** retrained at 2026-03-31, tested at 2026-06-30 on held-out customers: ROC-AUC 0.582, Brier 0.154, ECE 0.053.
 
 **Proxy ablation** (spec 12.2):
 
 | variant | ROC-AUC | Brier | ECE | selection-rate range across income bands | max |calibration gap| across income bands |
 |---|---|---|---|---|---|
-| without proxies (default) | 0.640 | 0.152 | 0.084 | 0.247 | 0.293 |
-| with income band + region | 0.639 | 0.159 | 0.064 | 0.519 | 0.237 |
+| without proxies (default) | 0.612 | 0.150 | 0.053 | 0.235 | 0.274 |
+| with income band + region | 0.618 | 0.154 | 0.055 | 0.283 | 0.252 |
 
-Decision: default to the model **without** proxies (ΔROC-AUC with proxies = -0.001); proxies are not justified unless they add clear value without widening disparity.
+Decision: default to the model **without** proxies (ΔROC-AUC with proxies = 0.005); proxies are not justified unless they add clear value without widening disparity.
 
 **Subgroup diagnostics** (audit-only attributes, selected model):
 
@@ -69,39 +69,39 @@ Decision: default to the model **without** proxies (ΔROC-AUC with proxies = -0.
 
 | group | n | positives | roc_auc | mean_pred | observed_rate | calibration_gap | selection_rate | fpr | fnr |
 |---|---|---|---|---|---|---|---|---|---|
-| 18-24 | 3 | 0 | n/a | 0.185 | 0.000 | 0.185 | 1.000 | 1.000 | n/a |
-| 25-34 | 6 | 1 | 1.000 | 0.208 | 0.167 | 0.042 | 0.833 | 0.800 | 0.000 |
-| 35-44 | 21 | 4 | 0.588 | 0.140 | 0.190 | -0.051 | 0.810 | 0.765 | 0.000 |
-| 45-54 | 27 | 6 | 0.921 | 0.140 | 0.222 | -0.082 | 0.741 | 0.667 | 0.000 |
-| 55-64 | 23 | 7 | 0.679 | 0.143 | 0.304 | -0.162 | 0.565 | 0.500 | 0.286 |
-| 65+ | 19 | 2 | 0.382 | 0.146 | 0.105 | 0.041 | 0.632 | 0.647 | 0.500 |
+| 18-24 | 3 | 0 | n/a | 0.199 | 0.000 | 0.199 | 0.333 | 0.333 | n/a |
+| 25-34 | 7 | 1 | 1.000 | 0.191 | 0.143 | 0.048 | 0.429 | 0.333 | 0.000 |
+| 35-44 | 23 | 4 | 0.539 | 0.163 | 0.174 | -0.011 | 0.130 | 0.158 | 1.000 |
+| 45-54 | 28 | 6 | 0.841 | 0.150 | 0.214 | -0.064 | 0.036 | 0.000 | 0.833 |
+| 55-64 | 24 | 7 | 0.689 | 0.156 | 0.292 | -0.136 | 0.083 | 0.059 | 0.857 |
+| 65+ | 20 | 2 | 0.417 | 0.167 | 0.100 | 0.067 | 0.200 | 0.222 | 1.000 |
 
 *income_band*
 
 | group | n | positives | roc_auc | mean_pred | observed_rate | calibration_gap | selection_rate | fpr | fnr |
 |---|---|---|---|---|---|---|---|---|---|
-| 100k+ | 7 | 3 | 0.333 | 0.135 | 0.429 | -0.293 | 0.571 | 0.750 | 0.667 |
-| 25-50k | 33 | 5 | 0.557 | 0.143 | 0.152 | -0.008 | 0.818 | 0.786 | 0.000 |
-| 50-75k | 31 | 7 | 0.738 | 0.168 | 0.226 | -0.058 | 0.645 | 0.583 | 0.143 |
-| 75-100k | 9 | 2 | 0.714 | 0.128 | 0.222 | -0.094 | 0.667 | 0.571 | 0.000 |
-| <25k | 19 | 3 | 0.667 | 0.133 | 0.158 | -0.025 | 0.684 | 0.625 | 0.000 |
+| 100k+ | 7 | 3 | 0.250 | 0.154 | 0.429 | -0.274 | 0.000 | 0.000 | 1.000 |
+| 25-50k | 35 | 5 | 0.600 | 0.161 | 0.143 | 0.018 | 0.171 | 0.167 | 0.800 |
+| 50-75k | 34 | 7 | 0.725 | 0.172 | 0.206 | -0.034 | 0.235 | 0.222 | 0.714 |
+| 75-100k | 9 | 2 | 0.643 | 0.153 | 0.222 | -0.069 | 0.000 | 0.000 | 1.000 |
+| <25k | 20 | 3 | 0.627 | 0.151 | 0.150 | 0.001 | 0.000 | 0.000 | 1.000 |
 
 *region*
 
 | group | n | positives | roc_auc | mean_pred | observed_rate | calibration_gap | selection_rate | fpr | fnr |
 |---|---|---|---|---|---|---|---|---|---|
-| East Midlands | 10 | 2 | 0.812 | 0.118 | 0.200 | -0.082 | 0.600 | 0.500 | 0.000 |
-| East of England | 11 | 2 | 0.833 | 0.145 | 0.182 | -0.037 | 0.818 | 0.778 | 0.000 |
-| London | 12 | 1 | 1.000 | 0.163 | 0.083 | 0.079 | 0.750 | 0.727 | 0.000 |
-| North East | 5 | 0 | n/a | 0.156 | 0.000 | 0.156 | 0.800 | 0.800 | n/a |
-| North West | 10 | 3 | 0.238 | 0.144 | 0.300 | -0.156 | 1.000 | 1.000 | 0.000 |
-| Scotland | 8 | 1 | 0.000 | 0.135 | 0.125 | 0.010 | 0.500 | 0.571 | 1.000 |
-| South East | 12 | 3 | 0.556 | 0.148 | 0.250 | -0.102 | 0.583 | 0.556 | 0.333 |
-| South West | 4 | 1 | 0.667 | 0.167 | 0.250 | -0.083 | 0.750 | 0.667 | 0.000 |
-| UNKNOWN | 2 | 0 | n/a | 0.129 | 0.000 | 0.129 | 0.500 | 0.500 | n/a |
-| Wales | 7 | 4 | 0.667 | 0.244 | 0.571 | -0.328 | 0.857 | 0.667 | 0.000 |
-| West Midlands | 9 | 1 | 0.500 | 0.114 | 0.111 | 0.003 | 0.444 | 0.500 | 1.000 |
-| Yorkshire | 9 | 2 | 1.000 | 0.125 | 0.222 | -0.098 | 0.778 | 0.714 | 0.000 |
+| East Midlands | 10 | 2 | 0.812 | 0.141 | 0.200 | -0.059 | 0.000 | 0.000 | 1.000 |
+| East of England | 11 | 2 | 0.778 | 0.164 | 0.182 | -0.018 | 0.091 | 0.111 | 1.000 |
+| London | 12 | 1 | 0.818 | 0.161 | 0.083 | 0.078 | 0.250 | 0.182 | 0.000 |
+| North East | 5 | 0 | n/a | 0.172 | 0.000 | 0.172 | 0.200 | 0.200 | n/a |
+| North West | 13 | 3 | 0.400 | 0.173 | 0.231 | -0.058 | 0.154 | 0.200 | 1.000 |
+| Scotland | 8 | 1 | 0.286 | 0.157 | 0.125 | 0.032 | 0.000 | 0.000 | 1.000 |
+| South East | 12 | 3 | 0.704 | 0.159 | 0.250 | -0.091 | 0.167 | 0.222 | 1.000 |
+| South West | 5 | 1 | 0.250 | 0.185 | 0.200 | -0.015 | 0.400 | 0.500 | 1.000 |
+| UNKNOWN | 2 | 0 | n/a | 0.151 | 0.000 | 0.151 | 0.000 | 0.000 | n/a |
+| Wales | 7 | 4 | 0.500 | 0.207 | 0.571 | -0.364 | 0.429 | 0.333 | 0.500 |
+| West Midlands | 11 | 1 | 0.700 | 0.141 | 0.091 | 0.050 | 0.000 | 0.000 | 1.000 |
+| Yorkshire | 9 | 2 | 0.429 | 0.145 | 0.222 | -0.077 | 0.000 | 0.000 | 1.000 |
 
 **Confidence:** SUPPRESSED — Spearman(bin, error) n/a, error top-30% n/a vs bottom-30% n/a. See reports/CONFIDENCE_VALIDATION.md.
 

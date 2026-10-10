@@ -1,7 +1,7 @@
 """Held-out validation of the confidence layer (spec 16.4).
 
 Acceptance criteria (implementing "higher-confidence buckets must exhibit materially
-lower empirical error than lower-confidence buckets"). Run on HELD-OUT data (test), never
+lower empirical error than lower-confidence buckets"). Run on HELD-OUT data, never
 on the rows the meta-model was fitted on. ``passed`` requires ALL of:
 
 1. n >= ``MIN_ROWS`` (200); otherwise passed=False with a reason.
@@ -209,7 +209,7 @@ def write_confidence_report(results: dict, path_md, path_json) -> None:
         if res.get("ablation") is not None:
             ab = res["ablation"]
             entry["ablation"] = _clean(ab.to_dict(orient="records"))
-            md += ["### Ablation", "", "| variant | test AUC | passed |", "|---|---|---|"]
+            md += ["### Ablation", "", "| variant | held-out AUC | passed |", "|---|---|---|"]
             md += [f"| {r['variant']} | {r['test_auc']:.3f} | {r['passed']} |" for r in ab.to_dict(orient="records")]
             md.append("")
         if res.get("stress"):

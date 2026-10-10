@@ -337,6 +337,76 @@
       "title": "HomeFacts",
       "type": "object"
     },
+    "SourceUpdateRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "title": "Available At",
+          "type": "string"
+        },
+        "digital": {
+          "additionalProperties": true,
+          "title": "Digital",
+          "type": "object"
+        },
+        "event_at": {
+          "format": "date-time",
+          "title": "Event At",
+          "type": "string"
+        },
+        "feature_cutoff": {
+          "format": "date-time",
+          "title": "Feature Cutoff",
+          "type": "string"
+        },
+        "ownership": {
+          "additionalProperties": true,
+          "title": "Ownership",
+          "type": "object"
+        },
+        "reason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "request_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Request Id",
+          "type": "string"
+        },
+        "source_reference": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Source Reference",
+          "type": "string"
+        },
+        "vehicle": {
+          "additionalProperties": true,
+          "title": "Vehicle",
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "actor",
+        "reason",
+        "source_reference",
+        "event_at",
+        "available_at",
+        "feature_cutoff"
+      ],
+      "title": "SourceUpdateRequest",
+      "type": "object"
+    },
     "SpendFacts": {
       "additionalProperties": false,
       "description": "Aggregated categorised transaction spend in GBP (debits only).\n\n``None`` means no transaction history at the cutoff (unknown), never zero spend.",
@@ -594,6 +664,21 @@
       ],
       "default": null,
       "title": "Segment"
+    },
+    "source_events": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/SourceUpdateRequest"
+      },
+      "title": "Source Events",
+      "type": "array"
+    },
+    "source_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Source Versions",
+      "type": "object"
     },
     "spend": {
       "$ref": "#/$defs/SpendFacts"

@@ -28,7 +28,7 @@ incremental value could justify adding it.
 Meta-model
 ----------
 Interpretable ``LogisticRegression`` on median-imputed, standardised, clipped (+-5 sd)
-features, trained on VALIDATION predictions only. It must be validated on held-out TEST
+features, trained on VALIDATION predictions only. Release selection uses reserved validation
 data (see ``validation.validate_confidence``); if validation fails, confidence is
 SUPPRESSED (``to_results``) and never shown.
 

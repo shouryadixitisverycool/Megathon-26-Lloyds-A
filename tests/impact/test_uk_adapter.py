@@ -175,6 +175,28 @@ def test_paperless_activity_is_not_a_carbon_claim():
     detail = calculator.calculate(snapshot)
     assert detail.status == ImpactStatus.NOT_CLAIMED
     assert detail.value is None and detail.issues
+    assert detail.boundary == "paper_statement_and_digital_delivery_comparison_not_established"
+    assert any("No reviewed lifecycle carbon" in item for item in detail.exclusions)
+    assert detail.secondary_metrics[0].value == snapshot.digital.paper_statements_12m
+    assert detail.secondary_metrics[1].value == snapshot.digital.paper_statements_12m * 2
+    assert detail.secondary_metrics[1].unit == "sheets/year"
+    assert detail.secondary_metrics[1].evidence_references
+    assert ImpactResult.model_validate_json(detail.model_dump_json()) == detail
+
+
+def test_passport_identity_ignores_clock_but_binds_customer_and_evidence():
+    snapshot = ev_source()
+    first = UKImpactCalculator(Product.EV_FINANCE, clock=lambda: NOW).calculate(snapshot)
+    later = UKImpactCalculator(Product.EV_FINANCE).calculate(snapshot)
+    assert first.passport_id == later.passport_id
+    assert first.factors[0].source_published_on == date(2025, 6, 10)
+    assert first.factors[0].current_edition == "2026"
+    snapshot = snapshot.model_copy(update={"customer_id": "C99999"})
+    assert UKImpactCalculator(Product.EV_FINANCE).calculate(snapshot).passport_id != first.passport_id
+    dumped = first.model_dump(mode="json")
+    dumped["method_version"] = "tampered"
+    with pytest.raises(ValueError, match="passport"):
+        ImpactResult.model_validate(dumped)
 
 
 def test_missing_snapshot_is_explicit():

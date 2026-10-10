@@ -71,6 +71,11 @@ def customer_view(customers, load, save=None, provider_mode=None):
                     st.caption("Baseline minus scenario; this is a modeled opportunity, not a realized reduction.")
                 else:
                     st.caption("No defensible carbon estimate is available. An unavailable impact never means zero.")
+                def inspect_product(value=product):
+                    st.session_state["why_product"] = value
+                st.button(f"Explore {PRODUCTS.get(product, product)}", key=f"explore_{product}",
+                          on_click=inspect_product, width="stretch")
+                st.caption("Explore the product evidence, not financial eligibility or approval.")
     if not recommendations:
         st.info("The API returned no product decisions for this customer.")
         return
@@ -80,7 +85,19 @@ def customer_view(customers, load, save=None, provider_mode=None):
     row = by_product[product]
     try:
         explanation = load(f"/customers/{customer_id}/explanations/{product}")
-        st.markdown(explanation["text"])
+        # Older shipped API responses only expose text.
+        if explanation.get("headline") is not None:
+            st.subheader(explanation["headline"])
+            st.markdown(explanation["explanation"])
+            bullets(explanation["why_recommended"])
+            st.markdown(explanation["estimated_impact_text"])
+            st.caption(explanation["confidence_text"])
+            st.markdown(explanation["action_text"])
+            if explanation["missing_information"]:
+                st.markdown("**Missing information**")
+                bullets(explanation["missing_information"])
+        else:
+            st.markdown(explanation["text"])
         st.caption(f"Explanation source: {explanation['source']} · {explanation['provider_version']} · Validation: {explanation['validation_passed']}")
         if explanation.get("fallback_reason"):
             st.caption(f"Template fallback: {explanation['fallback_reason']}")
@@ -124,6 +141,12 @@ def impact_details(impact):
         st.text(f"Factor catalogue SHA-256: {impact['factor_catalogue_sha256']}")
         if impact.get("period"):
             st.caption(f"Activity period: {impact['period']['start']} inclusive to {impact['period']['end']} exclusive")
+        if impact.get("secondary_metrics"):
+            st.markdown("**Physical action metrics**")
+            st.dataframe([{"Metric": metric["name"], "Value": metric["value"], "Unit": metric["unit"],
+                           "Method": metric["method_version"], "Evidence": metric["evidence_references"]}
+                          for metric in impact["secondary_metrics"]], hide_index=True)
+            st.caption("Physical actions are not carbon savings; no lifecycle carbon impact is inferred.")
         for key in ("baseline", "scenario"):
             scenario = impact[key]
             field = "emissions_kg_co2e" if impact["units"] == "kg CO2e/year" else "emissions_kg_co2"
@@ -177,6 +200,17 @@ def portfolio_view(customers, load):
     if summary["total_customers"] == 0:
         st.info("No customers match these filters. Clear filters to return to the full synthetic portfolio.")
         return
+    analytics = summary.get("analytics", {})
+    if analytics:
+        st.subheader("Physical potential and evidence quality")
+        physical = analytics["physical_impact"]
+        st.caption(physical["limitation"])
+        if physical["groups"]:
+            st.dataframe(physical["groups"], hide_index=True)
+        else:
+            st.info("Physical potential is unavailable for this selection.")
+        st.write("Data quality counts", analytics["quality_counts"])
+        st.write("Missing evidence counts", analytics["missingness"])
     with st.container(border=True):
         st.subheader("Product decision states")
         st.plotly_chart(opportunities_chart(summary["product_opportunities"]), key="products_chart",
@@ -192,6 +226,17 @@ def portfolio_view(customers, load):
     with st.container(border=True):
         st.subheader("Monthly trend")
         st.caption(trends["disclaimer"])
+        historical = trends.get("analytics", {})
+        if historical:
+            st.caption(historical["limitation"])
+            evidence = historical["observations"]
+            st.dataframe([{**{key: value for key, value in row.items() if key != "physical_impact_groups"},
+                           "observed_conversion_rate": percentage(row["observed_conversion_rate"])}
+                          for row in evidence], hide_index=True)
+            impact_rows = [{"month": row["month"], "product": row["product"], **group}
+                           for row in evidence for group in row["physical_impact_groups"]]
+            if impact_rows:
+                st.dataframe(impact_rows, hide_index=True)
         if trends["observations"]:
             st.plotly_chart(trends_chart(trends["observations"]), key="trends_chart", alt="Historical synthetic monthly supported opportunities for each product", config={"scrollZoom": False})
             with st.expander("Historical observations"):

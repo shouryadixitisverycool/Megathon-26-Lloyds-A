@@ -1,14 +1,19 @@
 """HTTP boundaries for governed memory, oversight and scenario tools."""
 
 import json
+import os
+import secrets
+from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Header, HTTPException, Query
+from pydantic import ValidationError
 
 from greenpath import config
 from greenpath.contracts.enums import Product
+from greenpath.contracts.lifecycle import SourceUpdateRequest
 from greenpath.extensions.contracts import (
-    CampaignRequest, CustomerRequest, FeedbackRequest, PlanningRequest,
+    CampaignRequest, CounterfactualRequest, CustomerRequest, FeedbackRequest, PlanningRequest,
     PreferencesRequest, ReviewRequest, SensitivityRequest, SimulationRequest,
 )
 from greenpath.extensions.service import ExtensionService, communication, dump, prioritise
@@ -28,7 +33,7 @@ def attach_extensions(application, memory_path: Path | None = None):
     state = application.state
     service = ExtensionService(state.snapshot_provider, state.recommendation_service,
                                state.explanation_service, state.repository,
-                               MemoryStore(memory_path or config.DATA_DIR / "greenpath.sqlite3"))
+                               state.memory_store if memory_path is None else MemoryStore(memory_path))
     state.extension_service = service
     router = APIRouter()
 
@@ -63,6 +68,10 @@ def attach_extensions(application, memory_path: Path | None = None):
     @router.post("/feedback")
     def feedback(request: FeedbackRequest):
         row(request.customer_id, request.product)
+        if request.product == Product.PAPERLESS_BANKING and request.response == "CLOSED":
+            snap = customer(request.customer_id)
+            if snap.source_snapshot is None or snap.source_snapshot.digital.is_paperless is not True:
+                raise HTTPException(409, "Paperless closure requires a factual source update, not a feedback claim")
         try:
             return service.feedback(request)
         except ValueError as error:
@@ -82,8 +91,119 @@ def attach_extensions(application, memory_path: Path | None = None):
     def history(customer_id: str, product: Product | None = None):
         customer(customer_id)
         return {"events": service.store.history(customer_id, str(product) if product else None),
+                "recommendations": service.store.recommendation_history(customer_id, str(product) if product else None),
+                "source_updates": service.store.source_updates(customer_id),
                 "source_history": [dump(e) for e in state.history_provider.list_history() if e.customer_id == customer_id and (product is None or e.product == product)],
-                "limitation": "Feedback history is an audit trail. Factual completion must update source data before rescoring."}
+                 "limitation": "Feedback history is an audit trail. Factual completion must update source data before rescoring."}
+
+    @router.post("/customers/{customer_id}/source-updates")
+    def source_update(customer_id: str, request: SourceUpdateRequest,
+                      x_demo_admin_token: str | None = Header(default=None)):
+        token = os.environ.get("GREENPATH_DEMO_ADMIN_TOKEN")
+        if not token or not x_demo_admin_token or not secrets.compare_digest(token, x_demo_admin_token):
+            raise HTTPException(403, "Authorized local demo source update required")
+        snap = customer(customer_id)
+        provider = state.snapshot_provider
+        if snap.source_snapshot is None or not hasattr(provider, "override_source_snapshot"):
+            raise HTTPException(409, "Factual updates require a trained source snapshot override provider")
+        data = request.model_dump(mode="json")
+        try:
+            with service.store.transaction():
+                replay = service.store.replay(customer_id, "ALL", "source_update", data)
+                if replay:
+                    return replay
+                snap = customer(customer_id)
+                if request.feature_cutoff > datetime.now(timezone.utc) or request.feature_cutoff < snap.feature_cutoff:
+                    raise HTTPException(422, "Cutoff cannot be future-dated or precede the current source snapshot")
+                source = snap.source_snapshot
+                payload = source.model_dump(mode="json")
+                mappings = {
+                    "vehicle": {"has_vehicle": "has_vehicle", "vehicle_age_years": "vehicle_age_years",
+                                "annual_mileage_km": "annual_mileage_km", "mileage_is_estimated": "mileage_is_estimated"},
+                    "digital": {"is_paperless": "is_paperless", "paper_statements_3m": "paper_statements_3m",
+                                "paper_statements_12m": "paper_statements_12m", "digital_statement_ratio": "digital_statement_ratio",
+                                "digital_transactions_3m_avg": "digital_txn_3m_avg", "branch_visits_3m": "branch_visits_3m"},
+                    "ownership": {"home_owner": "home_owner", "has_existing_solar": "has_existing_solar"},
+                }
+                features = payload["features"]
+                for group, changes in (("vehicle", request.vehicle), ("digital", request.digital), ("ownership", request.ownership)):
+                    allowed = set(mappings[group]) | ({"fuel_type"} if group == "vehicle" else set())
+                    if set(changes) - allowed:
+                        raise ValueError(f"Unsupported factual {group} fields: {sorted(set(changes) - allowed)}")
+                    for field, value in changes.items():
+                        if value is None or field == "fuel_type":
+                            continue
+                        boolean_fields = {"has_vehicle", "mileage_is_estimated", "is_paperless", "home_owner", "has_existing_solar"}
+                        if field in boolean_fields and type(value) is not bool:
+                            raise ValueError(f"{field} requires a Boolean fact, not a claim or string")
+                        if field not in boolean_fields and type(value) not in {int, float}:
+                            raise ValueError(f"{field} requires a numeric fact")
+                    target = "home" if group == "ownership" else group
+                    payload[target].update(changes)
+                    for field, value in changes.items():
+                        if field in mappings[group]:
+                            features[mappings[group][field]] = value
+                if request.vehicle:
+                    payload["vehicle"]["record_updated_at"] = request.event_at.date().isoformat()
+                    age = (request.feature_cutoff.date() - request.event_at.date()).days
+                    features["vehicle_record_age_days"] = age
+                    payload["data_quality"]["vehicle_record_age_days"] = age
+                if "fuel_type" in request.vehicle:
+                    fuel = request.vehicle["fuel_type"]
+                    features.update(is_ev=None if fuel is None else fuel == "EV",
+                                    is_ice=None if fuel is None else fuel in {"PETROL", "DIESEL"},
+                                    is_hybrid=None if fuel is None else fuel == "HYBRID")
+                payload["feature_cutoff"] = request.feature_cutoff.date().isoformat()
+                payload["generated_at"] = datetime.now(timezone.utc).isoformat()
+                payload["source_events"] = [*payload.get("source_events", []), data]
+                payload.setdefault("source_versions", {}).update({group: f"local-demo:{request.request_id}:{request.source_reference}"
+                    for group in ("vehicle", "digital", "ownership") if getattr(request, group)})
+                updated = source.__class__.model_validate(payload)
+                payload = updated.model_dump(mode="python")
+                resolved = set()
+                for group, changes in (("vehicle", request.vehicle), ("digital", request.digital), ("ownership", request.ownership)):
+                    facts = getattr(updated, "home" if group == "ownership" else group)
+                    for field in changes:
+                        if field in mappings[group]:
+                            value = getattr(facts, field)
+                            payload["features"][mappings[group][field]] = value
+                            if value is not None:
+                                resolved.update((field, mappings[group][field], f"{group}.{field}"))
+                payload["data_quality"]["missing_fields"] = [f for f in payload["data_quality"]["missing_fields"] if f not in resolved]
+                updated = source.__class__.model_validate(payload)
+                # Keep historical monthly estimates unchanged by this later local update.
+                provider.list_history()
+                previous_decisions = service.rows(customer_id)
+                provider.override_source_snapshot(updated)
+                try:
+                    decisions = service.rows(customer_id)
+                    closed = [r["decision_id"] for r in decisions if r["product"] == "PAPERLESS_BANKING"
+                              and request.digital.get("is_paperless") is True and source.digital.is_paperless is not True
+                              and updated.digital.is_paperless is True and r["state"] == "NOT_APPLICABLE"]
+                    event = service.store.append(customer_id, "ALL", "source_update", data, {
+                        "actor": request.actor, "reason": request.reason, "source_reference": request.source_reference,
+                        "event_at": data["event_at"], "available_at": data["available_at"], "feature_cutoff": data["feature_cutoff"],
+                        "source_snapshot": updated.model_dump(mode="json"), "previous_source_snapshot": source.model_dump(mode="json"),
+                        "recommendations": decisions, "automatically_closed_decisions": closed,
+                        "lifecycle_state": "CLOSED" if closed else "RESCORED",
+                        "limitation": "Local synthetic factual source update; genuine model inference, not a measured sustainability outcome.",
+                    })
+                    if closed:
+                        service.store.append(customer_id, str(Product.PAPERLESS_BANKING), "source_completion",
+                            {"request_id": request.request_id + ":paperless-close", "source_update_id": event["id"]},
+                            {"lifecycle_state": "CLOSED", "automatic": True, "source_update_id": event["id"],
+                             "closed_decision_ids": [r["decision_id"] for r in previous_decisions if r["product"] == "PAPERLESS_BANKING"],
+                             "recommendation": next(r for r in decisions if r["product"] == "PAPERLESS_BANKING"),
+                             "event_at": data["event_at"], "available_at": data["available_at"], "feature_cutoff": data["feature_cutoff"]})
+                except Exception:
+                    provider.restore_source_snapshot(source)
+                    raise
+                state.invalidate_summary()
+                return event
+        except ValidationError as error:
+            raise HTTPException(422, str(error)) from error
+        except ValueError as error:
+            raise HTTPException(409, str(error)) from error
 
     @router.get("/customers/{customer_id}/preferences")
     def preferences(customer_id: str):
@@ -191,10 +311,22 @@ def attach_extensions(application, memory_path: Path | None = None):
         except ValueError as error:
             raise HTTPException(409, str(error)) from error
 
+    @router.post("/customers/{customer_id}/counterfactual-search")
+    def counterfactual_search(customer_id: str, request: CounterfactualRequest):
+        customer(customer_id)
+        try:
+            return service.counterfactual_search(customer_id, request)
+        except ValueError as error:
+            raise HTTPException(409, str(error)) from error
+
     @router.get("/portfolio/opportunities")
     def opportunities(region: str | None = None, segment: str | None = None, product: Product | None = None,
-                      status: str | None = None, min_propensity: float = Query(0, ge=0, le=1), min_trust: float = Query(0, ge=0, le=1)):
-        return {"opportunities": service.opportunities(region, segment, product, status, min_propensity, min_trust),
+                      status: str | None = None, min_propensity: float = Query(0, ge=0, le=1), min_trust: float = Query(0, ge=0, le=1),
+                      min_confidence: float = Query(0, ge=0, le=1), min_impact: float = Query(0, ge=0), data_quality: str | None = None):
+        # Zero defaults leave missing confidence/impact visible to shipped fixture consumers.
+        kwargs = {"min_confidence": min_confidence if min_confidence > 0 else None,
+                  "min_impact": min_impact if min_impact > 0 else None, "data_quality": data_quality}
+        return {"opportunities": service.opportunities(region, segment, product, status, min_propensity, min_trust, **kwargs),
                 "disclaimer": "Propensity, validated confidence, Trust and physical impact are separate dimensions. Missing priority components are never invented."}
 
     @router.get("/portfolio/segments")
@@ -217,12 +349,46 @@ def attach_extensions(application, memory_path: Path | None = None):
         except ValueError as error:
             raise HTTPException(409, str(error)) from error
 
+    @router.post("/campaigns/{campaign_id}/close")
+    def close_campaign(campaign_id: str, x_demo_admin_token: str | None = Header(default=None)):
+        token = os.environ.get("GREENPATH_DEMO_ADMIN_TOKEN")
+        if not token or not x_demo_admin_token or not secrets.compare_digest(token, x_demo_admin_token):
+            raise HTTPException(403, "Authorized local demo campaign closure required")
+        with service.store.transaction():
+            event = service.store.get_event(campaign_id)
+            if event is None or event["kind"] != "campaign":
+                raise HTTPException(404, "Campaign not found")
+            for closure in service.store.history("PORTFOLIO"):
+                if closure["kind"] == "campaign_closed" and closure.get("campaign_id") == campaign_id:
+                    return closure
+            return service.store.append("PORTFOLIO", event["product"], "campaign_closed", {},
+                                        {"campaign_id": campaign_id,
+                                         "limitation": "Releases simulated campaign capacity only; contact history and evidence remain unchanged."})
+
     @router.get("/audit/recommendations/{event_id}")
     def audit(event_id: str):
-        event = service.store.get_event(event_id)
+        event = service.store.get_recommendation(event_id) or service.store.get_event(event_id)
         if event is None:
             raise HTTPException(404, "Audit event not found")
         return event
+
+    @router.get("/customers/{customer_id}/shap/{product}")
+    def shap_audit(customer_id: str, product: Product):
+        snap = customer(customer_id)
+        runtime = getattr(service.repository, "runtime", None)
+        provider = getattr(runtime, "propensity", None)
+        audit = getattr(provider, "shap_audit", None)
+        if snap.source_snapshot is None or runtime is None:
+            return {"status": "NOT_AVAILABLE", "limitation": "No trained SHAP audit provider is available; reasons are not SHAP values."}
+        if audit is not None:
+            return audit(snap.source_snapshot, product)
+        from greenpath.models.propensity.shap_audit import audit_shap
+        import pandas as pd
+        try:
+            return audit_shap(runtime.bundles[product], pd.DataFrame(
+                [snap.source_snapshot.features], index=[customer_id]))
+        except (ValueError, AttributeError) as error:
+            return {"status": "NOT_AVAILABLE", "limitation": str(error)}
 
     @router.get("/governance/diagnostics")
     def governance():

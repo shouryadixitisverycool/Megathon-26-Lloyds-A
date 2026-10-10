@@ -45,6 +45,7 @@ class EventSource:
     frame: pd.DataFrame
     time_col: str
     monthly: bool = False
+    availability_col: str | None = None
 
 
 def check_customer_split_disjoint(split_or_frames: Any) -> str:
@@ -173,6 +174,9 @@ def run_all_checks(
     for source in sources:
         record("event_times_within_cutoff", source.name, check_event_times,
                source.frame, source.time_col, cutoff, source.name, monthly=source.monthly)
+        if source.availability_col is not None:
+            record("source_available_within_cutoff", source.name, check_availability,
+                   source.frame, source.availability_col, cutoff, source.name)
 
     if feature_names is None:
         not_run("no_target_features", "features", "no feature names supplied")
@@ -205,6 +209,14 @@ def run_all_checks(
         message = "; ".join(f"{r['check']}[{r['target']}]: {r['detail']}" for r in failures)
         raise LeakageError(message)
     return summary
+
+
+def check_availability(frame, time_col, cutoff, name):
+    if time_col not in frame or frame[time_col].isna().any():
+        raise LeakageError(f"{name}: missing source availability timestamps")
+    if (pd.to_datetime(frame[time_col]) > pd.Timestamp(cutoff)).any():
+        raise LeakageError(f"{name}: source availability after cutoff {cutoff}")
+    return check_event_times(frame, time_col, cutoff, name)
 
 
 def _as_product(product: Product | str) -> Product:

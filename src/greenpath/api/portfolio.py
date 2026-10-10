@@ -18,6 +18,74 @@ from greenpath.contracts.product import (
 from greenpath.impact import ImpactStatus, Product
 
 
+def impact_totals(recommendations: Iterable[Recommendation]) -> dict:
+    """Physical totals retain the complete compatibility boundary, including units."""
+    from greenpath.extensions.service import dump, impact_group
+
+    totals = defaultdict(lambda: Decimal(0))
+    unavailable = 0
+    for recommendation in recommendations:
+        row = dump(recommendation)
+        key = impact_group(row)
+        if key is None:
+            unavailable += 1
+        else:
+            totals[key] += recommendation.impact.value
+    return {"status": "AVAILABLE" if totals else "UNAVAILABLE", "unavailable_count": unavailable,
+            "groups": [{"product": key[0], "units": key[1], "boundary": key[2], "period": key[3],
+                        "method_version": key[4], "factor_catalogue_version": key[5], "value": str(value)}
+                       for key, value in sorted(totals.items())],
+            "limitation": "Modelled physical potential, not realised carbon savings. Incompatible units and boundaries are never summed."}
+
+
+def portfolio_analytics(recommendations: Iterable[Recommendation]) -> dict:
+    selected = tuple(recommendations)
+    quality = defaultdict(int)
+    for item in selected:
+        quality[item.trust.status] += 1
+    return {"physical_impact": impact_totals(item for item in selected if item.state == RecommendationState.RECOMMEND),
+            "quality_counts": dict(quality),
+            "missingness": {"propensity": sum(item.propensity is None or item.propensity.probability is None for item in selected),
+                            "validated_confidence": sum(not item.propensity or not item.propensity.confidence_validated or item.propensity.confidence is None for item in selected),
+                            "physical_impact": sum(item.impact.status != ImpactStatus.AVAILABLE or item.impact.value is None for item in selected)},
+            "decision_count": len(selected)}
+
+
+def historical_analytics(history: Iterable[HistoryRecord]) -> dict:
+    """Optional historical evidence stays unavailable rather than using today's values."""
+    groups = defaultdict(dict)
+    for record in history:
+        key = (record.month, record.product)
+        previous = groups[key].get(record.customer_id)
+        if previous is not None and previous != record:
+            raise ValueError("Conflicting historical evidence for one customer, product and month")
+        groups[key][record.customer_id] = record
+    observations = []
+    for (month, product), records in sorted(groups.items()):
+        rows = list(records.values())
+        observed = [r.observed_adoption_90d for r in rows if r.observed_adoption_90d is not None]
+        impacts = [getattr(r, "impact", None) for r in rows]
+        quality = [getattr(r, "data_quality", None) for r in rows]
+        totals = defaultdict(lambda: Decimal(0))
+        for impact in impacts:
+            if impact is not None and impact.status == ImpactStatus.AVAILABLE and impact.value is not None:
+                key = (impact.units, impact.boundary, str(impact.period), impact.method_version, impact.factor_catalogue_version)
+                totals[key] += impact.value
+        observations.append({"month": month, "product": str(product), "customer_count": len(rows),
+                             "observed_conversion_rate": str(Decimal(sum(observed)) / len(observed)) if observed else None,
+                             "observed_outcome_count": len(observed), "outcome_missing_count": len(rows) - len(observed),
+                             "quality_counts": {value: quality.count(value) for value in sorted(set(quality) - {None})},
+                             "quality_missing_count": quality.count(None),
+                             "propensity_missing_count": sum(r.propensity is None for r in rows),
+                             "confidence_missing_count": sum(r.confidence is None for r in rows),
+                             "trust_missing_count": sum(r.trust_score is None for r in rows),
+                             "physical_impact_status": "AVAILABLE" if totals else "UNAVAILABLE",
+                             "physical_impact_missing_count": sum(i is None or i.status != ImpactStatus.AVAILABLE or i.value is None for i in impacts),
+                             "physical_impact_groups": [{"units": k[0], "boundary": k[1], "period": k[2], "method_version": k[3],
+                                                         "factor_catalogue_version": k[4], "value": str(v)} for k, v in sorted(totals.items())]})
+    return {"observations": observations, "limitation": "Conversion denominators include recorded outcomes only. Missing historical quality and physical impact are unavailable; current evidence is never substituted."}
+
+
 def state_counts(recommendations: Iterable[Recommendation | HistoryRecord]) -> dict[str, int]:
     counts = {state.value: 0 for state in RecommendationState}
     for recommendation in recommendations:
@@ -91,6 +159,7 @@ def summarize(
     recommended = tuple(item for item in selected if item.state == RecommendationState.RECOMMEND)
     validated_recommended = sum(bool(item.propensity and item.propensity.confidence_validated) for item in recommended)
     return PortfolioSummary(
+        analytics=portfolio_analytics(selected),
         total_customers=len(snapshots),
         total_recommendations=len(selected),
         recommended_count=counts[RecommendationState.RECOMMEND.value],
@@ -120,10 +189,10 @@ def historical_trends(
     product: Product | None = None,
 ) -> PortfolioTrends:
     customer_ids = {snapshot.customer_id for snapshot in snapshots}
+    selected_history = tuple(record for record in history
+                             if record.customer_id in customer_ids and (product is None or record.product == product))
     groups: dict[tuple[str, Product], dict[str, HistoryRecord]] = defaultdict(dict)
-    for record in history:
-        if record.customer_id not in customer_ids or (product is not None and record.product != product):
-            continue
+    for record in selected_history:
         group = groups[(record.month, record.product)]
         previous = group.get(record.customer_id)
         if previous is not None and previous.state != record.state:
@@ -146,7 +215,7 @@ def historical_trends(
         observed = [record.is_paperless for record in records.values() if record.is_paperless is not None]
         return len(observed), sum(observed) if observed else None, Decimal(sum(observed)) / len(observed) if observed else None
 
-    return PortfolioTrends(observations=tuple(
+    return PortfolioTrends(analytics=historical_analytics(selected_history), observations=tuple(
         TrendPoint(
             month=month,
             product=selected_product,

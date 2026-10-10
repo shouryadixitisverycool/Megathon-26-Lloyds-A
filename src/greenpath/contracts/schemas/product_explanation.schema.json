@@ -1,0 +1,196 @@
+{
+  "$defs": {
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "RecommendationState": {
+      "enum": [
+        "RECOMMEND",
+        "DO_NOT_RECOMMEND",
+        "INSUFFICIENT_INFORMATION",
+        "CONFLICT_REQUIRES_REVIEW",
+        "NOT_APPLICABLE",
+        "SUPPRESSED"
+      ],
+      "title": "RecommendationState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Action Text"
+    },
+    "confidence_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence Text"
+    },
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "eligibility_disclaimer": {
+      "default": "This is a synthetic demonstration of product relevance, not a credit eligibility or approval decision.",
+      "title": "Eligibility Disclaimer",
+      "type": "string"
+    },
+    "estimated_impact_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Estimated Impact Text"
+    },
+    "explanation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Explanation"
+    },
+    "fallback_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fallback Reason"
+    },
+    "headline": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Headline"
+    },
+    "impact_value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Impact Value"
+    },
+    "missing_information": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Information",
+      "type": "array"
+    },
+    "product": {
+      "$ref": "#/$defs/Product"
+    },
+    "provider_version": {
+      "title": "Provider Version",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "source": {
+      "enum": [
+        "template",
+        "llm"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/RecommendationState"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "units": {
+      "title": "Units",
+      "type": "string"
+    },
+    "validation_passed": {
+      "title": "Validation Passed",
+      "type": "boolean"
+    },
+    "why_recommended": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Why Recommended",
+      "type": "array"
+    }
+  },
+  "required": [
+    "customer_id",
+    "product",
+    "state",
+    "text",
+    "reason_codes",
+    "units",
+    "source",
+    "provider_version",
+    "validation_passed"
+  ],
+  "title": "Explanation",
+  "type": "object"
+}

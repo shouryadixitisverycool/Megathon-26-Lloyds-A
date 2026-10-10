@@ -3,6 +3,8 @@
 from datetime import date, datetime
 from decimal import Context, Decimal, InvalidOperation, localcontext
 from enum import StrEnum
+import hashlib
+import json
 from typing import Literal
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -76,6 +78,27 @@ class FactorReference(Model):
     source_sha256: str | None
     verification_basis: str
     source_limitation: str | None = None
+    source_published_on: date | None = None
+    source_checked_on: date | None = None
+    current_edition: str | None = None
+    current_edition_url: str | None = None
+
+
+class SecondaryActivityMetric(Model):
+    """Non-carbon activity, displayed independently of the carbon status/value."""
+
+    name: Literal["paper_statements_avoided", "paper_sheets_avoided"]
+    value: Decimal = Field(ge=0)
+    unit: Literal["statements/year", "sheets/year"]
+    method_version: str
+    evidence_references: tuple[str, ...]
+
+    @model_validator(mode="after")
+    def compatible_unit(self):
+        expected = "statements/year" if self.name == "paper_statements_avoided" else "sheets/year"
+        if self.unit != expected or not self.evidence_references:
+            raise ValueError("Activity metric requires matching units and evidence references")
+        return self
 
 
 class ActivityEvidence(Model):
@@ -141,6 +164,8 @@ class ImpactResult(Model):
     timestamp: AwareDatetime
     evidence: tuple[ActivityEvidence, ...] = ()
     issues: tuple[ImpactIssue, ...] = ()
+    secondary_metrics: tuple[SecondaryActivityMetric, ...] = ()
+    passport_id: str | None = None
 
     @model_validator(mode="after")
     def consistent_status(self):
@@ -162,4 +187,14 @@ class ImpactResult(Model):
                     raise ValueError("Impact must equal baseline minus scenario")
         elif any(v is not None for v in (self.value, baseline, scenario)) or not self.issues:
             raise ValueError("Unavailable impact requires null numbers and specific issues")
+        if self.secondary_metrics and (self.product != Product.PAPERLESS_BANKING
+                                       or self.status != ImpactStatus.NOT_CLAIMED):
+            raise ValueError("Paper activity metrics require a supported NOT_CLAIMED paperless scenario")
+        identity = self.model_dump(mode="json", exclude={"timestamp", "passport_id"})
+        expected_id = "GP-" + hashlib.sha256(json.dumps(
+            identity, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+        ).encode()).hexdigest()
+        if self.passport_id is not None and self.passport_id != expected_id:
+            raise ValueError("Impact passport ID does not match its evidence and method provenance")
+        object.__setattr__(self, "passport_id", expected_id)
         return self

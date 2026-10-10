@@ -4,7 +4,7 @@ Source of truth: `src/greenpath/contracts/` (Pydantic v2, frozen, `extra="forbid
 JSON Schemas: `src/greenpath/contracts/schemas/*.json` (regenerate with `make schemas`).
 Valid example payloads: `src/greenpath/contracts/fixtures/*.json` (one Recommendation per state).
 
-The integrated repository uses this package as canonical. Mirror-named modules are compatibility imports, not separate schema authorities.
+The shared package owns the scoring contracts and the explicit product/API contracts. They remain distinct serialized views, not a single interchangeable Recommendation payload. Mirror-named modules are compatibility imports, not separate schema authorities.
 
 ## Integrated product adapter
 
@@ -39,3 +39,15 @@ The detailed product impact unit enum supports `kg CO2`, `kg CO2/year` and `kg C
 
 ## Change process
 Propose changes in writing; bump `CONTRACT_VERSION`; regenerate schemas and fixtures; give the same version to both agents.
+
+## Decision audit and local factual lifecycle
+
+Every recommendation served through `create_app` receives an evidence-stable `decision_id` and is persisted in append-only SQLite decision storage. Repeated evidence returns the original immutable decision, including its original timestamp. Identity retains source observations, versions, rules, calibration and impact provenance, but excludes generation timestamps. Changed factual evidence or method versions produce a new decision ID. `/audit/recommendations/{decision_id}` retrieves the decision plus append-only explanation runs and unified audit provenance. The shipped event-ID lookup remains supported for existing review consumers. Explanation prompt/provider versions and fallback/validation results are recorded without rewriting the original decision.
+
+The API Explanation contract preserves the structured headline, explanation, recommendation reasons, impact/confidence/action text and missing information supplied by the explanation adapter. The original `text` and other shipped fields remain available. JSON schemas now export the product views with `product_` names alongside the numeric scoring views; these are not interchangeable units or methods.
+
+`POST /customers/{customer_id}/source-updates` is disabled unless `GREENPATH_DEMO_ADMIN_TOKEN` is configured and matched by `X-Demo-Admin-Token`. It accepts only vehicle, digital and ownership facts with actor, reason, source reference, idempotent request ID, event time, availability time and cutoff. Event <= availability <= cutoff <= now is required. Trained artifacts are required; fixture probabilities cannot be updated. The provider synchronizes approved feature mappings with validated source facts and reruns deployed model inference, Trust and physical impact on the updated snapshot. It does not patch probabilities, assume consent, or claim recomputation of unchanged rolling transaction/energy evidence. Updates and source snapshots persist across application restarts; historical monthly estimates remain unchanged.
+
+Paperless feedback can record a completion claim and suppress outreach, but cannot establish factual closure. A verified paperless source update creates an automatic `source_completion` event tied to the previous decision and the rescored decision. History exposes source updates, served decisions and existing feedback events separately. `SourceSnapshotOverrideProvider` exposes source override/history capabilities. History records also accept optional physical impact value/status/units, missing fields and observed-rate evidence; unavailable outcomes are not inferred.
+
+`/customers/{customer_id}/shap/{product}` exposes the ML adapter's deployed-model audit when available, explicitly in raw uncalibrated log-odds space. Missing SHAP artifacts return NOT_AVAILABLE, never reason-code values relabelled as SHAP. Portfolio filters forward validated-confidence, impact and data-quality constraints to the extension service. Persistent active-campaign/capacity helpers use campaign and campaign-closure events; these are local simulated contacts, not sent messages.

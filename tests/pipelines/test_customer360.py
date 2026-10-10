@@ -78,6 +78,31 @@ def test_unknown_category_rejected(raw):
         build_customer360(tables, bad, CUTOFF)
 
 
+@pytest.mark.parametrize("name", ["financial_products", "vehicles", "energy_usage", "digital_usage", "transactions"])
+def test_delayed_records_excluded_even_when_event_before_cutoff(raw, name):
+    tables, txns = raw
+    changed = {key: value.copy() for key, value in tables.items()}
+    txns = txns.copy()
+    source = txns if name == "transactions" else changed[name]
+    source["available_at"] = pd.Timestamp(CUTOFF) + pd.Timedelta(days=1)
+    delayed = build_customer360(changed, txns, CUTOFF)
+    if name == "transactions":
+        expected = build_customer360(changed, txns.iloc[:0], CUTOFF)
+    else:
+        changed[name] = changed[name].iloc[:0]
+        expected = build_customer360(changed, txns, CUTOFF)
+    _assert_same(delayed, expected)
+
+
+def test_delayed_profile_is_masked(raw):
+    tables, txns = raw
+    changed = {key: value.copy() for key, value in tables.items()}
+    changed["customers"]["available_at"] = pd.Timestamp(CUTOFF) + pd.Timedelta(days=1)
+    row = build_customer360(changed, txns, CUTOFF).loc["C001"]
+    assert pd.isna(row.home_owner)
+    assert row.tenure_months == 29
+
+
 # --- window arithmetic (hand computed, see fixtures_c360) -------------------------------------
 
 def test_fuel_windows_hand_computed(c360):

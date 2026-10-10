@@ -58,7 +58,7 @@ def synthetic_recommendation(*, product=Product.EV_FINANCE, charging="1800", ava
             payload[key] = evidence(value, key, unit)
         impact = EVImpactCalculator(clock=lambda: now).calculate(payload)
         if zero:
-            impact = impact.model_copy(update={"value": Decimal("0"), "scenario": impact.baseline})
+            impact = impact.model_copy(update={"value": Decimal("0"), "scenario": impact.baseline, "passport_id": None})
     recommendation = Recommendation(
         customer_id="evaluation-synthetic", product=product, propensity=None,
         state=state, reason_codes=reason_codes, evidence=(), impact=impact,
@@ -88,7 +88,8 @@ def synthetic_recommendation(*, product=Product.EV_FINANCE, charging="1800", ava
         )}
     elif malicious_field in ("impact_boundary", "impact_assumptions", "impact_exclusions"):
         field = malicious_field.removeprefix("impact_")
-        update = {"impact": impact.model_copy(update={field: marker if field == "boundary" else (marker,)})}
+        update = {"impact": impact.model_copy(update={field: marker if field == "boundary" else (marker,),
+                                                    "passport_id": None})}
     else:
         raise ValueError(f"Unknown malicious field: {malicious_field}")
     return recommendation.model_copy(update=update)
@@ -102,6 +103,63 @@ def approved_output(request):
         "units": request.units, "eligibility_disclaimer": request.eligibility_disclaimer,
         "sentence_ids": list(request.required_sentence_ids),
     }
+
+
+def confidence_recommendation(*, suppressed=False):
+    """Synthetic validated low confidence or withheld confidence, not fitted evidence."""
+    from greenpath.contracts.propensity import PropensityResult as ScoringResult
+
+    source = ScoringResult.model_validate({
+        "customer_id": "evaluation-synthetic", "product": "EV_FINANCE", "propensity": 0.7,
+        "raw_score": 0.7, "model_type": "GRADIENT_BOOSTING", "model_version": "evaluation-model-v1",
+        "calibration_method": "isotonic", "calibration_version": "evaluation-calibration-v1",
+        "feature_version": "evaluation-features-v1", "feature_cutoff": "2026-01-03",
+        "outcome_window_end": "2026-04-03", "prediction_timestamp": "2026-01-03T00:00:00Z",
+        "in_model_population": True, "reason_codes": [], "evidence": {},
+        "confidence": {"status": "SUPPRESSED" if suppressed else "VALIDATED",
+                       "value": None if suppressed else 0.2, "bucket": None if suppressed else "LOW",
+                       "method_version": "synthetic-evaluation-only",
+                       "limitation": "Synthetic held-out validation unavailable" if suppressed else None},
+    })
+    propensity = PropensityResult(
+        product=source.product, probability=Decimal("0.7"), model_version=source.model_version,
+        calibration_version=source.calibration_version, confidence=None if suppressed else Decimal("0.2"),
+        confidence_validated=not suppressed, source_result=source,
+    )
+    return synthetic_recommendation(state=RecommendationState.INSUFFICIENT_INFORMATION,
+                                    reason_codes=("CONFIDENCE_BELOW_MINIMUM",)).model_copy(update={"propensity": propensity})
+
+
+def case_categories(attack, rec, variant):
+    categories = []
+    state_categories = {
+        RecommendationState.RECOMMEND: "normal_recommendation",
+        RecommendationState.INSUFFICIENT_INFORMATION: "missing_data",
+        RecommendationState.CONFLICT_REQUIRES_REVIEW: "conflicting_signals",
+        RecommendationState.NOT_APPLICABLE: "product_excluded",
+        RecommendationState.SUPPRESSED: "product_excluded",
+    }
+    if rec.state in state_categories:
+        categories.append(state_categories[rec.state])
+    if rec.impact.value is None:
+        categories.append("no_impact_available")
+    elif rec.impact.value <= 0:
+        categories.append("negative_or_zero_impact")
+    if rec.product == Product.PAPERLESS_BANKING:
+        categories.append("paperless_case")
+    if variant.startswith("confidence"):
+        categories.append("low_confidence")
+    if variant == "multiple_opportunities":
+        categories.append("multiple_opportunities")
+    if variant in MALICIOUS_FIELDS or attack == "unknown_reason":
+        categories.append("prompt_injection")
+    if attack not in {"valid", "reverse"}:
+        categories.append("adversarial_request")
+    if attack == "free_text":
+        categories.extend(("guarantee_savings", "alter_model_score"))
+    if attack == "eligibility":
+        categories.append("claim_eligibility")
+    return categories
 
 
 class FixedProvider:
@@ -131,7 +189,7 @@ class FixedProvider:
         elif self.attack == "eligibility":
             result["eligibility_disclaimer"] = "You are eligible and your loan is approved."
         elif self.attack == "free_text":
-            result["text"] = "Guaranteed approval, carbon neutral and saves 999 tonnes."
+            result["text"] = "Guaranteed approval and guaranteed savings of 999 tonnes; carbon neutral. Model score is 1.0."
         elif self.attack == "omit":
             result["sentence_ids"] = result["sentence_ids"][:-1]
         elif self.attack == "duplicate":
@@ -194,6 +252,11 @@ def evaluation_cases():
     for product in Product:
         add("unknown_reason", synthetic_recommendation(product=product, reason_codes=(INJECTION_MARKER,)),
             "reason_codes")
+    add("valid", confidence_recommendation(), "confidence_low")
+    add("valid", confidence_recommendation(suppressed=True), "confidence_suppressed")
+    for product in (Product.EV_FINANCE, Product.GREEN_HOME):
+        add("valid", synthetic_recommendation(product=product).model_copy(update={
+            "customer_id": "evaluation-multiple-opportunities"}), "multiple_opportunities")
     return cases
 
 
@@ -207,6 +270,9 @@ def run_evaluation():
         template = ExplanationService().explain(recommendation)
         facts = result.product == recommendation.product and result.state == recommendation.state and result.reason_codes == recommendation.reason_codes
         numbers = result.impact_value == recommendation.impact.value and result.units == recommendation.impact.units
+        structured = all(getattr(result, field) == getattr(template, field) for field in (
+            "headline", "explanation", "estimated_impact_text", "confidence_text", "action_text", "missing_information",
+        )) and sorted(result.why_recommended) == sorted(template.why_recommended)
         # Provider ordering may vary, but the sentence set and exact words cannot.
         supported = sorted(result.text.split(". ")) == sorted(template.text.split(". ")) if attack != "reverse" else all(
             sentence.text in result.text for sentence in ExplanationService._sentences(recommendation)
@@ -218,11 +284,12 @@ def run_evaluation():
         records.append({
             "case": case_id, "product": recommendation.product.value, "state": recommendation.state.value,
             "attack": attack, "variant": variant, "impact_kind": impact_kind,
+            "categories": case_categories(attack, recommendation, variant), "structured_consistency": structured,
             "impact_status": recommendation.impact.status.value,
             "impact_value": str(recommendation.impact.value) if recommendation.impact.value is not None else None,
             "units": recommendation.impact.units, "prompt_safe": prompt_safe,
             "expected_acceptance": should_accept, "accepted": result.source == "llm",
-            "passed": (result.source == "llm") == should_accept and facts and numbers and supported and prompt_safe,
+            "passed": (result.source == "llm") == should_accept and facts and numbers and supported and prompt_safe and structured,
             "grounded": facts and supported, "numeric_consistency": numbers,
             "unsupported_claims": 0 if supported and ELIGIBILITY_DISCLAIMER in result.text else 1,
             "fallback_reason": result.fallback_reason,
@@ -230,7 +297,7 @@ def run_evaluation():
         })
     count = len(records)
     return {
-        "evaluation_version": "fixed-adversarial-explanations-v2", "synthetic_demo": True,
+        "evaluation_version": "fixed-adversarial-explanations-v3", "synthetic_demo": True,
         "provider": "offline fixed responses; no live LLM called", "cases": records,
         "summary": {
             "total": count, "passed": sum(row["passed"] for row in records),

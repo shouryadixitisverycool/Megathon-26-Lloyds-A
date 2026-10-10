@@ -51,6 +51,7 @@ from greenpath.contracts.recommendation import (
     TrendPoint,
 )
 from greenpath.contracts.trust import TrustAssessment, TrustIssue
+from greenpath.contracts.lifecycle import SourceUpdateRequest
 
 from types import ModuleType as _ModuleType
 

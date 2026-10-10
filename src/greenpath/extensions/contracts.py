@@ -44,16 +44,24 @@ class SensitivityRequest(Request):
     changes: dict[str, float | None] = Field(min_length=1, max_length=6)
 
 
+class CounterfactualRequest(Request):
+    product: Product
+    candidates: dict[str, list[float]] = Field(min_length=1, max_length=3)
+    target_probability: float = Field(default=0.6, ge=0, le=1)
+    max_evaluations: int = Field(default=64, ge=1, le=128)
+
+
 class PlanningRequest(Request):
     product: Product
     target_count: int = Field(default=100, ge=0, le=100000)
     conversion_rate: float = Field(default=0.05, ge=0, le=1)
     region: str | None = None
     segment: str | None = None
+    channel: Literal["app", "email", "phone", "rm"] = "app"
 
 
 class CampaignRequest(PlanningRequest):
     objective: Literal["conversions", "impact", "balanced"] = "conversions"
-    channel: Literal["app", "email", "phone", "rm"] = "app"
     channel_capacity: int = Field(default=100, ge=0, le=100000)
+    max_active_campaigns: int = Field(default=3, ge=1, le=100)
     execute: StrictBool = False

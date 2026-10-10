@@ -17,8 +17,9 @@ from greenpath.contracts.product import (
 from greenpath.contracts.impact_detail import ImpactStatus, Product
 
 from .ports import ApprovedSentence, ExplanationProvider, ExplanationRequest, ProviderExplanation
+from .schema import StructuredExplanation
 
-TEMPLATE_VERSION = "grounded-template-v1"
+TEMPLATE_VERSION = "grounded-template-v2"
 PRODUCT_LABELS = {
     Product.EV_FINANCE: "EV Finance",
     Product.GREEN_HOME: "Green Home",
@@ -230,25 +231,50 @@ class ExplanationService:
                 items.append(sentence("confidence", f"Validated model confidence is {format(propensity.confidence, 'f')}. This describes prediction reliability and is separate from evidence Trust."))
             else:
                 items.append(sentence("confidence", "Model confidence is withheld because held-out reliability validation does not support displaying it."))
+        else:
+            items.append(sentence("confidence", "Model confidence is unavailable because no validated model source is attached to this decision."))
         impact = rec.impact
         if impact.status == ImpactStatus.AVAILABLE:
             value = format(impact.value, "f")
             direction = "a decrease" if impact.value > 0 else "an increase" if impact.value < 0 else "no change"
             items.append(sentence("impact", f"The synthetic scenario's baseline minus scenario impact is {value} {impact.units}, indicating {direction} within the stated comparison period and accounting boundary."))
-            items.append(sentence("impact:limits", "This is a scenario estimate of operational CO2 within the recorded method, assumptions and exclusions. It is not a realized reduction or a lifecycle estimate."))
+            gas = "CO2e" if impact.units == "kg CO2e/year" else "CO2"
+            items.append(sentence("impact:limits", f"This is a scenario estimate of operational {gas} within the recorded method, assumptions and exclusions. It is not a realized reduction or a lifecycle estimate."))
         else:
             items.append(sentence("impact", "Carbon impact is unavailable because the required input, evidence or method basis is inadequate. No numeric carbon estimate is presented."))
         limitation = ("Synthetic-data scores do not establish real-world predictive performance."
                       if propensity is not None and propensity.source_result is not None
                       else "Synthetic fixture scores do not establish predictive performance.")
         items.append(sentence("trust", "Trust describes input evidence quality and is separate from model confidence. " + limitation))
+        if rec.state == RecommendationState.RECOMMEND:
+            action = f"Explore {PRODUCT_LABELS[rec.product]} and review the supporting evidence and scenario assumptions."
+        elif rec.state == RecommendationState.SUPPRESSED:
+            action = f"Do not initiate outreach about {PRODUCT_LABELS[rec.product]}; respect the recorded contact preferences."
+        elif rec.state in {RecommendationState.INSUFFICIENT_INFORMATION, RecommendationState.CONFLICT_REQUIRES_REVIEW}:
+            action = f"Review the missing or conflicting evidence before exploring {PRODUCT_LABELS[rec.product]}."
+        else:
+            action = f"Review the {PRODUCT_LABELS[rec.product]} decision evidence; no recommendation is made."
+        items.append(sentence("action", action))
         items.append(sentence("eligibility", ELIGIBILITY_DISCLAIMER))
         return tuple(items)
 
     @staticmethod
     def _result(rec, sentences, source, version, fallback_reason):
-        return Explanation(
+        by_id = {item.sentence_id: item.text for item in sentences}
+        reasons = tuple(item.text for item in sentences if item.sentence_id.startswith(("reason:", "model-reason:")))
+        missing = tuple(REASON_TEXT[code] for code in dict.fromkeys(rec.reason_codes)
+                        if code in {"MISSING_EVIDENCE", "STALE_EVIDENCE", "FUTURE_EVIDENCE",
+                                    "PROPENSITY_UNAVAILABLE", "CONFIDENCE_BELOW_MINIMUM"})
+        if rec.impact.status != ImpactStatus.AVAILABLE:
+            missing += (by_id["impact"],)
+        return StructuredExplanation(
             customer_id=rec.customer_id, product=rec.product, state=rec.state,
+            headline=f"{PRODUCT_LABELS[rec.product]}: {rec.state.value.replace('_', ' ').lower()}",
+            explanation=" ".join(by_id[key] for key in ("decision", "propensity", "trust") if key in by_id),
+            why_recommended=reasons,
+            estimated_impact_text=" ".join(by_id[key] for key in ("impact", "impact:limits") if key in by_id),
+            confidence_text=by_id["confidence"], action_text=by_id["action"],
+            missing_information=missing,
             text=" ".join(item.text for item in sentences), reason_codes=rec.reason_codes,
             impact_value=rec.impact.value, units=rec.impact.units,
             source=source, provider_version=version, validation_passed=True,

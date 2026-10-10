@@ -98,7 +98,7 @@ def test_prompt_excludes_untrusted_strings_customer_id_and_unvalidated_confidenc
         "propensity": PropensityResult(product=rec.product, probability=Decimal("0.95"), model_version=marker,
                                        calibration_version=marker, reason_codes=(marker,), confidence=Decimal("0.99"),
                                        confidence_validated=False),
-        "impact": rec.impact.model_copy(update={"boundary": marker, "assumptions": (marker,), "exclusions": (marker,)}),
+        "impact": rec.impact.model_copy(update={"boundary": marker, "assumptions": (marker,), "exclusions": (marker,), "passport_id": None}),
     })
     provider = FixedProvider()
     result = ExplanationService(provider).explain(rec)
@@ -170,7 +170,7 @@ def test_structured_explanation_schemas_share_product_impact_units():
 
 def test_zero_is_distinct_from_unavailable():
     rec = synthetic_recommendation()
-    zero_impact = rec.impact.model_copy(update={"value": Decimal("0"), "scenario": rec.impact.baseline})
+    zero_impact = rec.impact.model_copy(update={"value": Decimal("0"), "scenario": rec.impact.baseline, "passport_id": None})
     rec = rec.model_copy(update={"impact": zero_impact})
     result = ExplanationService().explain(rec)
     assert result.impact_value == 0
@@ -232,7 +232,7 @@ def test_vocabulary_matches_recommendation_engine():
 
 def test_offline_report_has_actual_cases_and_no_live_metrics():
     report = run_evaluation()
-    assert report["summary"]["passed"] == report["summary"]["total"] == 196
+    assert report["summary"]["passed"] == report["summary"]["total"] == 200
     assert report["summary"]["groundedness_rate"] == 1
     assert report["summary"]["numeric_consistency_rate"] == 1
     assert report["summary"]["unsupported_claims"] == 0

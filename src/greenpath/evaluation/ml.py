@@ -212,6 +212,12 @@ def stage_evaluate() -> None:
                                 "n_test": int(len(rows)), "n_test_positive": int(y.sum())},
                      "features": b.features, "notes": b.notes}
         res["test"] = model_metrics(b, rows, y)
+        from greenpath.models.propensity.shap_audit import audit_shap
+        shap_path = config.REPORTS_DIR / "shap" / f"{p.value.lower()}.json"
+        shap = audit_shap(b, rows.head(100), shap_path)
+        res["shap_audit"] = {"path": str(shap_path.relative_to(config.REPO_ROOT)),
+                             "method": shap["method"], "output_space": shap["output_space"],
+                             "rows": len(shap["rows"]), "background": shap["background"]}
         p_sel = predict_calibrated(b, rows)
         raw_sel = np.clip(predict_raw(b, rows), 0, 1)
         res["calibration_curve"] = {"before": M.calibration_curve(y, raw_sel).to_dict("records"),
@@ -286,6 +292,9 @@ def stage_evaluate() -> None:
         confidence_path = config.ARTIFACT_DIR / runtime.CONFIDENCE_DIR / f"{p.value.lower()}.joblib"
         if confidence_path.exists():
             cm = ConfidenceModel.load(confidence_path)
+            test_features = runtime.confidence_features(b, rows, p_sel, detectors.get(p))
+            decisions[p.value]["held_out_test_diagnostic"] = validate_confidence(
+                cm.predict(test_features), (p_sel >= b.threshold) == (y == 1)).to_dict()
             stress = stress_report(cm, scen)
             decisions[p.value]["stress"] = {k: v.to_dict() for k, v in stress.items()}
         else:
@@ -303,7 +312,9 @@ def stage_evaluate() -> None:
 
     # trust diagnostics on held-out customers
     log("trust diagnostics")
-    results["trust"] = trust_diagnostics(frame, test_rows, labels, bundles, TrustScorer(ood_detectors=detectors))
+    from greenpath.trust.selection import load_thresholds
+    results["trust"] = trust_diagnostics(frame, test_rows, labels, bundles, TrustScorer(
+        ood_detectors=detectors, thresholds=load_thresholds(config.ARTIFACT_DIR / "trust_thresholds.json")))
 
     # transaction categorisation: unseen- vs known-merchant evaluation
     log("transaction categorisation evaluation")

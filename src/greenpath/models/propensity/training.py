@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import HistGradientBoostingClassifier
+from xgboost import XGBClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, roc_auc_score
@@ -52,7 +52,7 @@ class ProductModelBundle:
     seed: int
     heuristic: HeuristicModel
     logistic: Pipeline
-    gbm: HistGradientBoostingClassifier
+    gbm: XGBClassifier
     logistic_c: float
     selected_model_type: ModelType
     model_versions: dict[ModelType, str]
@@ -65,6 +65,8 @@ class ProductModelBundle:
     n_validation: int
     n_validation_positive: int
     notes: list[str] = field(default_factory=list)
+    shap_background_mean: np.ndarray | None = None
+    shap_background_rows: int = 0
 
     @property
     def model_version(self) -> str:
@@ -91,10 +93,12 @@ def _logistic_pipeline(c: float, seed: int) -> Pipeline:
     ])
 
 
-def _gbm(seed: int) -> HistGradientBoostingClassifier:
-    return HistGradientBoostingClassifier(
-        learning_rate=0.05, max_iter=200, max_depth=4, min_samples_leaf=40, l2_regularization=1.0,
-        early_stopping=False, random_state=seed)
+def _gbm(seed: int) -> XGBClassifier:
+    return XGBClassifier(
+        learning_rate=0.05, n_estimators=200, max_depth=4, min_child_weight=10,
+        reg_lambda=1.0, subsample=1.0, colsample_bytree=1.0,
+        tree_method="hist", device="cpu", n_jobs=1, random_state=seed,
+        objective="binary:logistic", eval_metric="logloss")
 
 
 def _safe_auc(y: np.ndarray, s: np.ndarray) -> float:
@@ -200,7 +204,7 @@ def train_product(
     thresholds: dict[ModelType, float] = {}
     for mt, raw in raw_val.items():
         brier_raw = float(brier_score_loss(y_va, raw)) if mt is not ModelType.HEURISTIC else float("nan")
-        cal = Calibrator.fit(raw, y_va, name=slug, seed=seed)
+        cal = Calibrator.fit(raw, y_va, name=f"{slug}_{_MODEL_SLUG[mt]}", seed=seed)
         p_cal = cal.transform(raw)
         calibrators[mt] = cal
         thresholds[mt] = best_f1_threshold(y_va, p_cal)
@@ -216,6 +220,11 @@ def train_product(
         reason_thresholds=fit_reason_thresholds(sub.loc[tr]),
         validation_metrics=metrics, n_train=int(tr.sum()), n_train_positive=int(y_tr.sum()),
         n_validation=int(va.sum()), n_validation_positive=int(y_va.sum()),
+        shap_background_mean=logit[:-1].transform(X_tr).mean(axis=0),
+        shap_background_rows=len(X_tr),
+        notes=["Gradient boosting candidate: XGBoost CPU hist, one thread, fixed seed. "
+               "Deployment selected against logistic baseline on validation raw AUC/Brier; "
+               "heuristic is a ranking benchmark, not a probabilistic deployment candidate."],
     )
 
 

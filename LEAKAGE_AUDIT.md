@@ -21,13 +21,19 @@ Automated checks run in `make train`; the run fails on any violation (implementa
 
 | check | target | status | detail |
 |---|---|---|---|
-| customer_split_disjoint | split | PASS | 4 splits, 4010 customers, no customer in more than one split |
-| event_times_within_cutoff | transactions | PASS | transactions: 749492 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | financial_products | PASS | financial_products: 12712 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | vehicles | PASS | vehicles: 4539 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | energy_usage | PASS | energy_usage: 62003 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | digital_usage | PASS | digital_usage: 68284 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3103 rows with event time on or before cutoff 2026-06-30 |
+| customer_split_disjoint | split | PASS | 5 splits, 4010 customers, no customer in more than one split |
+| event_times_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
 | no_target_features | features | PASS | 25 feature names, none target-like |
 | no_audit_features | features | PASS | 25 feature names, none audit-only or proxy |
 | no_post_adoption_features | EV_FINANCE | PASS | EV_FINANCE: none of ['holds_ev_finance', 'is_ev'] used as features |
@@ -36,13 +42,19 @@ Automated checks run in `make train`; the run fails on any violation (implementa
 
 | check | target | status | detail |
 |---|---|---|---|
-| customer_split_disjoint | split | PASS | 4 splits, 4010 customers, no customer in more than one split |
-| event_times_within_cutoff | transactions | PASS | transactions: 749492 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | financial_products | PASS | financial_products: 12712 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | vehicles | PASS | vehicles: 4539 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | energy_usage | PASS | energy_usage: 62003 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | digital_usage | PASS | digital_usage: 68284 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3103 rows with event time on or before cutoff 2026-06-30 |
+| customer_split_disjoint | split | PASS | 5 splits, 4010 customers, no customer in more than one split |
+| event_times_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
 | no_target_features | features | PASS | 31 feature names, none target-like |
 | no_audit_features | features | PASS | 31 feature names, none audit-only or proxy |
 | no_post_adoption_features | GREEN_HOME | PASS | GREEN_HOME: none of ['holds_green_home_loan'] used as features |
@@ -51,13 +63,19 @@ Automated checks run in `make train`; the run fails on any violation (implementa
 
 | check | target | status | detail |
 |---|---|---|---|
-| customer_split_disjoint | split | PASS | 4 splits, 4010 customers, no customer in more than one split |
-| event_times_within_cutoff | transactions | PASS | transactions: 749492 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | financial_products | PASS | financial_products: 12712 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | vehicles | PASS | vehicles: 4539 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | energy_usage | PASS | energy_usage: 62003 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | digital_usage | PASS | digital_usage: 68284 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3103 rows with event time on or before cutoff 2026-06-30 |
+| customer_split_disjoint | split | PASS | 5 splits, 4010 customers, no customer in more than one split |
+| event_times_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
 | no_target_features | features | PASS | 22 feature names, none target-like |
 | no_audit_features | features | PASS | 22 feature names, none audit-only or proxy |
 | no_post_adoption_features | SOLAR_FINANCE | PASS | SOLAR_FINANCE: none of ['has_existing_solar', 'holds_solar_finance'] used as features |
@@ -66,13 +84,19 @@ Automated checks run in `make train`; the run fails on any violation (implementa
 
 | check | target | status | detail |
 |---|---|---|---|
-| customer_split_disjoint | split | PASS | 4 splits, 4010 customers, no customer in more than one split |
-| event_times_within_cutoff | transactions | PASS | transactions: 749492 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | financial_products | PASS | financial_products: 12712 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | vehicles | PASS | vehicles: 4539 rows with event time on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | energy_usage | PASS | energy_usage: 62003 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | digital_usage | PASS | digital_usage: 68284 rows with month-end availability on or before cutoff 2026-06-30 |
-| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3103 rows with event time on or before cutoff 2026-06-30 |
+| customer_split_disjoint | split | PASS | 5 splits, 4010 customers, no customer in more than one split |
+| event_times_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | transactions | PASS | transactions: 745317 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | financial_products | PASS | financial_products: 12698 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | vehicles | PASS | vehicles: 4526 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | energy_usage | PASS | energy_usage: 58436 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with month-end availability on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | digital_usage | PASS | digital_usage: 64339 rows with event time on or before cutoff 2026-06-30 |
+| event_times_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
+| source_available_within_cutoff | customers_available_profiles | PASS | customers_available_profiles: 3061 rows with event time on or before cutoff 2026-06-30 |
 | no_target_features | features | PASS | 13 feature names, none target-like |
 | no_audit_features | features | PASS | 13 feature names, none audit-only or proxy |
 | no_post_adoption_features | PAPERLESS_BANKING | PASS | PAPERLESS_BANKING: none of ['is_paperless'] used as features |

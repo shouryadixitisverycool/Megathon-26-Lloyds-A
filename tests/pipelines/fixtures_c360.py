@@ -23,6 +23,9 @@ D = pd.Timestamp
 
 def _df(rows: list[dict], schema: schemas.TableSchema) -> pd.DataFrame:
     df = pd.DataFrame(rows, columns=list(schema.columns))
+    if "available_at" in df:
+        event = pd.to_datetime(df[schema.event_time_column or "record_updated_at"])
+        df["available_at"] = event + pd.offsets.MonthEnd(0) if schema.name in {"energy_usage", "digital_usage"} else event
     for col, kind in schema.columns.items():
         if kind == "date":
             df[col] = pd.to_datetime(df[col]).astype("datetime64[ns]")
@@ -144,6 +147,7 @@ def make_tables() -> tuple[dict[str, pd.DataFrame], pd.DataFrame]:
     }
     txn_df = pd.DataFrame(txns)
     txn_df["date"] = txn_df["date"].astype("datetime64[ns]")
+    txn_df["available_at"] = txn_df["date"]
     tables["transactions"] = txn_df[list(schemas.TRANSACTIONS.columns)].copy()
     for name, schema in schemas.RAW_TABLES.items():
         schemas.validate_table(tables[name], schema)
@@ -213,4 +217,12 @@ def add_post_cutoff_events(tables: dict[str, pd.DataFrame], txns: pd.DataFrame
     tb["customers"] = pd.concat([cust, late], ignore_index=True)
     # customer-level solar installed after the cutoff must not change the 2026-06-30 view
     tb = copy.copy(tb)
+    tx["available_at"] = tx["available_at"].fillna(tx["date"])
+    for name, df in tb.items():
+        if "available_at" in df:
+            schema = schemas.RAW_TABLES[name]
+            event = df[schema.event_time_column or "record_updated_at"]
+            if name in {"energy_usage", "digital_usage"}:
+                event = event + pd.offsets.MonthEnd(0)
+            df["available_at"] = df["available_at"].fillna(event)
     return tb, tx

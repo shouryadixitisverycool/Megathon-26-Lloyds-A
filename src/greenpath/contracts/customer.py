@@ -2,10 +2,11 @@
 
 from datetime import date, datetime
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from greenpath.contracts.base import CONTRACT_VERSION, Contract, Probability
 from greenpath.contracts.enums import FuelType, HeatingType
+from greenpath.contracts.lifecycle import SourceUpdateRequest
 
 FeatureScalar = float | int | bool | str | None
 
@@ -97,3 +98,13 @@ class CustomerSnapshot(Contract):
     spend: SpendFacts
     features: dict[str, FeatureScalar]
     data_quality: DataQualityEvidence
+    source_versions: dict[str, str] = Field(default_factory=dict)
+    source_events: tuple[SourceUpdateRequest, ...] = ()
+
+    @model_serializer(mode="wrap")
+    def preserve_shipped_source_payload(self, handler):
+        payload = handler(self)
+        for field in ("source_versions", "source_events"):
+            if not payload.get(field):
+                payload.pop(field, None)
+        return payload

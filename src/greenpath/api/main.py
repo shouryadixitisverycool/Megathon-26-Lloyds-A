@@ -2,6 +2,7 @@
 
 from contextlib import asynccontextmanager
 from typing import Protocol
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 
@@ -43,6 +44,7 @@ def create_app(
     history_provider: PortfolioHistoryProvider | None = None,
     recommendation_service: RecommendationServicePort | None = None,
     explanation_service: ExplanationServicePort | None = None,
+    memory_path: Path | None = None,
 ) -> FastAPI:
     """Use explicit overrides first, repository ports second, demo defaults last."""
     needs_repository = (
@@ -73,6 +75,47 @@ def create_app(
 
         explanation_service = ExplanationService(configured_provider())
 
+    from greenpath.extensions.store import MemoryStore
+    from greenpath import config
+
+    store = MemoryStore(memory_path or config.DATA_DIR / "greenpath.sqlite3")
+    explanation_context = {"prompt_version": getattr(explanation_service, "prompt_version", None),
+                           "llm_version": getattr(explanation_service, "provider_version", None),
+                           "template_version": "grounded-template-v1"}
+    if hasattr(recommendation_service, "explanation_context"):
+        recommendation_service.explanation_context = explanation_context
+    if hasattr(snapshot_provider, "bind_store"):
+        snapshot_provider.bind_store(store)
+
+    class PersistedRecommendations:
+        def recommendations(self, customer_id):
+            # Source updates and inference share one boundary, preventing mixed snapshots/scores.
+            with store.transaction():
+                decisions = recommendation_service.recommendations(customer_id)
+                if any(not r.provenance for r in decisions):
+                    snap = snapshot_provider.get_snapshot(customer_id)
+                    decisions = tuple(r if r.provenance else r.model_copy(update={"provenance": {
+                        "snapshot": snap.model_dump(mode="json"), "source_version": getattr(snapshot_provider, "version", "injected-provider"),
+                        "run_identity": getattr(snapshot_provider, "run_identity", None), "reason_version": r.rules_version,
+                        "prompt_version": None, "llm_version": None, "explanation_status": "NOT_RUN",
+                        "calibration_version": r.propensity.calibration_version if r.propensity else None,
+                        "decision_timestamp": r.timestamp.isoformat(),
+                        **explanation_context,
+                    }}) for r in decisions)
+                return tuple(store.save_recommendation(r) for r in decisions)
+
+    class PersistedExplanations:
+        def __getattr__(self, name):
+            return getattr(explanation_service, name)
+
+        def explain(self, recommendation):
+            persisted = store.save_recommendation(recommendation)
+            result = explanation_service.explain(persisted)
+            store.save_explanation(persisted.decision_id, result, getattr(explanation_service, "prompt_version", None))
+            return result
+
+    served_recommendations = PersistedRecommendations()
+    served_explanations = PersistedExplanations()
     summary_cache = {}
 
     @asynccontextmanager
@@ -82,7 +125,7 @@ def create_app(
         if getattr(repository, "mode", None) == "trained":
             repository.list_history()
             for item in snapshot_provider.list_snapshots():
-                recommendation_service.recommendations(item.customer_id)
+                served_recommendations.recommendations(item.customer_id)
             portfolio_summary()
         yield
 
@@ -90,8 +133,10 @@ def create_app(
     application.state.repository = repository
     application.state.snapshot_provider = snapshot_provider
     application.state.history_provider = history_provider
-    application.state.recommendation_service = recommendation_service
-    application.state.explanation_service = explanation_service
+    application.state.recommendation_service = served_recommendations
+    application.state.explanation_service = served_explanations
+    application.state.memory_store = store
+    application.state.invalidate_summary = summary_cache.clear
 
     def snapshot(customer_id: str) -> CustomerSnapshot:
         try:
@@ -105,7 +150,7 @@ def create_app(
     def recommendations(customer_id: str) -> tuple[Recommendation, ...]:
         snapshot(customer_id)
         try:
-            return recommendation_service.recommendations(customer_id)
+            return served_recommendations.recommendations(customer_id)
         except KeyError as error:
             raise HTTPException(status_code=404, detail="Customer not found") from error
 
@@ -144,7 +189,7 @@ def create_app(
     def customer_explanation(customer_id: str, product: Product):
         for recommendation in recommendations(customer_id):
             if recommendation.product == product:
-                return explanation_service.explain(recommendation)
+                return served_explanations.explain(recommendation)
         raise HTTPException(status_code=404, detail="Product recommendation not found")
 
     @application.get("/portfolio/summary", response_model=PortfolioSummary)
