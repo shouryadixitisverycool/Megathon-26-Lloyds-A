@@ -11,6 +11,18 @@ class APIError(RuntimeError):
     """An API failure that can be safely shown to the demo user."""
 
 
+class APIPreparing(APIError):
+    """Portfolio data is warming up, rather than empty or unavailable."""
+
+    def __init__(self, detail: dict[str, Any]):
+        message = detail.get("message")
+        if not isinstance(message, str) or not message.strip():
+            message = "Portfolio data is preparing. Use Refresh data to check again shortly."
+        super().__init__(message[:500])
+        self.resource = detail.get("resource")
+        self.progress = detail.get("progress") if isinstance(detail.get("progress"), dict) else {}
+
+
 class APIClient:
     def __init__(self, base_url: str | None = None):
         self.base_url = (base_url or os.getenv("GREENPATH_API_URL", "http://127.0.0.1:8000")).rstrip("/")
@@ -37,6 +49,13 @@ class APIClient:
             raise APIError("Cannot reach the API. Start both services with make app, then refresh data.") from error
         except httpx.HTTPStatusError as error:
             code = error.response.status_code
+            if code == 503:
+                try:
+                    detail = error.response.json().get("detail")
+                except (ValueError, AttributeError):
+                    detail = None
+                if isinstance(detail, dict) and detail.get("code") == "PORTFOLIO_PREPARING":
+                    raise APIPreparing(detail) from error
             message = "Customer or product not found." if code == 404 else "The API could not complete this request."
             if code in {409, 422}:
                 try:

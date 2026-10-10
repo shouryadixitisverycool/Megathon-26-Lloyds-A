@@ -88,6 +88,20 @@ def stage_predict() -> None:
     portfolio = pd.concat(frames, ignore_index=True)
     portfolio["split"] = portfolio["customer_id"].map(split)
     portfolio.to_parquet(PORTFOLIO_PATH)
+    canonical = portfolio[portfolio["cutoff"] == pd.Timestamp(config.FEATURE_CUTOFF)]
+    availability = {}
+    for cohort, rows in (("population", canonical), ("demo", canonical[canonical["split"] == "demo"])):
+        availability[cohort] = {}
+        for product, group in [("ALL", rows), *list(rows.groupby("product"))]:
+            eligible = group[group["in_model_population"]]
+            validated = int((eligible["confidence_status"] == ConfidenceStatus.VALIDATED.value).sum())
+            availability[cohort][product] = {
+                "n_total": len(group), "n_eligible": len(eligible), "n_validated": validated,
+                "validated_share_eligible": validated / len(eligible) if len(eligible) else None,
+                "validated_share_total": validated / len(group) if len(group) else None,
+                "status_counts": group["confidence_status"].value_counts().to_dict(),
+            }
+    write_json(config.REPORTS_DIR / "confidence_availability.json", availability)
 
     # 2. held-out test predictions at the canonical cutoff
     current = portfolio[(portfolio["cutoff"] == pd.Timestamp(config.FEATURE_CUTOFF)) & (portfolio["split"] == "test")]

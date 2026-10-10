@@ -122,6 +122,15 @@ def split_customers(
     return pd.Series(values, index=ids, name="split", dtype=object)
 
 
+def split_pipeline_customers(customer_ids: Iterable[str], seed: int = SEED_SPLIT) -> pd.Series:
+    """Reserve independent 55/15/15/15 train/validation/confidence-release/test cohorts."""
+    split = split_customers(customer_ids, seed=seed, fractions=(0.55, 0.30, 0.15))
+    validation_ids = split.index[split == "validation"].sort_values()
+    release_ids = np.random.default_rng(seed).permutation(validation_ids)[:len(validation_ids) // 2]
+    split.loc[release_ids] = "confidence_release"
+    return split
+
+
 def write_split_manifest(split: pd.Series, path: str | Path) -> str:
     """Write ``customer_id,split`` rows (sorted by customer) to ``path`` and return the sha256 hex digest.
 

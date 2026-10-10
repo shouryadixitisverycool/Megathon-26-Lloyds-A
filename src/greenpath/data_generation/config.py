@@ -94,7 +94,7 @@ MERCHANT_SHIFT_BASE: dict[str, Any] = {
 @dataclass(frozen=True)
 class GeneratorConfig:
     name: str = "base"
-    n_customers: int = 10_000
+    n_customers: int = gp_config.DEFAULT_CUSTOMERS
     seed: int = gp_config.SEED_DATA
     noise_scale: float = 1.0
     monthly_noise: float = 0.35  # extra month-to-month latent noise (times noise_scale)

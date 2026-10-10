@@ -59,7 +59,7 @@ def main(argv=None):
     parser.add_argument("--api-port", type=_port, default=8000)
     parser.add_argument("--ui-port", type=_port, default=8501)
     parser.add_argument("--startup-timeout", type=int, default=300,
-                        help="Seconds allowed for trained model and monthly-history warmup (default: 300; full trained warmup can exceed 180)")
+                         help="Seconds allowed for API health readiness (default: 300; historical preparation may run separately)")
     args = parser.parse_args(argv)
     processes = []
     try:

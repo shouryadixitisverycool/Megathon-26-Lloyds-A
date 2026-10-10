@@ -47,7 +47,7 @@ from greenpath.pipelines.feature_registry import PROPENSITY_FEATURES
 from greenpath.pipelines.leakage_checks import EventSource, LeakageError, run_all_checks
 from greenpath.pipelines.schemas import ALL_TABLES, OPTIONAL_TABLES, RAW_TABLES, validate_dataset
 from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
-from greenpath.pipelines.split import make_labels, split_customers, write_split_manifest
+from greenpath.pipelines.split import make_labels, split_pipeline_customers, write_split_manifest
 from greenpath.trust.ood import OODDetector
 
 PRODUCTS = list(Product)
@@ -228,12 +228,18 @@ def stage_train() -> None:
                                 "observed_negative": int((labels[p.value] == 0).sum()),
                                 "unsupported": int(labels[p.value].isna().sum())} for p in PRODUCTS},
     }
+    split = split_pipeline_customers(frame.index)
+    quality["split_counts"] = split.value_counts().to_dict()
+    quality["product_cohorts"] = {}
+    for p in PRODUCTS:
+        eligible, _ = population_mask(frame, p)
+        quality["product_cohorts"][p.value] = {
+            cohort: {"customers": int((split == cohort).sum()),
+                     "eligible": int((eligible & (split == cohort)).sum()),
+                     "eligible_observed": int((eligible & (split == cohort) & labels[p.value].notna()).sum())}
+            for cohort in ("train", "validation", "confidence_release", "test", "demo")
+        }
     write_json(config.REPORTS_DIR / "dataset_quality.json", quality)
-    split = split_customers(frame.index)
-    # Reserve release-selection customers before propensity tuning/calibration or meta fitting.
-    validation_ids = split.index[split == "validation"].sort_values()
-    release_ids = np.random.default_rng(config.SEED_SPLIT).permutation(validation_ids)[::3]
-    split.loc[release_ids] = "confidence_release"
     split_hash = write_split_manifest(split, SPLIT_PATH)
     labels.to_parquet(config.PROCESSED_DIR / "labels.parquet")
 
@@ -284,7 +290,7 @@ def stage_train() -> None:
     select_thresholds(frame, split, bundles, detectors, config.ARTIFACT_DIR / "trust_thresholds.json")
     timings["ood_and_trust_selection_seconds"] = time.perf_counter() - start
 
-    # 8. Fit confidence on validation, select release on reserved validation customers, never test.
+    # 8. Fit confidence on validation, select release on an independent cohort, never test.
     start = time.perf_counter()
     decisions = train_confidence(frame, labels, split, bundles, detectors)
     timings["confidence_training_seconds"] = time.perf_counter() - start

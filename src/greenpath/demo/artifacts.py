@@ -7,6 +7,8 @@ import os
 import json
 import hashlib
 import logging
+import tempfile
+from threading import RLock, Lock
 from time import perf_counter
 
 from greenpath import config
@@ -50,6 +52,10 @@ class ArtifactRepository:
 
     def __init__(self, runtime=None, scenario_provider=None):
         injected_runtime = runtime is not None
+        self.background_warmup = not injected_runtime
+        self._historical_paths = {}
+        self._history_cache_dir = (None if injected_runtime or scenario_provider is not None
+                                   else config.ARTIFACT_DIR / "history_cache")
         self._outcome_path = config.ARTIFACT_DIR / "portfolio_scores.parquet" if runtime is None else None
         if runtime is None:
             from greenpath.pipelines.runtime import load_runtime
@@ -58,12 +64,14 @@ class ArtifactRepository:
             if config.FEATURE_CUTOFF not in cutoffs:
                 cutoffs.append(config.FEATURE_CUTOFF)
             try:
-                runtime = load_runtime(cutoffs=cutoffs)
+                runtime = load_runtime(cutoffs=[config.FEATURE_CUTOFF])
+                self._historical_paths = {c: customer360_path(c) for c in cutoffs}
             except Exception as exc:
                 raise RuntimeError("Trained provider artifacts are missing, incomplete or corrupt. Run the full pipeline or select GREENPATH_PROVIDER=fixture.") from exc
         if set(runtime.bundles) != set(Product):
             raise ValueError("Trained provider requires a calibrated bundle for every product")
         self.runtime = runtime
+        self.history_cutoffs = tuple(sorted(self._historical_paths or runtime.snapshots.cutoffs))
         if scenario_provider is None and not injected_runtime:
             import pandas as pd
             from greenpath.pipelines.scenario_provider import ScenarioProvider
@@ -75,6 +83,9 @@ class ArtifactRepository:
         self.impact_calculators = build_uk_registry()
         self._cache = {}
         self._history = None
+        self._batch_lock = RLock()
+        self._history_lock = Lock()
+        self.history_status = {"phase": "pending", "cutoff": None, "completed_cutoffs": 0}
         self._overrides = {}
         self._source_history = {}
         manifest = config.REPORTS_DIR / "RUN_MANIFEST.json"
@@ -121,9 +132,24 @@ class ArtifactRepository:
             history.pop()
         self._cache.pop(self.runtime.snapshots.default_cutoff, None)
 
+    def prepare_current(self):
+        """Prepare only current evidence; historical preparation is independently callable."""
+        self._at(self.runtime.snapshots.default_cutoff)
+
     def _at(self, cutoff):
+        if cutoff in self._cache:
+            return self._cache[cutoff]
+        with self._batch_lock:
+            return self._prepare_at(cutoff)
+
+    def _prepare_at(self, cutoff):
         if cutoff not in self._cache:
-            sources = self.runtime.snapshots.snapshots(cutoff)
+            provider = self.runtime.snapshots
+            if cutoff != provider.default_cutoff and cutoff in self._historical_paths:
+                from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
+                provider = Customer360SnapshotProvider.from_parquet(
+                    self._historical_paths[cutoff], default_cutoff=cutoff)
+            sources = provider.snapshots(cutoff)
             if cutoff == self.runtime.snapshots.default_cutoff:
                 sources = [self._overrides.get(s.customer_id, s) for s in sources]
             propensities, trusts = {}, {}
@@ -180,7 +206,7 @@ class ArtifactRepository:
 
     def get_propensity(self, customer_id, product):
         result = self._at(self.runtime.snapshots.default_cutoff)[1].get((customer_id, Product(product)))
-        return PropensityResult.model_validate(result.model_dump(mode="python")) if result else None
+        return PropensityResult.model_validate(result.model_dump(mode="python", round_trip=True)) if result else None
 
     def get_impact_input(self, customer_id, product):
         Product(product)
@@ -191,7 +217,86 @@ class ArtifactRepository:
         return (self.scenario_provider.attach(source, product)
                 if self.scenario_provider is not None else source)
 
+    def _history_key(self, cutoff):
+        """Content provenance, not mtimes or a model-version label, controls reuse."""
+        if self._history_cache_dir is None:
+            return None
+        digest = hashlib.sha256(b"greenpath-history-jsonl-v1")
+        digest.update(str(cutoff).encode())
+        digest.update(json.dumps({p.value: [self.runtime.bundles[p].model_version,
+            str(self.runtime.bundles[p].threshold)] for p in Product}, sort_keys=True).encode())
+        paths = [self._historical_paths[cutoff], config.RAW_DIR / "scenario_evidence.parquet",
+                 config.ARTIFACT_DIR / "portfolio_scores.parquet", config.REPORTS_DIR / "RUN_MANIFEST.json"]
+        for directory in ("models", "confidence", "ood"):
+            paths.extend(sorted((config.ARTIFACT_DIR / directory).rglob("*")))
+        paths.append(config.ARTIFACT_DIR / "trust_thresholds.json")
+        # Includes rules, contracts, factors, provider implementation and configuration.
+        package = Path(__file__).parents[1]
+        for pattern in ("*.py", "*.json", "*.yaml", "*.yml", "*.csv"):
+            paths.extend(sorted(package.rglob(pattern)))
+        for path in paths:
+            if path.is_dir():
+                continue
+            digest.update(str(path).encode())
+            if not path.is_file():
+                digest.update(b"missing")
+                continue
+            with path.open("rb") as stream:
+                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                    digest.update(chunk)
+        return digest.hexdigest()
+
+    def _read_history_cache(self, path, key):
+        try:
+            records = []
+            digest = hashlib.sha256()
+            with path.open("rb") as stream:
+                if json.loads(next(stream)) != {"key": key}:
+                    return None
+                for line in stream:
+                    payload = json.loads(line)
+                    if "record_count" in payload:
+                        if (payload != {"record_count": len(records), "sha256": digest.hexdigest()}
+                                or stream.read(1)):
+                            return None
+                        return records
+                    digest.update(line)
+                    records.append(HistoryRecord.model_validate(payload))
+        except (OSError, ValueError, TypeError, StopIteration):
+            pass
+        return None
+
+    def _write_history_cache(self, path, key, records):
+        temporary = None
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with tempfile.NamedTemporaryFile(mode="wb", dir=path.parent, delete=False) as stream:
+                temporary = Path(stream.name)
+                stream.write((json.dumps({"key": key}) + "\n").encode())
+                digest = hashlib.sha256()
+                for record in records:
+                    line = (record.model_dump_json() + "\n").encode()
+                    digest.update(line)
+                    stream.write(line)
+                stream.write((json.dumps({"record_count": len(records), "sha256": digest.hexdigest()}) + "\n").encode())
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, path)
+        except OSError:
+            logger.warning("Could not persist history cache %s", path, exc_info=True)
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+
     def list_history(self):
+        with self._history_lock:
+            try:
+                return self._prepare_history()
+            except Exception:
+                self.history_status = {**self.history_status, "phase": "failed"}
+                raise
+
+    def _prepare_history(self):
         if self._history is None:
             from greenpath.recommendation.service import RecommendationService
             records = []
@@ -202,9 +307,18 @@ class ArtifactRepository:
                 frame = pd.read_parquet(outcome_path, columns=["cutoff", "customer_id", "product", "observed_adoption_90d"])
                 outcomes = {(pd.Timestamp(row.cutoff).date(), row.customer_id, Product(row.product)): int(row.observed_adoption_90d)
                             for row in frame.itertuples(index=False) if pd.notna(row.observed_adoption_90d)}
-            for cutoff in self.runtime.snapshots.cutoffs:
+            for index, cutoff in enumerate(self.history_cutoffs):
+                self.history_status = {"phase": "preparing", "cutoff": cutoff.isoformat(), "completed_cutoffs": index}
                 started = perf_counter()
                 logger.info("Startup history cutoff=%s phase=start", cutoff)
+                key = self._history_key(cutoff)
+                path = self._history_cache_dir / f"{cutoff}-{key}.jsonl" if key else None
+                cached = self._read_history_cache(path, key) if path else None
+                if cached is not None:
+                    records.extend(cached)
+                    logger.info("History cutoff=%s phase=cache-hit records=%d seconds=%.2f", cutoff, len(cached), perf_counter() - started)
+                    continue
+                record_start = len(records)
                 snapshots, propensities = self._at(cutoff)
                 class CutoffProvider:
                     impact_calculators = self.impact_calculators
@@ -245,8 +359,11 @@ class ArtifactRepository:
                                    for r in service.recommendations(customer_id))
                 if cutoff != self.runtime.snapshots.default_cutoff:
                     del self._cache[cutoff]
+                if path is not None:
+                    self._write_history_cache(path, key, records[record_start:])
                 logger.info("Startup history cutoff=%s customers=%d seconds=%.2f", cutoff, len(snapshots), perf_counter() - started)
             self._history = tuple(records)
+            self.history_status = {"phase": "ready", "cutoff": None, "completed_cutoffs": len(self.history_cutoffs)}
         return self._history
 
 
