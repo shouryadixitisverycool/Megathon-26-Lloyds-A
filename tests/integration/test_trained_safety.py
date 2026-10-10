@@ -78,10 +78,15 @@ def test_unknown_customer_is_not_hidden_by_warmed_cache(trained):
     ("marketing_consent", tuple(Product), "MARKETING_CONSENT_WITHDRAWN"),
     ("paperless_consent", (Product.PAPERLESS_BANKING,), "PAPERLESS_CONSENT_WITHDRAWN"),
 ])
-def test_available_withdrawal_invalidates_warmed_decisions(trained, field, products, code):
+def test_available_withdrawal_invalidates_warmed_decisions(trained, monkeypatch, field, products, code):
     provider, service = trained
     previous = service.recommendations("test-1")
-    assert service.recommendations("test-1") is previous
+    with monkeypatch.context() as patch:
+        def unexpected_inference(*args):
+            pytest.fail("Unchanged evidence must reuse cached decisions")
+
+        patch.setattr(provider, "get_propensity", unexpected_inference)
+        assert service.recommendations("test-1") == previous
     evidence = provider.snapshot.features["owns_home"].model_copy(update={
         "value": False, "reference": f"permission:{field}",
     })
@@ -97,6 +102,17 @@ def test_available_withdrawal_invalidates_warmed_decisions(trained, field, produ
         else:
             assert result.state == State.RECOMMEND
     assert all(r.state == State.RECOMMEND for r in previous)
+
+
+def test_returned_decisions_cannot_mutate_warmed_cache(trained):
+    _, service = trained
+    previous = service.recommendations("test-1")
+    expected = tuple(result.model_dump(mode="python") for result in previous)
+    previous[0].provenance["snapshot"]["features"].clear()
+    repeated = service.recommendations("test-1")
+    assert tuple(result.model_dump(mode="python") for result in repeated) == expected
+    repeated[0].provenance["snapshot"]["features"].clear()
+    assert tuple(result.model_dump(mode="python") for result in service.recommendations("test-1")) == expected
 
 
 @pytest.mark.parametrize("field", ["marketing_consent", "paperless_consent"])
