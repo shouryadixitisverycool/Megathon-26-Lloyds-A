@@ -1,0 +1,48 @@
+name: Sync personal repository
+
+on:
+  push:
+    branches: ['**']
+    tags: ['**']
+  schedule:
+    # Also catch changes on branches that do not contain this workflow yet.
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-personal
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'IIIT-ECell/megathon26-chuds'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Copy branches and tags to personal
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SYNC_SSH_KEY: ${{ secrets.PERSONAL_SYNC_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$SYNC_SSH_KEY"
+          sync_dir=$(mktemp -d)
+          trap 'rm -rf "$sync_dir"' EXIT
+          printf '%s\n' "$SYNC_SSH_KEY" > "$sync_dir/key"
+          chmod 600 "$sync_dir/key"
+          curl --fail --silent --show-error https://api.github.com/meta |
+            jq -r '.ssh_keys[] | "github.com " + .' > "$sync_dir/known_hosts"
+          export GIT_SSH_COMMAND="ssh -i $sync_dir/key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$sync_dir/known_hosts"
+          git init --bare "$sync_dir/repository.git"
+          cd "$sync_dir/repository.git"
+          git remote add origin https://github.com/IIIT-ECell/megathon26-chuds.git
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w 0)
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" \
+            fetch --no-tags origin '+refs/heads/*:refs/heads/*' '+refs/tags/*:refs/tags/*'
+          git remote add personal git@github.com:shouryadixitisverycool/Megathon-26-Lloyds-A.git
+          # Fail on divergent branches or rewritten tags; preserve personal-only refs.
+          git push --atomic personal 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*'
