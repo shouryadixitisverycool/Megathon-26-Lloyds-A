@@ -13,6 +13,7 @@ class MemoryStore:
     def __init__(self, path: Path):
         self.path = Path(path)
         self._local = local()
+        self._recommendations = {}
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as db:
             db.execute("PRAGMA journal_mode=WAL")
@@ -47,13 +48,18 @@ class MemoryStore:
         if getattr(self._local, "connection", None) is not None:
             yield
             return
-        with self.connect() as db:
-            db.execute("BEGIN IMMEDIATE")
-            self._local.connection = db
-            try:
+        pending = {}
+        try:
+            with self.connect() as db:
+                db.execute("BEGIN IMMEDIATE")
+                self._local.connection = db
+                self._local.recommendations = pending
                 yield
-            finally:
-                self._local.connection = None
+            # Entries are known durable only after the outer transaction commits.
+            self._recommendations.update(pending)
+        finally:
+            self._local.connection = None
+            self._local.recommendations = None
 
     def replay(self, customer_id, product, kind, request):
         if not request.get("request_id"):
@@ -110,15 +116,25 @@ class MemoryStore:
         if recommendation.decision_id is None:
             recommendation = recommendation.model_copy(update={"decision_id": decision_identity(recommendation)})
         payload = recommendation.model_dump(mode="json")
+        evidence = decision_evidence(payload)
+        pending = getattr(self._local, "recommendations", None)
+        cached = (pending or {}).get(payload["decision_id"]) or self._recommendations.get(payload["decision_id"])
+        if cached is not None:
+            if cached[0] != evidence:
+                raise ValueError("Decision ID already belongs to different immutable evidence")
+            return cached[1].model_copy(deep=True)
         with self.connect() as db:
             db.execute("INSERT OR IGNORE INTO decisions VALUES (?,?,?,?,?)", (
                 payload["decision_id"], payload["customer_id"], payload["product"],
                 payload["timestamp"], json.dumps(payload, sort_keys=True),
             ))
             stored = db.execute("SELECT payload FROM decisions WHERE id=?", (payload["decision_id"],)).fetchone()
-            if decision_evidence(json.loads(stored[0])) != decision_evidence(payload):
+            if decision_evidence(json.loads(stored[0])) != evidence:
                 raise ValueError("Decision ID already belongs to different immutable evidence")
-        return recommendation.__class__.model_validate_json(stored[0])
+            result = recommendation.__class__.model_validate_json(stored[0])
+        target = pending if pending is not None else self._recommendations
+        target[payload["decision_id"]] = (evidence, result)
+        return result.model_copy(deep=True)
 
     def get_recommendation(self, decision_id):
         with self.connect() as db:

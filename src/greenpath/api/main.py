@@ -124,9 +124,8 @@ def create_app(
         # trend calculation should not become a client timeout.
         if getattr(repository, "mode", None) == "trained":
             repository.list_history()
-            for item in snapshot_provider.list_snapshots():
-                served_recommendations.recommendations(item.customer_id)
-            portfolio_summary()
+            with store.transaction():
+                portfolio_summary()
         yield
 
     application = FastAPI(title="GreenPath decision platform", version=CONTRACT_VERSION, lifespan=lifespan)
@@ -199,7 +198,7 @@ def create_app(
         if cacheable and key in summary_cache:
             return summary_cache[key]
         selected = filtered_snapshots(region, segment)
-        decisions = {item.customer_id: recommendations(item.customer_id) for item in selected}
+        decisions = {item.customer_id: served_recommendations.recommendations(item.customer_id) for item in selected}
         result = summarize(selected, decisions, product)
         if cacheable:
             summary_cache[key] = result

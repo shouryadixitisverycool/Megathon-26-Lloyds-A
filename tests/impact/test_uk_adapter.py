@@ -189,8 +189,14 @@ def test_passport_identity_ignores_clock_but_binds_customer_and_evidence():
     first = UKImpactCalculator(Product.EV_FINANCE, clock=lambda: NOW).calculate(snapshot)
     later = UKImpactCalculator(Product.EV_FINANCE).calculate(snapshot)
     assert first.passport_id == later.passport_id
-    assert first.factors[0].source_published_on == date(2025, 6, 10)
+    assert first.factors[0].source_published_on == date(2026, 6, 11)
     assert first.factors[0].current_edition == "2026"
+    assert all(f.source_edition == f.activity_period == "2026" for f in first.factors)
+    assert first.factor_catalogue_version == "desnz_2026_v1"
+    assert first.method_release == "reviewed-desnz-2026-subset"
+    scoring = UKImpactCalculator(Product.EV_FINANCE).calculate_scoring(snapshot)
+    assert scoring.factor_version == "desnz_2026_v1"
+    assert scoring.grid_scenario == "2026 UK factors held constant"
     snapshot = snapshot.model_copy(update={"customer_id": "C99999"})
     assert UKImpactCalculator(Product.EV_FINANCE).calculate(snapshot).passport_id != first.passport_id
     dumped = first.model_dump(mode="json")

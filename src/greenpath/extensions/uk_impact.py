@@ -1,4 +1,4 @@
-"""UK annual physical scenario passports, using matched DESNZ 2025 CO2e factors.
+"""UK annual physical scenario passports, using matched DESNZ 2026 CO2e factors.
 
 Separate from the legacy CO2 calculators. No banking spend or propensity enters a
 physical calculation. Every forecast activity must be supplied explicitly.
@@ -61,8 +61,8 @@ class PaperlessInputs(PhysicalInputs):
     avoided_fraction: float = Field(ge=0, le=1)
 
 
-FACTOR_PATH = Path(__file__).with_name("uk_factors_2025.json")
-FACTOR_SUBSET_SHA256 = "a1c1f18e1c1fa6a66bb50d36cf7245bc0236964c994c045e4fc0d726dfc4a3b8"
+FACTOR_PATH = Path(__file__).with_name("uk_factors_2026.json")
+FACTOR_SUBSET_SHA256 = "2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d"
 BOUNDARY = "Operational well-to-wheel energy emissions; manufacturing and embodied emissions excluded"
 METHOD_VERSION = "uk-physical-scenarios-v1"
 
@@ -90,7 +90,7 @@ def calculate(product: Product | str, inputs: dict) -> dict:
     limitations = ["Modelled annual scenario, not a measured outcome or a guarantee.",
                   "Physical assumptions are supplied by the caller; their accuracy is not independently verified.",
                   catalogue["current_vintage_limitation"],
-                  "Reviewed 2025 factors are held constant; no future grid decarbonisation is assumed.",
+                  f"Reviewed {catalogue['selected_edition']} factors are held constant; no future grid decarbonisation is assumed.",
                   "Official reporting convention excludes outside-of-scopes biogenic combustion CO2."]
     if product == Product.EV_FINANCE:
         request = EVInputs.model_validate(inputs)

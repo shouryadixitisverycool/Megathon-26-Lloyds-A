@@ -2,6 +2,7 @@
 
 Source of truth: `src/greenpath/contracts/` (Pydantic v2, frozen, `extra="forbid"`) and `src/greenpath/ports.py`.
 JSON Schemas: `src/greenpath/contracts/schemas/*.json` (regenerate with `make schemas`).
+Source changes to event/availability provenance, lifecycle, structured explanations and history require regeneration after final integration. Generated files are not proof of source parity; `make all` does not invoke `make schemas`. This docs-only pass leaves regeneration and final validation to the main owner.
 Valid example payloads: `src/greenpath/contracts/fixtures/*.json` (one Recommendation per state).
 
 The shared package owns the scoring contracts and the explicit product/API contracts. They remain distinct serialized views, not a single interchangeable Recommendation payload. Mirror-named modules are compatibility imports, not separate schema authorities.
@@ -51,3 +52,11 @@ The API Explanation contract preserves the structured headline, explanation, rec
 Paperless feedback can record a completion claim and suppress outreach, but cannot establish factual closure. A verified paperless source update creates an automatic `source_completion` event tied to the previous decision and the rescored decision. History exposes source updates, served decisions and existing feedback events separately. `SourceSnapshotOverrideProvider` exposes source override/history capabilities. History records also accept optional physical impact value/status/units, missing fields and observed-rate evidence; unavailable outcomes are not inferred.
 
 `/customers/{customer_id}/shap/{product}` exposes the ML adapter's deployed-model audit when available, explicitly in raw uncalibrated log-odds space. Missing SHAP artifacts return NOT_AVAILABLE, never reason-code values relabelled as SHAP. Portfolio filters forward validated-confidence, impact and data-quality constraints to the extension service. Persistent active-campaign/capacity helpers use campaign and campaign-closure events; these are local simulated contacts, not sent messages.
+
+## Release And Analytics Evidence
+
+Confidence adapters consume persisted decisions selected on reserved `confidence_release` customers excluded from propensity tuning/calibration and meta fitting. Final test is reporting-only, not release selection. The inspected report suppresses all four core products. Suppressed values/buckets must remain absent from customer display, high-confidence counts, minimum-confidence filters and composite priority; older saved coverage is not authoritative.
+
+Portfolio analytics expose funnel/quality/missingness and physical totals only in compatible product, units, boundary, period, method and factor-catalogue groups. Historical records retain optional propensity, validated confidence, Trust, impact, quality, Paperless state and 90-day outcomes. Rate denominators use recorded observations; missing historical quality/impact is unavailable, not reconstructed from today's decisions. Planning estimates remain separate from observed outcomes; no common CO2/CO2e total is established.
+
+Regeneration covers the numeric customer schema and `product_customer_snapshot`, `product_recommendation`, `product_explanation`, `product_history_record`, and `source_update_request` exports. Product-prefixed views remain distinct from numeric scoring payloads. Source update authorization is local demo-only, not production IAM or bank-system writeback.

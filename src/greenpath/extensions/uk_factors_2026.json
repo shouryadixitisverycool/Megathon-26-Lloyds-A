@@ -1,0 +1,113 @@
+{
+  "version": "desnz_2026_v1",
+  "geography": "United Kingdom",
+  "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+  "download_url": "https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx",
+  "source_sha256": "a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e",
+  "retrieved": "2026-10-10",
+  "published_on": "2026-06-11",
+  "updated_on": "2026-07-31",
+  "source_checked_on": "2026-10-10",
+  "selected_edition": "2026",
+  "current_edition": "2026",
+  "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+  "current_edition_published_on": "2026-06-11",
+  "current_edition_updated_on": "2026-07-31",
+  "current_vintage_limitation": "Reviewed 2026 revised flat-file subset; annual UK average inventory factors held constant for scenario comparisons, not marginal or future grid forecasts.",
+  "verification_basis": "Official revised XLSX downloaded and SHA-256 hashed; all ten source IDs, scopes, categories, activities and units checked in Factors by Category. Values use the workbook's published 0.00000 cell format, removing binary floating-point serialization artifacts.",
+  "project_guidance_url": "https://ghgprotocol.org/project-protocol",
+  "licence": "Open Government Licence v3.0",
+  "source_sheet": "Factors by Category",
+  "factors": {
+    "gas_gross_kwh": {
+      "value": "0.18231",
+      "units": "kg CO2e/kWh (Gross CV)",
+      "source_row": 83,
+      "source_id": "1_100_1004_6_1",
+      "scope": "Scope 1",
+      "category": "Fuels",
+      "activity": "Natural gas"
+    },
+    "diesel_litre": {
+      "value": "2.58354",
+      "units": "kg CO2e/litres",
+      "source_row": 187,
+      "source_id": "1_101_1011_8_1",
+      "scope": "Scope 1",
+      "category": "Fuels",
+      "activity": "Diesel (average biofuel blend)"
+    },
+    "petrol_litre": {
+      "value": "2.07500",
+      "units": "kg CO2e/litres",
+      "source_row": 283,
+      "source_id": "1_101_1017_8_1",
+      "scope": "Scope 1",
+      "category": "Fuels",
+      "activity": "Petrol (average biofuel blend)"
+    },
+    "electricity_kwh": {
+      "value": "0.13096",
+      "units": "kg CO2e/kWh",
+      "source_row": 3066,
+      "source_id": "7_400_4000_5_1",
+      "scope": "Scope 2",
+      "category": "UK electricity",
+      "activity": "Electricity: UK"
+    },
+    "gas_wtt_gross_kwh": {
+      "value": "0.03021",
+      "units": "kg CO2e/kWh (Gross CV)",
+      "source_row": 3477,
+      "source_id": "11_100_1004_6_1",
+      "scope": "Scope 3",
+      "category": "WTT- fuels",
+      "activity": "Natural gas"
+    },
+    "diesel_wtt_litre": {
+      "value": "0.61101",
+      "units": "kg CO2e/litres",
+      "source_row": 3503,
+      "source_id": "11_101_1011_8_1",
+      "scope": "Scope 3",
+      "category": "WTT- fuels",
+      "activity": "Diesel (average biofuel blend)"
+    },
+    "petrol_wtt_litre": {
+      "value": "0.58094",
+      "units": "kg CO2e/litres",
+      "source_row": 3527,
+      "source_id": "11_101_1017_8_1",
+      "scope": "Scope 3",
+      "category": "WTT- fuels",
+      "activity": "Petrol (average biofuel blend)"
+    },
+    "electricity_td_kwh": {
+      "value": "0.01299",
+      "units": "kg CO2e/kWh",
+      "source_row": 3627,
+      "source_id": "13_402_4000_5_1",
+      "scope": "Scope 3",
+      "category": "Transmission and distribution",
+      "activity": "Electricity: UK"
+    },
+    "electricity_wtt_generation_kwh": {
+      "value": "0.03682",
+      "units": "kg CO2e/kWh",
+      "source_row": 3939,
+      "source_id": "15_917_4000_5_1",
+      "scope": "Scope 3",
+      "category": "WTT- UK electricity",
+      "activity": "Electricity: UK"
+    },
+    "electricity_wtt_td_kwh": {
+      "value": "0.00359",
+      "units": "kg CO2e/kWh",
+      "source_row": 3940,
+      "source_id": "15_918_4000_5_1",
+      "scope": "Scope 3",
+      "category": "WTT- UK electricity",
+      "activity": "Electricity: UK"
+    }
+  }
+}

@@ -151,14 +151,14 @@ class UKImpactCalculator:
             factors = tuple(FactorReference(
                 factor_id=key, value=Decimal(record["value"]), unit=record["units"],
                 original_value=Decimal(record["value"]), original_unit=record["units"],
-                geography=catalogue["geography"], activity_period="2025",
+                geography=catalogue["geography"], activity_period=catalogue["selected_edition"],
                 boundary=record["scope"] + ": " + record["category"],
                 applicability=record["activity"], source_id=record["source_id"],
-                source_url=catalogue["source_url"], source_title="Greenhouse gas reporting conversion factors 2025",
-                source_publisher="DESNZ", source_edition="2025",
+                source_url=catalogue["source_url"], source_title=f"Greenhouse gas reporting conversion factors {catalogue['selected_edition']}",
+                source_publisher="DESNZ", source_edition=catalogue["selected_edition"],
                 source_locator=f"{catalogue['source_sheet']} row {record['source_row']}",
                 source_sha256=catalogue["source_sha256"],
-                verification_basis="Reviewed subset pinned by SHA-256: " + uk_impact.FACTOR_SUBSET_SHA256,
+                verification_basis=catalogue["verification_basis"] + " Subset SHA-256: " + uk_impact.FACTOR_SUBSET_SHA256,
                  source_limitation=catalogue["current_vintage_limitation"],
                  source_published_on=catalogue["published_on"],
                  source_checked_on=catalogue["source_checked_on"],
@@ -191,7 +191,7 @@ class UKImpactCalculator:
              boundary="paper_statement_and_digital_delivery_comparison_not_established"
                  if self.product == Product.PAPERLESS_BANKING else "CO2e: " + uk_impact.BOUNDARY,
             assumptions=("Synthetic Customer360 data; forecast assumptions must be explicit.",
-                         "2025 UK factors held constant; this is not a measured historical reduction.",
+                         "2026 UK factors held constant; this is not a measured historical reduction.",
                          "Source annual activities are held constant for the annual forecast comparison.",
                          *((f"Source snapshot generated at {source.generated_at.isoformat()}; feature version {source.feature_version}.",)
                            if source else ())),
@@ -199,7 +199,7 @@ class UKImpactCalculator:
                          *(passport.get("limitations", ()) if passport else ()),
                          *((passport["limitation"],) if not_claimed else ())),
             method_version=passport["method_version"] if passport else uk_impact.METHOD_VERSION,
-            method_release="reviewed-desnz-2025-subset", timestamp=self.clock(),
+            method_release="reviewed-desnz-2026-subset", timestamp=self.clock(),
             evidence=evidence, issues=issues,
             secondary_metrics=tuple(SecondaryActivityMetric(
                 name=key, value=Decimal(passport[key]), unit=unit,
@@ -231,12 +231,12 @@ class UKImpactCalculator:
             factor_source=catalogue["source_url"] if catalogue else None,
             factor_version=catalogue["version"] if catalogue else None,
             boundary=uk_impact.BOUNDARY if available else None,
-            grid_scenario="2025 UK factors held constant" if available else None,
+            grid_scenario="2026 UK factors held constant" if available else None,
             assumptions=[ImpactAssumption(name=item.field, value=float(item.value) if isinstance(item.value, Decimal) else item.value,
                 unit=item.unit, source=item.reference, is_estimated=True) for item in evidence],
             unavailable_reason="; ".join(f"{issue.code}: {issue.field}: {issue.message}" for issue in issues) or None,
             data_cutoff=source.feature_cutoff, calculation_timestamp=self.clock(),
-            carbon_engine_version="reviewed-desnz-2025-subset:" + uk_impact.FACTOR_SUBSET_SHA256,
+            carbon_engine_version="reviewed-desnz-2026-subset:" + uk_impact.FACTOR_SUBSET_SHA256,
         )
 
 

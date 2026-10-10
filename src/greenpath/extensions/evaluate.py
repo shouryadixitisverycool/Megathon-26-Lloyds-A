@@ -2,9 +2,10 @@
 
 import json
 from pathlib import Path
+import resource
+import sys
 import tempfile
 import time
-import tracemalloc
 
 import numpy as np
 import pandas as pd
@@ -12,28 +13,23 @@ from fastapi.testclient import TestClient
 
 from greenpath import config
 from greenpath.api.main import create_app
-from greenpath.extensions.store import MemoryStore
+from greenpath.extensions.service import prioritise
+from greenpath.impact import Product
 
 
 def benchmark(mode, memory_path):
-    tracing_started = not tracemalloc.is_tracing()
-    if tracing_started:
-        tracemalloc.start()
-    try:
-        return _benchmark(mode, memory_path, tracing_started)
-    finally:
-        if tracing_started:
-            tracemalloc.stop()
-
-
-def _benchmark(mode, memory_path, tracing_started):
+    # ru_maxrss is bytes on macOS and KiB on Linux; it is a process lifetime peak.
+    rss_scale = 1 if sys.platform == "darwin" else 1024
+    peak_rss_before = int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * rss_scale)
+    benchmark_started = time.perf_counter()
     build_started = time.perf_counter()
-    application = create_app(provider_mode=mode)
-    application.state.extension_service.store = MemoryStore(memory_path)
+    application = create_app(provider_mode=mode, memory_path=memory_path)
     build_seconds = time.perf_counter() - build_started
+    print(f"{mode}: application build {build_seconds:.2f}s", flush=True)
     started = time.perf_counter()
     with TestClient(application) as client:
         startup = time.perf_counter() - started
+        print(f"{mode}: lifespan startup {startup:.2f}s", flush=True)
         customer_id = "C10001" if mode == "trained" else "GP-001"
         paths = ["/health", f"/customers/{customer_id}", f"/customers/{customer_id}/recommendations",
                  f"/customers/{customer_id}/explanations/EV_FINANCE", "/portfolio/summary", "/portfolio/trends"]
@@ -47,12 +43,27 @@ def _benchmark(mode, memory_path, tracing_started):
                 latencies.append((time.perf_counter() - started) * 1000)
             measurements[path] = {"n": len(latencies), "p50_ms": float(np.median(latencies)),
                                   "p95_ms": float(np.percentile(latencies, 95)), "max_ms": max(latencies)}
+            print(f"{mode}: {path} five requests {sum(latencies) / 1000:.2f}s", flush=True)
         metrics = client.get("/explanations/metrics").json()
         fairness = []
         ranking = {}
         scoring_started = time.perf_counter()
-        opportunities = application.state.extension_service.opportunities()
+        # Startup/summary already persisted every decision. Do not serialize and
+        # validate the large provenance snapshots again just to aggregate scores.
+        with application.state.memory_store.connect() as db:
+            rows = [json.loads(row[0]) for row in db.execute(
+                "SELECT json_remove(payload, '$.provenance') FROM decisions"
+            )]
+        expected = {(snapshot.customer_id, product.value)
+                    for snapshot in application.state.snapshot_provider.list_snapshots()
+                    for product in Product}
+        observed = {(row["customer_id"], row["product"]) for row in rows}
+        if observed != expected or len(rows) != len(expected):
+            raise ValueError("Persisted evaluation decisions must cover every snapshot/product exactly once")
+        opportunities = prioritise(rows)
         scoring_seconds = time.perf_counter() - scoring_started
+        print(f"{mode}: full portfolio scoring {scoring_seconds:.2f}s ({len(opportunities)} rows)", flush=True)
+        distributions_started = time.perf_counter()
         distributions = {}
         for product in sorted({row["product"] for row in opportunities}):
             rows = [row for row in opportunities if row["product"] == product]
@@ -68,20 +79,22 @@ def _benchmark(mode, memory_path, tracing_started):
                 distributions[product][name] = {"n": len(observed), "missing_count": len(values) - len(observed),
                                                "counts": counts.tolist(), "bin_edges": edges.tolist(),
                                                "mean": float(np.mean(observed)) if observed else None}
+        distributions_seconds = time.perf_counter() - distributions_started
         audit_started = time.perf_counter()
         if mode == "trained":
             source = pd.read_parquet(config.RAW_DIR / "customers.parquet").set_index("customer_id")
             labels = pd.read_parquet(config.PROCESSED_DIR / "labels.parquet")
             split = pd.read_csv(config.PROCESSED_DIR / "split_manifest.csv", dtype=str).set_index("customer_id")["split"]
             records = []
-            for snapshot in application.state.snapshot_provider.list_snapshots():
-                for row in application.state.recommendation_service.recommendations(snapshot.customer_id):
-                    records.append({"customer_id": snapshot.customer_id, "product": row.product.value,
-                                    "recommended": row.state.value == "RECOMMEND",
-                                    "abstained": row.state.value in {"INSUFFICIENT_INFORMATION", "CONFLICT_REQUIRES_REVIEW"},
-                                    "trust": float(row.trust.score),
-                                    "confidence": float(row.propensity.confidence) if row.propensity and row.propensity.confidence_validated else np.nan,
-                                    "probability": float(row.propensity.probability) if row.propensity and row.propensity.probability is not None else np.nan})
+            # Unfiltered opportunities contain the same full-cohort decisions, already persisted.
+            for row in opportunities:
+                propensity = row.get("propensity") or {}
+                records.append({"customer_id": row["customer_id"], "product": row["product"],
+                                "recommended": row["state"] == "RECOMMEND",
+                                "abstained": row["state"] in {"INSUFFICIENT_INFORMATION", "CONFLICT_REQUIRES_REVIEW"},
+                                "trust": float(row["trust"]["score"]),
+                                "confidence": float(propensity["confidence"]) if propensity.get("confidence_validated") else np.nan,
+                                "probability": float(propensity["probability"]) if propensity.get("probability") is not None else np.nan})
             frame = pd.DataFrame(records)
             priority_lookup = {(row["customer_id"], row["product"]): row["priority"]["score"] for row in opportunities}
             frame["priority"] = [priority_lookup.get((row.customer_id, row.product)) for row in frame.itertuples()]
@@ -112,16 +125,25 @@ def _benchmark(mode, memory_path, tracing_started):
                                     "common_cohort_propensity_only_observed_rate": float(common_probability.outcome.mean()) if common_n else None,
                                     "common_cohort_propensity_plus_trust_observed_rate": float(common_trust.outcome.mean()) if common_n else None,
                                     "limitation": "Full priority and common-cohort ablations use only rows with all validated components. If physical impact or confidence is absent, full priority remains unavailable. Synthetic outcomes do not establish causal impact."}
-        current_bytes, peak_bytes = tracemalloc.get_traced_memory()
+        audit_seconds = time.perf_counter() - audit_started
+        print(f"{mode}: fairness and ablation {audit_seconds:.2f}s", flush=True)
+        peak_rss_bytes = int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * rss_scale)
         return {"provider_mode": mode, "startup_seconds": startup, "api": measurements,
                  "explanation_cache": metrics, "fairness": fairness, "ranking_ablation": ranking,
-                "distributions": distributions,
-                "stage_seconds": {"application_build": build_seconds, "lifespan_startup": startup,
-                                  "portfolio_scoring_and_ranking": scoring_seconds, "fairness_and_ablation": time.perf_counter() - audit_started},
-                "memory": {"python_current_bytes": current_bytes, "python_peak_bytes": peak_bytes,
-                           "boundary": "tracemalloc Python allocations; excludes native model buffers and process RSS",
-                           "isolated_trace": tracing_started},
-                "measurement_boundary": "Local in-process FastAPI TestClient with Python allocation tracing enabled; excludes network transport, Streamlit render and live LLM latency."}
+                 "distributions": distributions,
+                 "evaluation_cohort": {"opportunity_rows": len(opportunities),
+                                       "opportunity_customers": len({row["customer_id"] for row in opportunities}),
+                                       "fairness_rows": len(records) if mode == "trained" else 0,
+                                       "boundary": "All provider snapshots and products; no customer subsampling. Ranking uses the reported held-out and complete-priority cohorts."},
+                 "portfolio_measurement_boundary": "Full-cohort scoring/ranking and audits read startup/summary-persisted decisions from isolated SQLite, omitting unused provenance snapshots. Includes cohort validation and the normal priority formula; excludes redundant inference/persistence. Not a fresh opportunities API latency measurement.",
+                 "stage_seconds": {"application_build": build_seconds, "lifespan_startup": startup,
+                                  "portfolio_scoring_and_ranking": scoring_seconds,
+                                  "distributions": distributions_seconds, "fairness_and_ablation": audit_seconds,
+                                  "total": time.perf_counter() - benchmark_started},
+                 "memory": {"process_peak_rss_bytes": peak_rss_bytes,
+                            "process_peak_rss_before_bytes": peak_rss_before,
+                            "boundary": "resource.getrusage(RUSAGE_SELF).ru_maxrss in bytes; process lifetime high-water RSS including native buffers, not current RSS or an isolated per-mode peak. Fixture and trained runs share a process."},
+                 "measurement_boundary": "Local in-process FastAPI TestClient without evaluator allocation tracing; includes full provider startup and normal SQLite decision persistence; excludes network transport, Streamlit render and live LLM latency."}
 
 
 def main():
