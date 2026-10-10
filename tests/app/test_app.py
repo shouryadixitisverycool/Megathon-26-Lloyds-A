@@ -112,6 +112,19 @@ def test_only_validated_confidence_is_shown(api_fixture):
     assert "Model confidence: 99.0%" in displayed(app)
 
 
+def test_co2e_baseline_and_scenario_keep_api_units(api_fixture):
+    impact = api_fixture["decisions"]["GP-001"][0]["impact"]
+    impact["units"] = "kg CO2e/year"
+    for key in ("baseline", "scenario"):
+        impact[key]["emissions_kg_co2e"] = impact[key].pop("emissions_kg_co2")
+    app = start()
+    text = displayed(app)
+    assert "-12.50 kg CO2e/year" in text
+    assert "100.00 kg CO2e/year" in text
+    assert "112.50 kg CO2e/year" in text
+    assert "100.00 kg CO2/year" not in text
+
+
 def test_empty_customer_list(api_fixture):
     api_fixture["customers"].clear()
     app = start()

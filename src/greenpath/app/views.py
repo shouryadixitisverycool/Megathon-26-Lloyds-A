@@ -126,8 +126,9 @@ def impact_details(impact):
             st.caption(f"Activity period: {impact['period']['start']} inclusive to {impact['period']['end']} exclusive")
         for key in ("baseline", "scenario"):
             scenario = impact[key]
-            number = decimal_number(scenario.get("emissions_kg_co2"))
-            value = f"{number:,.2f} kg CO2" if number is not None else "UNAVAILABLE"
+            field = "emissions_kg_co2e" if impact["units"] == "kg CO2e/year" else "emissions_kg_co2"
+            number = decimal_number(scenario.get(field))
+            value = f"{number:,.2f} {impact['units']}" if number is not None else "UNAVAILABLE"
             st.markdown(f"**{key.capitalize()}** · {scenario['description']} · {value}")
         for issue in impact.get("issues", []):
             st.warning(f"{issue['code']} · {issue['field']} · {issue['message']}")

@@ -55,11 +55,18 @@ Run the checks and generate an evaluation artifact:
 
 ```bash
 uv run --locked pytest tests/llm
-uv run --locked python -m greenpath.llm.evaluate
+make evaluate-llm
 ```
 
+The report uses 196 unique deterministic cases, preserving the original 18
+adversarial cases. It covers all four products and six states, missing impact,
+positive/negative/zero EV impact, changed claims, composition attacks, provider
+failures and malicious fields that must never enter the provider prompt.
+Each case records a stable unique identifier, product, state and impact variant.
+See `LLM_EVAL.md` for the coverage breakdown and offline limitations.
+
 The report measures rejection, groundedness, numeric consistency, unsupported
-claims, fallback rate and local validator latency on fixed cases. Live provider
+claims, fallback rate and local validator latency. Live provider
 latency and cost are null because no live calls are measured. These results do
 not establish live model quality or predictive performance.
 

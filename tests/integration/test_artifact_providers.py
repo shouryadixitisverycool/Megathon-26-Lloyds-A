@@ -1,6 +1,6 @@
 """ML evidence adaptation, batching, historical cutoffs and provider selection."""
 
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 from types import SimpleNamespace
 
@@ -74,7 +74,8 @@ def test_real_monthly_cutoffs_and_cached_batches():
     decisions = RecommendationService(repository, repository, repository).recommendations("C10001")
     assert all(r.state == RecommendationState.RECOMMEND for r in decisions)
     assert all(r.impact.value is None for r in decisions)
-    assert all(r.impact.issues[0].code == "UNSUPPORTED_SCOPE" for r in decisions)
+    assert all(any(i.code == "MISSING_INPUT" for i in r.impact.issues) for r in decisions)
+    assert all(r.impact.feature_cutoff == r.feature_cutoff for r in decisions)
     assert all(not r.impact.factors for r in decisions)
     history = repository.list_history()
     solar = {r.month: r.state for r in history if r.product == Product.SOLAR_FINANCE}
@@ -82,6 +83,41 @@ def test_real_monthly_cutoffs_and_cached_batches():
     assert len(runtime.calls) == 16
     assert repository.list_history() is history
     assert len(runtime.calls) == 16
+
+
+def test_impact_inputs_and_history_use_each_cutoffs_physical_evidence():
+    runtime = FakeRuntime()
+    original_sources = runtime.snapshots.snapshots
+
+    def sources(cutoff):
+        source = original_sources(cutoff)[0]
+        return [source.model_copy(update={
+            "vehicle": source.vehicle.model_copy(update={"annual_mileage_km": float(cutoff.month * 1000)}),
+            "features": {**source.features, "ice_litres_per_100km": 6.5,
+                         "ev_kwh_per_100km": 18.0, "charging_efficiency": 0.9},
+        })]
+
+    runtime.snapshots.snapshots = sources
+    repository = ArtifactRepository(runtime)
+    payload = repository.get_impact_input("C10001", Product.EV_FINANCE)
+    assert payload.vehicle.annual_mileage_km == 6000
+    payload.features.clear()
+    assert repository.get_impact_input("C10001", Product.EV_FINANCE).features
+    assert repository.get_impact_input("unknown", Product.EV_FINANCE) is None
+    calculator = repository.impact_calculators[Product.EV_FINANCE]
+    original_calculate = calculator.calculate
+    observed = []
+
+    def calculate(payload):
+        result = original_calculate(payload)
+        observed.append((result.feature_cutoff.date(),
+            next(e.value for e in result.evidence if e.field == "annual_mileage_km")))
+        return result
+
+    calculator.calculate = calculate
+    repository.list_history()
+    assert observed == [(date(2026, 5, 31), Decimal("5000")),
+                        (date(2026, 6, 30), Decimal("6000"))]
 
 
 def test_validated_low_confidence_abstains_without_conflating_trust():
@@ -92,6 +128,37 @@ def test_validated_low_confidence_abstains_without_conflating_trust():
     assert all(r.state == RecommendationState.INSUFFICIENT_INFORMATION for r in decisions)
     assert all(r.reason_codes == ("CONFIDENCE_BELOW_MINIMUM",) for r in decisions)
     assert all(r.trust.status == "TRUSTED" for r in decisions)
+
+
+def test_explicit_trained_scenario_exposes_available_co2e_through_api():
+    from fastapi.testclient import TestClient
+    from greenpath.api.main import create_app
+    from greenpath.contracts.impact_detail import ImpactResult
+
+    runtime = FakeRuntime()
+    # Explicit scenario snapshot only: do not add efficiencies to production
+    # generation, model predictors, or adapter defaults.
+    runtime.source = runtime.source.model_copy(update={"features": {**runtime.source.features,
+        "ice_litres_per_100km": 6.5, "ev_kwh_per_100km": 18.0, "charging_efficiency": 0.9}})
+    repository = ArtifactRepository(runtime)
+    expected = repository.impact_calculators[Product.EV_FINANCE].calculate(runtime.source)
+    with TestClient(create_app(repository)) as client:
+        rows = client.get("/customers/C10001/recommendations").json()["recommendations"]
+        ev = next(row for row in rows if row["product"] == "EV_FINANCE")
+        assert ev["state"] == "RECOMMEND"
+        actual = ImpactResult.model_validate(ev["impact"])
+        assert actual.status == "AVAILABLE" and actual.units == "kg CO2e/year"
+        assert actual.value == expected.value
+        assert actual.baseline == expected.baseline and actual.scenario == expected.scenario
+        assert actual.factors == expected.factors and actual.evidence == expected.evidence
+        assert actual.feature_cutoff == datetime.fromisoformat(ev["feature_cutoff"])
+        assert all(row["impact"]["value"] is None for row in rows if row != ev)
+        explanation = client.get("/customers/C10001/explanations/EV_FINANCE").json()
+        assert explanation["validation_passed"] is True
+        assert explanation["impact_value"] == ev["impact"]["value"]
+        assert explanation["units"] == "kg CO2e/year"
+        assert "kg CO2e/year" in explanation["text"]
+        assert client.get("/portfolio/summary").json()["available_impact_count"] == 1
 
 
 def test_auto_fixture_and_partial_artifacts_fail_visibly(tmp_path, monkeypatch):

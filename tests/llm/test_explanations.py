@@ -33,7 +33,7 @@ def test_no_key_is_usable_for_every_product_and_state(product, state):
 @pytest.mark.parametrize("attack,reason", [
     ("product", "CLAIMS_REJECTED"), ("state", "CLAIMS_REJECTED"),
     ("reason", "CLAIMS_REJECTED"), ("number", "CLAIMS_REJECTED"),
-    ("units", "SCHEMA_REJECTED"), ("eligibility", "CLAIMS_REJECTED"),
+    ("units", "CLAIMS_REJECTED"), ("eligibility", "CLAIMS_REJECTED"),
     ("free_text", "SCHEMA_REJECTED"), ("omit", "SENTENCES_REJECTED"),
     ("duplicate", "SENTENCES_REJECTED"), ("invent_sentence", "SENTENCES_REJECTED"),
     ("malformed", "SCHEMA_REJECTED"), ("error", "PROVIDER_ERROR"),
@@ -129,6 +129,45 @@ def test_negative_carbon_keeps_sign_and_names_increase():
     assert ExplanationService(FixedProvider("sign")).explain(rec).fallback_reason == "CLAIMS_REJECTED"
 
 
+@pytest.mark.parametrize("charging", [0.9, 0.1])
+def test_co2e_explanation_grounds_signed_numbers_and_rejects_co2_relabelling(charging):
+    from greenpath.contracts.customer import CustomerSnapshot
+    from greenpath.contracts.fixtures import load_model
+    from greenpath.impact.uk_adapter import UKImpactCalculator
+
+    snapshot = load_model("customer_snapshot_C10001", CustomerSnapshot)
+    snapshot = snapshot.model_copy(update={"features": {**snapshot.features,
+        "ice_litres_per_100km": 6.5, "ev_kwh_per_100km": 18.0,
+        "charging_efficiency": charging}})
+    impact = UKImpactCalculator(Product.EV_FINANCE).calculate(snapshot)
+    rec = synthetic_recommendation().model_copy(update={"impact": impact})
+    provider = FixedProvider()
+    result = ExplanationService(provider).explain(rec)
+    assert result.source == "llm"
+    assert result.impact_value == impact.value
+    assert result.units == provider.requests[0].units == "kg CO2e/year"
+    assert f"{impact.value} kg CO2e/year" in result.text
+    assert ("an increase" in result.text) == (impact.value < 0)
+
+    class RelabelProvider(FixedProvider):
+        def generate(self, request, *, timeout_seconds):
+            output = approved_output(request)
+            output["units"] = "kg CO2/year"
+            return output
+
+    assert ExplanationService(RelabelProvider()).explain(rec).fallback_reason == "CLAIMS_REJECTED"
+
+
+def test_structured_explanation_schemas_share_product_impact_units():
+    from greenpath.contracts.impact_detail import ImpactResult
+    from greenpath.llm.ports import ExplanationRequest
+
+    units = ImpactResult.model_json_schema()["properties"]["units"]["enum"]
+    assert units == ["kg CO2", "kg CO2/year", "kg CO2e/year"]
+    for model in (ExplanationRequest, ProviderExplanation):
+        assert model.model_json_schema()["properties"]["units"]["enum"] == units
+
+
 def test_zero_is_distinct_from_unavailable():
     rec = synthetic_recommendation()
     zero_impact = rec.impact.model_copy(update={"value": Decimal("0"), "scenario": rec.impact.baseline})
@@ -193,7 +232,7 @@ def test_vocabulary_matches_recommendation_engine():
 
 def test_offline_report_has_actual_cases_and_no_live_metrics():
     report = run_evaluation()
-    assert report["summary"]["passed"] == report["summary"]["total"] == 18
+    assert report["summary"]["passed"] == report["summary"]["total"] == 196
     assert report["summary"]["groundedness_rate"] == 1
     assert report["summary"]["numeric_consistency_rate"] == 1
     assert report["summary"]["unsupported_claims"] == 0

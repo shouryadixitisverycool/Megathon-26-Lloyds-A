@@ -107,6 +107,16 @@ class ActivityEvidence(Model):
 class EmissionsScenario(Model):
     description: str
     emissions_kg_co2: Decimal | None = Field(default=None, ge=0)
+    emissions_kg_co2e: Decimal | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def exclusive_emissions(self):
+        if self.emissions_kg_co2 is not None and self.emissions_kg_co2e is not None:
+            raise ValueError("Scenario emissions must be CO2 or CO2e, not both")
+        return self
+
+
+ImpactUnit = Literal["kg CO2", "kg CO2/year", "kg CO2e/year"]
 
 
 class ImpactResult(Model):
@@ -114,7 +124,7 @@ class ImpactResult(Model):
     product: Product
     status: ImpactStatus
     value: Decimal | None = None
-    units: Literal["kg CO2", "kg CO2/year"] = "kg CO2"
+    units: ImpactUnit = "kg CO2"
     baseline: EmissionsScenario
     scenario: EmissionsScenario
     period: Period | None = None
@@ -134,8 +144,13 @@ class ImpactResult(Model):
 
     @model_validator(mode="after")
     def consistent_status(self):
-        baseline = self.baseline.emissions_kg_co2
-        scenario = self.scenario.emissions_kg_co2
+        co2e = self.units == "kg CO2e/year"
+        for item in (self.baseline, self.scenario):
+            mismatched = item.emissions_kg_co2 if co2e else item.emissions_kg_co2e
+            if mismatched is not None:
+                raise ValueError("Scenario emissions must match impact units")
+        baseline = self.baseline.emissions_kg_co2e if co2e else self.baseline.emissions_kg_co2
+        scenario = self.scenario.emissions_kg_co2e if co2e else self.scenario.emissions_kg_co2
         if self.status == ImpactStatus.AVAILABLE:
             if any(v is None for v in (self.value, baseline, scenario)):
                 raise ValueError("Available impact requires value and both emissions")

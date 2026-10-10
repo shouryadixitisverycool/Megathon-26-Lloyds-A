@@ -7,30 +7,11 @@ import os
 
 from greenpath import config
 from greenpath.contracts.enums import ConfidenceStatus, FuelType, Severity, TrustIssueCategory
-from greenpath.contracts.impact_detail import ImpactIssue, IssueCode
 from greenpath.contracts.product import (
     CustomerSnapshot, FeatureEvidence, HistoryRecord, PropensityResult, TrustAssessment, TrustIssue,
 )
-from greenpath.impact import Product, build_registry
-
-
-class UnavailableGeographyCalculator:
-    """Keep UK-source physical data out of the India-only factor catalogue."""
-
-    def __init__(self, calculator):
-        self.calculator = calculator
-        self.product = calculator.product
-        result = self.calculator.calculate(None)
-        self._result = result.model_copy(update={
-            "factors": (),
-            "issues": (ImpactIssue(
-                code=IssueCode.UNSUPPORTED_SCOPE, field="context.geography",
-                message="Trained snapshots use UK physical data. The reviewed impact catalogue supports India only; no compatible calculation is available.",
-            ),),
-        })
-
-    def calculate(self, payload):
-        return self._result
+from greenpath.impact import Product
+from greenpath.impact.uk_adapter import build_uk_registry
 
 
 def _adapt_trust(source):
@@ -77,7 +58,7 @@ class ArtifactRepository:
             raise ValueError("Trained provider requires a calibrated bundle for every product")
         self.runtime = runtime
         self.version = "trained:" + ",".join(runtime.bundles[p].model_version for p in Product)
-        self.impact_calculators = {p: UnavailableGeographyCalculator(c) for p, c in build_registry().items()}
+        self.impact_calculators = build_uk_registry()
         self._cache = {}
         self._history = None
 
@@ -138,7 +119,9 @@ class ArtifactRepository:
         return result.model_copy(deep=True) if result else None
 
     def get_impact_input(self, customer_id, product):
-        return None
+        Product(product)
+        snapshot = self.get_snapshot(customer_id)
+        return snapshot.source_snapshot if snapshot else None
 
     def list_history(self):
         if self._history is None:
@@ -160,7 +143,9 @@ class ArtifactRepository:
                     def get_propensity(self, customer_id, product):
                         return propensities.get((customer_id, product))
                     def get_impact_input(self, customer_id, product):
-                        return None
+                        Product(product)
+                        snapshot = snapshots.get(customer_id)
+                        return snapshot.source_snapshot.model_copy(deep=True) if snapshot else None
                 provider = CutoffProvider()
                 # Evaluate against that month's evidence, never copy current decisions.
                 service = RecommendationService(provider, provider, provider,

@@ -1,7 +1,7 @@
 """Deterministic relevance and abstention rules, independent of credit eligibility."""
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from decimal import Decimal
 from types import MappingProxyType
@@ -107,8 +107,6 @@ class RecommendationService:
             raise ValueError("Calculator registration must match its product")
 
     def recommendations(self, customer_id: str) -> tuple[Recommendation, ...]:
-        if self._decision_cache is not None and customer_id in self._decision_cache:
-            return self._decision_cache[customer_id]
         snapshot = self.snapshot_provider.get_snapshot(customer_id)
         if snapshot is None:
             raise KeyError(customer_id)
@@ -117,12 +115,18 @@ class RecommendationService:
         snapshot = CustomerSnapshot.model_validate(snapshot.model_dump(mode="python", warnings=False))
         if snapshot.customer_id != customer_id:
             raise KeyError(customer_id)
+        # Re-read evidence even in trained mode so an available withdrawal cannot
+        # be hidden by decisions warmed before the permission changed.
+        if self._decision_cache is not None and customer_id in self._decision_cache:
+            cached_snapshot, decisions = self._decision_cache[customer_id]
+            if cached_snapshot == snapshot:
+                return decisions
         now = self.clock()
         if now.tzinfo is None or now.utcoffset() is None:
             raise ValueError("Decision clock must return a timezone-aware datetime")
         decisions = tuple(self._recommendation(snapshot, product, now) for product in Product)
         if self._decision_cache is not None:
-            self._decision_cache[customer_id] = decisions
+            self._decision_cache[customer_id] = (snapshot.model_copy(deep=True), decisions)
         return decisions
 
     def _recommendation(self, snapshot: CustomerSnapshot, product: Product, now: datetime) -> Recommendation:
@@ -135,7 +139,10 @@ class RecommendationService:
             if source.customer_id != snapshot.customer_id or source.feature_cutoff != snapshot.feature_cutoff.date():
                 propensity = None
         rules = TRAINED_PRODUCT_RULES if snapshot.decision_profile == "trained" else PRODUCT_RULES
-        state, evidence = self._decide(snapshot, rules[product], propensity, now)
+        rule = rules[product]
+        if snapshot.decision_profile == "trained" and product == Product.GREEN_HOME and "efficient_home" in snapshot.features:
+            rule = replace(rule, adoption_field="efficient_home")
+        state, evidence = self._decide(snapshot, rule, propensity, now, product)
         calculator = self.calculators[product]
         payload = self.impact_input_provider.get_impact_input(snapshot.customer_id, product)
         impact = calculator.calculate(payload)
@@ -149,7 +156,7 @@ class RecommendationService:
             "Synthetic-data probabilities do not establish real-world predictive performance.",
         ]
         if snapshot.decision_profile == "trained":
-            exclusions.append("Marketing consent, installation suitability and permission to change service are not assessed.")
+            exclusions.append("Product relevance does not authorize marketing contact or a service change; absent permissions are not consent. Installation suitability is not assessed.")
         if raw_propensity is not None and raw_propensity.confidence is not None and not raw_propensity.confidence_validated:
             exclusions.append("Model confidence is suppressed because its reliability has not been validated.")
         if impact.value is None:
@@ -189,7 +196,7 @@ class RecommendationService:
 
     def _decide(
         self, snapshot: CustomerSnapshot, rule: ProductRule,
-        propensity: PropensityResult | None, now: datetime,
+        propensity: PropensityResult | None, now: datetime, product: Product,
     ) -> tuple[State, tuple[DecisionEvidence, ...]]:
         def decision(state: State, code: str, fields: tuple[str, ...] = ()):
             return state, (self._evidence(snapshot, code, fields),)
@@ -199,24 +206,34 @@ class RecommendationService:
             return bool(item is not None and item.value is not None and item.freshness == "current"
                         and not item.conflicts and item.observed_at <= snapshot.feature_cutoff <= now)
 
-        consent = snapshot.features.get("marketing_consent")
-        consent_conflict = any(issue.severity == "HIGH" and issue.field in ("marketing_consent", "", "*")
-                               for issue in snapshot.trust.issues)
-        if rule.require_marketing_consent and usable("marketing_consent") and consent.value is False and not consent_conflict:
-            return decision(State.SUPPRESSED, "MARKETING_CONSENT_WITHDRAWN", ("marketing_consent",))
+        consent_fields = ("marketing_consent",) + (("paperless_consent",) if product == Product.PAPERLESS_BANKING else ())
+        for field in consent_fields:
+            consent = snapshot.features.get(field)
+            consent_conflict = any(issue.severity == "HIGH" and issue.field in (field, "", "*")
+                                   for issue in snapshot.trust.issues)
+            if usable(field) and consent.value is False and not consent_conflict:
+                code = "MARKETING_CONSENT_WITHDRAWN" if field == "marketing_consent" else "PAPERLESS_CONSENT_WITHDRAWN"
+                return decision(State.SUPPRESSED, code, (field,))
 
-        conflict_fields = tuple(field for field in rule.required_fields
+        checked_fields = tuple(dict.fromkeys((*rule.required_fields, *consent_fields)))
+        conflict_fields = tuple(field for field in checked_fields
                                 if field in snapshot.features and snapshot.features[field].conflicts)
         high_issues = tuple(issue for issue in snapshot.trust.issues if issue.severity == "HIGH")
         high_conflicts = tuple(issue for issue in high_issues if issue.code in CONFLICT_CODES)
         if snapshot.trust.status == "CONFLICT" or conflict_fields or high_conflicts:
             fields = tuple(dict.fromkeys((*conflict_fields, *(issue.field for issue in high_issues
-                                                              if issue.field in rule.required_fields))))
+                                                              if issue.field in checked_fields))))
             return decision(State.CONFLICT_REQUIRES_REVIEW, "EVIDENCE_CONFLICT", fields)
         if snapshot.trust.status == "OOD" or any(issue.code in OOD_CODES for issue in high_issues):
             return decision(State.INSUFFICIENT_INFORMATION, "OUT_OF_DISTRIBUTION")
         if snapshot.feature_cutoff > now:
             return decision(State.INSUFFICIENT_INFORMATION, "FUTURE_FEATURE_CUTOFF")
+        available_consent = tuple(field for field in consent_fields
+                                  if field in snapshot.features and snapshot.features[field].value is not None)
+        missing = self._unusable(snapshot, available_consent)
+        if missing:
+            code, affected = missing
+            return decision(State.INSUFFICIENT_INFORMATION, code, affected)
         if high_issues:
             for codes, reason in ((MISSING_CODES, "MISSING_EVIDENCE"), (STALE_CODES, "STALE_EVIDENCE"),
                                   (FUTURE_CODES, "FUTURE_EVIDENCE")):

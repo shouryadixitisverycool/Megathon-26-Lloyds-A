@@ -1,9 +1,9 @@
 {
-  "transaction_categorisation_seconds": 5.908667560001049,
-  "customer360_seconds": 3.3260195500006375,
-  "propensity_training_seconds": 3.1342190710001887,
-  "confidence_training_seconds": 0.8251479330010625,
-  "train_seconds": 18.55148696899414,
-  "evaluation_seconds": 36.19931411743164,
-  "all_command_seconds": 83.27562423199925
+  "transaction_categorisation_seconds": 2.434654999990016,
+  "customer360_seconds": 3.3459657500497997,
+  "propensity_training_seconds": 6.7556495000608265,
+  "confidence_training_seconds": 0.7590053339954466,
+  "train_seconds": 19.125471830368042,
+  "evaluation_seconds": 21.76694107055664,
+  "all_command_seconds": 65.88034554198384
 }

@@ -1,0 +1,13 @@
+# Responsible AI Note
+
+GreenPath is a synthetic demonstration for sustainability conversations, not a deployed banking decision system. No real customer data is used. Public UK household energy aggregates anchor demand distributions, not individual behaviours or model validity.
+
+- **Separate decisions:** propensity estimates simulated interest; Trust measures evidence adequacy; confidence is shown only after stored held-out reliability validation; deterministic impact describes a physical scenario. None establishes affordability, eligibility, approval or investment suitability.
+- **Fail closed:** missing critical evidence, conflicts, OOD, stale inputs and population exclusions support abstention/review rather than a forced recommendation. Missing factors or incompatible geography must not produce invented impact.
+- **Fairness:** audit-only age/income/location attributes are excluded from default propensity inputs under the feature policy. Subgroup and proxy-ablation diagnostics remain visible. Exclusion of attributes does not eliminate proxies or disparities; small synthetic subgroups cannot certify fairness.
+- **Privacy and grounding:** raw merchant descriptions and uncontrolled feature/reason text do not enter the explanation prompt. Optional providers receive approved structured claims/sentences only. Output schema and exact numeric/reason/product checks run before display; unsafe/error/timeout output falls back to templates.
+- **Human control:** review, consent, suppression, cooling-off and contact-fatigue rules govern outreach. SQLite records feedback and lifecycle history without silently changing source facts or model scores. Campaign execution is simulated contact logging only.
+- **Environmental honesty:** India operational CO2 and UK WTW CO2e methods remain separate. UK forecasts use explicit assumptions and pinned factors, exclude embodied/manufacturing emissions and do not guarantee reductions. Paperless reports avoided activity, not carbon. No carbon-credit claim.
+- **Evidence honesty:** saved synthetic ML/offline validator/local API reports are scoped evidence, not live-provider or production benchmarks. Live LLM evaluation was **not run without credentials**; live costs, tokens, latency and performance are unmeasured. Final integration gates await main verification.
+
+Before real deployment: lawful data basis and privacy assessment, independently observed outcome/fairness validation, secure authenticated role-based review, retention/deletion policy, operational monitoring, provider/data-transfer review, vulnerability checks and bank governance approval. These controls are not certified by this demo. What-if and sensitivity tools show assumptions/model responses, not causal advice.
