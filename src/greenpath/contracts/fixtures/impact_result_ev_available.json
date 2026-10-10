@@ -1,0 +1,77 @@
+{
+  "contract_version": "1.0.0",
+  "customer_id": "C10001",
+  "product": "EV_FINANCE",
+  "status": "AVAILABLE",
+  "metric": "kg_co2e_per_year",
+  "unit": "kg CO2e",
+  "baseline": 2850.0,
+  "scenario": 1180.0,
+  "estimated_reduction": 1670.0,
+  "secondary_metrics": [],
+  "methodology_id": "EV_OPERATIONAL_WTW_V1",
+  "method_version": "ev_impact_v1",
+  "factor_ids": [
+    "UKGHG_PETROL_CAR_OPERATIONAL",
+    "UKGHG_GRID_ELECTRICITY_OPERATIONAL"
+  ],
+  "factor_source": "UK Government GHG Conversion Factors",
+  "factor_version": "PINNED_AT_BUILD",
+  "boundary": "operational well-to-wheel where matched factors are available; manufacturing excluded",
+  "grid_scenario": "current-year factor for headline annual estimate",
+  "assumptions": [
+    {
+      "name": "annual_mileage_km",
+      "value": 15200.0,
+      "unit": "km/year",
+      "source": "customer_snapshot C10001 vehicle.annual_mileage_km",
+      "is_estimated": false
+    },
+    {
+      "name": "vehicle_fuel_type",
+      "value": "PETROL",
+      "unit": null,
+      "source": "customer_snapshot C10001 vehicle.fuel_type",
+      "is_estimated": false
+    },
+    {
+      "name": "ice_operational_factor",
+      "value": 0.1875,
+      "unit": "kg CO2e/km",
+      "source": "placeholder back-solved from spec section 5 baseline; replace with pinned factor",
+      "is_estimated": true
+    },
+    {
+      "name": "ev_energy_intensity",
+      "value": 0.2,
+      "unit": "kWh/km",
+      "source": "placeholder back-solved from spec section 5 scenario; replace with pinned value",
+      "is_estimated": true
+    },
+    {
+      "name": "grid_operational_factor",
+      "value": 0.388,
+      "unit": "kg CO2e/kWh",
+      "source": "placeholder back-solved from spec section 5 scenario; replace with pinned factor",
+      "is_estimated": true
+    },
+    {
+      "name": "time_horizon",
+      "value": "1 year",
+      "unit": null,
+      "source": null,
+      "is_estimated": false
+    },
+    {
+      "name": "manufacturing_emissions_included",
+      "value": false,
+      "unit": null,
+      "source": null,
+      "is_estimated": false
+    }
+  ],
+  "unavailable_reason": null,
+  "data_cutoff": "2026-06-30",
+  "calculation_timestamp": "2026-10-10T09:00:00",
+  "carbon_engine_version": "carbon_v2"
+}

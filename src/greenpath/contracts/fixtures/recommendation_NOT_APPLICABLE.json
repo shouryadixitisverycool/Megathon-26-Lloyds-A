@@ -1,0 +1,57 @@
+{
+  "contract_version": "1.0.0",
+  "recommendation_id": "REC-C10006-GP04-2026-06-30",
+  "customer_id": "C10006",
+  "opportunity_id": "PAPERLESS_BANKING",
+  "product_id": "GP04",
+  "propensity": 0.96,
+  "propensity_model_version": "paperless_propensity_v1",
+  "calibration_version": "paperless_iso_v1",
+  "confidence": {
+    "status": "SUPPRESSED",
+    "value": null,
+    "bucket": null,
+    "method_version": "conf_meta_v2",
+    "limitation": "Not displayed: customer is already paperless, so is outside the model population."
+  },
+  "trust": {
+    "contract_version": "1.0.0",
+    "customer_id": "C10006",
+    "product": "PAPERLESS_BANKING",
+    "score": 0.88,
+    "status": "HIGH",
+    "completeness": 0.94,
+    "freshness": 0.9,
+    "cross_source_consistency": 0.93,
+    "critical_fields_present": true,
+    "ood_score": 0.06,
+    "issues": [],
+    "method_version": "trust_v1",
+    "assessed_at": "2026-10-10T09:00:00"
+  },
+  "recommendation_status": "NOT_APPLICABLE",
+  "guardrail_codes": [],
+  "conflict_codes": [],
+  "exclusions": [
+    "ALREADY_PAPERLESS"
+  ],
+  "priority": null,
+  "reason_codes": [],
+  "evidence": {},
+  "impact": null,
+  "eligibility": {
+    "status": "NOT_ASSESSED",
+    "message": "Propensity does not establish financial eligibility."
+  },
+  "data_cutoff": "2026-06-30",
+  "outcome_window_end": "2026-09-28",
+  "prediction_timestamp": "2026-10-10T09:00:00",
+  "feature_version": "feature_v1",
+  "confidence_method_version": "conf_meta_v2",
+  "trust_method_version": "trust_v1",
+  "carbon_engine_version": "carbon_v2",
+  "emission_factor_version": "PINNED_AT_BUILD",
+  "recommendation_rule_version": "rules_v1",
+  "prompt_version": "prompt_v4",
+  "llm_model_version": "PINNED_AT_BUILD"
+}

@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from importlib.resources import files
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     APPROVED_FEATURES, CustomerSnapshot, FeatureEvidence, HistoryRecord,
     PropensityResult, RecommendationState, TrustAssessment, TrustIssue,
 )
@@ -33,6 +33,7 @@ PERSONAS = (
 class DemoRepository:
     """Implements the four provider mirrors with independent copies on reads."""
 
+    mode = "fixture"
     version = FIXTURE_VERSION
 
     def __init__(self):

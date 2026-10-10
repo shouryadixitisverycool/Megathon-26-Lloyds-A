@@ -12,7 +12,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.881
+      "local_latency_ms": 1.759
     },
     {
       "case": "reverse:AVAILABLE",
@@ -23,7 +23,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": null,
-      "local_latency_ms": 0.57
+      "local_latency_ms": 1.283
     },
     {
       "case": "product:AVAILABLE",
@@ -34,7 +34,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.42
+      "local_latency_ms": 1.055
     },
     {
       "case": "state:AVAILABLE",
@@ -45,7 +45,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.515
+      "local_latency_ms": 1.147
     },
     {
       "case": "reason:AVAILABLE",
@@ -56,7 +56,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.41
+      "local_latency_ms": 1.19
     },
     {
       "case": "number:AVAILABLE",
@@ -67,7 +67,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.498
+      "local_latency_ms": 1.505
     },
     {
       "case": "units:AVAILABLE",
@@ -78,7 +78,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SCHEMA_REJECTED",
-      "local_latency_ms": 0.443
+      "local_latency_ms": 1.004
     },
     {
       "case": "eligibility:AVAILABLE",
@@ -89,7 +89,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.398
+      "local_latency_ms": 1.03
     },
     {
       "case": "free_text:AVAILABLE",
@@ -100,7 +100,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SCHEMA_REJECTED",
-      "local_latency_ms": 0.362
+      "local_latency_ms": 1.233
     },
     {
       "case": "omit:AVAILABLE",
@@ -111,7 +111,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SENTENCES_REJECTED",
-      "local_latency_ms": 0.364
+      "local_latency_ms": 0.991
     },
     {
       "case": "duplicate:AVAILABLE",
@@ -122,7 +122,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SENTENCES_REJECTED",
-      "local_latency_ms": 0.564
+      "local_latency_ms": 1.079
     },
     {
       "case": "invent_sentence:AVAILABLE",
@@ -133,7 +133,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SENTENCES_REJECTED",
-      "local_latency_ms": 0.732
+      "local_latency_ms": 1.576
     },
     {
       "case": "malformed:AVAILABLE",
@@ -144,7 +144,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "SCHEMA_REJECTED",
-      "local_latency_ms": 0.583
+      "local_latency_ms": 1.12
     },
     {
       "case": "error:AVAILABLE",
@@ -155,7 +155,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "PROVIDER_ERROR",
-      "local_latency_ms": 0.556
+      "local_latency_ms": 1.038
     },
     {
       "case": "timeout:AVAILABLE",
@@ -166,7 +166,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "PROVIDER_TIMEOUT",
-      "local_latency_ms": 20.611
+      "local_latency_ms": 21.81
     },
     {
       "case": "wrong_null:AVAILABLE",
@@ -177,7 +177,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.691
+      "local_latency_ms": 1.447
     },
     {
       "case": "sign:AVAILABLE",
@@ -188,7 +188,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.69
+      "local_latency_ms": 1.273
     },
     {
       "case": "number:UNAVAILABLE",
@@ -199,7 +199,7 @@
       "numeric_consistency": true,
       "unsupported_claims": 0,
       "fallback_reason": "CLAIMS_REJECTED",
-      "local_latency_ms": 0.256
+      "local_latency_ms": 0.72
     }
   ],
   "summary": {
@@ -209,7 +209,7 @@
     "numeric_consistency_rate": 1.0,
     "unsupported_claims": 0,
     "fallback_rate": 0.8888888888888888,
-    "local_mean_latency_ms": 1.641,
+    "local_mean_latency_ms": 2.348,
     "live_provider_latency_ms": null,
     "live_provider_cost": null
   },

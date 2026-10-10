@@ -1,7 +1,7 @@
 """Product registration; no product branching in calling code."""
 
-from ._contract_mirror import Product
-from ._port_mirror import ImpactCalculator
+from greenpath.contracts.impact_detail import Product
+from greenpath.ports import ProductImpactCalculator as ImpactCalculator
 from .catalogue import FactorCatalogue
 from .common import Clock, utc_now
 from .ev import EVImpactCalculator

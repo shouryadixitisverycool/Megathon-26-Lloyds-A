@@ -1,0 +1,46 @@
+{
+  "contract_version": "1.0.0",
+  "data_cutoff": "2026-06-30",
+  "generated_at": "2026-10-10T09:00:00",
+  "customers_analysed": 100000,
+  "customers_with_opportunity": 43000,
+  "by_product": [
+    {
+      "product": "EV_FINANCE",
+      "candidates": 18200,
+      "actionable": 9400,
+      "high_confidence": 6100,
+      "high_trust": 7600,
+      "suppressed_or_abstained": 3100,
+      "estimated_impact_kg_co2e": 15698000.0
+    },
+    {
+      "product": "GREEN_HOME",
+      "candidates": 12400,
+      "actionable": 5200,
+      "high_confidence": 3100,
+      "high_trust": 4400,
+      "suppressed_or_abstained": 2600,
+      "estimated_impact_kg_co2e": null
+    },
+    {
+      "product": "SOLAR_FINANCE",
+      "candidates": 6100,
+      "actionable": 1100,
+      "high_confidence": 700,
+      "high_trust": 900,
+      "suppressed_or_abstained": 2100,
+      "estimated_impact_kg_co2e": null
+    },
+    {
+      "product": "PAPERLESS_BANKING",
+      "candidates": 21000,
+      "actionable": 8800,
+      "high_confidence": 5200,
+      "high_trust": 9100,
+      "suppressed_or_abstained": 1800,
+      "estimated_impact_kg_co2e": null
+    }
+  ],
+  "synthetic_data_notice": "Synthetic demonstration data; not evidence of real-world performance."
+}

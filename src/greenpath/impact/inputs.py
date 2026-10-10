@@ -7,7 +7,7 @@ from typing import Annotated, Generic, TypeVar
 
 from pydantic import AwareDatetime, Field, StrictBool, field_validator
 
-from ._contract_mirror import Model, Period
+from greenpath.contracts.impact_detail import Model, Period
 
 NonBlank = Annotated[str, Field(min_length=1, pattern=r"\S")]
 T = TypeVar("T")

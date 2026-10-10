@@ -19,8 +19,16 @@ class APIClient:
             raise APIError("GREENPATH_API_URL must be an HTTP or HTTPS URL without credentials.")
 
     def get(self, path: str, params: dict[str, str] | None = None) -> Any:
+        return self._request("get", path, params=params)
+
+    def post(self, path: str, payload: dict[str, Any]) -> Any:
+        """Write through HTTP without caching responses or retrying mutations."""
+        return self._request("post", path, json=payload)
+
+    def _request(self, method: str, path: str, **kwargs) -> Any:
         try:
-            response = httpx.get(self.base_url + path, params=params, timeout=httpx.Timeout(5.0, connect=2.0))
+            response = getattr(httpx, method)(self.base_url + path, **kwargs,
+                                              timeout=httpx.Timeout(30.0 if method == "post" else 5.0, connect=2.0))
             response.raise_for_status()
             result = response.json()
         except httpx.TimeoutException as error:
@@ -30,6 +38,13 @@ class APIClient:
         except httpx.HTTPStatusError as error:
             code = error.response.status_code
             message = "Customer or product not found." if code == 404 else "The API could not complete this request."
+            if code in {409, 422}:
+                try:
+                    detail = error.response.json().get("detail")
+                    if isinstance(detail, str):
+                        message = detail[:500]
+                except (ValueError, AttributeError):
+                    pass
             raise APIError(f"{message} HTTP {code}.") from error
         except ValueError as error:
             raise APIError("The API returned an invalid JSON response.") from error

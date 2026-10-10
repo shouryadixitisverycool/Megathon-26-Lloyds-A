@@ -8,15 +8,15 @@ from types import MappingProxyType
 
 from pydantic import ValidationError
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     CustomerSnapshot, DecisionEvidence, PropensityResult, Recommendation,
     RecommendationState as State,
 )
-from greenpath._product_port_mirror import (
-    CustomerSnapshotProvider, ImpactInputProvider, PropensityProvider,
+from greenpath.ports import (
+    ProductSnapshotProvider as CustomerSnapshotProvider, ImpactInputProvider, ProductPropensityProvider as PropensityProvider,
 )
 from greenpath.impact import Product, build_registry
-from greenpath.impact._port_mirror import ImpactCalculator
+from greenpath.ports import ProductImpactCalculator as ImpactCalculator
 from greenpath.impact.common import Clock, utc_now
 
 from .reasons import REASON_MESSAGES
@@ -32,15 +32,17 @@ FUTURE_CODES = frozenset({"FUTURE_EVIDENCE", "FUTURE_INPUT", "FUTURE_FEATURE_CUT
 
 @dataclass(frozen=True)
 class ProductRule:
-    adoption_field: str
+    adoption_field: str | None
     applicability: tuple[tuple[str, str], ...]
     interest_field: str | None = None
     consent_field: str | None = None
+    require_marketing_consent: bool = True
 
     @property
     def required_fields(self) -> tuple[str, ...]:
         return (
-            "marketing_consent", self.adoption_field,
+            *(("marketing_consent",) if self.require_marketing_consent else ()),
+            *((self.adoption_field,) if self.adoption_field else ()),
             *(field for field, _ in self.applicability),
             *((self.interest_field,) if self.interest_field else ()),
             *((self.consent_field,) if self.consent_field else ()),
@@ -61,12 +63,28 @@ PRODUCT_RULES = MappingProxyType({
         consent_field="paperless_consent"),
 })
 
+# The trained source records ownership/adoption and calibrated interest, but it
+# has no marketing permissions, roof survey or explicit upgrade-interest record.
+# These rules establish product relevance only. They authorize no contact or
+# physical-installation/credit eligibility claim.
+TRAINED_PRODUCT_RULES = MappingProxyType({
+    Product.EV_FINANCE: ProductRule(
+        "already_has_ev", (("owns_vehicle", "VEHICLE_REQUIRED"),
+                           ("fuel_supported", "FUEL_UNSUPPORTED")), require_marketing_consent=False),
+    Product.GREEN_HOME: ProductRule(
+        None, (("owns_home", "HOME_REQUIRED"),), require_marketing_consent=False),
+    Product.SOLAR_FINANCE: ProductRule(
+        "solar_installed", (("owns_home", "HOME_REQUIRED"),), require_marketing_consent=False),
+    Product.PAPERLESS_BANKING: ProductRule(
+        "paperless_active", (("paper_statements", "NO_PAPER_STATEMENTS"),), require_marketing_consent=False),
+})
+
 
 class RecommendationService:
     """Return one decision per product without estimating impact or eligibility.
 
     Provider exceptions propagate; a missing snapshot is the only unknown-ID case.
-    Dependencies implement the narrow, replaceable Agent B mirror ports.
+    Dependencies implement canonical product-view ports.
     """
 
     def __init__(
@@ -80,13 +98,17 @@ class RecommendationService:
         self.propensity_provider = propensity_provider
         self.impact_input_provider = impact_input_provider
         self.clock = clock
-        self.calculators = dict(calculators) if calculators is not None else build_registry(clock=clock)
+        self._decision_cache = {} if getattr(snapshot_provider, "mode", None) == "trained" else None
+        selected_calculators = calculators if calculators is not None else getattr(snapshot_provider, "impact_calculators", None)
+        self.calculators = dict(selected_calculators) if selected_calculators is not None else build_registry(clock=clock)
         if set(self.calculators) != set(Product):
             raise ValueError("Register exactly one calculator for each supported product")
         if any(calculator.product != product for product, calculator in self.calculators.items()):
             raise ValueError("Calculator registration must match its product")
 
     def recommendations(self, customer_id: str) -> tuple[Recommendation, ...]:
+        if self._decision_cache is not None and customer_id in self._decision_cache:
+            return self._decision_cache[customer_id]
         snapshot = self.snapshot_provider.get_snapshot(customer_id)
         if snapshot is None:
             raise KeyError(customer_id)
@@ -98,12 +120,22 @@ class RecommendationService:
         now = self.clock()
         if now.tzinfo is None or now.utcoffset() is None:
             raise ValueError("Decision clock must return a timezone-aware datetime")
-        return tuple(self._recommendation(snapshot, product, now) for product in Product)
+        decisions = tuple(self._recommendation(snapshot, product, now) for product in Product)
+        if self._decision_cache is not None:
+            self._decision_cache[customer_id] = decisions
+        return decisions
 
     def _recommendation(self, snapshot: CustomerSnapshot, product: Product, now: datetime) -> Recommendation:
+        if product in snapshot.product_trust:
+            snapshot = snapshot.model_copy(update={"trust": snapshot.product_trust[product]})
         raw_propensity = self.propensity_provider.get_propensity(snapshot.customer_id, product)
         propensity = self._clean_propensity(raw_propensity, product)
-        state, evidence = self._decide(snapshot, PRODUCT_RULES[product], propensity, now)
+        if propensity is not None and propensity.source_result is not None:
+            source = propensity.source_result
+            if source.customer_id != snapshot.customer_id or source.feature_cutoff != snapshot.feature_cutoff.date():
+                propensity = None
+        rules = TRAINED_PRODUCT_RULES if snapshot.decision_profile == "trained" else PRODUCT_RULES
+        state, evidence = self._decide(snapshot, rules[product], propensity, now)
         calculator = self.calculators[product]
         payload = self.impact_input_provider.get_impact_input(snapshot.customer_id, product)
         impact = calculator.calculate(payload)
@@ -114,8 +146,10 @@ class RecommendationService:
             impact = calculator.calculate(None)
         exclusions = [
             "Credit eligibility and approval assessment are excluded.",
-            "Synthetic fixture probabilities do not establish predictive performance.",
+            "Synthetic-data probabilities do not establish real-world predictive performance.",
         ]
+        if snapshot.decision_profile == "trained":
+            exclusions.append("Marketing consent, installation suitability and permission to change service are not assessed.")
         if raw_propensity is not None and raw_propensity.confidence is not None and not raw_propensity.confidence_validated:
             exclusions.append("Model confidence is suppressed because its reliability has not been validated.")
         if impact.value is None:
@@ -125,7 +159,8 @@ class RecommendationService:
             state=state, reason_codes=tuple(item.code for item in evidence),
             evidence=evidence, exclusions=tuple(exclusions), impact=impact,
             trust=snapshot.trust, feature_cutoff=snapshot.feature_cutoff,
-            rules_version=RULES_VERSION, timestamp=now,
+            rules_version="trained-relevance-rules-v1" if snapshot.decision_profile == "trained" else RULES_VERSION,
+            timestamp=now,
         )
 
     @staticmethod
@@ -141,7 +176,7 @@ class RecommendationService:
         # A model's free-form reason vocabulary cannot authorize relevance reasons.
         # The rules derive reasons directly from approved snapshot evidence.
         return result.model_copy(update={
-            "reason_codes": (),
+            "reason_codes": tuple(code.value for code in result.source_result.reason_codes) if result.source_result else (),
             "confidence": result.confidence if result.confidence_validated else None,
         })
 
@@ -167,7 +202,7 @@ class RecommendationService:
         consent = snapshot.features.get("marketing_consent")
         consent_conflict = any(issue.severity == "HIGH" and issue.field in ("marketing_consent", "", "*")
                                for issue in snapshot.trust.issues)
-        if usable("marketing_consent") and consent.value is False and not consent_conflict:
+        if rule.require_marketing_consent and usable("marketing_consent") and consent.value is False and not consent_conflict:
             return decision(State.SUPPRESSED, "MARKETING_CONSENT_WITHDRAWN", ("marketing_consent",))
 
         conflict_fields = tuple(field for field in rule.required_fields
@@ -191,13 +226,23 @@ class RecommendationService:
                     return decision(State.INSUFFICIENT_INFORMATION, reason, fields)
             return decision(State.INSUFFICIENT_INFORMATION, "TRUST_LIMITATION")
 
+        if snapshot.trust.source_assessment is not None and not snapshot.trust.source_assessment.critical_fields_present:
+            return decision(State.INSUFFICIENT_INFORMATION, "MISSING_EVIDENCE")
+        if snapshot.trust.source_assessment is not None and snapshot.trust.source_assessment.status.value in {"LOW", "INSUFFICIENT"}:
+            return decision(State.INSUFFICIENT_INFORMATION, "TRUST_LIMITATION")
+        if propensity is not None and not propensity.in_model_population:
+            return decision(State.NOT_APPLICABLE, "ALREADY_ADOPTED")
+
         # Existing adoption is enough to stop, after consent and safety checks.
-        fields = ("marketing_consent", rule.adoption_field)
+        fields = (
+            *(("marketing_consent",) if rule.require_marketing_consent else ()),
+            *((rule.adoption_field,) if rule.adoption_field else ()),
+        )
         missing = self._unusable(snapshot, fields)
         if missing:
             code, affected = missing
             return decision(State.INSUFFICIENT_INFORMATION, code, affected)
-        if snapshot.features[rule.adoption_field].value:
+        if rule.adoption_field and snapshot.features[rule.adoption_field].value:
             return decision(State.NOT_APPLICABLE, "ALREADY_ADOPTED", (rule.adoption_field,))
 
         missing = self._unusable(snapshot, rule.required_fields)
@@ -213,7 +258,12 @@ class RecommendationService:
             return decision(State.DO_NOT_RECOMMEND, "INTEREST_NOT_SUPPORTED", (rule.interest_field,))
         if propensity is None or propensity.probability is None or not propensity.model_version.strip():
             return decision(State.INSUFFICIENT_INFORMATION, "PROPENSITY_UNAVAILABLE")
-        if propensity.probability < DEMO_PROPENSITY_THRESHOLD:
+        if (snapshot.decision_profile == "trained" and propensity.confidence_validated
+                and propensity.source_result is not None
+                and propensity.source_result.confidence.bucket is not None
+                and propensity.source_result.confidence.bucket.value == "LOW"):
+            return decision(State.INSUFFICIENT_INFORMATION, "CONFIDENCE_BELOW_MINIMUM")
+        if propensity.probability < propensity.decision_threshold:
             return decision(State.DO_NOT_RECOMMEND, "PROPENSITY_BELOW_THRESHOLD")
         return State.RECOMMEND, (
             self._evidence(snapshot, "RELEVANCE_SUPPORTED", rule.required_fields),

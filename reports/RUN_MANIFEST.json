@@ -1,0 +1,327 @@
+{
+  "seeds": {
+    "data": 42,
+    "split": 43,
+    "model": 44,
+    "perturbation": 45
+  },
+  "timeline": {
+    "feature_cutoff": "2026-06-30",
+    "outcome_window_end": "2026-09-28",
+    "prediction_timestamp": "2026-10-10T09:00:00"
+  },
+  "generator": {
+    "config": {
+      "adoption_start": "2025-07-01",
+      "calibration_cutoff": "2026-06-30",
+      "coefficients": {
+        "EV_FINANCE": {
+          "digital": 0.1,
+          "ev_owner": -1.5,
+          "fuel_intensity": 0.4,
+          "green": 0.5,
+          "latent_pref": 0.85,
+          "mileage": 0.65,
+          "no_ice_car": -2.6,
+          "vehicle_age": 0.4,
+          "vehicle_finance": 0.55,
+          "wealth": 0.3
+        },
+        "GREEN_HOME": {
+          "gas_demand": 0.3,
+          "green": 0.45,
+          "home_improvement": 0.75,
+          "house": 0.3,
+          "latent_pref": 0.85,
+          "mortgage": 0.45,
+          "owner": 1.6,
+          "wealth": 0.25
+        },
+        "PAPERLESS_BANKING": {
+          "age": -0.25,
+          "digital": 1.05,
+          "green": 0.3,
+          "latent_pref": 0.75,
+          "wealth": 0.1
+        },
+        "SOLAR_FINANCE": {
+          "elec_demand": 0.65,
+          "green": 0.55,
+          "home_improvement": 0.2,
+          "house": 0.9,
+          "latent_pref": 0.85,
+          "mortgage": 0.3,
+          "owner": 2.0,
+          "sunny_region": 0.3,
+          "wealth": 0.35
+        }
+      },
+      "energy_anchor_sha256": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+      "history_end": "2026-09-28",
+      "history_start": "2025-01-01",
+      "include_personas": true,
+      "interactions": {
+        "EV_FINANCE": {
+          "mileage*green": 0.25,
+          "vehicle_age*vehicle_finance": 0.25
+        },
+        "GREEN_HOME": {
+          "home_improvement*green": 0.25,
+          "owner*home_improvement": 0.3
+        },
+        "PAPERLESS_BANKING": {
+          "digital*green": 0.2
+        },
+        "SOLAR_FINANCE": {
+          "elec_demand*green": 0.25,
+          "owner*wealth": 0.15
+        }
+      },
+      "late_joiner_rate": 0.03,
+      "merchant_shift": {
+        "adversarial_rate": 0.0002,
+        "description_noise": 1.0,
+        "include_shift_only": false,
+        "rank_permutation_seed": null,
+        "shift_only_share": 0.0,
+        "variants_per_merchant": 40,
+        "zipf_exponent": 1.1
+      },
+      "missingness": {
+        "digital_absent": 0.02,
+        "energy_absent": 0.08,
+        "energy_gap_month": 0.2,
+        "energy_gappy": 0.12,
+        "fuel_capture_zero": 0.08,
+        "has_solar_pv": 0.04,
+        "heating_type": 0.03,
+        "home_owner": 0.08,
+        "mileage_estimated": 0.2,
+        "mileage_missing": 0.1,
+        "property_type": 0.03,
+        "region": 0.015,
+        "sustainability_preference": 0.1,
+        "vehicle_age_missing": 0.03,
+        "vehicle_record_missing": 0.05,
+        "vehicle_stale": 0.12
+      },
+      "monthly_noise": 0.35,
+      "n_customers": 4000,
+      "name": "base",
+      "noise_scale": 1.0,
+      "preexisting_rates": {
+        "ev_finance_given_ev": 0.6,
+        "ev_owner": 0.05,
+        "green_home_given_owner": 0.025,
+        "paperless_intercept": -0.2,
+        "solar_finance_given_solar": 0.45,
+        "solar_given_owner_house": 0.05
+      },
+      "seed": 42,
+      "stale_ev_conflict_rate": 0.15,
+      "target_90d_rate": {
+        "EV_FINANCE": 0.065,
+        "GREEN_HOME": 0.08,
+        "PAPERLESS_BANKING": 0.15,
+        "SOLAR_FINANCE": 0.055
+      }
+    },
+    "config_hash": "5b189503ed5002a61e17e2f25cd384774a6d2455c5a218f2f6ffbbf1f4648a93",
+    "file_sha256": {
+      "customer_outcomes.parquet": "41dcf66dd9ecd779ed2c320e2f7cc4b0a006361c46ddcef6a13fb4b24f335315",
+      "customers.parquet": "2e018260e5ae73d6213630f7bc6fa9facb111c2716fd4aab062c85f37f6dc679",
+      "digital_usage.parquet": "5653fb4acbeb392745cefa6d12f76d586335a8b48c2eb112678d1b79e7b26ff2",
+      "energy_usage.parquet": "6b04e6739e11dc96a0bd761b8ee48a342b0b2c4b68efa249bb4e5766bea15c6d",
+      "financial_products.parquet": "92dea03962ebd1a2ef00807c2196ae1099217f7a62d3b5a30b03d6da04719712",
+      "green_product_catalogue.parquet": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+      "merchants.parquet": "33520abe59bb2d339830935e04326a0c32357b4b4d84e4e5f6b9dc88fc3ec39b",
+      "transaction_truth.parquet": "528550173d46d5fffc87e5bb60ba8ad5fa9f9e63c268c431b656daa336a6e75c",
+      "transactions.parquet": "39d52a0955e5e65abd68f598cb95c0f9d52514798ce2cafbbaa8233d00004195",
+      "vehicles.parquet": "acc858b262cac69b6324882647e03ab962df129a17d7e9d2664d63b44d975193"
+    },
+    "public_anchors": {
+      "diagnostic_scope": "Complete calendar-year synthetic observations, including adoption effects and observation noise. Gas includes positive consumers only. Not a real-world predictive validation.",
+      "diagnostic_year": 2025,
+      "energy": {
+        "electricity": {
+          "mean_kwh": 3323,
+          "median_kwh": 2471,
+          "section": "2.2, Chart 7"
+        },
+        "gas": {
+          "mean_kwh": 11359,
+          "median_kwh": 9859,
+          "section": "3.2, Chart 15",
+          "weather_corrected": true
+        },
+        "licence": "Open Government Licence v3.0",
+        "limitations": "Meter aggregates are not individual banking records or evidence of adoption. A fitted lognormal is an approximation to published mean and median, not a reconstruction of meter microdata. Simulated adoption effects, missing months and observation noise change generated totals. Gas source year runs mid-May 2024 to mid-May 2025. GB excludes Northern Ireland.",
+        "population": "Great Britain consuming domestic meters, 2024",
+        "published_updated": "2025-12-19",
+        "publisher": "Department for Energy Security and Net Zero",
+        "retrieved": "2026-10-10",
+        "source_url": "https://www.gov.uk/government/statistics/subnational-electricity-and-gas-consumption-summary-report-2024/subnational-electricity-and-gas-consumption-summary-report-2024--2",
+        "title": "Subnational electricity and gas consumption summary report 2024",
+        "use": "Public aggregate statistics anchor synthetic baseline annual demand marginals. Seasonal profiles, customer associations, observations and adoption labels remain synthetic.",
+        "version": "desnz_gb_domestic_2024_v1"
+      },
+      "energy_anchor_sha256": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+      "energy_marginal_diagnostics": {
+        "electricity": {
+          "n_complete_consumers": 2685,
+          "observed_mean_kwh": 3379.5910986964623,
+          "observed_median_kwh": 2644.8,
+          "reference_mean_kwh": 3323,
+          "reference_median_kwh": 2471
+        },
+        "gas": {
+          "n_complete_consumers": 2376,
+          "observed_mean_kwh": 11438.419023569022,
+          "observed_median_kwh": 10036.4,
+          "reference_mean_kwh": 11359,
+          "reference_median_kwh": 9859
+        }
+      }
+    },
+    "row_counts": {
+      "customer_outcomes": 6879,
+      "customers": 4010,
+      "digital_usage": 80119,
+      "energy_usage": 72752,
+      "financial_products": 13182,
+      "green_product_catalogue": 4,
+      "merchants": 146,
+      "transaction_truth": 874498,
+      "transactions": 874498,
+      "vehicles": 4744
+    }
+  },
+  "split_manifest_sha256": "45197c61dd726cb80e915debaf1ff298685e7166e39a04a7a886b17c160701f9",
+  "feature_version": "feature_v1",
+  "environment": {
+    "python": "3.12.13",
+    "packages": {
+      "numpy": "2.5.3",
+      "pandas": "3.0.6",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "pydantic": "2.14.0",
+      "pyarrow": "23.0.1",
+      "joblib": "1.6.0"
+    }
+  },
+  "artifacts_sha256": {
+    "data/artifacts/confidence/decisions.json": "b4b92e6b80158f5d808e8f8b8637820fd8b21a354780ae86d78c79b0546dfe38",
+    "data/artifacts/confidence/ev_finance.joblib": "cd202d640c9f43ee6687c8872e896f3cf88f9021bb58bfa0ae0bba547e90ab57",
+    "data/artifacts/confidence/green_home.joblib": "77976c355d48d0203b23dfddc5c77b1a122999dbbb0e63d90a6c98a772b55516",
+    "data/artifacts/confidence/solar_finance.joblib": "22f7b8a9c6f357ee5bcf65732687d45dda969ca414fe6da1c474a285ba609a4d",
+    "data/artifacts/demo/C10001.json": "a8579265e91491937a8b9746e59a6cbd7b45c068ba4a5cdf3cc7fa452feec9ab",
+    "data/artifacts/demo/C10002.json": "dc339ef6dfadf859a2be233daafdaca8cb00cebf2396a97980104a86cbd33bc2",
+    "data/artifacts/demo/C10003.json": "2ee8ede027e548c892c31cad42716a4c0a889a60a7f3865dbe9d6148848d6e37",
+    "data/artifacts/demo/C10004.json": "8e758a134add5b42f67276c0125ca38508e10fb0aeaa30c262fe9baa7e5de4eb",
+    "data/artifacts/demo/C10005.json": "4e2f54007edaa807691fdcbc490123a5911827acfe4defb3328a70ecaaba3608",
+    "data/artifacts/demo/C10006.json": "c59b83d3b8be9012d36166891aedefe8e9a34c93045878cb07756282c547b1f3",
+    "data/artifacts/demo/C10007.json": "d875d2727a6c59d3ce2648fd62f6e2b14c4901c6699df11af9d3c4d94ceb061f",
+    "data/artifacts/demo/C10008.json": "8f46bed055ab33e9f19a7305f67c001338101537939cfb6abf937ee94c012ec0",
+    "data/artifacts/demo/C10009.json": "b92d2cd16ddc2b9011ba39ca06de9e0a7ce90525959827f92ffb3c9168c65aeb",
+    "data/artifacts/demo/C10010.json": "4baaf11761c4dd117b12cf36eb4828083fef8b024cbb79df8b803b180f4e384a",
+    "data/artifacts/demo/index.json": "45b3ce0504e92913ccd514281b07bcd77777aa1fc7d2282e19a05089d10b4374",
+    "data/artifacts/greenpath.db": "95a3d4ccf5e270921cc6b0b2c08b81bd62ddc53ccfdfdb0902930d39bd648d9b",
+    "data/artifacts/models/ev_finance/bundle.joblib": "d62564b42a7f68dc88beed09b3b6d7de0496ce4a957adceb02d603141ee083aa",
+    "data/artifacts/models/ev_finance/manifest.json": "28a4016a42c83475f1afaafa3dd8ca646cd045c12db05e503f2b5dfde6007ec9",
+    "data/artifacts/models/ev_finance_proxy/bundle.joblib": "a186810c46076133b3fbef26042389ee25b806c5bc32d83c9a484b6244898e6d",
+    "data/artifacts/models/ev_finance_proxy/manifest.json": "0b5fa5ee448d676fdcdf526c6807e0c80077b70ff019c577fcf660dfc73c89bc",
+    "data/artifacts/models/green_home/bundle.joblib": "d345ebad00f18263d0c7dae963979e331d705fd1bd96b526ab2d789e71d2b6fe",
+    "data/artifacts/models/green_home/manifest.json": "62badd62fd28dbaa3c5a16d92ec17bb0721e57d758b062cef1ab4fd748013dec",
+    "data/artifacts/models/green_home_proxy/bundle.joblib": "9e668b9f632326cfcfbdd5d9765d0e8c61ec0198827b61c70fc1cb8124e66ab8",
+    "data/artifacts/models/green_home_proxy/manifest.json": "2c7344f04ea968423ff46ae7aebf1965d25a497098266843a05c53d81f173dd3",
+    "data/artifacts/models/manifest.json": "f3d46fd9d63a57e80582026d6d3e455a2133647e361a7eb52c6880bc36406cb4",
+    "data/artifacts/models/paperless_banking/bundle.joblib": "0aafab2275a3a6acd45d563f8e0350396473fbaeb2e2e397eaef1e4c13ad9f8a",
+    "data/artifacts/models/paperless_banking/manifest.json": "8d4b0b6e50647a63a485ba11c416b8d0f251425e1742236902ebb4b5aefc8116",
+    "data/artifacts/models/paperless_banking_proxy/bundle.joblib": "477d4b83b15036c70d9f194ffc51a1526023effa984b31747912e1d720a90c96",
+    "data/artifacts/models/paperless_banking_proxy/manifest.json": "bf3e7c15f2239c28ee62e22b03e1223ec36ae30269ee9d62e076f67874b36526",
+    "data/artifacts/models/solar_finance/bundle.joblib": "78ee9b7ee60754f6fa245d54e9a9a8c1cacd8e2b3944a9079a592e7f09324e40",
+    "data/artifacts/models/solar_finance/manifest.json": "5014f0ff02e4c6b156a599d3b2e0638876fcf0a95c47e5b84e550df80943be2a",
+    "data/artifacts/models/solar_finance_proxy/bundle.joblib": "f75af2e8c637a1589c58f0e23e7a36d7a0be451eb3344a5aa827575610d94054",
+    "data/artifacts/models/solar_finance_proxy/manifest.json": "621c9ebe0e2650030e009d9320952ab1526c7c452bc20f5922afa7280bb7ab43",
+    "data/artifacts/ood/ev_finance.joblib": "9a14354aea1916bc6e343c9a811d1bf59bed5a415e9c500fcbb156ff034a619b",
+    "data/artifacts/ood/green_home.joblib": "b6fc629faeaec148315f89c14ab0702233002e2f4fd0574486c6cfaf8394fc5b",
+    "data/artifacts/ood/paperless_banking.joblib": "77089ffebe6d2b877c66afb5957599afe4f5bebe3899e30007c427249696cc0f",
+    "data/artifacts/ood/solar_finance.joblib": "2a799f9572b3621e996eff4ff22dda2ea3618bfc9890ed2a67abab08d3a65e22",
+    "data/artifacts/portfolio_scores.parquet": "4efa7b4f1c2dc60e25525ac498bda878c300324d3362641a89e1764300013c77",
+    "data/artifacts/transaction_categoriser.joblib": "8e70f14ceb531b8319d1b6222d37f85e4cd4a9b09f2d479befe6f40407b2b83a"
+  },
+  "inputs_sha256": {
+    "data/synthetic/customer_outcomes.parquet": "41dcf66dd9ecd779ed2c320e2f7cc4b0a006361c46ddcef6a13fb4b24f335315",
+    "data/synthetic/customers.parquet": "2e018260e5ae73d6213630f7bc6fa9facb111c2716fd4aab062c85f37f6dc679",
+    "data/synthetic/digital_usage.parquet": "5653fb4acbeb392745cefa6d12f76d586335a8b48c2eb112678d1b79e7b26ff2",
+    "data/synthetic/energy_usage.parquet": "6b04e6739e11dc96a0bd761b8ee48a342b0b2c4b68efa249bb4e5766bea15c6d",
+    "data/synthetic/financial_products.parquet": "92dea03962ebd1a2ef00807c2196ae1099217f7a62d3b5a30b03d6da04719712",
+    "data/synthetic/generator_config.json": "8069bbc329587fe05ad7aebd113402aac4e0e9e0e5c16b824680c29a91c17bf0",
+    "data/synthetic/green_product_catalogue.parquet": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+    "data/synthetic/merchants.parquet": "33520abe59bb2d339830935e04326a0c32357b4b4d84e4e5f6b9dc88fc3ec39b",
+    "data/synthetic/transaction_truth.parquet": "528550173d46d5fffc87e5bb60ba8ad5fa9f9e63c268c431b656daa336a6e75c",
+    "data/synthetic/transactions.parquet": "39d52a0955e5e65abd68f598cb95c0f9d52514798ce2cafbbaa8233d00004195",
+    "data/synthetic/vehicles.parquet": "acc858b262cac69b6324882647e03ab962df129a17d7e9d2664d63b44d975193",
+    "data/synthetic_perturbed/customer_outcomes.parquet": "b480fde26cb976a264ab3a6158e13d5eed503df56638dd271491d775d07af946",
+    "data/synthetic_perturbed/customers.parquet": "fd83ea50921eb664949c480d24bb66cb4590896ed850dbf146ba634893c1d638",
+    "data/synthetic_perturbed/digital_usage.parquet": "f49c78eff0d9654e28f59167127c9b5fedb7ae30c2a60654d2f1a88a8cc8283a",
+    "data/synthetic_perturbed/energy_usage.parquet": "291bec1e6224fe96a791c993f6f05366fb8245eeced1c41984fc4e16796025da",
+    "data/synthetic_perturbed/financial_products.parquet": "33f11450f90bc93217b5ec878441b733dd8a3710c402222ebcafad5f74c19c09",
+    "data/synthetic_perturbed/generator_config.json": "c273d4e6f8abd8fc080f423868d2d3e4bd87a737c78a4a4830a2446915d1c311",
+    "data/synthetic_perturbed/green_product_catalogue.parquet": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+    "data/synthetic_perturbed/merchants.parquet": "33520abe59bb2d339830935e04326a0c32357b4b4d84e4e5f6b9dc88fc3ec39b",
+    "data/synthetic_perturbed/transaction_truth.parquet": "161ac6e9d5324a302e03d488f23bf151badfba45360f9bf8b70c6527765eae30",
+    "data/synthetic_perturbed/transactions.parquet": "05c4d2859b055168284220638f87ff108fa4edb42274dc00fc346f8d312f0f08",
+    "data/synthetic_perturbed/vehicles.parquet": "8cc3596b74bf586ee58ed7de7586d9e89e61612da489ab18e770caf275d16be2"
+  },
+  "processed_sha256": {
+    "data/processed/customer360_2026-01-31.parquet": "de4763fa96e56add8bd1a69bf2a5427c43998133e2cf21e6dc9de5428f098b89",
+    "data/processed/customer360_2026-02-28.parquet": "aa306fb17abaf3d7ea192b1dd25981239fac6ec702dc2d4e2114c99978d38b2d",
+    "data/processed/customer360_2026-03-31.parquet": "31694a2bc4123c8e0410c406b53dbaf353c18f44abd4c31ff2f6fab5b99f1faa",
+    "data/processed/customer360_2026-04-30.parquet": "235a592461640fac6ce5da927f788eeebab70bd698305c398bb855244fe5c1c2",
+    "data/processed/customer360_2026-05-31.parquet": "afe9196eb8a482421e0ef91b6b8ef3bf93901e45055f819ad06ed6a092091a4c",
+    "data/processed/customer360_2026-06-30.parquet": "ff3d514e9d7248f59927ef83ada4a8105a180b4add0bd9789cd0ecaee3be7717",
+    "data/processed/labels.parquet": "1bdd8755f2b361b583ea4e5892d79fb471f7482cb9d5f156f10d981aaf68c315",
+    "data/processed/split_manifest.csv": "45197c61dd726cb80e915debaf1ff298685e7166e39a04a7a886b17c160701f9",
+    "data/processed/split_manifest.csv.sha256": "9a726e8a1b33e3cd9b008610b859dd768d120eecf8505a9c1682b8061aa08c10",
+    "data/processed/transactions_categorised.parquet": "281dfa976519600e68a84f6ce472b08e4ac7812f042bdc519b04c6229013b8fd"
+  },
+  "outputs_sha256": {
+    "reports/CONFIDENCE_VALIDATION.md": "87b08ebe04e835b80c053f48153c64dfa81e7372b91d2e0d8b121182a962a1b4",
+    "reports/TRANSACTION_CATEGORISATION.md": "ad8c32f0c93848c7c8c6b651715b5d08955d0d04af105e98227bde24a92cde25",
+    "reports/confidence_validation.json": "1f47935fa595c314f9069bfc86ca4be29e7f34dcf5a828aabb6872a3e6896d8a",
+    "reports/explanation_evaluation.json": "11c396ea6d8be5b393e2a19f30e0f1cb31c9844fb0e8e2ee8acfcae2e3ca4ecb",
+    "reports/feature_drift.json": "a51f03768b4fc48875266ec83c497f10ba77fca1e9404f56a16e2252e3f344cc",
+    "reports/leakage_checks.json": "8cdb2c32459caba6e15e1160c90a4ebda6f1e9cd2c630bd28ef034743daae091",
+    "reports/ml_evaluation.json": "a6f5b3c0a6e271a643603693bff78ac36ccbe28b8478bc526d65a443b4c94241",
+    "reports/pipeline_timings.json": "b4aa188721114c490624e3f4cb9657b5ac1c58b8ead1eb90e7e60f6fe415a02b",
+    "reports/plots/ev_finance_calibration.svg": "6db5d0fd7da8e92d9eeee6b39942662aa57f6416cfe096823293422358bca814",
+    "reports/plots/ev_finance_precision_recall.svg": "b4e5153d3476736d9ae944b851f980e66c0a124413b25e3a26514bb6f334e762",
+    "reports/plots/ev_finance_roc.svg": "57cc0433ca30212643bdf8267ed7d4ea659d899b1bab064419eab34a3eeef12f",
+    "reports/plots/green_home_calibration.svg": "c8dec4553312aa876fc08e3e37abc6e1bd788dddead974e94fae2cab899e78dd",
+    "reports/plots/green_home_precision_recall.svg": "fc952c8ee2cc4a6c8996dadc9b6fa0c0639527c48ea2f8ba528c0cd189347c13",
+    "reports/plots/green_home_roc.svg": "015e1d989694444af9debc41bec14151f18c8217fc4accba1198c861fa7c1d06",
+    "reports/plots/paperless_banking_calibration.svg": "1566c3cbd8790bdde9f37724ab5293961a7964868ef5f2536f3c8bdb78f3cb11",
+    "reports/plots/paperless_banking_precision_recall.svg": "c5cf0accdf1ce2b4413ece4b0c8293e1ba120d981962fa352c106a061df36324",
+    "reports/plots/paperless_banking_roc.svg": "3db392a4346fe23ebec37a1b0b5c7952c66757e455096c260ac789c825435f76",
+    "reports/plots/solar_finance_calibration.svg": "6ae54c3d4b91b327ac8fe3a53c6b5534a039587ac831c37503ae52b47ca32ebb",
+    "reports/plots/solar_finance_precision_recall.svg": "5f61b2b089581d591ef078f7c0328bfdabb2a452026b80f42b568375f099c3d9",
+    "reports/plots/solar_finance_roc.svg": "850a91010e175bce57839a1ad0969a74bd8788c5cee19c218ee585a1577fd132",
+    "reports/predictions/test_predictions.csv": "39fb34bae2b21f9e336a5c53fc905c26e8349171add20fbd8976acb260f3e2ef",
+    "reports/scenario_evaluation.json": "3ceabee11bd31849d2c57b55c15b9bc2a1561025de37fe635ab0d940697a4130",
+    "reports/transaction_eval.json": "e7794389172287d906c713b503ef718dc356784415c0aefc682e7f44cb49c9ea",
+    "DATA_CARD.md": "3cdf4781baa227071c73fbc7166f6c50b2d5b15e7068a7d9987645a7966c6704",
+    "EVALUATION_REPORT_AGENT_A.md": "94892d488a95e193c080c4b177286420fac54f1081faf50d4423cbef6eab9dd6",
+    "LEAKAGE_AUDIT.md": "b6021c8f56fffe98df12cbc188d6f211d78c636b8ab73367371d9336cfade60e",
+    "MODEL_CARD_EV.md": "6530fcc81a1bb4185bec6d9fa57cc385abae97e4ebd2c4d3623ea168d8bd2f53",
+    "MODEL_CARD_GREEN_HOME.md": "6f58f12f4468cff8f93cd443e15a277617f837b8067f08458a83d2f61974cf67",
+    "MODEL_CARD_PAPERLESS.md": "9f8b64ce1e4e9801574fcb4b7c90594997f91f6119c0d650b1ad226e1dd07b6c",
+    "MODEL_CARD_SOLAR.md": "719ac3f236f5ec75cedbf8006d0daf4f974fecb3391e4d2beaf9054a7a3a79c5"
+  },
+  "factor_files_sha256": {
+    "data/factors/ghg-conversion-factors-2025-flat-format.xlsx": "8bfdb45b81ec4a88e3bdf4584637330f62e6bd09ce1940e654c5d7b7f736de94",
+    "greenpath/extensions/uk_factors_2025.json": "d4fcc4996c54a286a5c66c6c952f69894392a46f682a3eb206c6f9562d03d2cd",
+    "greenpath/data_generation/public_energy_anchor.json": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb"
+  }
+}

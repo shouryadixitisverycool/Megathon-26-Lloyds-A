@@ -1,0 +1,108 @@
+{
+  "contract_version": "1.0.0",
+  "recommendation_id": "REC-C10005-GP03-2026-06-30",
+  "customer_id": "C10005",
+  "opportunity_id": "SOLAR_FINANCE",
+  "product_id": "GP03",
+  "propensity": 0.38,
+  "propensity_model_version": "solar_propensity_v1",
+  "calibration_version": "solar_platt_v1",
+  "confidence": {
+    "status": "SUPPRESSED",
+    "value": null,
+    "bucket": null,
+    "method_version": "conf_meta_v2",
+    "limitation": "Suppressed: critical field home ownership is missing."
+  },
+  "trust": {
+    "contract_version": "1.0.0",
+    "customer_id": "C10005",
+    "product": "SOLAR_FINANCE",
+    "score": 0.44,
+    "status": "INSUFFICIENT",
+    "completeness": 0.31,
+    "freshness": 0.7,
+    "cross_source_consistency": 1.0,
+    "critical_fields_present": false,
+    "ood_score": 0.12,
+    "issues": [
+      {
+        "code": "HOME_OWNERSHIP_UNKNOWN",
+        "category": "CRITICAL_FIELD",
+        "severity": "HIGH",
+        "message": "Home ownership is unknown, so Solar Finance cannot be assessed.",
+        "fields": [
+          "home.home_owner"
+        ]
+      },
+      {
+        "code": "SHORT_TRANSACTION_HISTORY",
+        "category": "COMPLETENESS",
+        "severity": "MEDIUM",
+        "message": "Only 2 months of transaction history are available up to the cutoff.",
+        "fields": [
+          "data_quality.transaction_months_observed"
+        ]
+      },
+      {
+        "code": "ENERGY_RECORDS_INCOMPLETE",
+        "category": "COMPLETENESS",
+        "severity": "LOW",
+        "message": "Energy usage covers 3 of the last 12 months.",
+        "fields": [
+          "energy.energy_months_present"
+        ]
+      }
+    ],
+    "method_version": "trust_v1",
+    "assessed_at": "2026-10-10T09:00:00"
+  },
+  "recommendation_status": "INSUFFICIENT_INFORMATION",
+  "guardrail_codes": [
+    "HOME_OWNERSHIP_UNKNOWN"
+  ],
+  "conflict_codes": [],
+  "exclusions": [],
+  "priority": null,
+  "reason_codes": [],
+  "evidence": {},
+  "impact": {
+    "contract_version": "1.0.0",
+    "customer_id": "C10005",
+    "product": "SOLAR_FINANCE",
+    "status": "UNAVAILABLE",
+    "metric": null,
+    "unit": null,
+    "baseline": null,
+    "scenario": null,
+    "estimated_reduction": null,
+    "secondary_metrics": [],
+    "methodology_id": "SOLAR_PV_GENERATION_V1",
+    "method_version": "solar_impact_v1",
+    "factor_ids": [],
+    "factor_source": null,
+    "factor_version": null,
+    "boundary": null,
+    "grid_scenario": null,
+    "assumptions": [],
+    "unavailable_reason": "INSUFFICIENT_SOLAR_GENERATION_INPUTS",
+    "data_cutoff": "2026-06-30",
+    "calculation_timestamp": "2026-10-10T09:00:00",
+    "carbon_engine_version": "carbon_v2"
+  },
+  "eligibility": {
+    "status": "NOT_ASSESSED",
+    "message": "Propensity does not establish financial eligibility."
+  },
+  "data_cutoff": "2026-06-30",
+  "outcome_window_end": "2026-09-28",
+  "prediction_timestamp": "2026-10-10T09:00:00",
+  "feature_version": "feature_v1",
+  "confidence_method_version": "conf_meta_v2",
+  "trust_method_version": "trust_v1",
+  "carbon_engine_version": "carbon_v2",
+  "emission_factor_version": "PINNED_AT_BUILD",
+  "recommendation_rule_version": "rules_v1",
+  "prompt_version": "prompt_v4",
+  "llm_model_version": "PINNED_AT_BUILD"
+}

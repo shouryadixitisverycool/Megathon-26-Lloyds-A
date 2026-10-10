@@ -22,17 +22,21 @@ def bullets(items):
         st.markdown(f"- {item}")
 
 
-def customer_view(customers, load):
+def customer_view(customers, load, save=None, provider_mode=None):
     lookup = {item["customer_id"]: item for item in customers}
     with st.sidebar:
         st.caption("CUSTOMER FIELD NOTES")
-        if "GP-002" in lookup:
+        abstention_id = "C10004" if "C10004" in lookup else "GP-002" if "GP-002" in lookup else None
+        if abstention_id:
             def abstention():
-                st.session_state["customer_id"] = "GP-002"
+                st.session_state["customer_id"] = abstention_id
             st.button("See responsible abstention", on_click=abstention, key="abstention", width="stretch")
         customer_id = safe_select("Customer", list(lookup), "customer_id",
                                   format_func=lambda key: f"{key} · {lookup[key]['display_name']}")
-        st.caption("GP-001 supported · GP-002 missing evidence · GP-003 conflict · GP-004 adopted · GP-005 suppressed · GP-006 low propensity")
+        if "C10001" in lookup:
+            st.caption("C10001 EV candidate · C10002 solar candidate · C10004 sparse evidence · C10005 conflicting records · C10006 already green")
+        elif "GP-001" in lookup:
+            st.caption("GP-001 supported · GP-002 missing evidence · GP-003 conflict · GP-004 adopted · GP-005 suppressed · GP-006 low propensity")
     customer = load(f"/customers/{customer_id}")
     recommendations = load(f"/customers/{customer_id}/recommendations")["recommendations"]
     st.header(customer["display_name"], icon=":material/person:")
@@ -58,7 +62,8 @@ def customer_view(customers, load):
                 st.badge(label, color=color)
                 st.caption(row["state"])
                 propensity = row.get("propensity") or {}
-                st.metric("Propensity · synthetic fixture", percentage(propensity.get("probability")))
+                label = "Calibrated propensity · synthetic model" if provider_mode in {"artifacts", "trained"} else "Propensity · synthetic demo"
+                st.metric(label, percentage(propensity.get("probability")))
                 confidence = percentage(propensity.get("confidence")) if propensity.get("confidence_validated") is True else "Unavailable"
                 st.caption(f"Model confidence: {confidence}. Validation is required before display.")
                 st.markdown(f"Potential impact: **{impact_label(row['impact'])}**")
@@ -102,6 +107,12 @@ def customer_view(customers, load):
         st.text(f"Cutoff: {row['feature_cutoff']}\nDecision timestamp: {row['timestamp']}\nRules: {row['rules_version']}\nModel: {propensity.get('model_version', 'Unavailable')}\nCalibration: {propensity.get('calibration_version') or 'Unavailable'}\nTrust: {row['trust'].get('version', 'Unavailable')}\nContract: {row['contract_version']}")
         bullets(row.get("exclusions", []))
     impact_details(row["impact"])
+    if save:
+        from greenpath.app.workspaces import journey_tools, scenario_tools
+        if st.toggle("Manage contact preferences and record a response", key="journey_open"):
+            journey_tools(customer_id, product, load, save)
+        if st.toggle("Explore a what-if scenario", key="scenario_open"):
+            scenario_tools(customer_id, product, load, save)
 
 
 def impact_details(impact):

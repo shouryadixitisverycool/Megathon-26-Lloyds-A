@@ -1,0 +1,65 @@
+{
+  "contract_version": "1.0.0",
+  "recommendation_id": "REC-C10007-GP02-2026-06-30",
+  "customer_id": "C10007",
+  "opportunity_id": "GREEN_HOME",
+  "product_id": "GP02",
+  "propensity": 0.06,
+  "propensity_model_version": "green_home_propensity_v1",
+  "calibration_version": "green_home_platt_v1",
+  "confidence": {
+    "status": "VALIDATED",
+    "value": 0.72,
+    "bucket": "MEDIUM",
+    "method_version": "conf_meta_v2",
+    "limitation": null
+  },
+  "trust": {
+    "contract_version": "1.0.0",
+    "customer_id": "C10007",
+    "product": "GREEN_HOME",
+    "score": 0.71,
+    "status": "ADEQUATE",
+    "completeness": 0.84,
+    "freshness": 0.8,
+    "cross_source_consistency": 0.95,
+    "critical_fields_present": true,
+    "ood_score": 0.15,
+    "issues": [
+      {
+        "code": "ENERGY_RECORDS_INCOMPLETE",
+        "category": "COMPLETENESS",
+        "severity": "LOW",
+        "message": "Energy usage covers 9 of the last 12 months.",
+        "fields": [
+          "energy.energy_months_present"
+        ]
+      }
+    ],
+    "method_version": "trust_v1",
+    "assessed_at": "2026-10-10T09:00:00"
+  },
+  "recommendation_status": "DO_NOT_RECOMMEND",
+  "guardrail_codes": [],
+  "conflict_codes": [],
+  "exclusions": [],
+  "priority": null,
+  "reason_codes": [],
+  "evidence": {},
+  "impact": null,
+  "eligibility": {
+    "status": "NOT_ASSESSED",
+    "message": "Propensity does not establish financial eligibility."
+  },
+  "data_cutoff": "2026-06-30",
+  "outcome_window_end": "2026-09-28",
+  "prediction_timestamp": "2026-10-10T09:00:00",
+  "feature_version": "feature_v1",
+  "confidence_method_version": "conf_meta_v2",
+  "trust_method_version": "trust_v1",
+  "carbon_engine_version": "carbon_v2",
+  "emission_factor_version": "PINNED_AT_BUILD",
+  "recommendation_rule_version": "rules_v1",
+  "prompt_version": "prompt_v4",
+  "llm_model_version": "PINNED_AT_BUILD"
+}

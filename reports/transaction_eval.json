@@ -1,0 +1,976 @@
+{
+  "version": "txn_cat_v1",
+  "seed": 43,
+  "rows": {
+    "available": 874498,
+    "used": 300000,
+    "sampled": true,
+    "max_rows": 300000
+  },
+  "split": {
+    "method": "GroupShuffleSplit on merchant_id; seeded row holdout of training merchants for known-merchant test",
+    "unseen_merchant_fraction": 0.3,
+    "known_holdout_fraction": 0.2,
+    "merchants_total": 127,
+    "merchants_train": 88,
+    "merchants_unseen": 39,
+    "rows_fit": 172675,
+    "rows_known_holdout": 43169,
+    "rows_unseen": 84156,
+    "merchants_per_category": {
+      "train": {
+        "FUEL": 5,
+        "ELECTRICITY": 6,
+        "GAS": 7,
+        "PUBLIC_TRANSPORT": 14,
+        "HOME_IMPROVEMENT": 12,
+        "AUTOMOTIVE": 9,
+        "UTILITIES": 10,
+        "OTHER": 25
+      },
+      "unseen": {
+        "FUEL": 11,
+        "ELECTRICITY": 2,
+        "GAS": 0,
+        "PUBLIC_TRANSPORT": 3,
+        "HOME_IMPROVEMENT": 3,
+        "AUTOMOTIVE": 7,
+        "UTILITIES": 4,
+        "OTHER": 9
+      }
+    }
+  },
+  "rules": {
+    "min_rule_count": 20,
+    "rule_purity": 0.98,
+    "brand_dictionary_keys": 844,
+    "boundary_rules": [
+      {
+        "name": "fuel_marker",
+        "category": "FUEL",
+        "description": "PFS, PETROL or UNLEADED token anywhere in the text (e.g. 'TESCO PFS', 'SHELL PETROL')."
+      },
+      {
+        "name": "automotive_service",
+        "category": "AUTOMOTIVE",
+        "description": "TYRES, TYRE, MOT, AUTOCENTRE, AUTOCARE, or CAR SERVICE / CAR SERVICING / CAR WASH / CAR REPAIR / AUTO CENTRE phrases (e.g. 'KWIK FIT TYRES')."
+      },
+      {
+        "name": "dual_fuel",
+        "category": "UTILITIES",
+        "description": "Electricity and gas markers both present (dual-fuel supplier)."
+      },
+      {
+        "name": "electricity_only",
+        "category": "ELECTRICITY",
+        "description": "ELECTRICITY / ELECTRIC / ELEC with no gas marker and no non-supply word (EV charging, electric bikes, appliances)."
+      },
+      {
+        "name": "gas_only",
+        "category": "GAS",
+        "description": "GAS with no electricity marker (e.g. 'CADENT GAS')."
+      },
+      {
+        "name": "bundled_utility",
+        "category": "UTILITIES",
+        "description": "ENERGY / UTILITIES / UTILITY / WATER, or the phrase DUAL FUEL, with no fuel-specific evidence (e.g. 'OCTOPUS ENERGY')."
+      }
+    ]
+  },
+  "labels": [
+    "FUEL",
+    "ELECTRICITY",
+    "GAS",
+    "PUBLIC_TRANSPORT",
+    "HOME_IMPROVEMENT",
+    "AUTOMOTIVE",
+    "UTILITIES",
+    "OTHER"
+  ],
+  "models": {
+    "hybrid": {
+      "unseen_merchants": {
+        "rows": 84156,
+        "accuracy": 0.561504824373782,
+        "macro_f1": 0.5289749821661901,
+        "weighted_f1": 0.5108990431261256,
+        "per_category": {
+          "FUEL": {
+            "precision": 0.9779808890735355,
+            "recall": 0.1345065996228787,
+            "f1": 0.23648784408278078,
+            "support": 17501
+          },
+          "ELECTRICITY": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2173
+          },
+          "GAS": {
+            "precision": null,
+            "recall": null,
+            "f1": null,
+            "support": 0
+          },
+          "PUBLIC_TRANSPORT": {
+            "precision": 0.7050791595550585,
+            "recall": 0.7406491499227202,
+            "f1": 0.7224265814388229,
+            "support": 16175
+          },
+          "HOME_IMPROVEMENT": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 2795
+          },
+          "AUTOMOTIVE": {
+            "precision": 0.9315589353612167,
+            "recall": 0.1959303358805758,
+            "f1": 0.3237647749798106,
+            "support": 11254
+          },
+          "UTILITIES": {
+            "precision": 0.7820039738858927,
+            "recall": 1.0,
+            "f1": 0.8776680471487734,
+            "support": 8265
+          },
+          "OTHER": {
+            "precision": 0.41581904683783116,
+            "recall": 0.7800946408648483,
+            "f1": 0.5424776275131425,
+            "support": 25993
+          }
+        },
+        "confusion_matrix": [
+          [
+            2354,
+            0,
+            0,
+            152,
+            454,
+            162,
+            0,
+            14379
+          ],
+          [
+            0,
+            2173,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            11980,
+            0,
+            0,
+            0,
+            4195
+          ],
+          [
+            0,
+            0,
+            0,
+            1684,
+            0,
+            0,
+            0,
+            1111
+          ],
+          [
+            53,
+            0,
+            0,
+            148,
+            19,
+            2205,
+            27,
+            8802
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            8265,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            3027,
+            412,
+            0,
+            2277,
+            20277
+          ]
+        ],
+        "rule_coverage": 0.15303721659774705,
+        "rule_accuracy": 1.0,
+        "model_accuracy": 0.482273384121105,
+        "method_counts": {
+          "RULE": 12879,
+          "MODEL": 71277
+        }
+      },
+      "known_merchants": {
+        "rows": 43169,
+        "accuracy": 0.9954133753387848,
+        "macro_f1": 0.9924071156776906,
+        "weighted_f1": 0.9953856775527489,
+        "per_category": {
+          "FUEL": {
+            "precision": 1.0,
+            "recall": 0.987460815047022,
+            "f1": 0.9936908517350158,
+            "support": 957
+          },
+          "ELECTRICITY": {
+            "precision": 1.0,
+            "recall": 0.9373665480427046,
+            "f1": 0.967670830271859,
+            "support": 2810
+          },
+          "GAS": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2289
+          },
+          "PUBLIC_TRANSPORT": {
+            "precision": 1.0,
+            "recall": 0.9981877491844872,
+            "f1": 0.9990930527843279,
+            "support": 5518
+          },
+          "HOME_IMPROVEMENT": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 1988
+          },
+          "AUTOMOTIVE": {
+            "precision": 0.9963503649635036,
+            "recall": 1.0,
+            "f1": 0.9981718464351006,
+            "support": 2730
+          },
+          "UTILITIES": {
+            "precision": 0.9625133120340789,
+            "recall": 1.0,
+            "f1": 0.980898632515737,
+            "support": 4519
+          },
+          "OTHER": {
+            "precision": 0.9994635672776039,
+            "recall": 1.0,
+            "f1": 0.9997317116794849,
+            "support": 22358
+          }
+        },
+        "confusion_matrix": [
+          [
+            945,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            12
+          ],
+          [
+            0,
+            2634,
+            0,
+            0,
+            0,
+            0,
+            176,
+            0
+          ],
+          [
+            0,
+            0,
+            2289,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            5508,
+            0,
+            10,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1988,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2730,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            4519,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            22358
+          ]
+        ],
+        "rule_coverage": 0.9693993374875489,
+        "rule_accuracy": 0.9957943031925062,
+        "model_accuracy": 0.9833459500378501,
+        "method_counts": {
+          "RULE": 41848,
+          "MODEL": 1321
+        }
+      }
+    },
+    "model_only_normalised": {
+      "unseen_merchants": {
+        "rows": 84156,
+        "accuracy": 0.5320119777555967,
+        "macro_f1": 0.46413902538197993,
+        "weighted_f1": 0.47083022302053523,
+        "per_category": {
+          "FUEL": {
+            "precision": 0.9779808890735355,
+            "recall": 0.1345065996228787,
+            "f1": 0.23648784408278078,
+            "support": 17501
+          },
+          "ELECTRICITY": {
+            "precision": 0.6996136509980683,
+            "recall": 1.0,
+            "f1": 0.823261981435878,
+            "support": 2173
+          },
+          "GAS": {
+            "precision": null,
+            "recall": null,
+            "f1": null,
+            "support": 0
+          },
+          "PUBLIC_TRANSPORT": {
+            "precision": 0.7035470988959361,
+            "recall": 0.7406491499227202,
+            "f1": 0.7216215402222691,
+            "support": 16175
+          },
+          "HOME_IMPROVEMENT": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 2795
+          },
+          "AUTOMOTIVE": {
+            "precision": 0.8019559902200489,
+            "recall": 0.0582903856406611,
+            "f1": 0.10868124585818423,
+            "support": 11254
+          },
+          "UTILITIES": {
+            "precision": 0.7608966376089664,
+            "recall": 0.8871143375680581,
+            "f1": 0.8191721132897604,
+            "support": 8265
+          },
+          "OTHER": {
+            "precision": 0.41262056896341215,
+            "recall": 0.7800946408648483,
+            "f1": 0.5397484527849871,
+            "support": 25993
+          }
+        },
+        "confusion_matrix": [
+          [
+            2354,
+            0,
+            0,
+            152,
+            454,
+            162,
+            0,
+            14379
+          ],
+          [
+            0,
+            2173,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            11980,
+            0,
+            0,
+            0,
+            4195
+          ],
+          [
+            0,
+            0,
+            0,
+            1684,
+            0,
+            0,
+            0,
+            1111
+          ],
+          [
+            53,
+            0,
+            0,
+            185,
+            1153,
+            656,
+            27,
+            9180
+          ],
+          [
+            0,
+            933,
+            0,
+            0,
+            0,
+            0,
+            7332,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            3027,
+            412,
+            0,
+            2277,
+            20277
+          ]
+        ],
+        "rule_coverage": 0.0,
+        "rule_accuracy": null,
+        "model_accuracy": 0.5320119777555967,
+        "method_counts": {
+          "RULE": 0,
+          "MODEL": 84156
+        }
+      },
+      "known_merchants": {
+        "rows": 43169,
+        "accuracy": 0.9994903750376427,
+        "macro_f1": 0.9988359328292411,
+        "weighted_f1": 0.9994896421244893,
+        "per_category": {
+          "FUEL": {
+            "precision": 1.0,
+            "recall": 0.987460815047022,
+            "f1": 0.9936908517350158,
+            "support": 957
+          },
+          "ELECTRICITY": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2810
+          },
+          "GAS": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2289
+          },
+          "PUBLIC_TRANSPORT": {
+            "precision": 1.0,
+            "recall": 0.9981877491844872,
+            "f1": 0.9990930527843279,
+            "support": 5518
+          },
+          "HOME_IMPROVEMENT": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 1988
+          },
+          "AUTOMOTIVE": {
+            "precision": 0.9963503649635036,
+            "recall": 1.0,
+            "f1": 0.9981718464351006,
+            "support": 2730
+          },
+          "UTILITIES": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 4519
+          },
+          "OTHER": {
+            "precision": 0.9994635672776039,
+            "recall": 1.0,
+            "f1": 0.9997317116794849,
+            "support": 22358
+          }
+        },
+        "confusion_matrix": [
+          [
+            945,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            12
+          ],
+          [
+            0,
+            2810,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2289,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            5508,
+            0,
+            10,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1988,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2730,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            4519,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            22358
+          ]
+        ],
+        "rule_coverage": 0.0,
+        "rule_accuracy": null,
+        "model_accuracy": 0.9994903750376427,
+        "method_counts": {
+          "RULE": 0,
+          "MODEL": 43169
+        }
+      }
+    },
+    "plain_tfidf_lr_raw": {
+      "unseen_merchants": {
+        "rows": 84156,
+        "accuracy": 0.48926992727791246,
+        "macro_f1": 0.45162806128428673,
+        "weighted_f1": 0.4394441535177562,
+        "per_category": {
+          "FUEL": {
+            "precision": 0.7806938159879336,
+            "recall": 0.14787726415633393,
+            "f1": 0.24865488086087625,
+            "support": 17501
+          },
+          "ELECTRICITY": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2173
+          },
+          "GAS": {
+            "precision": null,
+            "recall": null,
+            "f1": null,
+            "support": 0
+          },
+          "PUBLIC_TRANSPORT": {
+            "precision": 0.7595221996844715,
+            "recall": 0.8333848531684699,
+            "f1": 0.7947410311588008,
+            "support": 16175
+          },
+          "HOME_IMPROVEMENT": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 2795
+          },
+          "AUTOMOTIVE": {
+            "precision": 0.8631578947368421,
+            "recall": 0.0582903856406611,
+            "f1": 0.10920592641917763,
+            "support": 11254
+          },
+          "UTILITIES": {
+            "precision": 0.398185060847671,
+            "recall": 0.9184513006654568,
+            "f1": 0.5555270957590838,
+            "support": 8265
+          },
+          "OTHER": {
+            "precision": 0.3784138926105328,
+            "recall": 0.5650367406609472,
+            "f1": 0.4532674947920685,
+            "support": 25993
+          }
+        },
+        "confusion_matrix": [
+          [
+            2588,
+            0,
+            0,
+            933,
+            269,
+            104,
+            0,
+            13607
+          ],
+          [
+            0,
+            2173,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            13480,
+            699,
+            0,
+            0,
+            1996
+          ],
+          [
+            0,
+            0,
+            0,
+            1837,
+            0,
+            0,
+            0,
+            958
+          ],
+          [
+            53,
+            0,
+            0,
+            348,
+            1121,
+            656,
+            1512,
+            7564
+          ],
+          [
+            674,
+            0,
+            0,
+            0,
+            0,
+            0,
+            7591,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1150,
+            195,
+            0,
+            9961,
+            14687
+          ]
+        ],
+        "rule_coverage": 0.0,
+        "rule_accuracy": null,
+        "model_accuracy": 0.48926992727791246,
+        "method_counts": {
+          "RULE": 0,
+          "MODEL": 84156
+        }
+      },
+      "known_merchants": {
+        "rows": 43169,
+        "accuracy": 0.996895920683824,
+        "macro_f1": 0.9914455768916688,
+        "weighted_f1": 0.996992805192127,
+        "per_category": {
+          "FUEL": {
+            "precision": 0.8771769019248395,
+            "recall": 1.0,
+            "f1": 0.9345703125,
+            "support": 957
+          },
+          "ELECTRICITY": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2810
+          },
+          "GAS": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2289
+          },
+          "PUBLIC_TRANSPORT": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 5518
+          },
+          "HOME_IMPROVEMENT": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 1988
+          },
+          "AUTOMOTIVE": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 2730
+          },
+          "UTILITIES": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 4519
+          },
+          "OTHER": {
+            "precision": 1.0,
+            "recall": 0.9940066195545219,
+            "f1": 0.9969943026333498,
+            "support": 22358
+          }
+        },
+        "confusion_matrix": [
+          [
+            957,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            2810,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2289,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            5518,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1988,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2730,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            4519,
+            0
+          ],
+          [
+            134,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            22224
+          ]
+        ],
+        "rule_coverage": 0.0,
+        "rule_accuracy": null,
+        "model_accuracy": 0.996895920683824,
+        "method_counts": {
+          "RULE": 0,
+          "MODEL": 43169
+        }
+      }
+    }
+  },
+  "comparison": {
+    "hybrid_minus_plain_macro_f1_unseen": 0.07734692088190337,
+    "hybrid_minus_plain_weighted_f1_unseen": 0.07145488960836938,
+    "hybrid_minus_plain_macro_f1_known": 0.0009615387860217872,
+    "hybrid_minus_plain_weighted_f1_known": -0.001607127639378092,
+    "hybrid_minus_model_only_macro_f1_unseen": 0.06483595678421017,
+    "hybrid_minus_model_only_macro_f1_known": -0.0064288171515505255
+  }
+}

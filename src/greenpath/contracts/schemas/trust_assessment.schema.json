@@ -1,0 +1,182 @@
+{
+  "$defs": {
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "TrustIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/TrustIssueCategory"
+        },
+        "code": {
+          "$ref": "#/$defs/TrustIssueCode"
+        },
+        "fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        }
+      },
+      "required": [
+        "code",
+        "category",
+        "severity",
+        "message"
+      ],
+      "title": "TrustIssue",
+      "type": "object"
+    },
+    "TrustIssueCategory": {
+      "enum": [
+        "COMPLETENESS",
+        "FRESHNESS",
+        "CONFLICT",
+        "OOD",
+        "CRITICAL_FIELD"
+      ],
+      "title": "TrustIssueCategory",
+      "type": "string"
+    },
+    "TrustIssueCode": {
+      "enum": [
+        "SHORT_TRANSACTION_HISTORY",
+        "HOME_OWNERSHIP_UNKNOWN",
+        "VEHICLE_RECORD_MISSING",
+        "VEHICLE_RECORD_STALE",
+        "MILEAGE_MISSING",
+        "MILEAGE_ESTIMATED",
+        "ENERGY_RECORDS_MISSING",
+        "ENERGY_RECORDS_INCOMPLETE",
+        "DIGITAL_RECORDS_MISSING",
+        "REGION_MISSING",
+        "SUSTAINABILITY_PREFERENCE_UNKNOWN",
+        "EV_RECORD_WITH_RECURRING_FUEL_SPEND",
+        "NON_OWNER_WITH_ACTIVE_MORTGAGE",
+        "PAPERLESS_FLAG_WITH_PAPER_STATEMENTS",
+        "INVALID_PRODUCT_RECORD",
+        "OUT_OF_DISTRIBUTION"
+      ],
+      "title": "TrustIssueCode",
+      "type": "string"
+    },
+    "TrustStatus": {
+      "enum": [
+        "HIGH",
+        "ADEQUATE",
+        "LOW",
+        "INSUFFICIENT"
+      ],
+      "title": "TrustStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assessed_at": {
+      "format": "date-time",
+      "title": "Assessed At",
+      "type": "string"
+    },
+    "completeness": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Completeness",
+      "type": "number"
+    },
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "critical_fields_present": {
+      "title": "Critical Fields Present",
+      "type": "boolean"
+    },
+    "cross_source_consistency": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Cross Source Consistency",
+      "type": "number"
+    },
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "freshness": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Freshness",
+      "type": "number"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/TrustIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "method_version": {
+      "title": "Method Version",
+      "type": "string"
+    },
+    "ood_score": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Ood Score",
+      "type": "number"
+    },
+    "product": {
+      "$ref": "#/$defs/Product"
+    },
+    "score": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Score",
+      "type": "number"
+    },
+    "status": {
+      "$ref": "#/$defs/TrustStatus"
+    }
+  },
+  "required": [
+    "customer_id",
+    "product",
+    "score",
+    "status",
+    "completeness",
+    "freshness",
+    "cross_source_consistency",
+    "critical_fields_present",
+    "ood_score",
+    "method_version",
+    "assessed_at"
+  ],
+  "title": "TrustAssessment",
+  "type": "object"
+}

@@ -5,8 +5,8 @@ from typing import Literal, Protocol
 
 from pydantic import Field
 
-from greenpath._product_contract_mirror import RecommendationState
-from greenpath.impact._contract_mirror import Model, Product
+from greenpath.contracts.product import RecommendationState
+from greenpath.contracts.impact_detail import Model, Product
 
 
 class ApprovedSentence(Model):

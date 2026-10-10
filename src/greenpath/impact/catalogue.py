@@ -8,7 +8,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Mapping
 
-from ._contract_mirror import FactorReference, ImpactIssue, IssueCode
+from greenpath.contracts.impact_detail import FactorReference, ImpactIssue, IssueCode
 
 CATALOGUE_VERSION = "greenpath-carbon-factors-v1.0.0"
 METHOD_RELEASE = "greenpath-carbon-v1.0.0"

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="460" viewBox="0 0 640 460" role="img" aria-label="EV_FINANCE roc">
+<rect width="100%" height="100%" fill="white"/>
+<text x="320" y="28" text-anchor="middle" font-family="sans-serif" font-size="18">EV_FINANCE roc</text>
+<path d="M 80.0 55 V 375 M 80 375.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="80.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.0</text>
+<text x="68" y="379.0" text-anchor="end" font-family="sans-serif" font-size="12">0.0</text>
+<path d="M 180.0 55 V 375 M 80 311.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="180.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.2</text>
+<text x="68" y="315.0" text-anchor="end" font-family="sans-serif" font-size="12">0.2</text>
+<path d="M 280.0 55 V 375 M 80 247.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="280.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.4</text>
+<text x="68" y="251.0" text-anchor="end" font-family="sans-serif" font-size="12">0.4</text>
+<path d="M 380.0 55 V 375 M 80 183.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="380.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.6</text>
+<text x="68" y="187.0" text-anchor="end" font-family="sans-serif" font-size="12">0.6</text>
+<path d="M 480.0 55 V 375 M 80 118.99999999999999 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="480.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.8</text>
+<text x="68" y="122.99999999999999" text-anchor="end" font-family="sans-serif" font-size="12">0.8</text>
+<path d="M 580.0 55 V 375 M 80 55.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="580.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">1.0</text>
+<text x="68" y="59.0" text-anchor="end" font-family="sans-serif" font-size="12">1.0</text>
+<polyline points="80.00,375.00 580.00,55.00" stroke="#9ca3af" stroke-dasharray="6 4" fill="none"/>
+<polyline points="80.00,375.00 80.00,363.57 80.00,352.14 81.58,352.14 81.58,340.71 84.75,340.71 84.75,329.29 94.24,329.29 94.24,317.86 98.99,317.86 98.99,306.43 102.15,306.43 102.15,295.00 106.90,295.00 106.90,283.57 127.47,283.57 127.47,272.14 138.54,272.14 138.54,260.71 162.28,260.71 162.28,249.29 165.44,249.29 165.44,226.43 173.35,226.43 173.35,215.00 176.52,215.00 176.52,203.57 190.76,203.57 190.76,192.14 193.92,192.14 193.92,180.71 220.82,180.71 220.82,169.29 265.13,169.29 265.13,157.86 276.20,157.86 276.20,146.43 285.70,146.43 285.70,135.00 290.44,135.00 290.44,123.57 304.68,123.57 304.68,112.14 317.34,112.14 317.34,100.71 328.42,100.71 328.42,89.29 358.48,89.29 358.48,77.86 369.56,77.86 369.56,66.43 432.85,66.43 432.85,55.00 580.00,55.00" stroke="#047857" stroke-width="2.5" fill="none"/>
+<text x="80" y="446" fill="#047857" font-family="sans-serif" font-size="12">selected model</text>
+<text x="330" y="424" text-anchor="middle" font-family="sans-serif" font-size="13">False positive rate</text>
+<text transform="translate(22 215) rotate(-90)" text-anchor="middle" font-family="sans-serif" font-size="13">True positive rate</text>
+</svg>

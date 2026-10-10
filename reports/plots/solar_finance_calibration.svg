@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="460" viewBox="0 0 640 460" role="img" aria-label="SOLAR_FINANCE calibration">
+<rect width="100%" height="100%" fill="white"/>
+<text x="320" y="28" text-anchor="middle" font-family="sans-serif" font-size="18">SOLAR_FINANCE calibration</text>
+<path d="M 80.0 55 V 375 M 80 375.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="80.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.0</text>
+<text x="68" y="379.0" text-anchor="end" font-family="sans-serif" font-size="12">0.0</text>
+<path d="M 180.0 55 V 375 M 80 311.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="180.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.2</text>
+<text x="68" y="315.0" text-anchor="end" font-family="sans-serif" font-size="12">0.2</text>
+<path d="M 280.0 55 V 375 M 80 247.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="280.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.4</text>
+<text x="68" y="251.0" text-anchor="end" font-family="sans-serif" font-size="12">0.4</text>
+<path d="M 380.0 55 V 375 M 80 183.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="380.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.6</text>
+<text x="68" y="187.0" text-anchor="end" font-family="sans-serif" font-size="12">0.6</text>
+<path d="M 480.0 55 V 375 M 80 118.99999999999999 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="480.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.8</text>
+<text x="68" y="122.99999999999999" text-anchor="end" font-family="sans-serif" font-size="12">0.8</text>
+<path d="M 580.0 55 V 375 M 80 55.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="580.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">1.0</text>
+<text x="68" y="59.0" text-anchor="end" font-family="sans-serif" font-size="12">1.0</text>
+<polyline points="80.00,375.00 580.00,55.00" stroke="#9ca3af" stroke-dasharray="6 4" fill="none"/>
+<polyline points="87.46,375.00 148.93,320.37 208.91,215.00 252.14,215.00 300.32,375.00 342.19,55.00" stroke="#047857" stroke-width="2.5" fill="none"/>
+<text x="80" y="446" fill="#047857" font-family="sans-serif" font-size="12">before</text>
+<polyline points="83.51,375.00 152.27,343.00 204.77,268.33 263.66,255.00 308.07,188.33 356.35,247.00 402.86,215.00 454.04,375.00 490.47,55.00" stroke="#1d4ed8" stroke-width="2.5" fill="none"/>
+<text x="250" y="446" fill="#1d4ed8" font-family="sans-serif" font-size="12">after</text>
+<text x="330" y="424" text-anchor="middle" font-family="sans-serif" font-size="13">Mean predicted probability</text>
+<text transform="translate(22 215) rotate(-90)" text-anchor="middle" font-family="sans-serif" font-size="13">Observed adoption rate</text>
+</svg>

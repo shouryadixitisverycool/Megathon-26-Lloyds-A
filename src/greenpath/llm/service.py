@@ -1,16 +1,20 @@
 """Explain validated recommendations without accepting unsupported prose."""
 
 import math
+import hashlib
+import json
+import time
+from collections import OrderedDict
 import re
 from queue import Empty, Queue
-from threading import BoundedSemaphore, Thread
+from threading import BoundedSemaphore, Lock, Thread
 
 from pydantic import ValidationError
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     ELIGIBILITY_DISCLAIMER, Explanation, Recommendation, RecommendationState,
 )
-from greenpath.impact._contract_mirror import ImpactStatus, Product
+from greenpath.contracts.impact_detail import ImpactStatus, Product
 
 from .ports import ApprovedSentence, ExplanationProvider, ExplanationRequest, ProviderExplanation
 
@@ -48,6 +52,7 @@ REASON_TEXT = {
     "NO_PAPER_STATEMENTS": "The relevance evidence records no paper statements to replace.",
     "PAPERLESS_CONSENT_WITHDRAWN": "The relevance evidence records no consent to switch to paperless statements.",
     "INTEREST_NOT_SUPPORTED": "The relevance evidence does not support interest in this opportunity.",
+    "CONFIDENCE_BELOW_MINIMUM": "Validated model confidence is below the supported reliability level, so product relevance is withheld.",
     "PROPENSITY_UNAVAILABLE": "A usable product propensity estimate is unavailable.",
     "PROPENSITY_BELOW_THRESHOLD": "The synthetic propensity is below the demo relevance threshold.",
     "RELEVANCE_SUPPORTED": "The product-specific relevance signals support the opportunity.",
@@ -64,17 +69,73 @@ class ExplanationService:
 
     def __init__(self, provider: ExplanationProvider | None = None, *,
                  timeout_seconds: float = 2.0, provider_version: str | None = None,
-                 max_inflight: int = 2):
+                 max_inflight: int = 2, prompt_version: str = "grounded-selection-v1",
+                 locale: str = "en", cache_size: int = 512):
         if isinstance(timeout_seconds, bool) or not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive and finite")
         if isinstance(max_inflight, bool) or not isinstance(max_inflight, int) or max_inflight < 1:
             raise ValueError("max_inflight must be a positive integer")
+        if isinstance(cache_size, bool) or not isinstance(cache_size, int) or cache_size < 0:
+            raise ValueError("cache_size must be a non-negative integer")
+        self.prompt_version = getattr(provider, "prompt_version", prompt_version)
+        self.locale = locale
+        self.cache_size = cache_size
+        self._cache = OrderedDict()
+        self._cache_lock = Lock()
+        self._requests = self._hits = self._misses = self._provider_calls = self._provider_completed = 0
+        self._latency_ms = self._provider_latency_ms = 0.0
         self.provider = provider
         self.timeout_seconds = timeout_seconds
         self.provider_version = provider_version if provider_version is not None else getattr(provider, "version", None)
         self._slots = BoundedSemaphore(max_inflight)
 
     def explain(self, recommendation: Recommendation) -> Explanation:
+        started = time.perf_counter()
+        recommendation = Recommendation.model_validate(recommendation.model_dump(mode="python"))
+        payload = recommendation.model_dump(mode="json")
+        # Decision/impact wall-clock generation times are not evidence changes.
+        payload.pop("timestamp", None)
+        payload["impact"].pop("timestamp", None)
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+        key = hashlib.sha256(json.dumps([canonical, self.prompt_version, self.provider_version or TEMPLATE_VERSION,
+                                        self.locale], separators=(",", ":")).encode()).hexdigest()
+        with self._cache_lock:
+            self._requests += 1
+            cached = self._cache.get(key)
+            if cached is not None:
+                self._hits += 1
+                self._cache.move_to_end(key)
+                self._latency_ms += (time.perf_counter() - started) * 1000
+                return cached
+            self._misses += 1
+        output = self._explain_uncached(recommendation)
+        with self._cache_lock:
+            self._latency_ms += (time.perf_counter() - started) * 1000
+            # Transient failures must be retried and preserve worker-cap behavior.
+            if self.cache_size and output.fallback_reason in {None, "PROVIDER_NOT_CONFIGURED"}:
+                self._cache[key] = output
+                while len(self._cache) > self.cache_size:
+                    self._cache.popitem(last=False)
+        return output
+
+    def metrics(self) -> dict:
+        with self._cache_lock:
+            result = {"requests": self._requests, "cache_hits": self._hits, "cache_misses": self._misses,
+                      "cache_hit_rate": self._hits / self._requests if self._requests else 0.0,
+                      "average_latency_ms": self._latency_ms / self._requests if self._requests else None,
+                      "provider_attempts": self._provider_calls,
+                      "provider_completed": self._provider_completed,
+                      "live_provider_latency_ms": self._provider_latency_ms / self._provider_completed if self._provider_completed else None,
+                      "prompt_version": self.prompt_version, "model_version": self.provider_version or TEMPLATE_VERSION,
+                      "locale": self.locale, "offline_cost": 0 if self.provider is None else None,
+                      "live_provider_cost": None}
+        if self.provider is not None and hasattr(self.provider, "metrics"):
+            measured = self.provider.metrics()
+            result["provider_measurements"] = measured
+            result["live_provider_cost"] = measured.get("measured_cost")
+        return result
+
+    def _explain_uncached(self, recommendation: Recommendation) -> Explanation:
         # Revalidate even a model_construct/model_copy input at this boundary.
         recommendation = Recommendation.model_validate(recommendation.model_dump(mode="python"))
         if recommendation.impact.product != recommendation.product:
@@ -101,11 +162,17 @@ class ExplanationService:
         result_queue = Queue(maxsize=1)
 
         def invoke():
+            provider_started = time.perf_counter()
+            with self._cache_lock:
+                self._provider_calls += 1
             try:
                 result_queue.put((True, self.provider.generate(request, timeout_seconds=self.timeout_seconds)))
             except Exception:
                 result_queue.put((False, None))
             finally:
+                with self._cache_lock:
+                    self._provider_latency_ms += (time.perf_counter() - provider_started) * 1000
+                    self._provider_completed += 1
                 self._slots.release()
 
         try:
@@ -147,6 +214,22 @@ class ExplanationService:
         items.extend(sentence(f"reason:{code}", REASON_TEXT[code]) for code in known_codes)
         if any(code not in REASON_TEXT for code in rec.reason_codes):
             items.append(sentence("reason:unrecognized", "An additional reason is recorded in the structured decision; its text is not approved for explanation."))
+        propensity = rec.propensity
+        if propensity is not None and propensity.source_result is not None:
+            source = propensity.source_result
+            # Enum reasons come from the canonical fitted reason catalogue.
+            # Provider text and arbitrary reason strings are never trusted here.
+            from greenpath.models.propensity.reason_codes import REASON_CODE_CATALOGUE
+            for code in dict.fromkeys(source.reason_codes):
+                definition = REASON_CODE_CATALOGUE.get(code)
+                if definition is not None and rec.product in definition.applicable_products:
+                    items.append(sentence(f"model-reason:{code.value}", definition.rm_wording))
+            if propensity.probability is not None and propensity.in_model_population:
+                items.append(sentence("propensity", f"The calibrated synthetic-data take-up probability is {format(propensity.probability, 'f')}. This estimates product interest, not credit eligibility."))
+            if propensity.confidence_validated and propensity.confidence is not None:
+                items.append(sentence("confidence", f"Validated model confidence is {format(propensity.confidence, 'f')}. This describes prediction reliability and is separate from evidence Trust."))
+            else:
+                items.append(sentence("confidence", "Model confidence is withheld because held-out reliability validation does not support displaying it."))
         impact = rec.impact
         if impact.status == ImpactStatus.AVAILABLE:
             value = format(impact.value, "f")
@@ -155,7 +238,10 @@ class ExplanationService:
             items.append(sentence("impact:limits", "This is a scenario estimate of operational CO2 within the recorded method, assumptions and exclusions. It is not a realized reduction or a lifecycle estimate."))
         else:
             items.append(sentence("impact", "Carbon impact is unavailable because the required input, evidence or method basis is inadequate. No numeric carbon estimate is presented."))
-        items.append(sentence("trust", "Trust describes input evidence quality and is separate from model confidence. Synthetic fixture scores do not establish predictive performance."))
+        limitation = ("Synthetic-data scores do not establish real-world predictive performance."
+                      if propensity is not None and propensity.source_result is not None
+                      else "Synthetic fixture scores do not establish predictive performance.")
+        items.append(sentence("trust", "Trust describes input evidence quality and is separate from model confidence. " + limitation))
         items.append(sentence("eligibility", ELIGIBILITY_DISCLAIMER))
         return tuple(items)
 

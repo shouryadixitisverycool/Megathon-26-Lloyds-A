@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from decimal import Context, Decimal, localcontext
 from typing import ClassVar
 
-from ._contract_mirror import ImpactResult, IssueCode, Product
+from greenpath.contracts.impact_detail import ImpactResult, IssueCode, Product
 from .catalogue import FactorCatalogue
 from .common import Clock, Method, Payload, prepare, utc_now
 from .inputs import SolarInput

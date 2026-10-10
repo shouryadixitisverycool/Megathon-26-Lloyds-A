@@ -1,10 +1,11 @@
 """FastAPI application factory with injected domain services and narrow providers."""
 
+from contextlib import asynccontextmanager
 from typing import Protocol
 
 from fastapi import FastAPI, HTTPException
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     CONTRACT_VERSION,
     CustomerSnapshot,
     Explanation,
@@ -13,11 +14,11 @@ from greenpath._product_contract_mirror import (
     Recommendation,
     RecommendationsResponse,
 )
-from greenpath._product_port_mirror import (
-    CustomerSnapshotProvider,
+from greenpath.ports import (
+    ProductSnapshotProvider as CustomerSnapshotProvider,
     ImpactInputProvider,
     PortfolioHistoryProvider,
-    PropensityProvider,
+    ProductPropensityProvider as PropensityProvider,
 )
 from greenpath.impact import Product
 
@@ -35,6 +36,7 @@ class ExplanationServicePort(Protocol):
 def create_app(
     repository=None,
     *,
+    provider_mode: str | None = None,
     snapshot_provider: CustomerSnapshotProvider | None = None,
     propensity_provider: PropensityProvider | None = None,
     impact_input_provider: ImpactInputProvider | None = None,
@@ -49,9 +51,9 @@ def create_app(
         or (recommendation_service is None and (propensity_provider is None or impact_input_provider is None))
     )
     if repository is None and needs_repository:
-        from greenpath.demo.providers import DemoRepository
+        from greenpath.demo.artifacts import default_repository
 
-        repository = DemoRepository()
+        repository = default_repository(provider_mode)
     if snapshot_provider is None:
         snapshot_provider = repository
     if history_provider is None:
@@ -67,9 +69,25 @@ def create_app(
     if explanation_service is None:
         from greenpath.llm.service import ExplanationService
 
-        explanation_service = ExplanationService()
+        from greenpath.llm.http_provider import configured_provider
 
-    application = FastAPI(title="GreenPath synthetic demo", version=CONTRACT_VERSION)
+        explanation_service = ExplanationService(configured_provider())
+
+    summary_cache = {}
+
+    @asynccontextmanager
+    async def lifespan(application):
+        # Warm immutable trained evidence before accepting requests. A large first
+        # trend calculation should not become a client timeout.
+        if getattr(repository, "mode", None) == "trained":
+            repository.list_history()
+            for item in snapshot_provider.list_snapshots():
+                recommendation_service.recommendations(item.customer_id)
+            portfolio_summary()
+        yield
+
+    application = FastAPI(title="GreenPath decision platform", version=CONTRACT_VERSION, lifespan=lifespan)
+    application.state.repository = repository
     application.state.snapshot_provider = snapshot_provider
     application.state.history_provider = history_provider
     application.state.recommendation_service = recommendation_service
@@ -99,7 +117,15 @@ def create_app(
 
     @application.get("/health")
     def health() -> dict[str, str | bool]:
-        return {"status": "ok", "synthetic_demo": True, "contract_version": CONTRACT_VERSION}
+        return {"status": "ok", "synthetic_demo": True, "contract_version": CONTRACT_VERSION,
+                "provider_mode": getattr(snapshot_provider, "mode", "injected"),
+                "source_version": getattr(snapshot_provider, "version", "injected-provider")}
+
+    @application.get("/explanations/metrics")
+    def explanation_metrics():
+        if hasattr(explanation_service, "metrics"):
+            return explanation_service.metrics()
+        return {"provider": "injected", "measurements_available": False}
 
     @application.get("/customers", response_model=list[CustomerSnapshot])
     def customers():
@@ -123,14 +149,24 @@ def create_app(
 
     @application.get("/portfolio/summary", response_model=PortfolioSummary)
     def portfolio_summary(region: str | None = None, segment: str | None = None, product: Product | None = None):
+        key = (region, segment, product)
+        cacheable = getattr(repository, "mode", None) == "trained"
+        if cacheable and key in summary_cache:
+            return summary_cache[key]
         selected = filtered_snapshots(region, segment)
         decisions = {item.customer_id: recommendations(item.customer_id) for item in selected}
-        return summarize(selected, decisions, product)
+        result = summarize(selected, decisions, product)
+        if cacheable:
+            summary_cache[key] = result
+        return result
 
     @application.get("/portfolio/trends", response_model=PortfolioTrends)
     def portfolio_trends(region: str | None = None, segment: str | None = None, product: Product | None = None):
         return historical_trends(filtered_snapshots(region, segment), history_provider.list_history(), product)
 
+    from greenpath.extensions.api import attach_extensions
+
+    attach_extensions(application)
     return application
 
 

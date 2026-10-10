@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="460" viewBox="0 0 640 460" role="img" aria-label="SOLAR_FINANCE roc">
+<rect width="100%" height="100%" fill="white"/>
+<text x="320" y="28" text-anchor="middle" font-family="sans-serif" font-size="18">SOLAR_FINANCE roc</text>
+<path d="M 80.0 55 V 375 M 80 375.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="80.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.0</text>
+<text x="68" y="379.0" text-anchor="end" font-family="sans-serif" font-size="12">0.0</text>
+<path d="M 180.0 55 V 375 M 80 311.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="180.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.2</text>
+<text x="68" y="315.0" text-anchor="end" font-family="sans-serif" font-size="12">0.2</text>
+<path d="M 280.0 55 V 375 M 80 247.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="280.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.4</text>
+<text x="68" y="251.0" text-anchor="end" font-family="sans-serif" font-size="12">0.4</text>
+<path d="M 380.0 55 V 375 M 80 183.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="380.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.6</text>
+<text x="68" y="187.0" text-anchor="end" font-family="sans-serif" font-size="12">0.6</text>
+<path d="M 480.0 55 V 375 M 80 118.99999999999999 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="480.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.8</text>
+<text x="68" y="122.99999999999999" text-anchor="end" font-family="sans-serif" font-size="12">0.8</text>
+<path d="M 580.0 55 V 375 M 80 55.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="580.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">1.0</text>
+<text x="68" y="59.0" text-anchor="end" font-family="sans-serif" font-size="12">1.0</text>
+<polyline points="80.00,375.00 580.00,55.00" stroke="#9ca3af" stroke-dasharray="6 4" fill="none"/>
+<polyline points="80.00,375.00 80.00,361.67 80.00,335.00 84.55,335.00 84.55,308.33 90.61,308.33 90.61,281.67 93.64,281.67 93.64,241.67 95.15,241.67 95.15,201.67 96.67,201.67 96.67,188.33 104.24,188.33 104.24,161.67 105.76,161.67 105.76,148.33 111.82,148.33 111.82,135.00 113.33,135.00 113.33,108.33 117.88,108.33 117.88,81.67 120.91,81.67 120.91,68.33 139.09,68.33 139.09,55.00 487.58,55.00 580.00,55.00" stroke="#047857" stroke-width="2.5" fill="none"/>
+<text x="80" y="446" fill="#047857" font-family="sans-serif" font-size="12">selected model</text>
+<text x="330" y="424" text-anchor="middle" font-family="sans-serif" font-size="13">False positive rate</text>
+<text transform="translate(22 215) rotate(-90)" text-anchor="middle" font-family="sans-serif" font-size="13">True positive rate</text>
+</svg>

@@ -5,7 +5,7 @@ from decimal import Decimal
 
 import pytest
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     ELIGIBILITY_DISCLAIMER, DecisionEvidence, PropensityResult, RecommendationState, TrustAssessment, TrustIssue,
 )
 from greenpath.impact import Product

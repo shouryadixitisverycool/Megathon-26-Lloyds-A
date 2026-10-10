@@ -22,14 +22,34 @@ contract guarantees grounding mechanically; it limits the optional provider's
 stylistic freedom. A general prose validator cannot prove semantic grounding.
 
 Raw evidence messages, merchant descriptions, customer identifiers, trust issue
-text, propensity reason text, and unvalidated confidence never enter the request.
+text, free-form propensity reasons, and unvalidated confidence never enter the request.
+Trained explanations use the canonical reason catalogue, calibrated probability,
+and validated confidence or an explicit confidence-withheld sentence.
 Unknown decision reasons disable the provider path. Errors, deadlines, invalid
 schema, mismatched claims, omitted caveats, and extra sentences return the same
 usable deterministic fallback with a controlled `fallback_reason`.
 
-No live network adapter is included or discovered from environment variables.
-Live credentials and an explicit configured provider are needed before making
-any live calls. All tests and the report use fixed offline providers.
+The API remains offline when `GREENPATH_LLM_API_KEY` is absent. To enable the
+optional HTTP adapter, set that key plus `GREENPATH_LLM_ENDPOINT`, `LLM_MODEL`,
+and `LLM_MODEL_VERSION`. The endpoint must accept the adapter's structured chat
+completion protocol. `PROMPT_VERSION`, `TEMPERATURE`, and `MAX_OUTPUT_TOKENS`
+freeze prompt and sampling settings. Keyed but incomplete configuration fails
+clearly. The adapter applies an HTTP timeout; the service also bounds its caller
+wait and outstanding workers. All tests and reports use offline mock providers.
+
+A bounded in-memory cache hashes canonical recommendation evidence, prompt
+version, exact provider/model version, and locale. Wall-clock decision and impact
+generation timestamps are excluded so repeated identical evidence can reuse an
+explanation. Changing evidence, rules, model, prompt or locale invalidates reuse.
+Transient provider failures are retried and are not cached.
+
+`GET /explanations/metrics` exposes cache hits/misses, hit rate, measured local and
+provider latency, attempts, model/prompt versions and token usage. Offline cost
+is zero; unmeasured live cost remains null. Optional explicit prices in
+`GREENPATH_LLM_INPUT_PRICE_PER_MILLION` and
+`GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION` calculate cost from returned usage. The
+API labels their basis as configured prices, not independently verified current
+pricing. No measured live model quality or cost is claimed by offline tests.
 
 Run the checks and generate an evaluation artifact:
 
@@ -43,5 +63,5 @@ claims, fallback rate and local validator latency on fixed cases. Live provider
 latency and cost are null because no live calls are measured. These results do
 not establish live model quality or predictive performance.
 
-The imports use the documented replaceable Agent B product contract mirror.
-Replace it with Agent A's canonical contracts during manual integration.
+Product and impact evidence use canonical `greenpath.contracts.product` and
+`greenpath.contracts.impact_detail` models. Compatibility mirrors are reexports.

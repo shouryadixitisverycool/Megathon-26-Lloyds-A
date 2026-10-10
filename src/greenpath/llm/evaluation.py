@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     ELIGIBILITY_DISCLAIMER, Recommendation, RecommendationState, TrustAssessment,
 )
 from greenpath.impact import EVImpactCalculator, Product, build_registry

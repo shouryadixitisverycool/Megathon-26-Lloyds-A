@@ -3,15 +3,21 @@ requires = ["hatchling==1.27.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "greenpath-agent-b"
+name = "greenpath"
 version = "0.1.0"
-description = "GreenPath Agent B impact, recommendation, API and UI synthetic demo"
+description = "GreenPath synthetic data, calibrated models, recommendations, impact and demo"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115,<1",
     "httpx>=0.27,<1",
+    "joblib>=1.4,<2",
+    "numpy>=2,<3",
+    "pandas>=2.2,<4",
     "plotly>=6,<7",
+    "pyarrow>=17,<24",
     "pydantic>=2.12,<3",
+    "pyyaml>=6,<7",
+    "scikit-learn>=1.6,<2",
     "streamlit>=1.60,<2",
     "uvicorn>=0.30,<1",
 ]

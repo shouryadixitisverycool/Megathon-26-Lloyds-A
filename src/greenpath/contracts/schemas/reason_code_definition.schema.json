@@ -1,0 +1,107 @@
+{
+  "$defs": {
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "ReasonCode": {
+      "enum": [
+        "HIGH_FUEL_SPEND",
+        "HIGH_ANNUAL_MILEAGE",
+        "ICE_VEHICLE_OWNER",
+        "OLDER_VEHICLE",
+        "HIGH_ELECTRICITY_USE",
+        "HOMEOWNER",
+        "MORTGAGE_CUSTOMER",
+        "NO_EXISTING_SOLAR",
+        "PAPER_STATEMENTS_ACTIVE",
+        "HIGH_DIGITAL_ENGAGEMENT",
+        "RECENT_HOME_IMPROVEMENT_SPEND",
+        "UTILITY_SPEND_RISING",
+        "EXISTING_VEHICLE_FINANCE",
+        "HIGH_GAS_USE",
+        "STATED_SUSTAINABILITY_PREFERENCE"
+      ],
+      "title": "ReasonCode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Catalogue entry for a controlled reason code (spec 18).",
+  "properties": {
+    "applicable_products": {
+      "items": {
+        "$ref": "#/$defs/Product"
+      },
+      "title": "Applicable Products",
+      "type": "array"
+    },
+    "code": {
+      "$ref": "#/$defs/ReasonCode"
+    },
+    "customer_wording": {
+      "title": "Customer Wording",
+      "type": "string"
+    },
+    "derivation": {
+      "title": "Derivation",
+      "type": "string"
+    },
+    "evidence_fields": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Fields",
+      "type": "array"
+    },
+    "rm_wording": {
+      "title": "Rm Wording",
+      "type": "string"
+    },
+    "threshold": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Threshold"
+    },
+    "threshold_unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Threshold Unit"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "customer_wording",
+    "rm_wording",
+    "derivation",
+    "evidence_fields",
+    "applicable_products",
+    "version"
+  ],
+  "title": "ReasonCodeDefinition",
+  "type": "object"
+}

@@ -468,7 +468,7 @@
     ],
     "available_impact_count": 3,
     "synthetic_demo": true,
-    "disclaimer": "Synthetic fixture counts; potential opportunities are not realized reductions. No cross-product carbon total is calculated."
+    "disclaimer": "Synthetic-data decision counts; potential opportunities are not realized reductions. No cross-product carbon total is calculated."
   },
   "trends": {
     "observations": [
@@ -484,7 +484,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-10",
@@ -498,7 +505,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-10",
@@ -512,7 +526,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-10",
@@ -526,7 +547,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -540,7 +568,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -554,7 +589,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -568,7 +610,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -582,7 +631,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -596,7 +652,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -610,7 +673,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -624,7 +694,14 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -638,11 +715,18 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       }
     ],
     "synthetic_demo": true,
-    "disclaimer": "Historical states are synthetic fixtures, not predictions of real customer behavior."
+    "disclaimer": "Historical states use synthetic evidence. Trained trends retrospectively apply the current model to each monthly feature cutoff; they are not observed customer behavior."
   },
   "limitations": "Fixed fixtures verify Agent B integration. They do not train or evaluate Agent A models, establish predictive performance, or record realized carbon reductions."
 }
