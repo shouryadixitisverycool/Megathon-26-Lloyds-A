@@ -1,0 +1,866 @@
+{
+  "$defs": {
+    "ActivityEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "title": "Basis",
+          "type": "string"
+        },
+        "conflicts": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Conflicts",
+          "type": "array"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "freshness": {
+          "title": "Freshness",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/$defs/Period"
+        },
+        "reference": {
+          "title": "Reference",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "field",
+        "value",
+        "reference",
+        "basis",
+        "observed_at",
+        "period",
+        "freshness"
+      ],
+      "title": "ActivityEvidence",
+      "type": "object"
+    },
+    "EmissionsScenario": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "emissions_kg_co2": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Emissions Kg Co2"
+        },
+        "emissions_kg_co2e": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Emissions Kg Co2E"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "title": "EmissionsScenario",
+      "type": "object"
+    },
+    "FactorReference": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Activity Period"
+        },
+        "applicability": {
+          "title": "Applicability",
+          "type": "string"
+        },
+        "boundary": {
+          "title": "Boundary",
+          "type": "string"
+        },
+        "current_edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Edition"
+        },
+        "current_edition_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Edition Url"
+        },
+        "factor_id": {
+          "title": "Factor Id",
+          "type": "string"
+        },
+        "fuel": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fuel"
+        },
+        "geography": {
+          "title": "Geography",
+          "type": "string"
+        },
+        "original_unit": {
+          "title": "Original Unit",
+          "type": "string"
+        },
+        "original_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Original Value"
+        },
+        "source_checked_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Checked On"
+        },
+        "source_edition": {
+          "title": "Source Edition",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_limitation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Limitation"
+        },
+        "source_locator": {
+          "title": "Source Locator",
+          "type": "string"
+        },
+        "source_published_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Published On"
+        },
+        "source_publisher": {
+          "title": "Source Publisher",
+          "type": "string"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Sha256"
+        },
+        "source_title": {
+          "title": "Source Title",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        },
+        "verification_basis": {
+          "title": "Verification Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "factor_id",
+        "value",
+        "unit",
+        "original_value",
+        "original_unit",
+        "geography",
+        "boundary",
+        "applicability",
+        "source_id",
+        "source_url",
+        "source_title",
+        "source_publisher",
+        "source_edition",
+        "source_locator",
+        "source_sha256",
+        "verification_basis"
+      ],
+      "title": "FactorReference",
+      "type": "object"
+    },
+    "ImpactIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/IssueCode"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "field",
+        "message"
+      ],
+      "title": "ImpactIssue",
+      "type": "object"
+    },
+    "ImpactResult": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "baseline": {
+          "$ref": "#/$defs/EmissionsScenario"
+        },
+        "boundary": {
+          "title": "Boundary",
+          "type": "string"
+        },
+        "contract_version": {
+          "default": "1.0.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ActivityEvidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "exclusions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Exclusions",
+          "type": "array"
+        },
+        "factor_catalogue_sha256": {
+          "title": "Factor Catalogue Sha256",
+          "type": "string"
+        },
+        "factor_catalogue_version": {
+          "title": "Factor Catalogue Version",
+          "type": "string"
+        },
+        "factors": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/FactorReference"
+          },
+          "title": "Factors",
+          "type": "array"
+        },
+        "feature_cutoff": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Feature Cutoff"
+        },
+        "issues": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ImpactIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "method_release": {
+          "title": "Method Release",
+          "type": "string"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "passport_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Passport Id"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Period"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "product": {
+          "$ref": "#/$defs/Product"
+        },
+        "scenario": {
+          "$ref": "#/$defs/EmissionsScenario"
+        },
+        "secondary_metrics": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SecondaryActivityMetric"
+          },
+          "title": "Secondary Metrics",
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/ImpactStatus"
+        },
+        "synthetic_demo": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Synthetic Demo"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "units": {
+          "default": "kg CO2",
+          "enum": [
+            "kg CO2",
+            "kg CO2/year",
+            "kg CO2e/year"
+          ],
+          "title": "Units",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "product",
+        "status",
+        "baseline",
+        "scenario",
+        "factor_catalogue_version",
+        "factor_catalogue_sha256",
+        "boundary",
+        "assumptions",
+        "exclusions",
+        "method_version",
+        "method_release",
+        "timestamp"
+      ],
+      "title": "ImpactResult",
+      "type": "object"
+    },
+    "ImpactStatus": {
+      "enum": [
+        "AVAILABLE",
+        "UNAVAILABLE",
+        "NOT_CLAIMED"
+      ],
+      "title": "ImpactStatus",
+      "type": "string"
+    },
+    "IssueCode": {
+      "enum": [
+        "MISSING_INPUT",
+        "INVALID_INPUT",
+        "CONFLICTING_INPUT",
+        "STALE_INPUT",
+        "UNSUPPORTED_SCOPE",
+        "FACTOR_NOT_ESTABLISHED",
+        "INCOMPARABLE_BASELINE"
+      ],
+      "title": "IssueCode",
+      "type": "string"
+    },
+    "Period": {
+      "additionalProperties": false,
+      "description": "Inclusive start, exclusive end. Dates are explicit, not epoch numbers.",
+      "properties": {
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "Period",
+      "type": "object"
+    },
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "RecommendationState": {
+      "enum": [
+        "RECOMMEND",
+        "DO_NOT_RECOMMEND",
+        "INSUFFICIENT_INFORMATION",
+        "CONFLICT_REQUIRES_REVIEW",
+        "NOT_APPLICABLE",
+        "SUPPRESSED"
+      ],
+      "title": "RecommendationState",
+      "type": "string"
+    },
+    "SecondaryActivityMetric": {
+      "additionalProperties": false,
+      "description": "Non-carbon activity, displayed independently of the carbon status/value.",
+      "properties": {
+        "evidence_references": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence References",
+          "type": "array"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "name": {
+          "enum": [
+            "paper_statements_avoided",
+            "paper_sheets_avoided"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "statements/year",
+            "sheets/year"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "unit",
+        "method_version",
+        "evidence_references"
+      ],
+      "title": "SecondaryActivityMetric",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "confidence": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence"
+    },
+    "confidence_high": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence High"
+    },
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "data_quality": {
+      "anyOf": [
+        {
+          "enum": [
+            "TRUSTED",
+            "LIMITED",
+            "CONFLICT",
+            "OOD"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Data Quality"
+    },
+    "impact": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ImpactResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "impact_status": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Impact Status"
+    },
+    "impact_units": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Impact Units"
+    },
+    "impact_value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Impact Value"
+    },
+    "is_paperless": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Is Paperless"
+    },
+    "missing_fields": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Fields",
+      "type": "array"
+    },
+    "month": {
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+      "title": "Month",
+      "type": "string"
+    },
+    "observed_adoption_90d": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed Adoption 90D"
+    },
+    "observed_adoption_rate": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed Adoption Rate"
+    },
+    "observed_outcome_count": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed Outcome Count"
+    },
+    "product": {
+      "$ref": "#/$defs/Product"
+    },
+    "propensity": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Propensity"
+    },
+    "state": {
+      "$ref": "#/$defs/RecommendationState"
+    },
+    "trust_score": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Trust Score"
+    }
+  },
+  "required": [
+    "customer_id",
+    "month",
+    "product",
+    "state"
+  ],
+  "title": "HistoryRecord",
+  "type": "object"
+}

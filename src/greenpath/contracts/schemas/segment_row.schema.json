@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "avg_propensity": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Avg Propensity"
+    },
+    "customers": {
+      "minimum": 0,
+      "title": "Customers",
+      "type": "integer"
+    },
+    "dimension": {
+      "title": "Dimension",
+      "type": "string"
+    },
+    "estimated_impact_kg_co2e": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Estimated Impact Kg Co2E"
+    },
+    "opportunities": {
+      "minimum": 0,
+      "title": "Opportunities",
+      "type": "integer"
+    },
+    "product": {
+      "$ref": "#/$defs/Product"
+    },
+    "segment": {
+      "title": "Segment",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dimension",
+    "segment",
+    "product",
+    "customers",
+    "opportunities"
+  ],
+  "title": "SegmentRow",
+  "type": "object"
+}

@@ -1,6 +1,6 @@
 """Agent B's standalone impact package. Canonical contract integration is pending."""
 
-from ._contract_mirror import ImpactResult, ImpactStatus, IssueCode, Product
+from greenpath.contracts.impact_detail import ImpactResult, ImpactStatus, IssueCode, Product
 from .common import display_value
 from .ev import EVImpactCalculator
 from .green_home import GreenHomeImpactCalculator

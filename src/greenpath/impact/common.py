@@ -8,7 +8,7 @@ from typing import Callable, Mapping
 
 from pydantic import BaseModel, ValidationError
 
-from ._contract_mirror import (
+from greenpath.contracts.impact_detail import (
     ActivityEvidence, EmissionsScenario, FactorReference, ImpactIssue, ImpactResult,
     ImpactStatus, IssueCode, Product,
 )

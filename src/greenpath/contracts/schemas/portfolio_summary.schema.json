@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "ProductSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "actionable": {
+          "minimum": 0,
+          "title": "Actionable",
+          "type": "integer"
+        },
+        "candidates": {
+          "minimum": 0,
+          "title": "Candidates",
+          "type": "integer"
+        },
+        "estimated_impact_kg_co2e": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimated Impact Kg Co2E"
+        },
+        "high_confidence": {
+          "minimum": 0,
+          "title": "High Confidence",
+          "type": "integer"
+        },
+        "high_trust": {
+          "minimum": 0,
+          "title": "High Trust",
+          "type": "integer"
+        },
+        "product": {
+          "$ref": "#/$defs/Product"
+        },
+        "suppressed_or_abstained": {
+          "minimum": 0,
+          "title": "Suppressed Or Abstained",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "product",
+        "candidates",
+        "actionable",
+        "high_confidence",
+        "high_trust",
+        "suppressed_or_abstained"
+      ],
+      "title": "ProductSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "by_product": {
+      "items": {
+        "$ref": "#/$defs/ProductSummary"
+      },
+      "title": "By Product",
+      "type": "array"
+    },
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "customers_analysed": {
+      "minimum": 0,
+      "title": "Customers Analysed",
+      "type": "integer"
+    },
+    "customers_with_opportunity": {
+      "minimum": 0,
+      "title": "Customers With Opportunity",
+      "type": "integer"
+    },
+    "data_cutoff": {
+      "format": "date",
+      "title": "Data Cutoff",
+      "type": "string"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "synthetic_data_notice": {
+      "default": "Synthetic demonstration data; not evidence of real-world performance.",
+      "title": "Synthetic Data Notice",
+      "type": "string"
+    }
+  },
+  "required": [
+    "data_cutoff",
+    "generated_at",
+    "customers_analysed",
+    "customers_with_opportunity",
+    "by_product"
+  ],
+  "title": "PortfolioSummary",
+  "type": "object"
+}

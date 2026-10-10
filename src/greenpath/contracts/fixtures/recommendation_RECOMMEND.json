@@ -1,0 +1,149 @@
+{
+  "contract_version": "1.0.0",
+  "recommendation_id": "REC-C10001-GP01-2026-06-30",
+  "customer_id": "C10001",
+  "opportunity_id": "EV_FINANCE",
+  "product_id": "GP01",
+  "propensity": 0.84,
+  "propensity_model_version": "ev_propensity_v3.1",
+  "calibration_version": "ev_iso_v1",
+  "confidence": {
+    "status": "VALIDATED",
+    "value": 0.87,
+    "bucket": "HIGH",
+    "method_version": "conf_meta_v2",
+    "limitation": null
+  },
+  "trust": {
+    "contract_version": "1.0.0",
+    "customer_id": "C10001",
+    "product": "EV_FINANCE",
+    "score": 0.91,
+    "status": "HIGH",
+    "completeness": 0.96,
+    "freshness": 0.89,
+    "cross_source_consistency": 0.92,
+    "critical_fields_present": true,
+    "ood_score": 0.08,
+    "issues": [],
+    "method_version": "trust_v1",
+    "assessed_at": "2026-10-10T09:00:00"
+  },
+  "recommendation_status": "RECOMMEND",
+  "guardrail_codes": [],
+  "conflict_codes": [],
+  "exclusions": [],
+  "priority": {
+    "rank": 1,
+    "score": 0.81,
+    "version": "priority_v2",
+    "components": {
+      "propensity": 0.84,
+      "confidence": 0.87,
+      "normalised_impact": 0.586,
+      "trust": 0.91
+    }
+  },
+  "reason_codes": [
+    "HIGH_FUEL_SPEND",
+    "HIGH_ANNUAL_MILEAGE",
+    "ICE_VEHICLE_OWNER"
+  ],
+  "evidence": {
+    "monthly_fuel_spend": 310.0,
+    "annual_mileage": 15200.0,
+    "vehicle_fuel_type": "PETROL"
+  },
+  "impact": {
+    "contract_version": "1.0.0",
+    "customer_id": "C10001",
+    "product": "EV_FINANCE",
+    "status": "AVAILABLE",
+    "metric": "kg_co2e_per_year",
+    "unit": "kg CO2e",
+    "baseline": 2850.0,
+    "scenario": 1180.0,
+    "estimated_reduction": 1670.0,
+    "secondary_metrics": [],
+    "methodology_id": "EV_OPERATIONAL_WTW_V1",
+    "method_version": "ev_impact_v1",
+    "factor_ids": [
+      "UKGHG_PETROL_CAR_OPERATIONAL",
+      "UKGHG_GRID_ELECTRICITY_OPERATIONAL"
+    ],
+    "factor_source": "UK Government GHG Conversion Factors",
+    "factor_version": "PINNED_AT_BUILD",
+    "boundary": "operational well-to-wheel where matched factors are available; manufacturing excluded",
+    "grid_scenario": "current-year factor for headline annual estimate",
+    "assumptions": [
+      {
+        "name": "annual_mileage_km",
+        "value": 15200.0,
+        "unit": "km/year",
+        "source": "customer_snapshot C10001 vehicle.annual_mileage_km",
+        "is_estimated": false
+      },
+      {
+        "name": "vehicle_fuel_type",
+        "value": "PETROL",
+        "unit": null,
+        "source": "customer_snapshot C10001 vehicle.fuel_type",
+        "is_estimated": false
+      },
+      {
+        "name": "ice_operational_factor",
+        "value": 0.1875,
+        "unit": "kg CO2e/km",
+        "source": "placeholder back-solved from spec section 5 baseline; replace with pinned factor",
+        "is_estimated": true
+      },
+      {
+        "name": "ev_energy_intensity",
+        "value": 0.2,
+        "unit": "kWh/km",
+        "source": "placeholder back-solved from spec section 5 scenario; replace with pinned value",
+        "is_estimated": true
+      },
+      {
+        "name": "grid_operational_factor",
+        "value": 0.388,
+        "unit": "kg CO2e/kWh",
+        "source": "placeholder back-solved from spec section 5 scenario; replace with pinned factor",
+        "is_estimated": true
+      },
+      {
+        "name": "time_horizon",
+        "value": "1 year",
+        "unit": null,
+        "source": null,
+        "is_estimated": false
+      },
+      {
+        "name": "manufacturing_emissions_included",
+        "value": false,
+        "unit": null,
+        "source": null,
+        "is_estimated": false
+      }
+    ],
+    "unavailable_reason": null,
+    "data_cutoff": "2026-06-30",
+    "calculation_timestamp": "2026-10-10T09:00:00",
+    "carbon_engine_version": "carbon_v2"
+  },
+  "eligibility": {
+    "status": "NOT_ASSESSED",
+    "message": "Propensity does not establish financial eligibility."
+  },
+  "data_cutoff": "2026-06-30",
+  "outcome_window_end": "2026-09-28",
+  "prediction_timestamp": "2026-10-10T09:00:00",
+  "feature_version": "feature_v1",
+  "confidence_method_version": "conf_meta_v2",
+  "trust_method_version": "trust_v1",
+  "carbon_engine_version": "carbon_v2",
+  "emission_factor_version": "PINNED_AT_BUILD",
+  "recommendation_rule_version": "rules_v1",
+  "prompt_version": "prompt_v4",
+  "llm_model_version": "PINNED_AT_BUILD"
+}

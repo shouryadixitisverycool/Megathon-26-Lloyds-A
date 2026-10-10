@@ -1,0 +1,14 @@
+{
+  "version": "desnz_gb_domestic_2024_v1",
+  "publisher": "Department for Energy Security and Net Zero",
+  "title": "Subnational electricity and gas consumption summary report 2024",
+  "source_url": "https://www.gov.uk/government/statistics/subnational-electricity-and-gas-consumption-summary-report-2024/subnational-electricity-and-gas-consumption-summary-report-2024--2",
+  "published_updated": "2025-12-19",
+  "retrieved": "2026-10-10",
+  "licence": "Open Government Licence v3.0",
+  "population": "Great Britain consuming domestic meters, 2024",
+  "electricity": {"mean_kwh": 3323, "median_kwh": 2471, "section": "2.2, Chart 7"},
+  "gas": {"mean_kwh": 11359, "median_kwh": 9859, "section": "3.2, Chart 15", "weather_corrected": true},
+  "use": "Public aggregate statistics anchor synthetic baseline annual demand marginals. Seasonal profiles, customer associations, observations and adoption labels remain synthetic.",
+  "limitations": "Meter aggregates are not individual banking records or evidence of adoption. A fitted lognormal is an approximation to published mean and median, not a reconstruction of meter microdata. Simulated adoption effects, missing months and observation noise change generated totals. Gas source year runs mid-May 2024 to mid-May 2025. GB excludes Northern Ireland."
+}

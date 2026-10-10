@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="460" viewBox="0 0 640 460" role="img" aria-label="PAPERLESS_BANKING precision recall">
+<rect width="100%" height="100%" fill="white"/>
+<text x="320" y="28" text-anchor="middle" font-family="sans-serif" font-size="18">PAPERLESS_BANKING precision recall</text>
+<path d="M 80.0 55 V 375 M 80 375.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="80.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.0</text>
+<text x="68" y="379.0" text-anchor="end" font-family="sans-serif" font-size="12">0.0</text>
+<path d="M 180.0 55 V 375 M 80 311.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="180.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.2</text>
+<text x="68" y="315.0" text-anchor="end" font-family="sans-serif" font-size="12">0.2</text>
+<path d="M 280.0 55 V 375 M 80 247.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="280.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.4</text>
+<text x="68" y="251.0" text-anchor="end" font-family="sans-serif" font-size="12">0.4</text>
+<path d="M 380.0 55 V 375 M 80 183.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="380.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.6</text>
+<text x="68" y="187.0" text-anchor="end" font-family="sans-serif" font-size="12">0.6</text>
+<path d="M 480.0 55 V 375 M 80 118.99999999999999 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="480.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">0.8</text>
+<text x="68" y="122.99999999999999" text-anchor="end" font-family="sans-serif" font-size="12">0.8</text>
+<path d="M 580.0 55 V 375 M 80 55.0 H 580" stroke="#e5e7eb" fill="none"/>
+<text x="580.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">1.0</text>
+<text x="68" y="59.0" text-anchor="end" font-family="sans-serif" font-size="12">1.0</text>
+<polyline points="580.00,314.05 580.00,313.46 580.00,312.86 580.00,312.25 580.00,311.63 580.00,311.00 580.00,310.35 580.00,309.69 580.00,309.02 580.00,308.33 580.00,307.63 580.00,306.91 580.00,306.18 580.00,305.43 580.00,304.67 580.00,303.89 580.00,303.09 580.00,302.27 580.00,301.44 580.00,300.58 580.00,299.71 580.00,298.81 580.00,297.89 580.00,296.95 580.00,295.99 580.00,295.00 580.00,293.99 555.00,297.05 530.00,300.19 530.00,299.21 530.00,298.20 530.00,297.16 530.00,296.10 530.00,295.00 530.00,293.87 505.00,297.29 480.00,300.80 480.00,299.71 480.00,298.58 455.00,302.27 455.00,301.15 455.00,300.00 430.00,303.89 430.00,302.74 405.00,306.80 405.00,305.67 405.00,304.49 405.00,303.28 405.00,302.02 405.00,300.71 405.00,299.36 380.00,303.89 380.00,302.55 380.00,301.15 355.00,305.98 355.00,304.60 330.00,309.69 330.00,308.33 330.00,306.91 330.00,305.43 330.00,303.89 330.00,302.27 330.00,300.58 330.00,298.81 330.00,296.95 330.00,295.00 330.00,292.95 305.00,299.21 305.00,297.16 305.00,295.00 305.00,292.71 280.00,299.71 255.00,307.12 255.00,305.00 255.00,302.74 230.00,311.00 230.00,308.79 230.00,306.43 230.00,303.89 230.00,301.15 230.00,298.20 230.00,295.00 230.00,291.52 205.00,302.27 180.00,314.05 155.00,327.00 155.00,324.47 155.00,321.67 155.00,318.53 155.00,315.00 155.00,311.00 155.00,306.43 155.00,301.15 130.00,321.67 130.00,316.82 130.00,311.00 130.00,303.89 130.00,295.00 130.00,283.57 130.00,268.33 130.00,247.00 130.00,215.00 130.00,161.67 130.00,55.00 105.00,55.00 80.00,55.00" stroke="#047857" stroke-width="2.5" fill="none"/>
+<text x="80" y="446" fill="#047857" font-family="sans-serif" font-size="12">selected model</text>
+<text x="330" y="424" text-anchor="middle" font-family="sans-serif" font-size="13">Recall</text>
+<text transform="translate(22 215) rotate(-90)" text-anchor="middle" font-family="sans-serif" font-size="13">Precision</text>
+</svg>

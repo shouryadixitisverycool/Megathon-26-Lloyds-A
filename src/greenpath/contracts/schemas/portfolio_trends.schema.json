@@ -1,0 +1,160 @@
+{
+  "$defs": {
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "TrendPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "avg_propensity": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Avg Propensity"
+        },
+        "avg_trust": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Avg Trust"
+        },
+        "estimated_impact_kg_co2e": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimated Impact Kg Co2E"
+        },
+        "high_confidence_share": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "High Confidence Share"
+        },
+        "month": {
+          "format": "date",
+          "title": "Month",
+          "type": "string"
+        },
+        "observed_conversion_rate": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Conversion Rate"
+        },
+        "opportunities": {
+          "minimum": 0,
+          "title": "Opportunities",
+          "type": "integer"
+        },
+        "paperless_adoption_rate": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Paperless Adoption Rate"
+        },
+        "product": {
+          "$ref": "#/$defs/Product"
+        },
+        "suppression_or_conflict_rate": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suppression Or Conflict Rate"
+        }
+      },
+      "required": [
+        "month",
+        "product",
+        "opportunities"
+      ],
+      "title": "TrendPoint",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "causality_disclaimer": {
+      "default": "Trends are descriptive; they do not establish causality.",
+      "title": "Causality Disclaimer",
+      "type": "string"
+    },
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "points": {
+      "items": {
+        "$ref": "#/$defs/TrendPoint"
+      },
+      "title": "Points",
+      "type": "array"
+    }
+  },
+  "required": [
+    "points"
+  ],
+  "title": "PortfolioTrends",
+  "type": "object"
+}

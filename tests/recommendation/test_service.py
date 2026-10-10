@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     APPROVED_FEATURES, ELIGIBILITY_DISCLAIMER, CustomerSnapshot, FeatureEvidence,
     PropensityResult, Recommendation, RecommendationState as State,
     TrustAssessment, TrustIssue,

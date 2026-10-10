@@ -58,6 +58,26 @@ def test_timeout_is_visible(monkeypatch):
         APIClient().get("/health")
 
 
+def test_post_is_uncached_and_preserves_json(monkeypatch):
+    calls = []
+    def post(url, **kwargs):
+        calls.append((url, kwargs["json"]))
+        return httpx.Response(200, json={"id": "audit-event"}, request=httpx.Request("POST", url))
+    monkeypatch.setattr(httpx, "post", post)
+    client = APIClient("http://localhost:8000")
+    for _ in range(2):
+        assert client.post("/feedback", {"note": "A customer response", "response": "LATER"})["id"] == "audit-event"
+    assert len(calls) == 2
+    assert calls[0][1]["note"] == "A customer response"
+
+
+def test_post_conflict_shows_actionable_reason(monkeypatch):
+    monkeypatch.setattr(httpx, "post", lambda url, **kwargs: httpx.Response(409,
+        json={"detail": "Completed journeys cannot reopen"}, request=httpx.Request("POST", url)))
+    with pytest.raises(APIError, match="Completed journeys cannot reopen"):
+        APIClient().post("/feedback", {})
+
+
 def test_ui_has_no_domain_imports():
     directory = Path(__file__).resolve().parents[2] / "src/greenpath/app"
     forbidden = ("greenpath.impact", "greenpath.recommendation", "greenpath.models", "greenpath.llm", "greenpath.demo", "greenpath.api")

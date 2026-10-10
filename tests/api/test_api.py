@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath._product_contract_mirror import (
+from greenpath.contracts.product import (
     CONTRACT_VERSION,
     CustomerSnapshot,
     Explanation,
@@ -118,6 +118,7 @@ def test_health_and_snapshot_decimal_serialization(api_fixture):
     client, _, _, _ = api_fixture
     assert client.get("/health").json() == {
         "status": "ok", "synthetic_demo": True, "contract_version": CONTRACT_VERSION,
+        "provider_mode": "injected", "source_version": "injected-provider",
     }
     customers = client.get("/customers").json()
     assert len(customers) == 6
@@ -284,7 +285,7 @@ def test_missing_service_customer_and_missing_product_become_404(api_fixture):
 
 
 def test_default_demo_wires_real_services_and_explicit_history():
-    with TestClient(create_app()) as client:
+    with TestClient(create_app(provider_mode="fixture")) as client:
         customers = client.get("/customers").json()
         assert {item["customer_id"] for item in customers} == {f"GP-00{index}" for index in range(1, 7)}
         summary = client.get("/portfolio/summary").json()

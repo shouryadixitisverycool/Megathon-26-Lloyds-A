@@ -1,15 +1,17 @@
 # GreenPath carbon methods
 
-Method release: `greenpath-carbon-v1.0.0`  
+Legacy India method release: `greenpath-carbon-v1.0.0`
 Factor catalogue: `src/greenpath/impact/factors/carbon_factors.v1.json`  
 Frozen on: 2026-10-10  
-Owner: Agent B, implementation sequence point 1
+UK method release: `uk-physical-scenarios-v1`; reviewed factor edition: DESNZ 2026 (`desnz_2026_v1`)
 
-This document freezes the method choices for the next implementation step. It does not implement the calculators or define Agent A's canonical contracts. Input names below describe required evidence; their eventual mapping into `CustomerSnapshot` must be agreed at integration.
+This document freezes two distinct implemented methods: legacy India operational CO2 and UK operational energy CO2e. They are not interchangeable and must not be added into a cross-product or cross-country total. The India sections below remain the historical method specification; the UK section defines the current UK adapter. Detailed results use `contracts/impact_detail.py`.
 
-The referenced `GreenPath_PS1_Master_MVP_v2.md` and frozen contract packet are absent from this workspace. India is the explicit working geography for this demo, subject to reconciliation with that specification. Other countries and off-grid electricity are unsupported in this release.
+India calculators accept only their documented India evidence. The UK adapter accepts explicit synthetic UK Customer360 scenarios; it does not apply India factors. Off-grid electricity is unsupported. Geography must be established by the caller/registry, not inferred from banking spend.
 
 ## Shared accounting rules
+
+The following CO2-only boundary and factor choices describe the legacy India release. UK results instead use the CO2e units and wider operational energy boundary documented below. Common rules on signed changes, explicit physical evidence, missing activity, display precision and no invented runtime defaults apply to both.
 
 - Calculate a signed change as baseline emissions minus scenario emissions over the same stated period and service demand. A negative result means higher scenario emissions; never clamp it to zero or describe it as a saving.
 - Report `kg CO2` for the stated period. Only label a result `kg CO2/year` when the supplied baseline and scenario both cover a full year or a documented annual forecast. Do not automatically annualize a partial month.
@@ -144,3 +146,44 @@ These inputs are synthetic illustrations, not typical customer values or default
 Step 2 must add formula/unit tests and the invalid/missing/conflict cases above when implementing the four calculators. No application scaffold, canonical contracts, or calculator code is part of point 1.
 
 Step 2 is now implemented in `src/greenpath/impact/` with scoped tests and synthetic input fixtures in `tests/impact/`. The original factor/method release is unchanged. See [`AGENT_B_HANDOFF.md`](AGENT_B_HANDOFF.md) for setup, the replaceable contract mirrors, proposed integration mappings, and supported input precision.
+
+## UK Frozen Method and Source Review
+
+Source URL checks performed on **2026-10-10** using webfetch:
+
+- **Legacy reviewed edition: DESNZ 2025**, [official publication](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2025), published **10 June 2025**. The existing `extensions/uk_factors_2025.json` and its workbook hash/numeric values remain unchanged as historical artifacts. It is no longer the default UK calculation catalogue.
+- **Selected current reviewed edition: DESNZ 2026**, [official publication](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026), published **11 June 2026**, updated **31 July 2026**. The update corrected flat-file zero values which should have been blank; the full set was not revised. The [revised 2026 flat file](https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx) was downloaded on 2026-10-10, with SHA-256 `a9a455ab396dae226d510c7be6233748416d490c41a5d20f3dc7a0c45feecd5e`. All ten required rows were checked against their exact source IDs, Scope 1/2/3, categories, activities and units in `Factors by Category`. `extensions/uk_factors_2026.json` pins this reviewed subset, its row locators, source dates and URLs. Values preserve the workbook's published five-decimal `0.00000` cell format rather than binary floating-point XML serialization artifacts. The subset SHA-256 is `2e68c3d110958473a0afff4777ab1c15fd433e8b01a2d4ce82883476c6673d0d`; missing or changed catalogue bytes fail closed, with no fallback to 2025 or runtime source lookup. The original download is retained in the approved temporary workspace, not bundled with the application.
+- CEA's [database landing page](https://cea.nic.in/cdm-co2-baseline-database/?lang=en) returned a login page on this review. No new CEA edition or numeric value was verified. The legacy FY2022-23 version 19 factor remains historical, with the existing PDF-verification limitation above. A URL path containing 2024/04 is not a verified publication date.
+- IPCC's 2006 Guidelines retain their explicitly dated 2006 edition; the earlier recorded PDF table checks/checksums are retained, not represented as a new 2026 numeric review.
+
+UK output is **kg CO2e/year**, using the frozen matched Scope 1/2 operational factors plus relevant Scope 3 well-to-tank and electricity transmission/distribution components. Electricity total is `0.13096 + 0.01299 + 0.03682 + 0.00359 = 0.18436 kg CO2e/kWh`; gross-CV gas total is `0.18231 + 0.03021 = 0.21252 kg CO2e/kWh`. Petrol total is `2.07500 + 0.58094 = 2.65594 kg CO2e/litre`; diesel total is `2.58354 + 0.61101 = 3.19455 kg CO2e/litre`. Petrol and diesel use the documented UK average biofuel blends, not the India unblended-fuel assumptions. Outside-of-scopes biogenic combustion CO2 is excluded under the source reporting convention. Manufacturing, embodied emissions, storage and end of life remain excluded: this is not a complete lifecycle footprint.
+
+All model inputs are explicit. EV compares equal supplied annual mileage with litres/100km and EV battery-side kWh/100km divided by charging efficiency. Insulation applies separate caller-sourced electricity/gross-gas saving fractions. Heat pump compares supplied gross gas heating demand with delivered heat (`gas * gross boiler efficiency`) divided by seasonal performance. No mileage, fuel density, thermal performance, efficiency, capacity, generation, self-consumption or saving fraction is a runtime physical default.
+
+UK Solar compares baseline grid demand with demand minus annual AC generation times explicitly supplied self-consumption fraction. Self-consumption exceeding baseline demand is rejected; exports receive no credit. Annual arithmetic alone does not prove interval overlap. The caller must establish matched load/generation overlap, unchanged service demand and absence of storage before interpreting this as a defensible import-reduction forecast. A free-text installer/synthetic generation declaration remains an **unverified explicit scenario**, not a source-reviewed regional estimator output.
+
+## Regional Solar Generation
+
+`impact/solar_generation.py` implements the public JRC **PVGIS 5.3 fixed, grid-connected PVcalc** interface, evidence version `greenpath-pvgis-5.3-fixed-v1`. The [official API documentation](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/using-pvgis-5/api-non-interactive-service_en) was accessible on 2026-10-10 and documents versioned endpoints, mandatory kW peak power and percent system losses. A direct sample API request was rejected by the upstream access policy; **no real regional yield was obtained, pinned or fabricated in this release**.
+
+The estimator requires the caller's regional/site label, coordinates, kW peak capacity, loss percent, tilt, azimuth (0=south), PV technology, mounting, radiation database and horizon treatment. There is no invented region-to-coordinate mapping or representative regional yield. Fixed mounting/no tracking/no optimization are method boundaries sent explicitly, not guessed physical inputs. PVGIS source radiation years are retained; its long-term annual generation is not a 2026 weather forecast.
+
+Review and archive the exact API response and pin its byte SHA-256 before calculation. `estimate_generation` consumes those bytes or fetches the exact versioned request and verifies that hash. It verifies response installation/location/database/horizon metadata, source radiation years, and `E_y` units `kWh/y`. Missing source, changed hash, rejected HTTP request, invalid/non-finite activity or incompatible energy dimensions raises `ValueError`: callers must return unavailable, never substitute a yield. The hash establishes integrity, not independent certification of caller-provided evidence.
+
+Generation is the source's modelled annual AC output after its specified system losses. Yield is `annual_generation_kwh / proposed_capacity_kw`, in kWh/kW/year, not power or irradiation. `GenerationEstimate.scenario_fields()` produces scalar UK scenario features with the source URL, response hash, evidence version, retrieval time and radiation years in `generation_evidence`. Demand and self-consumption are still mandatory separate evidence. A site forecast must not be relabelled as a measured customer outcome. All response values in estimator unit tests are labelled synthetic, not published regional inputs.
+
+## Avoided Emissions Guidance
+
+Reference: WRI/WBCSD [GHG Protocol for Project Accounting](https://ghgprotocol.org/project-protocol), copyright **2005**, and [Guidelines for Grid-Connected Electricity Projects](https://ghgprotocol.org/sites/default/files/2022-12/Guidelines%20for%20Grid-Connected%20Electricity%20Projects.pdf), **August 2007**. The official project page was checked on 2026-10-10: it explicitly says the 2005 Project Protocol remains in force until the revised ISO-GHG Protocol Project Standard is published. These are project-accounting references, **not claims that GreenPath implements or is certified against those standards**.
+
+The result is a potential operational scenario difference using constant average inventory factors. It is not verified avoided emissions, a marginal displaced-generation estimate, financed-emissions attribution, an offset/credit, or an inventory deduction. Project claims require a justified counterfactual baseline, assessment of primary and secondary effects/leakage, appropriate grid displacement method, monitoring, uncertainty and attribution/additionality review. Report scenario comparisons separately from corporate inventories; do not claim product adoption or finance caused the full difference. Do not sum overlapping EV/home/solar reductions without a separately reviewed allocation method.
+
+## Detailed Contract and UI Handoff
+
+UK paperless carbon status is `NOT_CLAIMED` with null carbon/baseline/scenario values and `FACTOR_NOT_ESTABLISHED`; legacy India retains `UNAVAILABLE` for carbon. Supported UK paperless scenarios expose **`secondary_metrics`** in both detailed and scoring contracts: `paper_statements_avoided` in `statements/year` and `paper_sheets_avoided` in `sheets/year`. Their values are `annual_statements * avoided_fraction` and that count times `sheets_per_statement`. These are expected activity quantities, possibly fractional, not pages, trees, mass or carbon equivalents. Actual displacement must be established for realized claims.
+
+The detailed metric also carries `method_version` and `evidence_references`. UI consumers should render these even when carbon is `NOT_CLAIMED`, with an activity-only label and the carbon limitation. Missing/invalid paperless inputs produce `UNAVAILABLE` and no secondary metrics. No UI files are changed in this ownership scope.
+
+Detailed **`passport_id`** is `GP-` plus the SHA-256 of canonical JSON of the result excluding calculation `timestamp` and the ID itself. It includes product, method, boundary, factors/source metadata, snapshot references, cutoff, periods, evidence, assumptions, issues and secondary metrics. A repeated calculation with identical provenance retains its ID; a different customer/evidence/method does not. Supplied IDs are validated against the content. This is deterministic provenance integrity, not a signature or certification. The lower-level UK scenario `UK-` ID intentionally identifies inputs/factors only; the detailed `GP-` ID additionally binds customer evidence and period.
+
+UI source fields are `factors[].source_url`, `source_title`, `source_publisher`, `source_edition`, `source_published_on`, `source_checked_on`, `source_locator`, `source_sha256`, `verification_basis`, `source_limitation`, `current_edition` and `current_edition_url`. Publication dates are nullable when not verified; they are never inferred from retrieval dates or URL paths. Show the selected reviewed 2026 edition with its constant-average-factor scenario limitation. Historical 2025 results remain historical and must not be relabelled as 2026.

@@ -6,7 +6,7 @@ import pytest
 from greenpath.impact import ImpactResult, ImpactStatus, Product, build_registry, display_value
 from greenpath.impact.inputs import EVInput, GreenHomeInput, PaperlessInput, SolarInput
 
-from conftest import NOW
+from .conftest import NOW
 
 
 @pytest.mark.parametrize("name,baseline,scenario,change", [

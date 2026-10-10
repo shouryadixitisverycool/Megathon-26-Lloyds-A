@@ -1,0 +1,111 @@
+{
+  "version": "desnz_2025_v1",
+  "geography": "United Kingdom",
+  "source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2025",
+  "download_url": "https://assets.publishing.service.gov.uk/media/6846b6ea57f3515d9611f0dd/ghg-conversion-factors-2025-flat-format.xlsx",
+  "source_sha256": "8bfdb45b81ec4a88e3bdf4584637330f62e6bd09ce1940e654c5d7b7f736de94",
+  "retrieved": "2026-10-10",
+  "published_on": "2025-06-10",
+  "source_checked_on": "2026-10-10",
+  "selected_edition": "2025",
+  "current_edition": "2026",
+  "current_edition_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026",
+  "current_edition_published_on": "2026-06-11",
+  "current_edition_updated_on": "2026-07-31",
+  "current_vintage_limitation": "2026 publication verified via official GOV.UK page; 2026 numeric rows not reviewed or substituted. Reviewed 2025 subset remains frozen for modelled comparisons, not current-vintage reporting.",
+  "project_guidance_url": "https://ghgprotocol.org/project-protocol",
+  "licence": "Open Government Licence v3.0",
+  "source_sheet": "Factors by Category",
+  "factors": {
+    "gas_gross_kwh": {
+      "value": "0.18296",
+      "units": "kg CO2e/kWh (Gross CV)",
+      "source_row": 83,
+      "source_id": "1_100_1004_6_1",
+      "scope": "Scope 1",
+      "category": "Fuels",
+      "activity": "Natural gas"
+    },
+    "diesel_litre": {
+      "value": "2.57082",
+      "units": "kg CO2e/litres",
+      "source_row": 187,
+      "source_id": "1_101_1011_8_1",
+      "scope": "Scope 1",
+      "category": "Fuels",
+      "activity": "Diesel (average biofuel blend)"
+    },
+    "petrol_litre": {
+      "value": "2.06916",
+      "units": "kg CO2e/litres",
+      "source_row": 283,
+      "source_id": "1_101_1017_8_1",
+      "scope": "Scope 1",
+      "category": "Fuels",
+      "activity": "Petrol (average biofuel blend)"
+    },
+    "electricity_kwh": {
+      "value": "0.177",
+      "units": "kg CO2e/kWh",
+      "source_row": 3066,
+      "source_id": "7_400_4000_5_1",
+      "scope": "Scope 2",
+      "category": "UK electricity",
+      "activity": "Electricity: UK"
+    },
+    "gas_wtt_gross_kwh": {
+      "value": "0.03021",
+      "units": "kg CO2e/kWh (Gross CV)",
+      "source_row": 3477,
+      "source_id": "11_100_1004_6_1",
+      "scope": "Scope 3",
+      "category": "WTT- fuels",
+      "activity": "Natural gas"
+    },
+    "diesel_wtt_litre": {
+      "value": "0.61101",
+      "units": "kg CO2e/litres",
+      "source_row": 3503,
+      "source_id": "11_101_1011_8_1",
+      "scope": "Scope 3",
+      "category": "WTT- fuels",
+      "activity": "Diesel (average biofuel blend)"
+    },
+    "petrol_wtt_litre": {
+      "value": "0.58094",
+      "units": "kg CO2e/litres",
+      "source_row": 3527,
+      "source_id": "11_101_1017_8_1",
+      "scope": "Scope 3",
+      "category": "WTT- fuels",
+      "activity": "Petrol (average biofuel blend)"
+    },
+    "electricity_td_kwh": {
+      "value": "0.01853",
+      "units": "kg CO2e/kWh",
+      "source_row": 3627,
+      "source_id": "13_402_4000_5_1",
+      "scope": "Scope 3",
+      "category": "Transmission and distribution",
+      "activity": "Electricity: UK"
+    },
+    "electricity_wtt_generation_kwh": {
+      "value": "0.0459",
+      "units": "kg CO2e/kWh",
+      "source_row": 3939,
+      "source_id": "15_917_4000_5_1",
+      "scope": "Scope 3",
+      "category": "WTT- UK electricity",
+      "activity": "Electricity: UK"
+    },
+    "electricity_wtt_td_kwh": {
+      "value": "0.00397",
+      "units": "kg CO2e/kWh",
+      "source_row": 3940,
+      "source_id": "15_918_4000_5_1",
+      "scope": "Scope 3",
+      "category": "WTT- UK electricity",
+      "activity": "Electricity: UK"
+    }
+  }
+}

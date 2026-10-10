@@ -1,0 +1,26 @@
+{
+  "contract_version": "1.0.0",
+  "customer_id": "C10004",
+  "product": "EV_FINANCE",
+  "score": 0.46,
+  "status": "LOW",
+  "completeness": 0.93,
+  "freshness": 0.78,
+  "cross_source_consistency": 0.2,
+  "critical_fields_present": true,
+  "ood_score": 0.1,
+  "issues": [
+    {
+      "code": "EV_RECORD_WITH_RECURRING_FUEL_SPEND",
+      "category": "CONFLICT",
+      "severity": "HIGH",
+      "message": "Vehicle record shows an EV, but categorised fuel spend is high and recurring. Possible causes: second vehicle, stale record or merchant misclassification.",
+      "fields": [
+        "vehicle.fuel_type",
+        "spend.fuel_spend_90d_monthly_avg"
+      ]
+    }
+  ],
+  "method_version": "trust_v1",
+  "assessed_at": "2026-10-10T09:00:00"
+}

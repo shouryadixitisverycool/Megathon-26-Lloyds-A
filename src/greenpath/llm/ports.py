@@ -5,8 +5,8 @@ from typing import Literal, Protocol
 
 from pydantic import Field
 
-from greenpath._product_contract_mirror import RecommendationState
-from greenpath.impact._contract_mirror import Model, Product
+from greenpath.contracts.product import RecommendationState
+from greenpath.contracts.impact_detail import ImpactUnit, Model, Product
 
 
 class ApprovedSentence(Model):
@@ -20,7 +20,7 @@ class ExplanationRequest(Model):
     state: RecommendationState
     reason_codes: tuple[str, ...]
     impact_value: Decimal | None
-    units: Literal["kg CO2", "kg CO2/year"]
+    units: ImpactUnit
     eligibility_disclaimer: str
     approved_sentences: tuple[ApprovedSentence, ...]
     required_sentence_ids: tuple[str, ...]
@@ -33,7 +33,7 @@ class ProviderExplanation(Model):
     state: RecommendationState
     reason_codes: tuple[str, ...]
     impact_value: Decimal | None
-    units: Literal["kg CO2", "kg CO2/year"]
+    units: ImpactUnit
     eligibility_disclaimer: str
     sentence_ids: tuple[str, ...] = Field(min_length=1)
 

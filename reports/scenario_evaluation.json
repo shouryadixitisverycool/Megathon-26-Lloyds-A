@@ -358,6 +358,53 @@
     ]
   },
   "portfolio": {
+    "analytics": {
+      "physical_impact": {
+        "status": "AVAILABLE",
+        "unavailable_count": 1,
+        "groups": [
+          {
+            "product": "EV_FINANCE",
+            "units": "kg CO2/year",
+            "boundary": "vehicle_fuel_combustion_and_charging_generation_co2",
+            "period": "{'start': '2025-01-01', 'end': '2026-01-01'}",
+            "method_version": "ev-operational-co2-v1",
+            "factor_catalogue_version": "greenpath-carbon-factors-v1.0.0",
+            "value": "553.19400"
+          },
+          {
+            "product": "GREEN_HOME",
+            "units": "kg CO2/year",
+            "boundary": "home_grid_electricity_generation_co2",
+            "period": "{'start': '2025-01-01', 'end': '2026-01-01'}",
+            "method_version": "home-electricity-operational-co2-v1",
+            "factor_catalogue_version": "greenpath-carbon-factors-v1.0.0",
+            "value": "716.000"
+          },
+          {
+            "product": "SOLAR_FINANCE",
+            "units": "kg CO2/year",
+            "boundary": "solar_reduction_in_grid_import_generation_co2",
+            "period": "{'start': '2025-01-01', 'end': '2026-01-01'}",
+            "method_version": "solar-self-consumption-operational-co2-v1",
+            "factor_catalogue_version": "greenpath-carbon-factors-v1.0.0",
+            "value": "1790.000"
+          }
+        ],
+        "limitation": "Modelled physical potential, not realised carbon savings. Incompatible units and boundaries are never summed."
+      },
+      "quality_counts": {
+        "TRUSTED": 16,
+        "LIMITED": 4,
+        "CONFLICT": 4
+      },
+      "missingness": {
+        "propensity": 0,
+        "validated_confidence": 24,
+        "physical_impact": 9
+      },
+      "decision_count": 24
+    },
     "total_customers": 6,
     "total_recommendations": 24,
     "recommended_count": 4,
@@ -467,10 +514,219 @@
       }
     ],
     "available_impact_count": 3,
+    "customers_with_opportunity": 1,
+    "high_confidence_opportunities": 0,
+    "validated_confidence_opportunities": 0,
+    "high_trust_opportunities": 4,
+    "funnel_counts": {
+      "analyzed_customers": 6,
+      "in_population_scored_opportunities": 24,
+      "supported_opportunities": 4,
+      "supported_with_validated_confidence": 0,
+      "supported_with_high_confidence": 0
+    },
+    "funnel_limitation": "Counts refer to synthetic evidence; unavailable priority or impact components are not inferred.",
     "synthetic_demo": true,
-    "disclaimer": "Synthetic fixture counts; potential opportunities are not realized reductions. No cross-product carbon total is calculated."
+    "disclaimer": "Synthetic-data decision counts; potential opportunities are not realized reductions. No cross-product carbon total is calculated."
   },
   "trends": {
+    "analytics": {
+      "observations": [
+        {
+          "month": "2025-10",
+          "product": "EV_FINANCE",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-10",
+          "product": "GREEN_HOME",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-10",
+          "product": "PAPERLESS_BANKING",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-10",
+          "product": "SOLAR_FINANCE",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-11",
+          "product": "EV_FINANCE",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-11",
+          "product": "GREEN_HOME",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-11",
+          "product": "PAPERLESS_BANKING",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-11",
+          "product": "SOLAR_FINANCE",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-12",
+          "product": "EV_FINANCE",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-12",
+          "product": "GREEN_HOME",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-12",
+          "product": "PAPERLESS_BANKING",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        },
+        {
+          "month": "2025-12",
+          "product": "SOLAR_FINANCE",
+          "customer_count": 6,
+          "observed_conversion_rate": null,
+          "observed_outcome_count": 0,
+          "outcome_missing_count": 6,
+          "quality_counts": {},
+          "quality_missing_count": 6,
+          "propensity_missing_count": 6,
+          "confidence_missing_count": 6,
+          "trust_missing_count": 6,
+          "physical_impact_status": "UNAVAILABLE",
+          "physical_impact_missing_count": 6,
+          "physical_impact_groups": []
+        }
+      ],
+      "limitation": "Conversion denominators include recorded outcomes only. Missing historical quality and physical impact are unavailable; current evidence is never substituted."
+    },
     "observations": [
       {
         "month": "2025-10",
@@ -484,7 +740,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-10",
@@ -498,7 +767,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-10",
@@ -512,7 +794,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-10",
@@ -526,7 +821,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -540,7 +848,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -554,7 +875,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -568,7 +902,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-11",
@@ -582,7 +929,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 4,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -596,7 +956,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -610,7 +983,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -624,7 +1010,20 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       },
       {
         "month": "2025-12",
@@ -638,11 +1037,24 @@
           "CONFLICT_REQUIRES_REVIEW": 1,
           "NOT_APPLICABLE": 1,
           "SUPPRESSED": 1
-        }
+        },
+        "high_confidence_opportunity_share": null,
+        "high_confidence_opportunity_count": 0,
+        "validated_confidence_opportunity_count": 0,
+        "paperless_observed_count": 0,
+        "paperless_active_count": null,
+        "paperless_adoption_rate": null,
+        "average_propensity": null,
+        "average_validated_confidence": null,
+        "validated_confidence_count": 0,
+        "average_trust": null,
+        "abstained_count": 3,
+        "observed_outcome_count": 0,
+        "observed_adoptions_90d": null
       }
     ],
     "synthetic_demo": true,
-    "disclaimer": "Historical states are synthetic fixtures, not predictions of real customer behavior."
+    "disclaimer": "Historical states use synthetic evidence. Trained trends retrospectively apply the current model to each monthly feature cutoff; they are not observed customer behavior."
   },
   "limitations": "Fixed fixtures verify Agent B integration. They do not train or evaluate Agent A models, establish predictive performance, or record realized carbon reductions."
 }

@@ -1,0 +1,306 @@
+{
+  "$defs": {
+    "ImpactAssumption": {
+      "additionalProperties": false,
+      "properties": {
+        "is_estimated": {
+          "default": false,
+          "title": "Is Estimated",
+          "type": "boolean"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "ImpactAssumption",
+      "type": "object"
+    },
+    "ImpactMetric": {
+      "additionalProperties": false,
+      "description": "Non-carbon outcome measure, e.g. paper statements avoided per year.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "unit"
+      ],
+      "title": "ImpactMetric",
+      "type": "object"
+    },
+    "ImpactStatus": {
+      "enum": [
+        "AVAILABLE",
+        "UNAVAILABLE",
+        "NOT_CLAIMED"
+      ],
+      "title": "ImpactStatus",
+      "type": "string"
+    },
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assumptions": {
+      "items": {
+        "$ref": "#/$defs/ImpactAssumption"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "baseline": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Baseline"
+    },
+    "boundary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Boundary"
+    },
+    "calculation_timestamp": {
+      "format": "date-time",
+      "title": "Calculation Timestamp",
+      "type": "string"
+    },
+    "carbon_engine_version": {
+      "title": "Carbon Engine Version",
+      "type": "string"
+    },
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "data_cutoff": {
+      "format": "date",
+      "title": "Data Cutoff",
+      "type": "string"
+    },
+    "estimated_reduction": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Estimated Reduction"
+    },
+    "factor_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Factor Ids",
+      "type": "array"
+    },
+    "factor_source": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Factor Source"
+    },
+    "factor_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Factor Version"
+    },
+    "grid_scenario": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Grid Scenario"
+    },
+    "method_version": {
+      "title": "Method Version",
+      "type": "string"
+    },
+    "methodology_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Methodology Id"
+    },
+    "metric": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Metric"
+    },
+    "product": {
+      "$ref": "#/$defs/Product"
+    },
+    "scenario": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scenario"
+    },
+    "secondary_metrics": {
+      "items": {
+        "$ref": "#/$defs/ImpactMetric"
+      },
+      "title": "Secondary Metrics",
+      "type": "array"
+    },
+    "status": {
+      "$ref": "#/$defs/ImpactStatus"
+    },
+    "unavailable_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unavailable Reason"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unit"
+    }
+  },
+  "required": [
+    "customer_id",
+    "product",
+    "status",
+    "method_version",
+    "data_cutoff",
+    "calculation_timestamp",
+    "carbon_engine_version"
+  ],
+  "title": "ImpactResult",
+  "type": "object"
+}

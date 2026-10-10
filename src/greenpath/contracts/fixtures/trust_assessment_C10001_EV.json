@@ -1,0 +1,15 @@
+{
+  "contract_version": "1.0.0",
+  "customer_id": "C10001",
+  "product": "EV_FINANCE",
+  "score": 0.91,
+  "status": "HIGH",
+  "completeness": 0.96,
+  "freshness": 0.89,
+  "cross_source_consistency": 0.92,
+  "critical_fields_present": true,
+  "ood_score": 0.08,
+  "issues": [],
+  "method_version": "trust_v1",
+  "assessed_at": "2026-10-10T09:00:00"
+}

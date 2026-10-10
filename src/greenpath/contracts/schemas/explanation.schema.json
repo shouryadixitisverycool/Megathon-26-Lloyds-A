@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "ExplanationSource": {
+      "enum": [
+        "LLM",
+        "TEMPLATE"
+      ],
+      "title": "ExplanationSource",
+      "type": "string"
+    },
+    "GroundingResult": {
+      "enum": [
+        "PASS",
+        "FAIL_NUMERIC",
+        "FAIL_REASON_CODE",
+        "FAIL_ELIGIBILITY",
+        "FAIL_UNSUPPORTED_CLAIM",
+        "NOT_RUN"
+      ],
+      "title": "GroundingResult",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "LLM structured output (spec 38) plus provenance of how it was produced.",
+  "properties": {
+    "action_text": {
+      "title": "Action Text",
+      "type": "string"
+    },
+    "cache_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cache Key"
+    },
+    "confidence_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence Text"
+    },
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "eligibility_disclaimer": {
+      "title": "Eligibility Disclaimer",
+      "type": "string"
+    },
+    "estimated_impact_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Estimated Impact Text"
+    },
+    "explanation": {
+      "title": "Explanation",
+      "type": "string"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "grounding_result": {
+      "$ref": "#/$defs/GroundingResult"
+    },
+    "headline": {
+      "title": "Headline",
+      "type": "string"
+    },
+    "llm_model_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Llm Model Version"
+    },
+    "missing_information": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Information",
+      "type": "array"
+    },
+    "prompt_version": {
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "recommendation_id": {
+      "title": "Recommendation Id",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/ExplanationSource"
+    },
+    "why_recommended": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Why Recommended",
+      "type": "array"
+    }
+  },
+  "required": [
+    "recommendation_id",
+    "headline",
+    "explanation",
+    "action_text",
+    "eligibility_disclaimer",
+    "source",
+    "grounding_result",
+    "prompt_version",
+    "generated_at"
+  ],
+  "title": "Explanation",
+  "type": "object"
+}

@@ -1,0 +1,31 @@
+{
+  "contract_version": "1.0.0",
+  "customer_id": "C10005",
+  "product": "SOLAR_FINANCE",
+  "propensity": 0.38,
+  "raw_score": 0.44,
+  "model_type": "LOGISTIC",
+  "model_version": "solar_propensity_v1",
+  "calibration_method": "platt",
+  "calibration_version": "solar_platt_v1",
+  "feature_version": "feature_v1",
+  "feature_cutoff": "2026-06-30",
+  "outcome_window_end": "2026-09-28",
+  "prediction_timestamp": "2026-10-10T09:00:00",
+  "in_model_population": true,
+  "population_exclusion": null,
+  "reason_codes": [],
+  "evidence": {
+    "home_owner": null,
+    "has_existing_solar": null,
+    "electricity_kwh_12m": null,
+    "energy_months_present": 3.0
+  },
+  "confidence": {
+    "status": "SUPPRESSED",
+    "value": null,
+    "bucket": null,
+    "method_version": "conf_meta_v2",
+    "limitation": "Suppressed: critical fields (home ownership, existing solar status) are missing, so reliability cannot be validated for this customer."
+  }
+}

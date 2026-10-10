@@ -1,0 +1,2215 @@
+{
+  "version": "system-performance-v1",
+  "synthetic_demo": true,
+  "runs": [
+    {
+      "provider_mode": "fixture",
+      "startup_seconds": 0.009052457986399531,
+      "api": {
+        "/health": {
+          "n": 5,
+          "p50_ms": 0.7026670500636101,
+          "p95_ms": 2.7351919561624523,
+          "max_ms": 3.2400419004261494
+        },
+        "/customers/GP-001": {
+          "n": 5,
+          "p50_ms": 0.6909591611474752,
+          "p95_ms": 0.9921582415699958,
+          "max_ms": 1.0672498028725386
+        },
+        "/customers/GP-001/recommendations": {
+          "n": 5,
+          "p50_ms": 6.12437492236495,
+          "p95_ms": 11.308316513895987,
+          "max_ms": 12.589458143338561
+        },
+        "/customers/GP-001/explanations/EV_FINANCE": {
+          "n": 5,
+          "p50_ms": 9.05995792709291,
+          "p95_ms": 9.554266650229692,
+          "max_ms": 9.631125023588538
+        },
+        "/portfolio/summary": {
+          "n": 5,
+          "p50_ms": 31.256542075425386,
+          "p95_ms": 36.76898363046348,
+          "max_ms": 37.342292023822665
+        },
+        "/portfolio/trends": {
+          "n": 5,
+          "p50_ms": 1.4132079668343067,
+          "p95_ms": 1.9475658424198627,
+          "max_ms": 1.9951658323407173
+        }
+      },
+      "explanation_cache": {
+        "requests": 5,
+        "cache_hits": 4,
+        "cache_misses": 1,
+        "cache_hit_rate": 0.8,
+        "average_latency_ms": 0.39298366755247116,
+        "provider_attempts": 0,
+        "provider_completed": 0,
+        "live_provider_latency_ms": null,
+        "prompt_version": "grounded-selection-v1",
+        "model_version": "grounded-template-v2",
+        "locale": "en",
+        "offline_cost": 0,
+        "live_provider_cost": null
+      },
+      "fairness": [],
+      "ranking_ablation": {},
+      "distributions": {
+        "EV_FINANCE": {
+          "propensity": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              5,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.725
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              4
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.7583333333333333
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        },
+        "GREEN_HOME": {
+          "propensity": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              5,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.725
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              4
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.7583333333333333
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        },
+        "PAPERLESS_BANKING": {
+          "propensity": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              5,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.725
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              4
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.7583333333333333
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        },
+        "SOLAR_FINANCE": {
+          "propensity": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              5,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.725
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 6,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              4
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.7583333333333333
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 6,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        }
+      },
+      "evaluation_cohort": {
+        "opportunity_rows": 24,
+        "opportunity_customers": 6,
+        "fairness_rows": 0,
+        "boundary": "All provider snapshots and products; no customer subsampling. Ranking uses the reported held-out and complete-priority cohorts."
+      },
+      "portfolio_measurement_boundary": "Full-cohort scoring/ranking and audits read startup/summary-persisted decisions from isolated SQLite, omitting unused provenance snapshots. Includes cohort validation and the normal priority formula; excludes redundant inference/persistence. Not a fresh opportunities API latency measurement.",
+      "stage_seconds": {
+        "application_build": 0.01731545804068446,
+        "lifespan_startup": 0.009052457986399531,
+        "portfolio_scoring_and_ranking": 0.003963292110711336,
+        "distributions": 0.000848167110234499,
+        "fairness_and_ablation": 2.919696271419525e-07,
+        "total": 0.29472758318297565
+      },
+      "memory": {
+        "process_peak_rss_bytes": 265846784,
+        "process_peak_rss_before_bytes": 262946816,
+        "boundary": "resource.getrusage(RUSAGE_SELF).ru_maxrss in bytes; process lifetime high-water RSS including native buffers, not current RSS or an isolated per-mode peak. Fixture and trained runs share a process."
+      },
+      "measurement_boundary": "Local in-process FastAPI TestClient without evaluator allocation tracing; includes full provider startup and normal SQLite decision persistence; excludes network transport, Streamlit render and live LLM latency."
+    },
+    {
+      "provider_mode": "trained",
+      "startup_seconds": 220.5426519580651,
+      "api": {
+        "/health": {
+          "n": 5,
+          "p50_ms": 0.6259579677134752,
+          "p95_ms": 7.1533328853547555,
+          "max_ms": 8.69470788165927
+        },
+        "/customers/C10001": {
+          "n": 5,
+          "p50_ms": 1.2680408544838428,
+          "p95_ms": 2.7748246211558576,
+          "max_ms": 3.137958003208041
+        },
+        "/customers/C10001/recommendations": {
+          "n": 5,
+          "p50_ms": 7.741583976894617,
+          "p95_ms": 14.541049953550099,
+          "max_ms": 16.212208196520805
+        },
+        "/customers/C10001/explanations/EV_FINANCE": {
+          "n": 5,
+          "p50_ms": 10.090083116665483,
+          "p95_ms": 11.584783345460892,
+          "max_ms": 11.913874885067344
+        },
+        "/portfolio/summary": {
+          "n": 5,
+          "p50_ms": 0.5349169950932264,
+          "p95_ms": 0.9188915602862834,
+          "max_ms": 1.006874954327941
+        },
+        "/portfolio/trends": {
+          "n": 5,
+          "p50_ms": 1276.215499965474,
+          "p95_ms": 1777.2201169282198,
+          "max_ms": 1901.69966686517
+        }
+      },
+      "explanation_cache": {
+        "requests": 5,
+        "cache_hits": 4,
+        "cache_misses": 1,
+        "cache_hit_rate": 0.8,
+        "average_latency_ms": 0.8246832061558962,
+        "provider_attempts": 0,
+        "provider_completed": 0,
+        "live_provider_latency_ms": null,
+        "prompt_version": "grounded-selection-v1",
+        "model_version": "grounded-template-v2",
+        "locale": "en",
+        "offline_cost": 0,
+        "live_provider_cost": null
+      },
+      "fairness": [
+        {
+          "product": "EV_FINANCE",
+          "dimension": "age_band",
+          "group": "18-24",
+          "n": 326,
+          "recommendation_rate": 0.05828220858895705,
+          "abstention_rate": 0.3006134969325153,
+          "mean_trust": 0.7573232500652765,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "age_band",
+          "group": "25-34",
+          "n": 588,
+          "recommendation_rate": 0.04251700680272109,
+          "abstention_rate": 0.3197278911564626,
+          "mean_trust": 0.7547055559125195,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "age_band",
+          "group": "35-44",
+          "n": 1025,
+          "recommendation_rate": 0.05951219512195122,
+          "abstention_rate": 0.2926829268292683,
+          "mean_trust": 0.7666721165172035,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "age_band",
+          "group": "45-54",
+          "n": 1027,
+          "recommendation_rate": 0.06718597857838364,
+          "abstention_rate": 0.29892891918208375,
+          "mean_trust": 0.7651449635355603,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "age_band",
+          "group": "55-64",
+          "n": 668,
+          "recommendation_rate": 0.058383233532934134,
+          "abstention_rate": 0.26497005988023953,
+          "mean_trust": 0.7796534744122522,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "age_band",
+          "group": "65+",
+          "n": 376,
+          "recommendation_rate": 0.05851063829787234,
+          "abstention_rate": 0.22872340425531915,
+          "mean_trust": 0.80074648875768,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "age_band",
+          "group": "18-24",
+          "n": 326,
+          "recommendation_rate": 0.03987730061349693,
+          "abstention_rate": 0.35276073619631904,
+          "mean_trust": 0.7765913166495892,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "age_band",
+          "group": "25-34",
+          "n": 588,
+          "recommendation_rate": 0.04591836734693878,
+          "abstention_rate": 0.40476190476190477,
+          "mean_trust": 0.7464695400687017,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "age_band",
+          "group": "35-44",
+          "n": 1025,
+          "recommendation_rate": 0.07317073170731707,
+          "abstention_rate": 0.3541463414634146,
+          "mean_trust": 0.7744709116774935,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "age_band",
+          "group": "45-54",
+          "n": 1027,
+          "recommendation_rate": 0.0759493670886076,
+          "abstention_rate": 0.34177215189873417,
+          "mean_trust": 0.7797420030078792,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "age_band",
+          "group": "55-64",
+          "n": 668,
+          "recommendation_rate": 0.07335329341317365,
+          "abstention_rate": 0.3937125748502994,
+          "mean_trust": 0.7495006680829019,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "age_band",
+          "group": "65+",
+          "n": 376,
+          "recommendation_rate": 0.06914893617021277,
+          "abstention_rate": 0.30851063829787234,
+          "mean_trust": 0.7978004886165977,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "age_band",
+          "group": "18-24",
+          "n": 326,
+          "recommendation_rate": 0.015337423312883436,
+          "abstention_rate": 0.2116564417177914,
+          "mean_trust": 0.7501466219083998,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "age_band",
+          "group": "25-34",
+          "n": 588,
+          "recommendation_rate": 0.022108843537414966,
+          "abstention_rate": 0.1377551020408163,
+          "mean_trust": 0.7853586403114703,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "age_band",
+          "group": "35-44",
+          "n": 1025,
+          "recommendation_rate": 0.0351219512195122,
+          "abstention_rate": 0.10439024390243902,
+          "mean_trust": 0.8074934805951832,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "age_band",
+          "group": "45-54",
+          "n": 1027,
+          "recommendation_rate": 0.043816942551119765,
+          "abstention_rate": 0.08373904576436222,
+          "mean_trust": 0.8261336983214221,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "age_band",
+          "group": "55-64",
+          "n": 668,
+          "recommendation_rate": 0.0374251497005988,
+          "abstention_rate": 0.059880239520958084,
+          "mean_trust": 0.8413464344895115,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "age_band",
+          "group": "65+",
+          "n": 376,
+          "recommendation_rate": 0.06914893617021277,
+          "abstention_rate": 0.06382978723404255,
+          "mean_trust": 0.8577780008028902,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "age_band",
+          "group": "18-24",
+          "n": 326,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.37423312883435583,
+          "mean_trust": 0.7592649385191444,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "age_band",
+          "group": "25-34",
+          "n": 588,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.43197278911564624,
+          "mean_trust": 0.7262084204382627,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "age_band",
+          "group": "35-44",
+          "n": 1025,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.37658536585365854,
+          "mean_trust": 0.7581267635202843,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "age_band",
+          "group": "45-54",
+          "n": 1027,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.37000973709834467,
+          "mean_trust": 0.7617554043249081,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "age_band",
+          "group": "55-64",
+          "n": 668,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.42664670658682635,
+          "mean_trust": 0.7286658793400372,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "age_band",
+          "group": "65+",
+          "n": 376,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.324468085106383,
+          "mean_trust": 0.7832790454308125,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "income_band",
+          "group": "100k+",
+          "n": 317,
+          "recommendation_rate": 0.06624605678233439,
+          "abstention_rate": 0.2082018927444795,
+          "mean_trust": 0.7989913188282921,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "income_band",
+          "group": "25-50k",
+          "n": 1439,
+          "recommendation_rate": 0.05350938151494093,
+          "abstention_rate": 0.2946490618485059,
+          "mean_trust": 0.7693459547249599,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "income_band",
+          "group": "50-75k",
+          "n": 960,
+          "recommendation_rate": 0.071875,
+          "abstention_rate": 0.25416666666666665,
+          "mean_trust": 0.786553489773546,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "income_band",
+          "group": "75-100k",
+          "n": 443,
+          "recommendation_rate": 0.07674943566591422,
+          "abstention_rate": 0.1873589164785553,
+          "mean_trust": 0.8110201258346986,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "income_band",
+          "group": "<25k",
+          "n": 851,
+          "recommendation_rate": 0.0399529964747356,
+          "abstention_rate": 0.3983548766157462,
+          "mean_trust": 0.7161502951987145,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "income_band",
+          "group": "100k+",
+          "n": 317,
+          "recommendation_rate": 0.07255520504731862,
+          "abstention_rate": 0.35962145110410093,
+          "mean_trust": 0.7652521103773345,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "income_band",
+          "group": "25-50k",
+          "n": 1439,
+          "recommendation_rate": 0.06671299513551077,
+          "abstention_rate": 0.36205698401667824,
+          "mean_trust": 0.7701145525382364,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "income_band",
+          "group": "50-75k",
+          "n": 960,
+          "recommendation_rate": 0.06770833333333333,
+          "abstention_rate": 0.3885416666666667,
+          "mean_trust": 0.7528742952259182,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "income_band",
+          "group": "75-100k",
+          "n": 443,
+          "recommendation_rate": 0.07900677200902935,
+          "abstention_rate": 0.3340857787810384,
+          "mean_trust": 0.7832325309363654,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "income_band",
+          "group": "<25k",
+          "n": 851,
+          "recommendation_rate": 0.057579318448883664,
+          "abstention_rate": 0.3407755581668625,
+          "mean_trust": 0.7836062463361648,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "income_band",
+          "group": "100k+",
+          "n": 317,
+          "recommendation_rate": 0.022082018927444796,
+          "abstention_rate": 0.1167192429022082,
+          "mean_trust": 0.8031037339047278,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "income_band",
+          "group": "25-50k",
+          "n": 1439,
+          "recommendation_rate": 0.03683113273106324,
+          "abstention_rate": 0.09798471160528145,
+          "mean_trust": 0.8160670189378542,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "income_band",
+          "group": "50-75k",
+          "n": 960,
+          "recommendation_rate": 0.042708333333333334,
+          "abstention_rate": 0.109375,
+          "mean_trust": 0.8094233162997903,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "income_band",
+          "group": "75-100k",
+          "n": 443,
+          "recommendation_rate": 0.01805869074492099,
+          "abstention_rate": 0.10158013544018059,
+          "mean_trust": 0.812990864176498,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "income_band",
+          "group": "<25k",
+          "n": 851,
+          "recommendation_rate": 0.0481786133960047,
+          "abstention_rate": 0.09283196239717979,
+          "mean_trust": 0.8236158533430886,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "income_band",
+          "group": "100k+",
+          "n": 317,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3753943217665615,
+          "mean_trust": 0.7473712307413514,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "income_band",
+          "group": "25-50k",
+          "n": 1439,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.38846421125781794,
+          "mean_trust": 0.7508399676966806,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "income_band",
+          "group": "50-75k",
+          "n": 960,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.41354166666666664,
+          "mean_trust": 0.7366601013005826,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "income_band",
+          "group": "75-100k",
+          "n": 443,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.34988713318284426,
+          "mean_trust": 0.7654010790227189,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "income_band",
+          "group": "<25k",
+          "n": 851,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.37485311398354876,
+          "mean_trust": 0.7656329184369995,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "East Midlands",
+          "n": 296,
+          "recommendation_rate": 0.05067567567567568,
+          "abstention_rate": 0.2635135135135135,
+          "mean_trust": 0.7880746828491096,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "East of England",
+          "n": 404,
+          "recommendation_rate": 0.05693069306930693,
+          "abstention_rate": 0.24752475247524752,
+          "mean_trust": 0.7908859730800151,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "London",
+          "n": 549,
+          "recommendation_rate": 0.058287795992714025,
+          "abstention_rate": 0.47540983606557374,
+          "mean_trust": 0.6704385169255371,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "North East",
+          "n": 176,
+          "recommendation_rate": 0.0625,
+          "abstention_rate": 0.24431818181818182,
+          "mean_trust": 0.7877727516538847,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "North West",
+          "n": 450,
+          "recommendation_rate": 0.04666666666666667,
+          "abstention_rate": 0.26,
+          "mean_trust": 0.7850210361219216,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "Scotland",
+          "n": 329,
+          "recommendation_rate": 0.057750759878419454,
+          "abstention_rate": 0.22188449848024316,
+          "mean_trust": 0.800944395571008,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "South East",
+          "n": 554,
+          "recommendation_rate": 0.05415162454873646,
+          "abstention_rate": 0.26895306859205775,
+          "mean_trust": 0.7773154912231826,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "South West",
+          "n": 331,
+          "recommendation_rate": 0.05740181268882175,
+          "abstention_rate": 0.23867069486404835,
+          "mean_trust": 0.7918473053805115,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "Wales",
+          "n": 183,
+          "recommendation_rate": 0.07103825136612021,
+          "abstention_rate": 0.29508196721311475,
+          "mean_trust": 0.76888070311589,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "West Midlands",
+          "n": 355,
+          "recommendation_rate": 0.07042253521126761,
+          "abstention_rate": 0.29295774647887324,
+          "mean_trust": 0.7683531278373189,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "Yorkshire",
+          "n": 331,
+          "recommendation_rate": 0.07250755287009064,
+          "abstention_rate": 0.24773413897280966,
+          "mean_trust": 0.7943869529964943,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "EV_FINANCE",
+          "dimension": "region",
+          "group": "<NA>",
+          "n": 52,
+          "recommendation_rate": 0.057692307692307696,
+          "abstention_rate": 0.3076923076923077,
+          "mean_trust": 0.7454313772651417,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "East Midlands",
+          "n": 296,
+          "recommendation_rate": 0.0945945945945946,
+          "abstention_rate": 0.38175675675675674,
+          "mean_trust": 0.7618094695626758,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "East of England",
+          "n": 404,
+          "recommendation_rate": 0.05198019801980198,
+          "abstention_rate": 0.37623762376237624,
+          "mean_trust": 0.7606529912478248,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "London",
+          "n": 549,
+          "recommendation_rate": 0.060109289617486336,
+          "abstention_rate": 0.366120218579235,
+          "mean_trust": 0.7662251642466131,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "North East",
+          "n": 176,
+          "recommendation_rate": 0.07954545454545454,
+          "abstention_rate": 0.3181818181818182,
+          "mean_trust": 0.7924935770654542,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "North West",
+          "n": 450,
+          "recommendation_rate": 0.04666666666666667,
+          "abstention_rate": 0.3888888888888889,
+          "mean_trust": 0.7547646890155557,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "Scotland",
+          "n": 329,
+          "recommendation_rate": 0.060790273556231005,
+          "abstention_rate": 0.3465045592705167,
+          "mean_trust": 0.7749257903696758,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "South East",
+          "n": 554,
+          "recommendation_rate": 0.09386281588447654,
+          "abstention_rate": 0.3483754512635379,
+          "mean_trust": 0.7774020863477469,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "South West",
+          "n": 331,
+          "recommendation_rate": 0.05740181268882175,
+          "abstention_rate": 0.3413897280966767,
+          "mean_trust": 0.7783465052981552,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "Wales",
+          "n": 183,
+          "recommendation_rate": 0.060109289617486336,
+          "abstention_rate": 0.36065573770491804,
+          "mean_trust": 0.7671633756897804,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "West Midlands",
+          "n": 355,
+          "recommendation_rate": 0.07323943661971831,
+          "abstention_rate": 0.3352112676056338,
+          "mean_trust": 0.7859502863200912,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "Yorkshire",
+          "n": 331,
+          "recommendation_rate": 0.06042296072507553,
+          "abstention_rate": 0.3716012084592145,
+          "mean_trust": 0.7650141468140652,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "GREEN_HOME",
+          "dimension": "region",
+          "group": "<NA>",
+          "n": 52,
+          "recommendation_rate": 0.057692307692307696,
+          "abstention_rate": 0.40384615384615385,
+          "mean_trust": 0.7479430382122758,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "East Midlands",
+          "n": 296,
+          "recommendation_rate": 0.037162162162162164,
+          "abstention_rate": 0.10472972972972973,
+          "mean_trust": 0.8120769059153492,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "East of England",
+          "n": 404,
+          "recommendation_rate": 0.0297029702970297,
+          "abstention_rate": 0.11138613861386139,
+          "mean_trust": 0.815487615978579,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "London",
+          "n": 549,
+          "recommendation_rate": 0.04735883424408015,
+          "abstention_rate": 0.10382513661202186,
+          "mean_trust": 0.812885349005052,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "North East",
+          "n": 176,
+          "recommendation_rate": 0.03409090909090909,
+          "abstention_rate": 0.09090909090909091,
+          "mean_trust": 0.8185248713550599,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "North West",
+          "n": 450,
+          "recommendation_rate": 0.042222222222222223,
+          "abstention_rate": 0.09555555555555556,
+          "mean_trust": 0.8191013277428372,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "Scotland",
+          "n": 329,
+          "recommendation_rate": 0.03343465045592705,
+          "abstention_rate": 0.08814589665653495,
+          "mean_trust": 0.8170174533080996,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "South East",
+          "n": 554,
+          "recommendation_rate": 0.036101083032490974,
+          "abstention_rate": 0.11552346570397112,
+          "mean_trust": 0.8086319051835705,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "South West",
+          "n": 331,
+          "recommendation_rate": 0.027190332326283987,
+          "abstention_rate": 0.1148036253776435,
+          "mean_trust": 0.8016464306751029,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "Wales",
+          "n": 183,
+          "recommendation_rate": 0.060109289617486336,
+          "abstention_rate": 0.08196721311475409,
+          "mean_trust": 0.8265302264838299,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "West Midlands",
+          "n": 355,
+          "recommendation_rate": 0.030985915492957747,
+          "abstention_rate": 0.10422535211267606,
+          "mean_trust": 0.8148686774736468,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "Yorkshire",
+          "n": 331,
+          "recommendation_rate": 0.03625377643504532,
+          "abstention_rate": 0.08157099697885196,
+          "mean_trust": 0.8232656900188108,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "PAPERLESS_BANKING",
+          "dimension": "region",
+          "group": "<NA>",
+          "n": 52,
+          "recommendation_rate": 0.038461538461538464,
+          "abstention_rate": 0.09615384615384616,
+          "mean_trust": 0.8284772617319788,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "East Midlands",
+          "n": 296,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3952702702702703,
+          "mean_trust": 0.7495196173934671,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "East of England",
+          "n": 404,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.38613861386138615,
+          "mean_trust": 0.7479905283473133,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "London",
+          "n": 549,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3825136612021858,
+          "mean_trust": 0.7528144506176792,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "North East",
+          "n": 176,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3409090909090909,
+          "mean_trust": 0.7794015500092955,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "North West",
+          "n": 450,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.41333333333333333,
+          "mean_trust": 0.7419785699531098,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "Scotland",
+          "n": 329,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3617021276595745,
+          "mean_trust": 0.7631455505509154,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "South East",
+          "n": 554,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.36823104693140796,
+          "mean_trust": 0.7606259131815598,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "South West",
+          "n": 331,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3564954682779456,
+          "mean_trust": 0.7650526285785215,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "Wales",
+          "n": 183,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3825136612021858,
+          "mean_trust": 0.7509711161702514,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "West Midlands",
+          "n": 355,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.35492957746478876,
+          "mean_trust": 0.7739092532514291,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "Yorkshire",
+          "n": 331,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 0.3957703927492447,
+          "mean_trust": 0.749636490570637,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        },
+        {
+          "product": "SOLAR_FINANCE",
+          "dimension": "region",
+          "group": "<NA>",
+          "n": 52,
+          "recommendation_rate": 0.0,
+          "abstention_rate": 1.0,
+          "mean_trust": 0.39999999999999986,
+          "validated_confidence_coverage": 0.0,
+          "mean_validated_confidence": null
+        }
+      ],
+      "ranking_ablation": {
+        "EV_FINANCE": {
+          "held_out_n": 346,
+          "top_decile_n": 35,
+          "propensity_only_observed_rate": 0.22857142857142856,
+          "propensity_plus_trust_observed_rate": 0.2,
+          "full_priority_observed_rate": null,
+          "complete_priority_n": 0,
+          "common_cohort_top_decile_n": 0,
+          "common_cohort_propensity_only_observed_rate": null,
+          "common_cohort_propensity_plus_trust_observed_rate": null,
+          "limitation": "Full priority and common-cohort ablations use only rows with all validated components. If physical impact or confidence is absent, full priority remains unavailable. Synthetic outcomes do not establish causal impact."
+        },
+        "GREEN_HOME": {
+          "held_out_n": 279,
+          "top_decile_n": 28,
+          "propensity_only_observed_rate": 0.17857142857142858,
+          "propensity_plus_trust_observed_rate": 0.10714285714285714,
+          "full_priority_observed_rate": null,
+          "complete_priority_n": 0,
+          "common_cohort_top_decile_n": 0,
+          "common_cohort_propensity_only_observed_rate": null,
+          "common_cohort_propensity_plus_trust_observed_rate": null,
+          "limitation": "Full priority and common-cohort ablations use only rows with all validated components. If physical impact or confidence is absent, full priority remains unavailable. Synthetic outcomes do not establish causal impact."
+        },
+        "PAPERLESS_BANKING": {
+          "held_out_n": 105,
+          "top_decile_n": 11,
+          "propensity_only_observed_rate": 0.18181818181818182,
+          "propensity_plus_trust_observed_rate": 0.18181818181818182,
+          "full_priority_observed_rate": null,
+          "complete_priority_n": 0,
+          "common_cohort_top_decile_n": 0,
+          "common_cohort_propensity_only_observed_rate": null,
+          "common_cohort_propensity_plus_trust_observed_rate": null,
+          "limitation": "Full priority and common-cohort ablations use only rows with all validated components. If physical impact or confidence is absent, full priority remains unavailable. Synthetic outcomes do not establish causal impact."
+        },
+        "SOLAR_FINANCE": {
+          "held_out_n": 354,
+          "top_decile_n": 36,
+          "propensity_only_observed_rate": 0.4722222222222222,
+          "propensity_plus_trust_observed_rate": 0.4722222222222222,
+          "full_priority_observed_rate": null,
+          "complete_priority_n": 0,
+          "common_cohort_top_decile_n": 0,
+          "common_cohort_propensity_only_observed_rate": null,
+          "common_cohort_propensity_plus_trust_observed_rate": null,
+          "limitation": "Full priority and common-cohort ablations use only rows with all validated components. If physical impact or confidence is absent, full priority remains unavailable. Synthetic outcomes do not establish causal impact."
+        }
+      },
+      "distributions": {
+        "EV_FINANCE": {
+          "propensity": {
+            "n": 2428,
+            "missing_count": 1582,
+            "counts": [
+              1941,
+              470,
+              14,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.06942247190033025
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 4010,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              1073,
+              83,
+              1,
+              150,
+              1040,
+              1663
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.7691237516357275
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        },
+        "GREEN_HOME": {
+          "propensity": {
+            "n": 2003,
+            "missing_count": 2007,
+            "counts": [
+              1433,
+              426,
+              96,
+              36,
+              2,
+              6,
+              1,
+              2,
+              1,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.08993259201476791
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 4010,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              1422,
+              24,
+              0,
+              9,
+              153,
+              2402
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.7699152145501008
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        },
+        "PAPERLESS_BANKING": {
+          "propensity": {
+            "n": 741,
+            "missing_count": 3269,
+            "counts": [
+              41,
+              546,
+              116,
+              28,
+              6,
+              2,
+              1,
+              0,
+              1,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.1735123952746084
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 4010,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              0,
+              6,
+              291,
+              97,
+              37,
+              61,
+              2924,
+              594
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.8147139031352435
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        },
+        "SOLAR_FINANCE": {
+          "propensity": {
+            "n": 2523,
+            "missing_count": 1487,
+            "counts": [
+              1932,
+              252,
+              88,
+              97,
+              85,
+              36,
+              20,
+              11,
+              1,
+              1
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.07566540007462932
+          },
+          "validated_confidence": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          },
+          "trust": {
+            "n": 4010,
+            "missing_count": 0,
+            "counts": [
+              0,
+              0,
+              1,
+              14,
+              1442,
+              17,
+              9,
+              24,
+              250,
+              2253
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": 0.7519190480064942
+          },
+          "priority": {
+            "n": 0,
+            "missing_count": 4010,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "bin_edges": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "mean": null
+          }
+        }
+      },
+      "evaluation_cohort": {
+        "opportunity_rows": 16040,
+        "opportunity_customers": 4010,
+        "fairness_rows": 16040,
+        "boundary": "All provider snapshots and products; no customer subsampling. Ranking uses the reported held-out and complete-priority cohorts."
+      },
+      "portfolio_measurement_boundary": "Full-cohort scoring/ranking and audits read startup/summary-persisted decisions from isolated SQLite, omitting unused provenance snapshots. Includes cohort validation and the normal priority formula; excludes redundant inference/persistence. Not a fresh opportunities API latency measurement.",
+      "stage_seconds": {
+        "application_build": 0.07640299992635846,
+        "lifespan_startup": 220.5426519580651,
+        "portfolio_scoring_and_ranking": 15.772676165914163,
+        "distributions": 0.07453387486748397,
+        "fairness_and_ablation": 0.34146158304065466,
+        "total": 243.940014957916
+      },
+      "memory": {
+        "process_peak_rss_bytes": 2020556800,
+        "process_peak_rss_before_bytes": 265846784,
+        "boundary": "resource.getrusage(RUSAGE_SELF).ru_maxrss in bytes; process lifetime high-water RSS including native buffers, not current RSS or an isolated per-mode peak. Fixture and trained runs share a process."
+      },
+      "measurement_boundary": "Local in-process FastAPI TestClient without evaluator allocation tracing; includes full provider startup and normal SQLite decision persistence; excludes network transport, Streamlit render and live LLM latency."
+    }
+  ],
+  "live_llm_cost_per_1000": null,
+  "offline_explanation_cost_per_1000": 0,
+  "limitations": [
+    "Synthetic labels and optional simulated outcomes do not establish real-world predictive accuracy.",
+    "No credentials or live provider were used; live cost and latency remain unmeasured.",
+    "Memory evaluations use isolated temporary databases; no demo customer history is changed."
+  ]
+}

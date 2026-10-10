@@ -3,3 +3,9 @@ __pycache__/
 .pytest_cache/
 dist/
 *.egg-info/
+data/synthetic/
+data/synthetic_perturbed/
+data/processed/
+data/artifacts/
+data/*.sqlite3
+data/*.sqlite3-*

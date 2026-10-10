@@ -1,0 +1,22 @@
+{
+  "contract_version": "1.0.0",
+  "recommendation_id": "REC-C10001-GP01-2026-06-30",
+  "headline": "Electric vehicle finance may suit your driving",
+  "explanation": "Your fuel spending and annual mileage are high for a petrol car. An electric vehicle could reduce operational emissions for the miles you drive. This is an interest signal, not a finance decision.",
+  "why_recommended": [
+    "Fuel spending averaged £310 a month over the last 90 days.",
+    "Your vehicle is a petrol car driven about 15,200 km a year.",
+    "You currently own a petrol vehicle."
+  ],
+  "estimated_impact_text": "Estimated operational reduction of about 1,670 kg CO2e a year, from a baseline of 2,850 to 1,180 kg CO2e. Manufacturing emissions are excluded.",
+  "confidence_text": "Confidence is high (0.87) for the data available at 30 June 2026.",
+  "action_text": "Discuss electric vehicle finance options with an adviser at your next review.",
+  "eligibility_disclaimer": "Propensity does not establish financial eligibility. Any finance decision follows the bank's authorised product processes.",
+  "missing_information": [],
+  "source": "TEMPLATE",
+  "grounding_result": "NOT_RUN",
+  "prompt_version": "template_v1",
+  "llm_model_version": null,
+  "cache_key": null,
+  "generated_at": "2026-10-10T09:00:00"
+}

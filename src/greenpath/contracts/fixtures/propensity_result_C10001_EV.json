@@ -1,0 +1,36 @@
+{
+  "contract_version": "1.0.0",
+  "customer_id": "C10001",
+  "product": "EV_FINANCE",
+  "propensity": 0.84,
+  "raw_score": 0.79,
+  "model_type": "GRADIENT_BOOSTING",
+  "model_version": "ev_propensity_v3.1",
+  "calibration_method": "isotonic",
+  "calibration_version": "ev_iso_v1",
+  "feature_version": "feature_v1",
+  "feature_cutoff": "2026-06-30",
+  "outcome_window_end": "2026-09-28",
+  "prediction_timestamp": "2026-10-10T09:00:00",
+  "in_model_population": true,
+  "population_exclusion": null,
+  "reason_codes": [
+    "HIGH_FUEL_SPEND",
+    "HIGH_ANNUAL_MILEAGE",
+    "ICE_VEHICLE_OWNER"
+  ],
+  "evidence": {
+    "fuel_spend_90d_avg": 310.0,
+    "annual_mileage_km": 15200.0,
+    "is_ice": 1.0,
+    "vehicle_age_years": 6.0,
+    "sustainability_preference": 4.0
+  },
+  "confidence": {
+    "status": "VALIDATED",
+    "value": 0.87,
+    "bucket": "HIGH",
+    "method_version": "conf_meta_v2",
+    "limitation": null
+  }
+}

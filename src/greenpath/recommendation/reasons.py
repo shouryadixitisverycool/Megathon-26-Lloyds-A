@@ -19,6 +19,7 @@ REASON_MESSAGES = MappingProxyType({
     "NO_PAPER_STATEMENTS": "Current evidence records no paper statements to replace.",
     "PAPERLESS_CONSENT_WITHDRAWN": "Current evidence records no consent to switch to paperless statements.",
     "INTEREST_NOT_SUPPORTED": "Current evidence does not support interest in this opportunity.",
+    "CONFIDENCE_BELOW_MINIMUM": "Validated model confidence is in the low reliability bucket; relevance is withheld.",
     "PROPENSITY_UNAVAILABLE": "A matching propensity probability and model version are unavailable.",
     "PROPENSITY_BELOW_THRESHOLD": "The synthetic propensity probability is below the demo relevance threshold.",
     "RELEVANCE_SUPPORTED": "Current product-specific evidence supports the relevance of this opportunity.",

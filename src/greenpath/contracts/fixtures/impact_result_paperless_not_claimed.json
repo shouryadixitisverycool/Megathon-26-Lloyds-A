@@ -1,0 +1,45 @@
+{
+  "contract_version": "1.0.0",
+  "customer_id": "C10003",
+  "product": "PAPERLESS_BANKING",
+  "status": "NOT_CLAIMED",
+  "metric": null,
+  "unit": null,
+  "baseline": null,
+  "scenario": null,
+  "estimated_reduction": null,
+  "secondary_metrics": [
+    {
+      "name": "paper_statements_avoided_per_year",
+      "value": 12.0,
+      "unit": "statements"
+    }
+  ],
+  "methodology_id": null,
+  "method_version": "paperless_impact_v1",
+  "factor_ids": [],
+  "factor_source": null,
+  "factor_version": null,
+  "boundary": null,
+  "grid_scenario": null,
+  "assumptions": [
+    {
+      "name": "carbon_impact_claim",
+      "value": "not claimed: no defensible lifecycle method is documented (spec section 26)",
+      "unit": null,
+      "source": null,
+      "is_estimated": false
+    },
+    {
+      "name": "completion_status",
+      "value": "NOT_STARTED",
+      "unit": null,
+      "source": null,
+      "is_estimated": false
+    }
+  ],
+  "unavailable_reason": null,
+  "data_cutoff": "2026-06-30",
+  "calculation_timestamp": "2026-10-10T09:00:00",
+  "carbon_engine_version": "carbon_v2"
+}

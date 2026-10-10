@@ -22,7 +22,7 @@ def test_catalogue_checksum_and_original_units_are_preserved():
 
 @pytest.mark.parametrize("changes", [
     {"value": "999"}, {"value": None}, {"status": "UNAVAILABLE"},
-    {"units": "kg CO2e/year"}, {"factors": []}, {"feature_cutoff": None},
+    {"units": "tonnes CO2e/year"}, {"factors": []}, {"feature_cutoff": None},
 ])
 def test_result_mirror_refuses_inconsistent_available_claims(payload, calculator, changes):
     raw = calculator("ev").calculate(payload("ev")).model_dump()
@@ -34,6 +34,24 @@ def test_result_mirror_refuses_inconsistent_available_claims(payload, calculator
 def test_unavailable_mirror_refuses_zero_as_a_substitute_for_missing(payload, calculator):
     raw = calculator("paperless").calculate(payload("paperless")).model_dump()
     raw["value"] = D(0)
+    with pytest.raises(ValidationError):
+        ImpactResult.model_validate(raw)
+
+
+@pytest.mark.parametrize("units", ["kg CO2", "kg CO2/year", "kg CO2e/year"])
+@pytest.mark.parametrize("mix", ["both", "baseline", "scenario"])
+def test_result_rejects_mixed_or_mismatched_emissions(payload, calculator, units, mix):
+    raw = calculator("ev").calculate(payload("ev")).model_dump()
+    raw["units"] = units
+    if units == "kg CO2e/year":
+        for key in ("baseline", "scenario"):
+            raw[key]["emissions_kg_co2e"] = raw[key].pop("emissions_kg_co2")
+    matching = "emissions_kg_co2e" if units == "kg CO2e/year" else "emissions_kg_co2"
+    wrong = "emissions_kg_co2" if units == "kg CO2e/year" else "emissions_kg_co2e"
+    key = "scenario" if mix == "scenario" else "baseline"
+    raw[key][wrong] = raw[key][matching]
+    if mix != "both":
+        raw[key][matching] = None
     with pytest.raises(ValidationError):
         ImpactResult.model_validate(raw)
 

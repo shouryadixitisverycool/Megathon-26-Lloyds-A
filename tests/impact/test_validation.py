@@ -8,8 +8,8 @@ from greenpath.impact import ImpactStatus, IssueCode, build_registry
 from greenpath.impact.catalogue import CATALOGUE_SHA256, GRID_FACTOR, FactorCatalogue
 from greenpath.impact.inputs import EVInput
 
-from conftest import CASES, NOW
-from test_formulas import change_period
+from .conftest import CASES, NOW
+from .test_formulas import change_period
 
 
 def unavailable(result, code=None):

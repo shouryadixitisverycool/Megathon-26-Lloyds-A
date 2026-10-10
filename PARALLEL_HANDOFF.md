@@ -1,5 +1,7 @@
 # Shared packet for Agent B points 3–6
 
+> Historical independent-build packet, superseded for integrated runtime by `AGENT_B_HANDOFF.md`, `CONTRACTS.md` and `README.md`. Agent A is now present. Canonical product/API contracts live in `contracts/product.py`, ports in `ports.py`; mirror-named modules are import shims. The API now composes fixture or trained providers and includes implemented extensions. Original instructions below are retained as design history, not current integration status. Main verification passed; see `IMPLEMENTATION_PLAN.md` for results and limitations.
+
 Read `IMPLEMENTATION_PLAN.md`, `CARBON_METHODS.md`, and `AGENT_B_HANDOFF.md`. Work in the existing shared workspace. Do not commit, merge, reset, or edit other subagents' owned files. Main thread owns project configuration, dependency installation/lock, demo providers, shared mirrors, and final documentation. All contract mirrors remain replaceable by Agent A's canonical versions.
 
 The immutable handoff schema is `src/greenpath/_product_contract_mirror.py`; narrow ports are in `_product_port_mirror.py`. Impact calculators remain those implemented in point 2. Do not alter frozen factors or invent impact inputs.

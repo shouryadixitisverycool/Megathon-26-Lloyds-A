@@ -1,4 +1,4 @@
-from greenpath._product_contract_mirror import APPROVED_FEATURES, RecommendationState
+from greenpath.contracts.product import APPROVED_FEATURES, RecommendationState
 from greenpath.demo.providers import DemoRepository
 from greenpath.impact import Product, build_registry
 

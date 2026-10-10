@@ -4,6 +4,7 @@ import streamlit as st
 
 from greenpath.app.client import APIClient, APIError
 from greenpath.app.views import customer_view, portfolio_view
+from greenpath.app.workspaces import governance_view, planning_view, rm_view
 
 st.set_page_config(page_title="GreenPath | Synthetic demo", page_icon=":material/forest:", layout="wide")
 
@@ -20,7 +21,7 @@ st.caption("Product relevance only. This demonstration does not establish real-w
 
 with st.sidebar:
     st.header("GreenPath", icon=":material/forest:")
-    view = st.radio("Workspace", ["Customer", "Portfolio"], key="workspace")
+    view = st.radio("Workspace", ["Customer", "Portfolio", "Relationship Manager", "Planning", "Governance"], key="workspace")
     if st.button("Refresh data", icon=":material/refresh:", key="refresh", width="stretch"):
         load_json.clear()
     st.caption("API responses cache for up to 15 seconds. Refresh data requests fresh responses.")
@@ -35,15 +36,26 @@ try:
     def load(path, params=None):
         return load_json(client.base_url, path, tuple(sorted((params or {}).items())))
 
+    def save(path, payload):
+        result = client.post(path, payload)
+        load_json.clear()
+        return result
+
     customers = load("/customers")
     if not isinstance(customers, list):
         raise APIError("The API customer list has an invalid response shape.")
     if not customers:
         st.info("No synthetic customers are available from the API.")
     elif view == "Customer":
-        customer_view(customers, load)
-    else:
+        customer_view(customers, load, save, health.get("provider_mode"))
+    elif view == "Portfolio":
         portfolio_view(customers, load)
+    elif view == "Relationship Manager":
+        rm_view(customers, load, save)
+    elif view == "Planning":
+        planning_view(customers, load, save)
+    elif view == "Governance":
+        governance_view(load)
 except APIError as error:
     st.error(str(error), icon=":material/cloud_off:")
     st.caption("No customer decisions or portfolio results are displayed while this request is unavailable.")
