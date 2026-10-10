@@ -1,0 +1,76 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=18mm,headheight=14pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,booktabs,tabularx,xcolor,enumitem,fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\definecolor{greenr}{HTML}{145747}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small Team 24}\fancyhead[R]{\small Megathon X\quad M2}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=15pt,itemsep=2pt,topsep=3pt}
+\newcommand{\sect}[1]{\vspace{5pt}{\large\bfseries\color{greenr}#1}\par\vspace{1pt}}
+\begin{document}
+{\LARGE\bfseries\color{greenr}Greenr}\par
+{\large Mid-submission for Lloyds PS1: Green Customer Insights Platform}\par
+{\small M2 checkpoint: 4:00 AM, 11 October 2026.}
+
+\sect{1\quad Current approach and changes since M1}
+The M1 architecture is now integrated: seeded UK customer and transaction data feeds point-in-time Customer 360 features, calibrated product propensity models, separate data Trust, six deterministic recommendation states, physical impact estimates and grounded explanations. FastAPI and Streamlit share the same versioned recommendation for EV Finance, Green Home, Solar Finance and Paperless Banking. Propensity estimates interest; it does not establish eligibility or approval.
+
+The saved run contains 4,000 generated customers plus 10 demo personas and 877,757 transactions. Features stop at 30 June 2026; adoption labels cover the next 90 days. Customers use a 70/15/15 split, with demo personas excluded from fitting. One third of validation is reserved for confidence release before model tuning, calibration or confidence fitting.
+
+Since M1, dataset repairs added effective-dated customer/ownership history and explicit outcome-observation coverage. Energy direct-debit resets now depend only on past usage or known forecasts; annualised partial history is labelled as estimated. Scenario assumptions are stored separately from propensity features. The main implementation decisions are:
+\begin{itemize}
+\item Validation selected XGBoost for EV and logistic regression for the other three products, all with Platt calibration. We preserve validation-selected models even where a baseline scores better on the final test.
+\item Confidence is currently suppressed for every core product. Reserved release cohorts have only 128, 95, 114 and 39 eligible rows respectively, below the 200-row release minimum; Green Home and Paperless also lack enough fitting rows. Trust and propensity remain visible as separate quantities.
+\item Customer and portfolio views now connect to an RM workspace, governance/audit history, consent-aware actions, explicit physical what-if scenarios and simulated campaign planning. Saved decisions and explanations persist in SQLite; factual source updates rerun inference without rewriting past decisions.
+\item Explanations use deterministic templates or optional selection of approved sentences, with schema and exact-claim validation. Unrestricted LLM paraphrasing is outside the current implementation. No paid live LLM evaluation has run.
+\end{itemize}
+UK impact retains the M1 operational well-to-wheel boundary and pinned DESNZ 2025 factors. Complete explicit inputs can produce annual CO\textsubscript{2}e estimates; missing inputs remain unavailable. PVGIS requires reviewed generation evidence and installation metadata. Paperless has no carbon-saving claim. Legacy India CO\textsubscript{2} fixtures are kept separate from UK CO\textsubscript{2}e scenarios.
+
+\sect{2\quad Experiments run so far and results}
+The following are saved held-out synthetic results, not real bank performance. Model selection and thresholds use validation only. AUC measures ranking, Brier and ECE measure probability quality, and lift compares the top 10\% with the eligible population's adoption rate.
+
+\begin{center}\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+Product & Test $n$ & AUC & Heuristic AUC & Brier & ECE & Lift@10\%\\
+\midrule
+EV Finance & 345 & .693 & .714 & .072 & .011 & 1.408\\
+Green Home & 277 & .675 & .689 & .084 & .019 & 1.902\\
+Solar Finance & 354 & .750 & .733 & .060 & .007 & 2.868\\
+Paperless Banking & 105 & .617 & .527 & .148 & .053 & 1.432\\
+\bottomrule
+\end{tabular}
+\end{center}
+EV and Green Home underperform their heuristics on held-out AUC. Paperless discrimination remains weak; Solar has the strongest ranking, but only modest improvement over its heuristic. EV calibration reduces ECE from .034 to .011 and Brier from .073 to .072. These are synthetic associations, not causal effects or deployment evidence.
+
+\newpage
+\sect{2\quad Experiments run so far and results, continued}
+\textbf{Robustness.} On the independent perturbed generator, selected-model AUC is .645 for EV, .651 for Green Home, .743 for Solar and .708 for Paperless. With 30\% of feature cells removed, AUC is .649, .559, .714 and .661 respectively. Green Home is particularly sensitive to missing inputs. Temporal holdouts, subgroup diagnostics and proxy ablations are also recorded; age, income and location remain audit-only attributes in the default propensity feature policy. Synthetic subgroup results do not certify fairness.
+
+\textbf{Transaction categorisation.} A seeded 300,000-row sample uses 88 training merchants and 39 unseen merchants. Rules plus TF-IDF/logistic regression achieves unseen macro F1 .543 versus .453 for the raw-text baseline, but known-merchant macro F1 is .998. Unseen rule coverage is only 14.2\%. The large gap is a current generalisation weakness, especially for home-improvement, fuel and automotive transactions.
+
+\textbf{Grounding and recommendation states.} The saved offline explanation evaluation passes 200/200 fixed cases with exact numeric consistency and zero unsupported claims in final output. Cases include injection, altered units/numbers, eligibility claims, guaranteed savings and signed impact. Fallback occurs in 63\% of this deliberately adversarial set; this is not a natural-traffic fallback estimate. The saved fixture evaluation passes 24/24 customer--product scenarios across all six states. Neither result measures live LLM quality or trained-cohort accuracy.
+
+\sect{3\quad Progress on testing}
+Automated coverage includes contracts, customer split integrity, point-in-time features, calibration, Trust/OOD, confidence suppression, recommendation rules, hand-calculated impact formulas, explanation validation, API behaviour and Streamlit views. Trained integration tests fit fresh temporary models and check artifact-backed serving, safe failure for incomplete artifacts, abstention and explicit UK physical scenarios.
+
+Saved leakage checks pass for split separation, cutoff/availability dates, target-derived features, audit-only attributes and post-adoption flags. Six historical cutoff rebuilds compare 84 features with no differences; the June rebuild covers 4,010 customers.
+
+The latest dataset-engineering record reports a successful 4,000-customer pipeline in approximately 54 seconds, dataset key/schema/foreign-key checks and 2,400 held-out predictions. Our current \texttt{make test} rerun on revision \texttt{cb53970} finishes with 1,353 passed, three skipped and two failed. The recommendation JSON schema is stale; the trained-startup test expects one database transaction but observes six. These are open integration checks, not a passing release gate. Earlier launcher and schema/build checks are historical. Expensive system benchmarks were not rerun and the retained performance report is stale for this dataset. Live-provider latency, tokens, cost and quality remain unmeasured.
+
+\sect{4\quad Plan for the remaining time}
+\begin{enumerate}[leftmargin=18pt,itemsep=4pt,topsep=3pt]
+\item Resolve the stale schema and startup transaction mismatch, then complete the final integrated gates: \texttt{make all}, \texttt{make schemas} and \texttt{make build}. Record the revision, manifest hashes, dataset size and exact test outcomes; reconcile documentation with regenerated evidence.
+\item Smoke-test fixture and trained launches, API/UI health and shutdown. Rehearse all six recommendation states, missing impact, suppressed confidence, RM review and consent controls, portfolio grouping and factual Paperless closure.
+\item Investigate unseen-merchant errors and EV shift sensitivity. Any rule/model change must use training/validation evidence and trigger evaluation again. Preserve the held-out test and reserved confidence-release cohort; keep confidence hidden unless its release checks pass.
+\item Tighten the final demo and submission around verified behaviour. Present weak baselines, synthetic-data limits and unavailable physical inputs plainly. Keep live LLM claims out unless an authorized, credentialed evaluation is actually completed. Keep the implemented code and submission artifacts synchronized on \texttt{main}.
+\end{enumerate}
+
+\vfill
+{\footnotesize\color{gray}Evidence in repository: \texttt{EVALUATION\_REPORT\_AGENT\_A.md}, \texttt{DATASET\_ENGINEERING.md}, \texttt{LEAKAGE\_AUDIT.md}, \texttt{LLM\_EVAL.md}; \texttt{reports/} ML, transaction, confidence, explanation and scenario evaluations. Scope and pending gates follow \texttt{SUBMISSION.md} and \texttt{REPRODUCIBILITY.md}.}
+\end{document}
