@@ -64,7 +64,7 @@ def test_signal_passes_on_test_and_results_validate(tmp_path):
     res = to_results(conf, model.bucket(conf), True)
     assert all(isinstance(r, ConfidenceResult) and r.status is ConfidenceStatus.VALIDATED for r in res)
     assert {r.bucket for r in res} == set(ConfidenceBucket)
-    assert res[0].method_version == "conf_meta_v1"
+    assert res[0].method_version == "conf_meta_v2"
     # save/load round trip
     model.save(tmp_path / "m.joblib")
     m2 = ConfidenceModel.load(tmp_path / "m.joblib")

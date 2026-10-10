@@ -1,0 +1,1302 @@
+{
+  "notice": "Isolated synthetic scaling experiment; not promoted. Ranking-gate pass is not proof of incremental probability reliability or real-world reliability.",
+  "workspace": "/tmp/opencode/greenpath-confidence-50k-20261011",
+  "source": {
+    "git_revision": "70e02fe8354bdde2cd4baf4f01926c84a88fbaaf",
+    "source_sha256": {
+      "src/greenpath/_product_contract_mirror.py": "d969aedb1c5ff7dd0e609a104c6d251f6e5283a623bf4f3b262bd8e0b6ecf8ba",
+      "src/greenpath/_product_port_mirror.py": "eb1f680c47979b0cb90b66076d0b9feeb5575e607c20b877f9a4844887508c38",
+      "src/greenpath/api/__init__.py": "f33a362eb7862a3f9a45841ade40e33193986080b961a541791ea00fe0252faf",
+      "src/greenpath/api/main.py": "9413f8fa6e4afcebab061710d5fba30476508e29787a336b3640c1c3ebebdd42",
+      "src/greenpath/api/portfolio.py": "36d6b133f3b81cf25c850fa79879fb16276224aa23e5bcd91ab6367a2bf0245c",
+      "src/greenpath/app/__init__.py": "0f4f5d8e8a2ea2590e1b9e4e44c317b799d1cc30b757c0b2792c35c0c86dceb4",
+      "src/greenpath/app/client.py": "3ad28122466223a4ebb862a941eefe34c23c358002a11e8d6710fe99465a2a70",
+      "src/greenpath/app/main.py": "b22aa733da9cfd9f8952fce68f13674e50430b594258e97058911dec1ea55876",
+      "src/greenpath/app/presentation.py": "c1a1274f62614bd0aaeb4878f83580ad0803baa6ba023a48ef846dd89edaf662",
+      "src/greenpath/app/views.py": "a901f158aae56db2c8bf78f6850fdb092cb50092626c5622a38b371773878e04",
+      "src/greenpath/app/workspaces.py": "68530c712c17ce18f8c123dca27296efffece7e678a20c3970767bf36fefbd35",
+      "src/greenpath/confidence/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/greenpath/confidence/meta_model.py": "44490c064ee9c26697090d800483506d61cc8dbc3b0d24f400d7d2693ae0c058",
+      "src/greenpath/confidence/validation.py": "69edcf286654b541647b040111f515e0f7ec517ef3957814d877719d0ac278e6",
+      "src/greenpath/config.py": "01235bd9a63e3459885a523abcd9ac901bd2d3bb903a2d12f51f77177516300a",
+      "src/greenpath/contracts/__init__.py": "470b05793ef1ee8fa3d3200efa8b7b022e52acdeed00f9b59bafc1f693938bc8",
+      "src/greenpath/contracts/base.py": "644d10823fbba1e056616ef2ff70cb626f01ec0e5d5c68500017c29631e57855",
+      "src/greenpath/contracts/customer.py": "b4f7ad7a519b456fc9f869306cee377bb17953792ccf0c8c540913fa33cdc92b",
+      "src/greenpath/contracts/enums.py": "87bc4df0ad0db5554b7c9ed4153d53854dcc617e63d15a62c03687426b51b1c8",
+      "src/greenpath/contracts/export_schemas.py": "c0e3020020e985901bdf3fe0e748423fe88701d98007d14feeecd13c167c2526",
+      "src/greenpath/contracts/fixtures.py": "b2fe3a8f273910f7b480e44c8d7ccba92d1622b85fc609d06af927d05f549e20",
+      "src/greenpath/contracts/impact.py": "baad32003efd75d4991793785a12ecb0ba6d986f1978ded20074f12d505eece3",
+      "src/greenpath/contracts/impact_detail.py": "4d7492d942330f4318b59b41a836826adeceb30c9874012aaa8b3f0d00718f93",
+      "src/greenpath/contracts/lifecycle.py": "380f2910e9a80bf6cd8ec13bb109b27875a8264ccb21c1e5cd1c95d12ce0bef7",
+      "src/greenpath/contracts/product.py": "40a6dc7d0fbcafa03e4569c9bfb3b98059ea30b13e88641bbc6392ead3db5bd5",
+      "src/greenpath/contracts/propensity.py": "2e2dc24c8441f56bc1f1a8aa6e1f41e68a4cf43ede7ebefc5d2c98ac08e613ea",
+      "src/greenpath/contracts/recommendation.py": "b5798c0b1ea64b6af2b880a10dfbb30a6786c46d3853e0f05ff5ae3c0ddbc5b2",
+      "src/greenpath/contracts/trust.py": "32be7b6149dbf8269cd9cf3fbfcebb3d002685d236b82c8bbe586d797a536498",
+      "src/greenpath/data_generation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/greenpath/data_generation/__main__.py": "73c4ce155f0184110b7756e65f2ba50aac55580c1bc0ba19f8d0610c740d05be",
+      "src/greenpath/data_generation/config.py": "9c387ff3c47b77c1b6545ac3bef3edb3eaec0e07ae3072a252db48018c8592df",
+      "src/greenpath/data_generation/generator.py": "0220c2a26fe2fbf81713c15cecb8f08df657eb7db60b7bced6767183a8219928",
+      "src/greenpath/data_generation/merchants.py": "3ac3ae1695f5e068eb1aa650f9004608a0ddafed8c1e6adcea775129cc99247d",
+      "src/greenpath/data_generation/outcome_coverage.py": "a0b3a7d535dc3d9f98a66fdda0b69093802ba4cd84ece6c8ac1f3edbae9074f9",
+      "src/greenpath/data_generation/personas.py": "44a79099df18f4d32c9bedd23ad99d635ddf4e2baf0cc63cec8af5bcdaf48062",
+      "src/greenpath/data_generation/perturbation.py": "7df97fdd292f630a967b84edcab41098c543205c5e804ecfff82f22cd6cb0c9d",
+      "src/greenpath/data_generation/public_anchors.py": "c5a335d727b3e582a0dee2407b269ac84b2ab9ddd57ad4620d1acf0edb064da1",
+      "src/greenpath/data_generation/scenarios.py": "24b05e633a7b75aedc13365c84c98e1b9d4556a2aacc0de65bcc25880f9f3b86",
+      "src/greenpath/data_generation/source_history.py": "102b4eadcdfc28d65d22ff7fd2d07c49a71e497ecc10576b7a82bffff45d665a",
+      "src/greenpath/demo/__init__.py": "4c9b9a70af346c8fcf935966959c0dcfd06cd14e91b94db02609a1217203a010",
+      "src/greenpath/demo/artifacts.py": "1168b6ca8a21a082810b576d9e2ce5cff5c54cd4c1d4b2f086a462f5d7b0e234",
+      "src/greenpath/demo/evaluate.py": "e2411fe8925100ede50df01b261f85f737e98e4c0b3e2e51013182cedd74f469",
+      "src/greenpath/demo/providers.py": "54a1876e07a5c7123761f221b0a8cabffb6c812d22637d4f9669580423912c45",
+      "src/greenpath/demo/run.py": "ec6f193f10230c6e921409061d46924ba0948c2b8bd1c6497195d48741298d61",
+      "src/greenpath/evaluation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/greenpath/evaluation/metrics.py": "858fc702ca374a37ad7aba8c86c7410c7b42532813d36b384ef6b85d1ea7a06f",
+      "src/greenpath/evaluation/ml.py": "051943f5ebe177cd4e4b0889ee678b13f4f3687fcb89ea321f2f90efe2eab62b",
+      "src/greenpath/evaluation/reports.py": "b67e720c32c6cfc06279e4188f502809174114737993cda995f089bd7f74e408",
+      "src/greenpath/evaluation/transaction.py": "4fc21fbbaaed8dded15c2fea5493902596c90de93cf1567ed5e6ab5aa3aa29e9",
+      "src/greenpath/extensions/__init__.py": "e6f18bf39fdc133ae32f184acc560631949e120d1d2d2afb41c0f2fcc678fae6",
+      "src/greenpath/extensions/api.py": "2cb861bd23eeffb8814f77240e7b78cfec4aeb6ac96a1ee56c51d7f70277cda1",
+      "src/greenpath/extensions/contracts.py": "fdf2e42087214538f0b0d35f3f61d1e0251d2060abaf43e73e27e47050fc61a0",
+      "src/greenpath/extensions/evaluate.py": "cc00a15d648fbfb796750437ddf73f60cf14130d396f703041d616baef08f438",
+      "src/greenpath/extensions/optional_models.py": "ce59064b16ad1f825e72b1ea084187c478a41abe667dc39266475bc51cbc108e",
+      "src/greenpath/extensions/service.py": "eca29a354003bb8d564d203a72e8c60b24ef29411a04c23fba626df24519bf9a",
+      "src/greenpath/extensions/store.py": "71c71a0882cd0d55e24b9d683592d99150fe0b4e31ed9af3e33a0745e12890ff",
+      "src/greenpath/extensions/uk_impact.py": "58692eae70f78cb655dd0fda5b7bf5ed5c4735a90bc6b0cd1577b0c148b67687",
+      "src/greenpath/impact/__init__.py": "9fef90a6ff07f10f778543b0f58f5c01740f680821ab0432334ed26703cb4e43",
+      "src/greenpath/impact/_contract_mirror.py": "2d3ebfce731677c468124edaaf83465b499feb78bf91606055261de416c21d23",
+      "src/greenpath/impact/_port_mirror.py": "d5414e9bbbe4ca4331f9a5b2dfb1eaeca5b94fae512d71283d8483e767166138",
+      "src/greenpath/impact/catalogue.py": "03109d334668c37e825ec95d669a91d067610e72b22b2825344a8a1c9c5e1a06",
+      "src/greenpath/impact/common.py": "1ffa265539d9b329c58e14457273fc217db038a42d630eeaf7fa3e675fba8dfb",
+      "src/greenpath/impact/ev.py": "100092121bd994505f15a0983d89ed96a17b2489d01934cb12b30946b1b48da3",
+      "src/greenpath/impact/green_home.py": "14767ded6ecd9595dfedb6fe3f8b689ff840c12d232aefa24d22ec5a054bf99d",
+      "src/greenpath/impact/inputs.py": "cc550850a00218e43dd2e62d2d177070d369658e807abf654882d4a8dfd33b92",
+      "src/greenpath/impact/paperless.py": "480bfe61d97342be9fa2b7476938c920eec7d9ff45bee97e8cb4097588f1c254",
+      "src/greenpath/impact/registry.py": "163c95b1771a1780a7b8cd9dcb23c3ad9ce6a54761922081ab0677cc92f778fb",
+      "src/greenpath/impact/solar.py": "3068fa68bb80347c2e666dbf90b949c4cd995a5e329f17da101651bdd1df0ab1",
+      "src/greenpath/impact/solar_generation.py": "63e8c8da5f6832bc07060290693a9b83d3777bdcd4bc430df2d5317a8ae1f780",
+      "src/greenpath/impact/uk_adapter.py": "e8de3183084552e10afa263e0d25fee497c09be722166b8130c1f5b9d71c74ac",
+      "src/greenpath/llm/__init__.py": "cbeca0bbc0c1acb2b0f81799538250386cfc6ba8fb6d8d2c1baa7860a46447a3",
+      "src/greenpath/llm/evaluate.py": "3d7eefff52c18ac61ee20ab29e155caff04f2e5022ce8a2fd5d47346ebc6ea73",
+      "src/greenpath/llm/evaluation.py": "7d19e643a53b8ff5a400a9e5aa1198bbfba846c65419e5e1973303d641f20e4a",
+      "src/greenpath/llm/http_provider.py": "cfd4e128da1203afdc844ddcb38b068ddbcef55e8c3638b6b0f7e8bf2b21595a",
+      "src/greenpath/llm/live_evaluation.py": "cdd504d3cf4510cbee44acec3f77069189813d06fb56dbfd7f76f6c30b0edac4",
+      "src/greenpath/llm/ports.py": "ed541d9c51a8f44ed460adbb7285f2518c6ce1ca714ba9c310492a1d886a28f7",
+      "src/greenpath/llm/schema.py": "38fb11a95c55e5178e9dfed8c7e2fd12bb7602bf939c08434451794948b42c8c",
+      "src/greenpath/llm/service.py": "e88da6e5fd41fa17b498748bbf4a3aa0269ae57db4e1957dafb8c3f6bb74f645",
+      "src/greenpath/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/greenpath/models/propensity/__init__.py": "85439be89c2fca16762c403c6ae362b1ef4e3a572ef352252cf39bace5925aad",
+      "src/greenpath/models/propensity/artifacts.py": "75eec541ecf5bf0a2e03bcbd1d05438c40ac9b82ef075557d143a2843878bf7d",
+      "src/greenpath/models/propensity/calibration.py": "b0087532783c8d902e40f8d1a11eeca35558212f52180a76dc602fc066e99522",
+      "src/greenpath/models/propensity/features.py": "f385f33b013cc02b278cab312f426be2e8f85dc7d32beb3ab9b081a4ca27b484",
+      "src/greenpath/models/propensity/heuristics.py": "d407a4b398f1f3b0051b839e9e37a6ae9df3a8174a0a015cb7bdf97acc534ad3",
+      "src/greenpath/models/propensity/provider.py": "b9395f915fdeb7589d9176b75e5effe9e3f860b0b4420a12c7d075e0aa1773bd",
+      "src/greenpath/models/propensity/reason_codes.py": "df7eddf25a60ad0b2673e3b7198095851d3dc623e239103333bcd20093f04aa7",
+      "src/greenpath/models/propensity/shap_audit.py": "ca8624bef3032817bb11a657fd190e11551bea014d18fe509112bf1cef0d16a4",
+      "src/greenpath/models/propensity/training.py": "49715b6ae6598285bb6a5cabae6c83426523c0bb925b16799559e085bcd34014",
+      "src/greenpath/models/transaction_classifier.py": "15512393da3a7bb3ac8aba1bbb3be3256029eaad6a774de5c7a63a6b44b5300d",
+      "src/greenpath/pipelines/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/greenpath/pipelines/customer360.py": "b58cedb9edec4c7a8de4fbba825a6016bc68c3fb64028c7d5164c0a37f592139",
+      "src/greenpath/pipelines/feature_registry.py": "8bd3631c25573b310ea0368dc0566fe11abcaa3a639e8471a7654da64b6dfd75",
+      "src/greenpath/pipelines/leakage_checks.py": "51f2ecb4861eb19c122b2702e7caee9cd6e9c7c582749ff24efce5e9afabbe21",
+      "src/greenpath/pipelines/predict.py": "042d906477885fd1ac1f8526dd2a01d7464c4f03b8f1217d90c1043d7e31181f",
+      "src/greenpath/pipelines/run.py": "1921d777dc3851728dd32cfbc98993ea9ec872e78b563c4583ce3372a7be47b0",
+      "src/greenpath/pipelines/runtime.py": "4adbf75bf90ba6b8495fe1a876ab3c99ccb2c1340d97bc9754718d9ddf32b38e",
+      "src/greenpath/pipelines/scenario_provider.py": "ef11ea1a39483049150be081dc86a01f432b6d078238dc1b972d764088f39652",
+      "src/greenpath/pipelines/schemas.py": "328e44fa9e711007bfeccaf782da18738f210e859722431e840ffb2863204136",
+      "src/greenpath/pipelines/snapshot_provider.py": "481e78d4ad2792dc4ebecf7bb5ad1711153263d96327514d35de3f6b0c8dd7d3",
+      "src/greenpath/pipelines/split.py": "042e8bbaa23ce819beaef09efc85a0f36df2d79ec94b1d7477968a7e91d5a019",
+      "src/greenpath/ports.py": "24fdc52d79bed33ddc89821f1db1ce8dc017fbfa4795466d32d0ff950464e512",
+      "src/greenpath/recommendation/__init__.py": "eabbcd7b8bb1460fb0ad8f041cc86445117e9920eea18078453b846a3c80cf68",
+      "src/greenpath/recommendation/reasons.py": "dfdc7d8ef6b3480f9e28504de23bd91d7ae64ac698d2c7270c8cb96fc3c0a3d3",
+      "src/greenpath/recommendation/service.py": "9872ff8136ad194503128235de2df3674942408575cead533bd8ff9a625f83d5",
+      "src/greenpath/trust/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/greenpath/trust/conflicts.py": "25f112c45429e41297dbe6139ebd2605e441e1fc2ec90fe0d3e61769c6ad57d7",
+      "src/greenpath/trust/ood.py": "d1955ad738322a90dd542e439b7e5b429c1277acfdba76863c38e28344631082",
+      "src/greenpath/trust/provider.py": "4fc4c514716a9e76912a1ffd504063e1d1a8d7e722c237e2a61d30dd0d0d07b7",
+      "src/greenpath/trust/quality.py": "d13e7757cf6a9370d59e7712dd79d8eb76b7af6336ce7382f547e4126139479f",
+      "src/greenpath/trust/selection.py": "fe196cf8091aa756f7fabdc987ed9d9872d5dc8217ecd97cdb1b3db643bd4ea2",
+      "scripts/confidence_experiment.py": "50da975b0a6fefb2cfb55eeb382b2977311364ff5b2efa73eab53b42236b6410"
+    },
+    "method_version": "conf_meta_v2",
+    "scope": "isolated canonical confidence experiment, not full end-to-end release certification"
+  },
+  "seeds": {
+    "data": 42,
+    "split": 43,
+    "model": 44,
+    "perturbation": 45
+  },
+  "timeline": {
+    "feature_cutoff": "2026-06-30",
+    "outcome_window_end": "2026-09-28",
+    "prediction_timestamp": "2026-10-10T09:00:00"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "numpy": "2.5.3",
+      "pandas": "3.0.6",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "pydantic": "2.14.0",
+      "pyarrow": "23.0.1",
+      "joblib": "1.6.0",
+      "xgboost": "3.1.1"
+    }
+  },
+  "split_manifest_sha256": "6d1ad86d61da3d1af9642350e8959201d025a4b326d2d349dcf01fc5cf5654bf",
+  "artifacts_sha256": {
+    "data/artifacts/confidence/decisions.json": "c13f8010893d2d8341ce03edea586b823aa9e8b2e8fce0fb803fe2cc1be85dc8",
+    "data/artifacts/confidence/ev_finance.joblib": "70371d583ae3b4a3d6bed2b8deb670a151b5b499f487f781e9f5204093aa4905",
+    "data/artifacts/confidence/green_home.joblib": "b6c9d8a730c4d358fcb0b0c83fc9eaec2adcdcd63c6d260f9e1ed9e22a101962",
+    "data/artifacts/confidence/paperless_banking.joblib": "fff520b828379fafe36668c1954989255c9691c6b5a1d16f97581d92b224cc84",
+    "data/artifacts/confidence/solar_finance.joblib": "f7ee1b27eac49dba395098b812d53021fe6505dad1ba65b88064035306846a81",
+    "data/artifacts/models/ev_finance/bundle.joblib": "2f55b8533246abf1b806bad4915cf4413c11c1f1b1ba8a0eda337351c4f341fb",
+    "data/artifacts/models/ev_finance/manifest.json": "0a41a9b8e434423a8e7c660058bb717f96d743a4d87f43ccf8875a7b4d6df253",
+    "data/artifacts/models/green_home/bundle.joblib": "1a36bc4843aa41cc3b07e1c0390c1a4c999a8fea2159f1bdfc675aea0b71538e",
+    "data/artifacts/models/green_home/manifest.json": "3aee39f879d9d03d5e079b36f191e76f19b70ffc2731de2cbe4be3f0861a43dc",
+    "data/artifacts/models/manifest.json": "d4befe7147bde74fc3bc85a076a1f4a94fd19fc0431613767969a251e12959b8",
+    "data/artifacts/models/paperless_banking/bundle.joblib": "ffeeba746c792c57468aaea5472bb498f399c06d56865d76d09be4a6fbd9ca26",
+    "data/artifacts/models/paperless_banking/manifest.json": "5c294eb042024105301f7e026330dfea14e9a51aa94f01c03f0e8aa4dd0f26f1",
+    "data/artifacts/models/solar_finance/bundle.joblib": "6ec05a816542f6aca44926a5719566a8c0e1d111923f0fa1afb4fcaa6045fef4",
+    "data/artifacts/models/solar_finance/manifest.json": "d8a6e899e2ffd29e007577e45cdfc5b7052567112cbcfe04ad8dc14c290b5147",
+    "data/artifacts/ood/ev_finance.joblib": "3abfebbd111e58f107f97ecb237eaa3b248fb3457e09202ffd64ef0bd72c4da8",
+    "data/artifacts/ood/green_home.joblib": "206ab0b6e3ce45275a940d25ce194ad7c3a6225642604636ae73168b05dc1613",
+    "data/artifacts/ood/paperless_banking.joblib": "d1f8aa07fde339548a4e396d4164b83d9be601079240d7c55d55f989a744753d",
+    "data/artifacts/ood/solar_finance.joblib": "927529f65e5ff4eb0befa7746b6577e66d6ad1b1301d5b30b4a57bc769fbea0a",
+    "data/artifacts/transaction_categoriser.joblib": "fb10d7b2b5a8d806155c5a9aef6395fa57f027f0eeab0d8a3ceeb4d93dfb57ed",
+    "data/artifacts/trust_thresholds.json": "23bd4357c5fb8f07a96832ee22ba474a9d7b38546c02bdec1852887701a180e6"
+  },
+  "datasets": {
+    "synthetic": {
+      "config": {
+        "adoption_start": "2025-07-01",
+        "calibration_cutoff": "2026-06-30",
+        "coefficients": {
+          "EV_FINANCE": {
+            "digital": 0.1,
+            "ev_owner": -1.5,
+            "fuel_intensity": 0.4,
+            "green": 0.5,
+            "latent_pref": 0.85,
+            "mileage": 0.65,
+            "no_ice_car": -2.6,
+            "vehicle_age": 0.4,
+            "vehicle_finance": 0.55,
+            "wealth": 0.3
+          },
+          "GREEN_HOME": {
+            "gas_demand": 0.3,
+            "green": 0.45,
+            "home_improvement": 0.75,
+            "house": 0.3,
+            "latent_pref": 0.85,
+            "mortgage": 0.45,
+            "owner": 1.6,
+            "wealth": 0.25
+          },
+          "PAPERLESS_BANKING": {
+            "age": -0.25,
+            "digital": 1.05,
+            "green": 0.3,
+            "latent_pref": 0.75,
+            "wealth": 0.1
+          },
+          "SOLAR_FINANCE": {
+            "elec_demand": 0.65,
+            "green": 0.55,
+            "home_improvement": 0.2,
+            "house": 0.9,
+            "latent_pref": 0.85,
+            "mortgage": 0.3,
+            "owner": 2.0,
+            "sunny_region": 0.3,
+            "wealth": 0.35
+          }
+        },
+        "energy_anchor_sha256": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+        "history_end": "2026-09-28",
+        "history_start": "2025-01-01",
+        "include_personas": true,
+        "interactions": {
+          "EV_FINANCE": {
+            "mileage*green": 0.25,
+            "vehicle_age*vehicle_finance": 0.25
+          },
+          "GREEN_HOME": {
+            "home_improvement*green": 0.25,
+            "owner*home_improvement": 0.3
+          },
+          "PAPERLESS_BANKING": {
+            "digital*green": 0.2
+          },
+          "SOLAR_FINANCE": {
+            "elec_demand*green": 0.25,
+            "owner*wealth": 0.15
+          }
+        },
+        "late_joiner_rate": 0.03,
+        "merchant_shift": {
+          "adversarial_rate": 0.0002,
+          "description_noise": 1.0,
+          "include_shift_only": false,
+          "rank_permutation_seed": null,
+          "shift_only_share": 0.0,
+          "variants_per_merchant": 40,
+          "zipf_exponent": 1.1
+        },
+        "missingness": {
+          "digital_absent": 0.02,
+          "energy_absent": 0.08,
+          "energy_gap_month": 0.2,
+          "energy_gappy": 0.12,
+          "fuel_capture_zero": 0.08,
+          "has_solar_pv": 0.04,
+          "heating_type": 0.03,
+          "home_owner": 0.08,
+          "mileage_estimated": 0.2,
+          "mileage_missing": 0.1,
+          "property_type": 0.03,
+          "region": 0.015,
+          "sustainability_preference": 0.1,
+          "vehicle_age_missing": 0.03,
+          "vehicle_record_missing": 0.05,
+          "vehicle_stale": 0.12
+        },
+        "monthly_noise": 0.35,
+        "n_customers": 50000,
+        "name": "base",
+        "noise_scale": 1.0,
+        "preexisting_rates": {
+          "ev_finance_given_ev": 0.6,
+          "ev_owner": 0.05,
+          "green_home_given_owner": 0.025,
+          "paperless_intercept": -0.2,
+          "solar_finance_given_solar": 0.45,
+          "solar_given_owner_house": 0.05
+        },
+        "seed": 42,
+        "stale_ev_conflict_rate": 0.15,
+        "target_90d_rate": {
+          "EV_FINANCE": 0.065,
+          "GREEN_HOME": 0.08,
+          "PAPERLESS_BANKING": 0.15,
+          "SOLAR_FINANCE": 0.055
+        },
+        "vehicle_declaration_missing_rate": 0.03
+      },
+      "config_hash": "0f504d973b3113c083fcfdc3af0149bcf89813623749a823ed85f3ccd65a2415",
+      "file_sha256": {
+        "customer_history.parquet": "5f16c836f2eeaf4c31adf004587797cd1216b751d009d5a13872083ce66b28da",
+        "customer_outcomes.parquet": "1e89e5ed1151d509af60b74d08395f06996c19b60d568063691a14a9a6336e53",
+        "customers.parquet": "82a08729725f3f3287e30d0faec67fc0f761baa9b61ddf60ac8d2deea05e7fda",
+        "digital_usage.parquet": "bc250122a3f1c4759a5c4faec35b45de50d1f807ec9cf99f7ca9b1bb7201579b",
+        "energy_usage.parquet": "3039cc9f17353a52a2a59dbce7bbaabf615280fdee66cac395c6a11069f8eaa5",
+        "financial_products.parquet": "8c6bcdf5d3978d360c87be4a89716cb226dbb3baca850f414645058e5556ffdf",
+        "green_product_catalogue.parquet": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+        "merchants.parquet": "106a1ee96472d91b1d10fa08ec42a37f7da4e6f2e3a57c4153623ac748b7d6a2",
+        "outcome_observation.parquet": "65ec86475b5443be6f5f726b1816a2034a6f8cf8e4974f026ae15a4d984ff39c",
+        "scenario_evidence.parquet": "0c232a80120452512d410a0b0ca072744052554e0b95a30e16f7510c94642290",
+        "transaction_truth.parquet": "44a98340720e33ee3eb3396758cdd635c71f27b083c57fa04a37fa844e53ad83",
+        "transactions.parquet": "201fe6413d9a015959882ea92b27f5c6980697d1dcac2344085e9d1536b0bf47",
+        "vehicle_ownership.parquet": "58c07ebedc89d7e0d32887642ea5adf5e6698bbd6c8ec958cd7159af41554e5c",
+        "vehicles.parquet": "a1e08c99b9c0d05b6e21669070cf23dd2a272d7c1de68363b31ddad59fe7d68f"
+      },
+      "public_anchors": {
+        "diagnostic_scope": "Complete calendar-year synthetic observations, including adoption effects and observation noise. Gas includes positive consumers only. Not a real-world predictive validation.",
+        "diagnostic_year": 2025,
+        "energy": {
+          "electricity": {
+            "mean_kwh": 3323,
+            "median_kwh": 2471,
+            "section": "2.2, Chart 7"
+          },
+          "gas": {
+            "mean_kwh": 11359,
+            "median_kwh": 9859,
+            "section": "3.2, Chart 15",
+            "weather_corrected": true
+          },
+          "licence": "Open Government Licence v3.0",
+          "limitations": "Meter aggregates are not individual banking records or evidence of adoption. A fitted lognormal is an approximation to published mean and median, not a reconstruction of meter microdata. Simulated adoption effects, missing months and observation noise change generated totals. Gas source year runs mid-May 2024 to mid-May 2025. GB excludes Northern Ireland.",
+          "population": "Great Britain consuming domestic meters, 2024",
+          "published_updated": "2025-12-19",
+          "publisher": "Department for Energy Security and Net Zero",
+          "retrieved": "2026-10-10",
+          "source_url": "https://www.gov.uk/government/statistics/subnational-electricity-and-gas-consumption-summary-report-2024/subnational-electricity-and-gas-consumption-summary-report-2024--2",
+          "title": "Subnational electricity and gas consumption summary report 2024",
+          "use": "Public aggregate statistics anchor synthetic baseline annual demand marginals. Seasonal profiles, customer associations, observations and adoption labels remain synthetic.",
+          "version": "desnz_gb_domestic_2024_v1"
+        },
+        "energy_anchor_sha256": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+        "energy_marginal_diagnostics": {
+          "electricity": {
+            "n_complete_consumers": 33543,
+            "observed_mean_kwh": 3373.096303252541,
+            "observed_median_kwh": 2610.8,
+            "reference_mean_kwh": 3323,
+            "reference_median_kwh": 2471
+          },
+          "gas": {
+            "n_complete_consumers": 30243,
+            "observed_mean_kwh": 11452.027047581258,
+            "observed_median_kwh": 9908.0,
+            "reference_mean_kwh": 11359,
+            "reference_median_kwh": 9859
+          }
+        }
+      },
+      "row_counts": {
+        "customer_history": 119647,
+        "customer_outcomes": 87866,
+        "customers": 50010,
+        "digital_usage": 995432,
+        "energy_usage": 913764,
+        "financial_products": 168989,
+        "green_product_catalogue": 4,
+        "merchants": 146,
+        "outcome_observation": 200040,
+        "scenario_evidence": 100,
+        "transaction_truth": 11029170,
+        "transactions": 11029170,
+        "vehicle_ownership": 71435,
+        "vehicles": 59862
+      }
+    },
+    "synthetic_perturbed": {
+      "config": {
+        "adoption_start": "2025-07-01",
+        "calibration_cutoff": "2026-06-30",
+        "coefficients": {
+          "EV_FINANCE": {
+            "digital": 0.12,
+            "ev_owner": -1.7999999999999998,
+            "fuel_intensity": 0.48,
+            "green": 0.325,
+            "latent_pref": 1.02,
+            "mileage": 0.78,
+            "no_ice_car": -3.12,
+            "vehicle_age": 0.48,
+            "vehicle_finance": 0.66,
+            "wealth": 0.195
+          },
+          "GREEN_HOME": {
+            "gas_demand": 0.36,
+            "green": 0.29250000000000004,
+            "home_improvement": 0.8999999999999999,
+            "house": 0.36,
+            "latent_pref": 1.02,
+            "mortgage": 0.54,
+            "owner": 1.92,
+            "wealth": 0.1625
+          },
+          "PAPERLESS_BANKING": {
+            "age": -0.3,
+            "digital": 1.26,
+            "green": 0.195,
+            "latent_pref": 0.8999999999999999,
+            "wealth": 0.065
+          },
+          "SOLAR_FINANCE": {
+            "elec_demand": 0.78,
+            "green": 0.35750000000000004,
+            "home_improvement": 0.24,
+            "house": 1.08,
+            "latent_pref": 1.02,
+            "mortgage": 0.36,
+            "owner": 2.4,
+            "sunny_region": 0.36,
+            "wealth": 0.22749999999999998
+          }
+        },
+        "energy_anchor_sha256": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+        "history_end": "2026-09-28",
+        "history_start": "2025-01-01",
+        "include_personas": false,
+        "interactions": {
+          "EV_FINANCE": {
+            "mileage*green": 0.125,
+            "vehicle_age*vehicle_finance": 0.125
+          },
+          "GREEN_HOME": {
+            "home_improvement*green": 0.125,
+            "owner*home_improvement": 0.15
+          },
+          "PAPERLESS_BANKING": {
+            "digital*green": 0.1
+          },
+          "SOLAR_FINANCE": {
+            "elec_demand*green": 0.125,
+            "owner*wealth": 0.075
+          }
+        },
+        "late_joiner_rate": 0.03,
+        "merchant_shift": {
+          "adversarial_rate": 0.0002,
+          "description_noise": 1.35,
+          "include_shift_only": true,
+          "rank_permutation_seed": 45,
+          "shift_only_share": 0.25,
+          "variants_per_merchant": 40,
+          "zipf_exponent": 0.7
+        },
+        "missingness": {
+          "digital_absent": 0.032,
+          "energy_absent": 0.128,
+          "energy_gap_month": 0.32000000000000006,
+          "energy_gappy": 0.192,
+          "fuel_capture_zero": 0.128,
+          "has_solar_pv": 0.064,
+          "heating_type": 0.048,
+          "home_owner": 0.128,
+          "mileage_estimated": 0.32000000000000006,
+          "mileage_missing": 0.16000000000000003,
+          "property_type": 0.048,
+          "region": 0.024,
+          "sustainability_preference": 0.16000000000000003,
+          "vehicle_age_missing": 0.048,
+          "vehicle_record_missing": 0.08000000000000002,
+          "vehicle_stale": 0.192
+        },
+        "monthly_noise": 0.5,
+        "n_customers": 50000,
+        "name": "perturbed",
+        "noise_scale": 1.35,
+        "preexisting_rates": {
+          "ev_finance_given_ev": 0.6,
+          "ev_owner": 0.05,
+          "green_home_given_owner": 0.025,
+          "paperless_intercept": -0.2,
+          "solar_finance_given_solar": 0.45,
+          "solar_given_owner_house": 0.05
+        },
+        "seed": 45,
+        "stale_ev_conflict_rate": 0.25,
+        "target_90d_rate": {
+          "EV_FINANCE": 0.065,
+          "GREEN_HOME": 0.08,
+          "PAPERLESS_BANKING": 0.15,
+          "SOLAR_FINANCE": 0.055
+        },
+        "vehicle_declaration_missing_rate": 0.03
+      },
+      "config_hash": "a2613f069a73eb94f514647e4b4a5cf80f27a35b6a5b888dac3c09b6ca06729f",
+      "file_sha256": {
+        "customer_history.parquet": "4f2178b660050e8195cfe79b267e1abfb83cbd103025b16750c8d0da6768ef9f",
+        "customer_outcomes.parquet": "fe95a431a0b1d4f3b42f89579a4575fe1a214a14feb55e095fa6e54078338f2b",
+        "customers.parquet": "811658704188606bb9acde350a279df55f3b5a17683a4c5dab659468b74f3454",
+        "digital_usage.parquet": "00e2bbec66888f11a79302ef01f57101a39796261d996a028e35cd829cb49864",
+        "energy_usage.parquet": "bc2b00dc293b4dbf4e8701df9dd4734218c8fbf2cb9e9d47df85e6093a6434ab",
+        "financial_products.parquet": "cf3b5e9afc982950d14e6021bb83ec56b08316c012144d0038bac614a0323153",
+        "green_product_catalogue.parquet": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+        "merchants.parquet": "106a1ee96472d91b1d10fa08ec42a37f7da4e6f2e3a57c4153623ac748b7d6a2",
+        "outcome_observation.parquet": "7c3425a0e343c3c87da51574a764719d730779f35c06bffd39c9ddacf630703b",
+        "scenario_evidence.parquet": "3395a69b7691017e2f677d0c9d151f7a8970d7d11616be26115c291b2b2aa1f3",
+        "transaction_truth.parquet": "e9f1624ee9ba4ea2f8f508139ddf07b7df068d3bc861a7af99063a5506c32d17",
+        "transactions.parquet": "b27d93a9b4a5733527e03ea49227b1fad9af5cb8f18769c41af9356dd85bcc79",
+        "vehicle_ownership.parquet": "2547632f05cf1651fe8cb7d5ef0a32d21bfa98a8abc046d6237e3598e211720a",
+        "vehicles.parquet": "55f4ff70495e2d55629265e4769e3244259154113bf2b77873a3a4856419206f"
+      },
+      "public_anchors": {
+        "diagnostic_scope": "Complete calendar-year synthetic observations, including adoption effects and observation noise. Gas includes positive consumers only. Not a real-world predictive validation.",
+        "diagnostic_year": 2025,
+        "energy": {
+          "electricity": {
+            "mean_kwh": 3323,
+            "median_kwh": 2471,
+            "section": "2.2, Chart 7"
+          },
+          "gas": {
+            "mean_kwh": 11359,
+            "median_kwh": 9859,
+            "section": "3.2, Chart 15",
+            "weather_corrected": true
+          },
+          "licence": "Open Government Licence v3.0",
+          "limitations": "Meter aggregates are not individual banking records or evidence of adoption. A fitted lognormal is an approximation to published mean and median, not a reconstruction of meter microdata. Simulated adoption effects, missing months and observation noise change generated totals. Gas source year runs mid-May 2024 to mid-May 2025. GB excludes Northern Ireland.",
+          "population": "Great Britain consuming domestic meters, 2024",
+          "published_updated": "2025-12-19",
+          "publisher": "Department for Energy Security and Net Zero",
+          "retrieved": "2026-10-10",
+          "source_url": "https://www.gov.uk/government/statistics/subnational-electricity-and-gas-consumption-summary-report-2024/subnational-electricity-and-gas-consumption-summary-report-2024--2",
+          "title": "Subnational electricity and gas consumption summary report 2024",
+          "use": "Public aggregate statistics anchor synthetic baseline annual demand marginals. Seasonal profiles, customer associations, observations and adoption labels remain synthetic.",
+          "version": "desnz_gb_domestic_2024_v1"
+        },
+        "energy_anchor_sha256": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+        "energy_marginal_diagnostics": {
+          "electricity": {
+            "n_complete_consumers": 28926,
+            "observed_mean_kwh": 3394.4899502177964,
+            "observed_median_kwh": 2623.45,
+            "reference_mean_kwh": 3323,
+            "reference_median_kwh": 2471
+          },
+          "gas": {
+            "n_complete_consumers": 26123,
+            "observed_mean_kwh": 11385.407376641273,
+            "observed_median_kwh": 9880.2,
+            "reference_mean_kwh": 11359,
+            "reference_median_kwh": 9859
+          }
+        }
+      },
+      "row_counts": {
+        "customer_history": 120927,
+        "customer_outcomes": 93171,
+        "customers": 50000,
+        "digital_usage": 982678,
+        "energy_usage": 831252,
+        "financial_products": 172387,
+        "green_product_catalogue": 4,
+        "merchants": 146,
+        "outcome_observation": 200000,
+        "scenario_evidence": 0,
+        "transaction_truth": 10909405,
+        "transactions": 10909405,
+        "vehicle_ownership": 73191,
+        "vehicles": 59060
+      }
+    }
+  },
+  "products": {
+    "EV_FINANCE": {
+      "surfaced": true,
+      "fitting_status": "FITTED",
+      "release_status": "PASSED",
+      "n_validation": 2945,
+      "n_release_selection": 1478,
+      "release_selection_split": "confidence_release",
+      "test_used_for_release_selection": false,
+      "cohorts": {
+        "fitting_validation": {
+          "n": 2945,
+          "n_correct": 2324,
+          "n_incorrect": 621,
+          "overall_error": 0.21086587436332768
+        },
+        "release_selection": {
+          "n": 1478,
+          "n_correct": 1159,
+          "n_incorrect": 319,
+          "overall_error": 0.2158322056833559
+        }
+      },
+      "runtime_equivalence": {
+        "rows": 12,
+        "single_vs_batch": "PASS",
+        "confidence_max_abs_difference": 2.220446049250313e-16
+      },
+      "deployed_propensity": {
+        "model_version": "ev_finance_logreg_v1",
+        "calibration_version": "ev_finance_logreg_platt_v2_4d2543a5ce7f2e07",
+        "operational_threshold": 0.10806793679446305
+      },
+      "validation": {
+        "n": 1478,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.9999999999999999,
+        "top30_error": 0.04054054054054054,
+        "bottom30_error": 0.4527027027027027,
+        "error_ratio": 0.08955223880597016,
+        "overall_error": 0.2158322056833559,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 1159,
+        "n_incorrect": 319,
+        "brier": 0.13906087263296552,
+        "ece": 0.04516621744020244,
+        "calibration_gap": 0.00598521433763366,
+        "correctness_auc": 0.7931440194092302
+      },
+      "baselines": {
+        "deployed_propensity_correctness": {
+          "formula": "where(p >= operational_threshold, p, 1-p)",
+          "operational_threshold": 0.10806793679446305,
+          "validation": {
+            "n": 1478,
+            "passed": true,
+            "reasons": [],
+            "spearman": -0.9118583155200968,
+            "top30_error": 0.013513513513513514,
+            "bottom30_error": 0.6328828828828829,
+            "error_ratio": 0.021352313167259787,
+            "overall_error": 0.2158322056833559,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 1159,
+            "n_incorrect": 319,
+            "brier": 0.05486699980226397,
+            "ece": 0.012307455884351238,
+            "calibration_gap": 0.0028450744991591614,
+            "correctness_auc": 0.9338365957032466
+          }
+        },
+        "constant_correctness": {
+          "probability": 0.7891341256366723,
+          "estimated_on": "validation",
+          "validation": {
+            "n": 1478,
+            "passed": false,
+            "reasons": [
+              "tied scores do not separate low- and high-confidence groups",
+              "Spearman undefined",
+              "top-30% error 0.216 is not <= 0.5 x bottom-30% error 0.216"
+            ],
+            "spearman": null,
+            "top30_error": 0.2158322056833559,
+            "bottom30_error": 0.2158322056833559,
+            "error_ratio": 1.0,
+            "overall_error": 0.2158322056833559,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 1159,
+            "n_incorrect": 319,
+            "brier": 0.1692733291199937,
+            "ece": 0.004966331320028217,
+            "calibration_gap": 0.004966331320028217,
+            "correctness_auc": 0.5
+          }
+        }
+      },
+      "held_out_test_diagnostic": {
+        "n": 4425,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.9999999999999999,
+        "top30_error": 0.0391566265060241,
+        "bottom30_error": 0.4495481927710843,
+        "error_ratio": 0.08710217755443887,
+        "overall_error": 0.22327683615819208,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 3437,
+        "n_incorrect": 988,
+        "brier": 0.14560961787781476,
+        "ece": 0.05625929562884736,
+        "calibration_gap": 0.012110819473726497,
+        "correctness_auc": 0.7845537194074014
+      },
+      "stress": {
+        "missing_data_30pct": {
+          "n": 4425,
+          "passed": true,
+          "reasons": [],
+          "spearman": -0.8666666666666665,
+          "top30_error": 0.0858433734939759,
+          "bottom30_error": 0.32831325301204817,
+          "error_ratio": 0.2614678899082569,
+          "overall_error": 0.1688135593220339,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 3678,
+          "n_incorrect": 747,
+          "brier": 0.1287120708408888,
+          "ece": 0.12197192208515369,
+          "calibration_gap": -0.09172303984934327,
+          "correctness_auc": 0.7315826656271633
+        },
+        "perturbed_generator": {
+          "n": 27605,
+          "passed": true,
+          "reasons": [],
+          "spearman": -0.9999999999999999,
+          "top30_error": 0.05421395798116397,
+          "bottom30_error": 0.39036464622071965,
+          "error_ratio": 0.13888029693782863,
+          "overall_error": 0.1939865966310451,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 22250,
+          "n_incorrect": 5355,
+          "brier": 0.13271907308228933,
+          "ece": 0.052440719267648796,
+          "calibration_gap": -0.03054381797727812,
+          "correctness_auc": 0.7693305385075379
+        }
+      }
+    },
+    "GREEN_HOME": {
+      "surfaced": true,
+      "fitting_status": "FITTED",
+      "release_status": "PASSED",
+      "n_validation": 2421,
+      "n_release_selection": 1186,
+      "release_selection_split": "confidence_release",
+      "test_used_for_release_selection": false,
+      "cohorts": {
+        "fitting_validation": {
+          "n": 2421,
+          "n_correct": 1827,
+          "n_incorrect": 594,
+          "overall_error": 0.24535315985130113
+        },
+        "release_selection": {
+          "n": 1186,
+          "n_correct": 904,
+          "n_incorrect": 282,
+          "overall_error": 0.23777403035413153
+        }
+      },
+      "runtime_equivalence": {
+        "rows": 12,
+        "single_vs_batch": "PASS",
+        "confidence_max_abs_difference": 0.0
+      },
+      "deployed_propensity": {
+        "model_version": "green_home_gbm_v1",
+        "calibration_version": "green_home_gbm_platt_v2_de2a37ba59c87bd4",
+        "operational_threshold": 0.11192764422079614
+      },
+      "validation": {
+        "n": 1186,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.9787279253249042,
+        "top30_error": 0.10393258426966293,
+        "bottom30_error": 0.34831460674157305,
+        "error_ratio": 0.29838709677419356,
+        "overall_error": 0.23777403035413153,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 904,
+        "n_incorrect": 282,
+        "brier": 0.17044149629659994,
+        "ece": 0.03695867727832147,
+        "calibration_gap": -0.009066301922491027,
+        "correctness_auc": 0.67098553317015
+      },
+      "baselines": {
+        "deployed_propensity_correctness": {
+          "formula": "where(p >= operational_threshold, p, 1-p)",
+          "operational_threshold": 0.11192764422079614,
+          "validation": {
+            "n": 1186,
+            "passed": true,
+            "reasons": [],
+            "spearman": -0.9515151515151514,
+            "top30_error": 0.03651685393258427,
+            "bottom30_error": 0.6657303370786517,
+            "error_ratio": 0.05485232067510548,
+            "overall_error": 0.23777403035413153,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 904,
+            "n_incorrect": 282,
+            "brier": 0.07479807294982117,
+            "ece": 0.009006322569196501,
+            "calibration_gap": 0.007877499500974938,
+            "correctness_auc": 0.9045887466264985
+          }
+        },
+        "constant_correctness": {
+          "probability": 0.7546468401486989,
+          "estimated_on": "validation",
+          "validation": {
+            "n": 1186,
+            "passed": false,
+            "reasons": [
+              "tied scores do not separate low- and high-confidence groups",
+              "Spearman undefined",
+              "top-30% error 0.238 is not <= 0.5 x bottom-30% error 0.238"
+            ],
+            "spearman": null,
+            "top30_error": 0.23777403035413153,
+            "bottom30_error": 0.23777403035413153,
+            "error_ratio": 1.0,
+            "overall_error": 0.23777403035413153,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 904,
+            "n_incorrect": 282,
+            "brier": 0.18129498404721894,
+            "ece": 0.0075791294971694345,
+            "calibration_gap": -0.0075791294971694345,
+            "correctness_auc": 0.5
+          }
+        }
+      },
+      "held_out_test_diagnostic": {
+        "n": 3656,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.9636363636363635,
+        "top30_error": 0.10209662716499544,
+        "bottom30_error": 0.3646308113035551,
+        "error_ratio": 0.28,
+        "overall_error": 0.2289387308533917,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 2819,
+        "n_incorrect": 837,
+        "brier": 0.16577607486117132,
+        "ece": 0.019247817277549675,
+        "calibration_gap": -0.015552689785177432,
+        "correctness_auc": 0.6809713740563161
+      },
+      "stress": {
+        "missing_data_30pct": {
+          "n": 3656,
+          "passed": false,
+          "reasons": [
+            "top-30% error 0.326 is not <= 0.5 x bottom-30% error 0.532"
+          ],
+          "spearman": -0.8787878787878788,
+          "top30_error": 0.3263445761166819,
+          "bottom30_error": 0.5323609845031905,
+          "error_ratio": 0.6130136986301371,
+          "overall_error": 0.43900437636761486,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 2051,
+          "n_incorrect": 1605,
+          "brier": 0.24998853688235376,
+          "ece": 0.09931789327870559,
+          "calibration_gap": 0.09391632652559678,
+          "correctness_auc": 0.5940182662966624
+        },
+        "perturbed_generator": {
+          "n": 22710,
+          "passed": true,
+          "reasons": [],
+          "spearman": -0.9999999999999999,
+          "top30_error": 0.12123880816086893,
+          "bottom30_error": 0.3808894760017613,
+          "error_ratio": 0.31830443159922933,
+          "overall_error": 0.2634081902245707,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 16728,
+          "n_incorrect": 5982,
+          "brier": 0.1838999763910609,
+          "ece": 0.03219939609185035,
+          "calibration_gap": -0.0170746460626523,
+          "correctness_auc": 0.6609251475133195
+        }
+      }
+    },
+    "SOLAR_FINANCE": {
+      "surfaced": true,
+      "fitting_status": "FITTED",
+      "release_status": "PASSED",
+      "n_validation": 3042,
+      "n_release_selection": 1579,
+      "release_selection_split": "confidence_release",
+      "test_used_for_release_selection": false,
+      "cohorts": {
+        "fitting_validation": {
+          "n": 3042,
+          "n_correct": 2770,
+          "n_incorrect": 272,
+          "overall_error": 0.08941485864562787
+        },
+        "release_selection": {
+          "n": 1579,
+          "n_correct": 1445,
+          "n_incorrect": 134,
+          "overall_error": 0.08486383787207093
+        }
+      },
+      "runtime_equivalence": {
+        "rows": 12,
+        "single_vs_batch": "PASS",
+        "confidence_max_abs_difference": 2.220446049250313e-16
+      },
+      "deployed_propensity": {
+        "model_version": "solar_finance_gbm_v1",
+        "calibration_version": "solar_finance_gbm_platt_v2_bbefc7644dee83c1",
+        "operational_threshold": 0.14649534047854848
+      },
+      "validation": {
+        "n": 1579,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.9939209163101398,
+        "top30_error": 0.014767932489451477,
+        "bottom30_error": 0.19198312236286919,
+        "error_ratio": 0.07692307692307693,
+        "overall_error": 0.08486383787207093,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 1445,
+        "n_incorrect": 134,
+        "brier": 0.06963027085115713,
+        "ece": 0.022373860421444267,
+        "calibration_gap": -0.010761401445542051,
+        "correctness_auc": 0.7926096162784693
+      },
+      "baselines": {
+        "deployed_propensity_correctness": {
+          "formula": "where(p >= operational_threshold, p, 1-p)",
+          "operational_threshold": 0.14649534047854848,
+          "validation": {
+            "n": 1579,
+            "passed": true,
+            "reasons": [],
+            "spearman": -0.9878044218151566,
+            "top30_error": 0.010548523206751054,
+            "bottom30_error": 0.20675105485232068,
+            "error_ratio": 0.0510204081632653,
+            "overall_error": 0.08486383787207093,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 1445,
+            "n_incorrect": 134,
+            "brier": 0.05096102945966742,
+            "ece": 0.008133573541844914,
+            "calibration_gap": -0.00020798039168312688,
+            "correctness_auc": 0.8359809946805765
+          }
+        },
+        "constant_correctness": {
+          "probability": 0.9105851413543721,
+          "estimated_on": "validation",
+          "validation": {
+            "n": 1579,
+            "passed": false,
+            "reasons": [
+              "tied scores do not separate low- and high-confidence groups",
+              "Spearman undefined",
+              "top-30% error 0.085 is not <= 0.5 x bottom-30% error 0.085"
+            ],
+            "spearman": null,
+            "top30_error": 0.08486383787207093,
+            "bottom30_error": 0.08486383787207093,
+            "error_ratio": 1.0,
+            "overall_error": 0.08486383787207093,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 1445,
+            "n_incorrect": 134,
+            "brier": 0.07768267868377515,
+            "ece": 0.004551020773556735,
+            "calibration_gap": -0.004551020773556735,
+            "correctness_auc": 0.5
+          }
+        }
+      },
+      "held_out_test_diagnostic": {
+        "n": 4599,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.8909090909090909,
+        "top30_error": 0.020289855072463767,
+        "bottom30_error": 0.21159420289855072,
+        "error_ratio": 0.0958904109589041,
+        "overall_error": 0.09045444661883018,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 4183,
+        "n_incorrect": 416,
+        "brier": 0.06687523051557052,
+        "ece": 0.02227966218497925,
+        "calibration_gap": 0.0035128759217993855,
+        "correctness_auc": 0.8071728056786628
+      },
+      "stress": {
+        "missing_data_30pct": {
+          "n": 4599,
+          "passed": true,
+          "reasons": [],
+          "spearman": -0.8909090909090909,
+          "top30_error": 0.02391304347826087,
+          "bottom30_error": 0.3130434782608696,
+          "error_ratio": 0.07638888888888888,
+          "overall_error": 0.12807131985214176,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 4010,
+          "n_incorrect": 589,
+          "brier": 0.08453557290686377,
+          "ece": 0.03790953493672129,
+          "calibration_gap": 0.017326593907993737,
+          "correctness_auc": 0.8269741605239871
+        },
+        "perturbed_generator": {
+          "n": 29282,
+          "passed": true,
+          "reasons": [],
+          "spearman": -0.9878787878787878,
+          "top30_error": 0.016505406943653957,
+          "bottom30_error": 0.22811610700056914,
+          "error_ratio": 0.0723552894211577,
+          "overall_error": 0.09500717164128133,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 26500,
+          "n_incorrect": 2782,
+          "brier": 0.06828764020366024,
+          "ece": 0.020799425317803658,
+          "calibration_gap": 0.004389652642870834,
+          "correctness_auc": 0.8208781926942744
+        }
+      }
+    },
+    "PAPERLESS_BANKING": {
+      "surfaced": true,
+      "fitting_status": "FITTED",
+      "release_status": "PASSED",
+      "n_validation": 972,
+      "n_release_selection": 490,
+      "release_selection_split": "confidence_release",
+      "test_used_for_release_selection": false,
+      "cohorts": {
+        "fitting_validation": {
+          "n": 972,
+          "n_correct": 688,
+          "n_incorrect": 284,
+          "overall_error": 0.29218106995884774
+        },
+        "release_selection": {
+          "n": 490,
+          "n_correct": 333,
+          "n_incorrect": 157,
+          "overall_error": 0.32040816326530613
+        }
+      },
+      "runtime_equivalence": {
+        "rows": 12,
+        "single_vs_batch": "PASS",
+        "confidence_max_abs_difference": 2.220446049250313e-16
+      },
+      "deployed_propensity": {
+        "model_version": "paperless_banking_logreg_v1",
+        "calibration_version": "paperless_banking_logreg_platt_v2_e62f1e124bd55630",
+        "operational_threshold": 0.16686896590578887
+      },
+      "validation": {
+        "n": 490,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.9665698144513026,
+        "top30_error": 0.06802721088435375,
+        "bottom30_error": 0.6462585034013606,
+        "error_ratio": 0.10526315789473685,
+        "overall_error": 0.32040816326530613,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 333,
+        "n_incorrect": 157,
+        "brier": 0.15157467757776147,
+        "ece": 0.056418261624695605,
+        "calibration_gap": 0.015721499399185213,
+        "correctness_auc": 0.8323291444310552
+      },
+      "baselines": {
+        "deployed_propensity_correctness": {
+          "formula": "where(p >= operational_threshold, p, 1-p)",
+          "operational_threshold": 0.16686896590578887,
+          "validation": {
+            "n": 490,
+            "passed": true,
+            "reasons": [],
+            "spearman": -0.9544117035777014,
+            "top30_error": 0.04081632653061224,
+            "bottom30_error": 0.8027210884353742,
+            "error_ratio": 0.05084745762711864,
+            "overall_error": 0.32040816326530613,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 333,
+            "n_incorrect": 157,
+            "brier": 0.11499033054843835,
+            "ece": 0.026950817710591664,
+            "calibration_gap": 0.019215953978850897,
+            "correctness_auc": 0.8747728620340085
+          }
+        },
+        "constant_correctness": {
+          "probability": 0.7078189300411523,
+          "estimated_on": "validation",
+          "validation": {
+            "n": 490,
+            "passed": false,
+            "reasons": [
+              "tied scores do not separate low- and high-confidence groups",
+              "Spearman undefined",
+              "top-30% error 0.320 is not <= 0.5 x bottom-30% error 0.320"
+            ],
+            "spearman": null,
+            "top30_error": 0.32040816326530613,
+            "bottom30_error": 0.32040816326530613,
+            "error_ratio": 1.0,
+            "overall_error": 0.32040816326530613,
+            "criteria": {
+              "min_rows": 200,
+              "spearman_max": -0.6,
+              "top30_error_max_ratio_of_bottom30": 0.5,
+              "min_bottom30_error": 0.02
+            },
+            "n_correct": 333,
+            "n_incorrect": 157,
+            "brier": 0.21854354097479056,
+            "ece": 0.02822709330645834,
+            "calibration_gap": 0.02822709330645834,
+            "correctness_auc": 0.5
+          }
+        }
+      },
+      "held_out_test_diagnostic": {
+        "n": 1443,
+        "passed": true,
+        "reasons": [],
+        "spearman": -0.9999999999999999,
+        "top30_error": 0.08545034642032333,
+        "bottom30_error": 0.6836027713625866,
+        "error_ratio": 0.125,
+        "overall_error": 0.3305613305613306,
+        "criteria": {
+          "min_rows": 200,
+          "spearman_max": -0.6,
+          "top30_error_max_ratio_of_bottom30": 0.5,
+          "min_bottom30_error": 0.02
+        },
+        "n_correct": 966,
+        "n_incorrect": 477,
+        "brier": 0.1583809312823996,
+        "ece": 0.032945806976876144,
+        "calibration_gap": 0.02470562499596074,
+        "correctness_auc": 0.8211410167931907
+      },
+      "stress": {
+        "missing_data_30pct": {
+          "n": 1443,
+          "passed": true,
+          "reasons": [],
+          "spearman": -0.7477238187264795,
+          "top30_error": 0.09237875288683603,
+          "bottom30_error": 0.3117782909930716,
+          "error_ratio": 0.29629629629629634,
+          "overall_error": 0.1774081774081774,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 1187,
+          "n_incorrect": 256,
+          "brier": 0.12412966980084382,
+          "ece": 0.047959457565717685,
+          "calibration_gap": 0.0347693551499908,
+          "correctness_auc": 0.7113620208508846
+        },
+        "perturbed_generator": {
+          "n": 8936,
+          "passed": true,
+          "reasons": [],
+          "spearman": -0.9999999999999999,
+          "top30_error": 0.043640432674375236,
+          "bottom30_error": 0.6266318537859008,
+          "error_ratio": 0.06964285714285715,
+          "overall_error": 0.2736123545210385,
+          "criteria": {
+            "min_rows": 200,
+            "spearman_max": -0.6,
+            "top30_error_max_ratio_of_bottom30": 0.5,
+            "min_bottom30_error": 0.02
+          },
+          "n_correct": 6491,
+          "n_incorrect": 2445,
+          "brier": 0.13392648996208587,
+          "ece": 0.030821742143036616,
+          "calibration_gap": 0.0023938076477811876,
+          "correctness_auc": 0.8497160926612559
+        }
+      }
+    }
+  },
+  "scope": "canonical confidence only; full make all/historical/proxy/SHAP/UI certification not run",
+  "verification": {
+    "focused_tests_passed": 83,
+    "split_leakage_outcome_history_tests_passed": 92,
+    "downstream_tests_passed": 185,
+    "downstream_tests_failed": 2,
+    "downstream_failures": "tests/integration/test_trained_safety.py:84 tuple identity assertion",
+    "fresh_training_acceptance": "90-second check budget exceeded",
+    "updated_base_revision": "933d07535eff8c5107fff262be79f09709d5ff79",
+    "combined_updated_base_tests_passed": 271,
+    "combined_updated_base_tests_failed": 0,
+    "historical_downstream_failures_resolved_by": "be3a45e, independently merged upstream in PR #2"
+  }
+}

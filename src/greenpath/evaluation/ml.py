@@ -18,7 +18,9 @@ from scipy.stats import ks_2samp
 
 from greenpath import config
 from greenpath.confidence.meta_model import ConfidenceModel
-from greenpath.confidence.validation import stress_report, validate_confidence, write_confidence_report
+from greenpath.confidence.validation import (
+    baseline_diagnostics, correctness_support, stress_report, validate_confidence, write_confidence_report,
+)
 from greenpath.contracts import ModelType, Product
 from greenpath.evaluation import metrics as M
 from greenpath.evaluation.reports import write_all_reports
@@ -290,17 +292,23 @@ def stage_evaluate() -> None:
         scen["missing_data_30pct"] = (runtime.confidence_features(b, masked, mcp, detectors.get(p)),
                                       (mcp >= b.threshold) == (y == 1))
         confidence_path = config.ARTIFACT_DIR / runtime.CONFIDENCE_DIR / f"{p.value.lower()}.joblib"
+        test_correct = (p_sel >= b.threshold) == (y == 1)
+        constant = decisions[p.value].get("baselines", {}).get("constant_correctness", {}).get("probability")
+        decisions[p.value]["held_out_test_baselines"] = baseline_diagnostics(test_correct, p_sel, b.threshold, constant)
         if confidence_path.exists():
             cm = ConfidenceModel.load(confidence_path)
             test_features = runtime.confidence_features(b, rows, p_sel, detectors.get(p))
             decisions[p.value]["held_out_test_diagnostic"] = validate_confidence(
-                cm.predict(test_features), (p_sel >= b.threshold) == (y == 1)).to_dict()
+                cm.predict(test_features), test_correct).to_dict()
             stress = stress_report(cm, scen)
             decisions[p.value]["stress"] = {k: v.to_dict() for k, v in stress.items()}
         else:
             from greenpath.confidence.validation import ConfidenceValidation
+            decisions[p.value]["held_out_test_diagnostic"] = ConfidenceValidation(
+                **correctness_support(test_correct), passed=False,
+                reasons=[decisions[p.value]["limitation"]]).to_dict()
             decisions[p.value]["stress"] = {
-                name: ConfidenceValidation(n=len(correct), passed=False,
+                name: ConfidenceValidation(**correctness_support(correct), passed=False,
                     reasons=[decisions[p.value]["limitation"]]).to_dict()
                 for name, (_, correct) in scen.items()}
         res["confidence"] = decisions[p.value]
@@ -327,6 +335,7 @@ def stage_evaluate() -> None:
 
     # confidence report
     write_confidence_report({p: {
+        **d,
         "validation": validate_confidence_from(d),
         "ablation": pd.DataFrame(d["ablation"]),
         "coefficients": d.get("coefficients"),
@@ -347,4 +356,4 @@ def validate_confidence_from(decision: dict):
     from greenpath.confidence.validation import ConfidenceValidation
     v = decision["validation"]
     fields = ConfidenceValidation.__dataclass_fields__
-    return ConfidenceValidation(**{k: v.get(k) for k in fields})
+    return ConfidenceValidation(**{k: v[k] for k in fields if k in v})

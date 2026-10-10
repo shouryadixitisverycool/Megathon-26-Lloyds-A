@@ -17,6 +17,7 @@ import pandas as pd
 
 from greenpath import config
 from greenpath.confidence.meta_model import (
+    METHOD_VERSION,
     ConfidenceModel,
     build_confidence_features,
     perturbation_stability,
@@ -58,8 +59,8 @@ def confidence_features(bundle: ProductModelBundle, frame: pd.DataFrame, calibra
         return build_confidence_features(p, bundle.threshold, p, p, p, p)
     ood = detector.score(frame) if detector is not None else np.zeros(len(frame))
     stability = perturbation_stability(
-        lambda f: predict_calibrated(bundle, f), frame.reset_index(drop=True),
-        perturb_columns=[c for c in bundle.features if c in frame.columns],
+        lambda f: predict_calibrated(bundle, f), frame,
+        perturb_columns=bundle.features,
         seed=config.SEED_MODEL, n_draws=STABILITY_DRAWS, mask_rate=STABILITY_MASK_RATE,
     )
     return build_confidence_features(
@@ -118,6 +119,11 @@ def load_confidence(bundles: dict[Product, ProductModelBundle], detectors: dict[
         validated[p] = bool(d.get("surfaced", False))
         if d.get("limitation"):
             limitations[p] = d["limitation"]
+        # Older artifacts were validated with batch-position-dependent masks. They
+        # must be refit/revalidated, not surfaced under the changed feature method.
+        if p in models and vars(models[p]).get("method_version") != METHOD_VERSION:
+            validated[p] = False
+            limitations[p] = "Confidence method changed; refit and revalidate confidence artifacts"
     return ConfidenceScorer(bundles, models, validated, limitations, detectors)
 
 

@@ -40,6 +40,8 @@ rest MEDIUM. Cut-offs are stored and re-applied to new data.
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+import hashlib
+import json
 from pathlib import Path
 
 import joblib
@@ -53,7 +55,7 @@ from sklearn.preprocessing import FunctionTransformer, StandardScaler
 from greenpath.contracts.enums import ConfidenceBucket, ConfidenceStatus
 from greenpath.contracts.propensity import ConfidenceResult
 
-METHOD_VERSION = "conf_meta_v1"
+METHOD_VERSION = "conf_meta_v2"
 FEATURE_COLUMNS = ["margin", "local_cal_error", "ood_score", "instability", "recency_days"]
 HIGH_QUANTILE = 0.60  # rows at/above this validation quantile -> HIGH (top 40%)
 LOW_QUANTILE = 0.30  # rows below this validation quantile -> LOW (bottom 30%)
@@ -132,19 +134,38 @@ def perturbation_stability(
 
     Each draw sets every (row, column) cell of ``perturb_columns`` to NaN independently
     with probability ``mask_rate`` (seeded), re-predicts, and records |p_perturbed - p|.
-    Returns the max over draws per row (the "instability" feature). Deterministic per seed.
+    Returns the max over draws per row (the "instability" feature). Masks depend only on
+    canonical numeric values of the approved ``perturb_columns`` and seed/draw/column,
+    never on row index, batch composition, order, or unapproved metadata.
     """
     base = np.asarray(predict_fn(frame), dtype=float).reshape(-1)
     out = np.zeros(len(frame))
-    cols = [c for c in perturb_columns if c in frame.columns]
+    cols = sorted(set(perturb_columns))
     if not cols:
         return out
-    rng = np.random.default_rng(seed)
-    for _ in range(n_draws):
+    # Fixed-endian float64 makes integer/float representations equivalent; normalise
+    # signed zero and NaN payloads before hashing. Hash no customer IDs or index values.
+    values = frame.reindex(columns=cols).to_numpy(dtype="<f8", copy=True)
+    values[values == 0] = 0.0
+    values[np.isnan(values)] = np.nan
+    row_keys = np.fromiter(
+        (int.from_bytes(hashlib.blake2b(row.tobytes(), digest_size=8).digest(), "little")
+         for row in values), dtype=np.uint64, count=len(frame),
+    )
+    for draw in range(n_draws):
         pert = frame.copy()
         for c in cols:
-            mask = rng.random(len(frame)) < mask_rate
-            pert[c] = pert[c].astype(float).mask(mask)
+            context = json.dumps([int(seed), draw, c, cols], separators=(",", ":")).encode()
+            key = int.from_bytes(hashlib.blake2b(context, digest_size=8).digest(), "little")
+            # SplitMix64 avalanches each row/context key into uniform 53-bit draws.
+            # All arithmetic is vectorised uint64, with intentional modular overflow.
+            bits = (row_keys ^ np.uint64(key)) + np.uint64(0x9E3779B97F4A7C15)
+            bits = (bits ^ (bits >> 30)) * np.uint64(0xBF58476D1CE4E5B9)
+            bits = (bits ^ (bits >> 27)) * np.uint64(0x94D049BB133111EB)
+            bits ^= bits >> 31
+            mask = (bits >> 11).astype(float) / (1 << 53) < mask_rate
+            values_to_mask = pert[c] if c in pert else pd.Series(np.nan, index=pert.index)
+            pert[c] = values_to_mask.astype(float).mask(mask)
         pred = np.asarray(predict_fn(pert), dtype=float).reshape(-1)
         out = np.maximum(out, np.abs(pred - base))
     return out
@@ -161,6 +182,7 @@ class ConfidenceModel:
     method_version = METHOD_VERSION
 
     def __init__(self, feature_columns: Sequence[str] | None = None, C: float = 1.0):
+        self.method_version = METHOD_VERSION
         self.feature_columns = list(feature_columns) if feature_columns else list(FEATURE_COLUMNS)
         self.C = C
         self.pipeline_: Pipeline | None = None
