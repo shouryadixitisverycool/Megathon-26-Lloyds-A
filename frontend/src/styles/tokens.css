@@ -1,0 +1,203 @@
+/* Design tokens. Light is the default; dark has its own selected steps, not an inversion. */
+:root {
+  color-scheme: light;
+
+  --font-display: "Bricolage Grotesque Variable", "Public Sans Variable", system-ui, sans-serif;
+  --font-ui: "Public Sans Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, monospace;
+
+  /* Modular type scale, ratio ~1.2 from a 15px base. */
+  --t-xs: 0.75rem;
+  --t-sm: 0.8125rem;
+  --t-base: 0.9375rem;
+  --t-md: 1.0625rem;
+  --t-lg: 1.25rem;
+  --t-xl: 1.5rem;
+  --t-2xl: 1.875rem;
+  --t-3xl: 2.375rem;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* Brand */
+  --canopy: #0f3d2e;
+  --canopy-raised: #175140;
+  --on-canopy: #e8f1ec;
+  --on-canopy-muted: #a3bdb0;
+  --sprout: #9ed9a8;
+
+  /* Surfaces & ink */
+  --page: #f1f4f2;
+  --surface: #ffffff;
+  --surface-sunk: #f6f8f7;
+  --ink: #15221c;
+  --ink-2: #4c5b53;
+  --ink-3: #6f7d75;
+  --line: #dce3de;
+  --line-strong: #c3cdc6;
+  --overlay: rgba(12, 28, 21, 0.38);
+  --shadow-drawer: -24px 0 48px rgba(12, 28, 21, 0.14);
+  --shadow-pop: 0 10px 30px rgba(12, 28, 21, 0.14), 0 1px 2px rgba(12, 28, 21, 0.08);
+
+  --leaf: #1f7a54;
+  --leaf-strong: #17633f;
+  --leaf-wash: #e3f1e8;
+  --on-leaf: #ffffff;
+  --focus: #2a78d6;
+
+  /* Decision-state tones: text, wash, mark. Marks validated for CVD separation. */
+  --tone-supported: #17633f;
+  --tone-supported-wash: #e2f2e8;
+  --tone-supported-mark: #1f8a5b;
+  --tone-info: #1d5ea8;
+  --tone-info-wash: #e6effa;
+  --tone-info-mark: #2a78d6;
+  --tone-conflict: #a8401f;
+  --tone-conflict-wash: #fbeae3;
+  --tone-conflict-mark: #e0603a;
+  --tone-neutral: #4c5b53;
+  --tone-neutral-wash: #edf1ee;
+  --tone-neutral-mark: #7d8782;
+  --tone-muted: #5f6c65;
+  --tone-muted-wash: #f1f3f2;
+  --tone-muted-mark: #b0b8b3;
+  --tone-stopped: #5c3a8a;
+  --tone-stopped-wash: #f0eaf7;
+  --tone-stopped-mark: #7a4fb0;
+
+  --warn-ink: #6f4a00;
+  --warn-wash: #fff5dc;
+  --warn-line: #ecd193;
+  --error-ink: #9b2c22;
+  --error-wash: #fdeceA;
+  --error-line: #f0b9b0;
+
+  /* Product identity (categorical, validated light vs white). */
+  --p-ev: #2a78d6;
+  --p-home: #1baf7a;
+  --p-solar: #eb6834;
+  --p-paper: #6250d6;
+
+  /* Chart chrome */
+  --grid: #e6ebe7;
+  --axis: #c3cdc6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --canopy: #0a2219;
+    --canopy-raised: #12352a;
+    --on-canopy: #e1ece6;
+    --on-canopy-muted: #8fab9d;
+    --page: #0f1613;
+    --surface: #18211d;
+    --surface-sunk: #141c18;
+    --ink: #e7eee9;
+    --ink-2: #b3c1b9;
+    --ink-3: #8b9a92;
+    --line: #29352f;
+    --line-strong: #3a4842;
+    --overlay: rgba(0, 0, 0, 0.55);
+    --shadow-drawer: -24px 0 48px rgba(0, 0, 0, 0.45);
+    --shadow-pop: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --leaf: #4cb582;
+    --leaf-strong: #62c693;
+    --leaf-wash: #1b3328;
+    --on-leaf: #0b1f16;
+    --focus: #6aa6ee;
+    --tone-supported: #7dd3a5;
+    --tone-supported-wash: #193126;
+    --tone-supported-mark: #2a9d69;
+    --tone-info: #8fbcf2;
+    --tone-info-wash: #172739;
+    --tone-info-mark: #3987e5;
+    --tone-conflict: #f3a183;
+    --tone-conflict-wash: #36201a;
+    --tone-conflict-mark: #e2683f;
+    --tone-neutral: #b3c1b9;
+    --tone-neutral-wash: #212b26;
+    --tone-neutral-mark: #6f7a74;
+    --tone-muted: #9aa8a0;
+    --tone-muted-wash: #1d2622;
+    --tone-muted-mark: #a3aca7;
+    --tone-stopped: #c9b3ef;
+    --tone-stopped-wash: #261f35;
+    --tone-stopped-mark: #9a7fe0;
+    --warn-ink: #f2cf7d;
+    --warn-wash: #2c2412;
+    --warn-line: #574720;
+    --error-ink: #f4a69b;
+    --error-wash: #351b18;
+    --error-line: #6a2f28;
+    --p-ev: #3987e5;
+    --p-home: #199e70;
+    --p-solar: #d95926;
+    --p-paper: #9085e9;
+    --grid: #232e29;
+    --axis: #3a4842;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canopy: #0a2219;
+  --canopy-raised: #12352a;
+  --on-canopy: #e1ece6;
+  --on-canopy-muted: #8fab9d;
+  --page: #0f1613;
+  --surface: #18211d;
+  --surface-sunk: #141c18;
+  --ink: #e7eee9;
+  --ink-2: #b3c1b9;
+  --ink-3: #8b9a92;
+  --line: #29352f;
+  --line-strong: #3a4842;
+  --overlay: rgba(0, 0, 0, 0.55);
+  --shadow-drawer: -24px 0 48px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --leaf: #4cb582;
+  --leaf-strong: #62c693;
+  --leaf-wash: #1b3328;
+  --on-leaf: #0b1f16;
+  --focus: #6aa6ee;
+  --tone-supported: #7dd3a5;
+  --tone-supported-wash: #193126;
+  --tone-supported-mark: #2a9d69;
+  --tone-info: #8fbcf2;
+  --tone-info-wash: #172739;
+  --tone-info-mark: #3987e5;
+  --tone-conflict: #f3a183;
+  --tone-conflict-wash: #36201a;
+  --tone-conflict-mark: #e2683f;
+  --tone-neutral: #b3c1b9;
+  --tone-neutral-wash: #212b26;
+  --tone-neutral-mark: #6f7a74;
+  --tone-muted: #9aa8a0;
+  --tone-muted-wash: #1d2622;
+  --tone-muted-mark: #a3aca7;
+  --tone-stopped: #c9b3ef;
+  --tone-stopped-wash: #261f35;
+  --tone-stopped-mark: #9a7fe0;
+  --warn-ink: #f2cf7d;
+  --warn-wash: #2c2412;
+  --warn-line: #574720;
+  --error-ink: #f4a69b;
+  --error-wash: #351b18;
+  --error-line: #6a2f28;
+  --p-ev: #3987e5;
+  --p-home: #199e70;
+  --p-solar: #d95926;
+  --p-paper: #9085e9;
+  --grid: #232e29;
+  --axis: #3a4842;
+}
