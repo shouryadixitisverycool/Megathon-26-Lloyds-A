@@ -1,4 +1,4 @@
-"""Canonical GreenPath contracts (Agent A is the contract authority).
+"""Canonical Greenr contracts (Agent A is the contract authority).
 
 Import from here, not from submodules, so the public surface stays stable.
 """

@@ -1,4 +1,4 @@
-# GreenPath presentation layer
+# Greenr presentation layer
 
 Run the API and UI together with `make app`. To run only the UI against an existing API:
 
@@ -14,6 +14,6 @@ Responses cache for 15 seconds with a maximum of 128 entries, keyed by API URL, 
 
 `uv run --locked pytest tests/app` covers JSON/Decimal handling, API errors, all recommendation states, customer switching, selected Why details, validated confidence, portfolio charts and filters, refresh, and removal of prior results after failures with Streamlit AppTest and mocked HTTP responses. UI tests do not exercise browser rendering; the main thread owns browser smoke verification.
 
-The design uses native Streamlit components and the project theme, with restrained forest/cream charts. It follows the installed Streamlit 1.65.0 bundled `developing-with-streamlit` skill, discovered through `streamlit skills --help` and read directly from the package. Relevant design, layout, session-state, dashboard and testing references were read. No third-party skill was installed, no upload code ran, and local `streamlit docs` verified current widget and chart APIs. GreenPath retains Plotly as specified in the implementation plan.
+The design uses native Streamlit components and the project theme, with restrained forest/cream charts. It follows the installed Streamlit 1.65.0 bundled `developing-with-streamlit` skill, discovered through `streamlit skills --help` and read directly from the package. Relevant design, layout, session-state, dashboard and testing references were read. No third-party skill was installed, no upload code ran, and local `streamlit docs` verified current widget and chart APIs. Greenr retains Plotly as specified in the implementation plan.
 
 During the later manual transfer, replace the local mirrors with Agent A's canonical contracts. The HTTP route and JSON fields are those frozen in `PARALLEL_HANDOFF.md`.

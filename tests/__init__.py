@@ -1,1 +1,1 @@
-"""GreenPath tests; directory packages keep fixture imports unambiguous."""
+"""Greenr tests; directory packages keep fixture imports unambiguous."""

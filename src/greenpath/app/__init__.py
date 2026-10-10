@@ -1,1 +1,1 @@
-"""HTTP-only presentation layer for the GreenPath synthetic demonstration."""
+"""HTTP-only presentation layer for the Greenr synthetic demonstration."""

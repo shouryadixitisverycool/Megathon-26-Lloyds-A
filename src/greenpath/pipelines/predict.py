@@ -146,7 +146,7 @@ def _to_sql(df: pd.DataFrame, name: str, con) -> None:
 def stage_demo() -> None:
     """Terminal walk-through of the demo personas (Agent A has no UI; Agent B owns the app)."""
     rt = load_runtime()
-    print("GreenPath - Agent A structured outputs for demo personas (synthetic data)\n")
+    print("Greenr - Agent A structured outputs for demo personas (synthetic data)\n")
     print(f"Data cutoff {config.FEATURE_CUTOFF} | outcome window to {config.OUTCOME_WINDOW_END} | "
           f"prediction {config.PREDICTION_TIMESTAMP:%Y-%m-%d}\n")
     for cid in config.DEMO_PERSONA_IDS:

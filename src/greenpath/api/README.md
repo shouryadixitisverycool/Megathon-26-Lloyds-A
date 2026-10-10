@@ -1,4 +1,4 @@
-# GreenPath API
+# Greenr API
 
 Start the default synthetic demo with `uv run --locked uvicorn greenpath.api.main:app --host 127.0.0.1 --port 8000`.
 

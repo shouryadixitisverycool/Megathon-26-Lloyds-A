@@ -106,7 +106,7 @@ def product_section(name: str, r: dict, level: str = "##") -> list[str]:
 
 
 def evaluation_report(results: dict) -> str:
-    md = ["# GreenPath — Agent A evaluation report (data, ML, reliability)", "",
+    md = ["# Greenr — Agent A evaluation report (data, ML, reliability)", "",
           f"> {results['notice']}", "",
           f"Feature cutoff {config.FEATURE_CUTOFF}; outcome = adoption within 90 days (to {config.OUTCOME_WINDOW_END}); "
            f"prediction timestamp {config.PREDICTION_TIMESTAMP:%Y-%m-%d}. Customer-level 55/15/15/15 train/validation/confidence-release/test split; release customers reserved before tuning/calibration; demo personas excluded from all fitting and selection. Cohort counts are recorded in reports/dataset_quality.json.", "",

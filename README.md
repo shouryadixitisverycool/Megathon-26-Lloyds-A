@@ -1,4 +1,4 @@
-# GreenPath Intelligence
+# Greenr Intelligence
 
 Synthetic sustainability opportunity demo integrating Agent A's data, calibrated ML and reliability pipeline with Agent B's product rules, deterministic impact, grounded explanations, FastAPI and Streamlit. Relevance is not credit eligibility, approval or investment suitability.
 

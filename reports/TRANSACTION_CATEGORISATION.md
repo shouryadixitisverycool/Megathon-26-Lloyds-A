@@ -1,6 +1,6 @@
 # Transaction categorisation evaluation
 
-> Synthetic data only. These figures describe generalisation within the GreenPath generator's merchant catalogue. They do not establish categorisation accuracy on real bank transactions.
+> Synthetic data only. These figures describe generalisation within the Greenr generator's merchant catalogue. They do not establish categorisation accuracy on real bank transactions.
 
 Categoriser `txn_cat_v1` · seed 43 · 300,000 of 877,757 transactions evaluated (seeded sample).
 

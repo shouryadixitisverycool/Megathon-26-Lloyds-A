@@ -1,4 +1,4 @@
-# GreenPath — Agent A evaluation report (data, ML, reliability)
+# Greenr — Agent A evaluation report (data, ML, reliability)
 
 > All results are computed on synthetic data generated for this demonstration; they do not establish real-world predictive performance or eligibility.
 

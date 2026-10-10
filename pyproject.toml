@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "greenpath"
 version = "0.1.0"
-description = "GreenPath synthetic data, calibrated models, recommendations, impact and demo"
+description = "Greenr synthetic data, calibrated models, recommendations, impact and demo"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115,<1",

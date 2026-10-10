@@ -1,4 +1,4 @@
-# GreenPath carbon methods
+# Greenr carbon methods
 
 Legacy India method release: `greenpath-carbon-v1.0.0`
 Factor catalogue: `src/greenpath/impact/factors/carbon_factors.v1.json`  
@@ -174,7 +174,7 @@ Generation is the source's modelled annual AC output after its specified system 
 
 ## Avoided Emissions Guidance
 
-Reference: WRI/WBCSD [GHG Protocol for Project Accounting](https://ghgprotocol.org/project-protocol), copyright **2005**, and [Guidelines for Grid-Connected Electricity Projects](https://ghgprotocol.org/sites/default/files/2022-12/Guidelines%20for%20Grid-Connected%20Electricity%20Projects.pdf), **August 2007**. The official project page was checked on 2026-10-10: it explicitly says the 2005 Project Protocol remains in force until the revised ISO-GHG Protocol Project Standard is published. These are project-accounting references, **not claims that GreenPath implements or is certified against those standards**.
+Reference: WRI/WBCSD [GHG Protocol for Project Accounting](https://ghgprotocol.org/project-protocol), copyright **2005**, and [Guidelines for Grid-Connected Electricity Projects](https://ghgprotocol.org/sites/default/files/2022-12/Guidelines%20for%20Grid-Connected%20Electricity%20Projects.pdf), **August 2007**. The official project page was checked on 2026-10-10: it explicitly says the 2005 Project Protocol remains in force until the revised ISO-GHG Protocol Project Standard is published. These are project-accounting references, **not claims that Greenr implements or is certified against those standards**.
 
 The result is a potential operational scenario difference using constant average inventory factors. It is not verified avoided emissions, a marginal displaced-generation estimate, financed-emissions attribution, an offset/credit, or an inventory deduction. Project claims require a justified counterfactual baseline, assessment of primary and secondary effects/leakage, appropriate grid displacement method, monitoring, uncertainty and attribution/additionality review. Report scenario comparisons separately from corporate inventories; do not claim product adoption or finance caused the full difference. Do not sum overlapping EV/home/solar reductions without a separately reviewed allocation method.
 

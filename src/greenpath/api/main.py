@@ -178,7 +178,7 @@ def create_app(
                     raise RuntimeError("Trained portfolio preparation failed; check API logs")
         yield
 
-    application = FastAPI(title="GreenPath decision platform", version=CONTRACT_VERSION, lifespan=lifespan)
+    application = FastAPI(title="Greenr decision platform", version=CONTRACT_VERSION, lifespan=lifespan)
     application.state.repository = repository
     application.state.snapshot_provider = snapshot_provider
     application.state.history_provider = history_provider

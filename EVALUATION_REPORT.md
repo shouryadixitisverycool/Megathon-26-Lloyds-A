@@ -1,12 +1,12 @@
-# GreenPath Consolidated Evaluation Report
+# Greenr Consolidated Evaluation Report
 
-This report follows all 30 topics in section 62 of [the original specification](GreenPath_PS1_Master_MVP_v2.md). It consolidates implemented behaviour, evidence locations and limitations as inspected on 2026-10-10; it does not replace that specification, the design/handoff history, or the generated [Agent A evaluation](EVALUATION_REPORT_AGENT_A.md).
+This report follows all 30 topics in section 62 of [the original specification](Greenr_PS1_Master_MVP_v2.md). It consolidates implemented behaviour, evidence locations and limitations as inspected on 2026-10-10; it does not replace that specification, the design/handoff history, or the generated [Agent A evaluation](EVALUATION_REPORT_AGENT_A.md).
 
 **Gate status:** the main owner is running full `make all`. Final exit status, revision, dataset size, counts, schema/build parity and runtime smoke outcomes remain that owner's responsibility. This docs-only pass did not run gates or a paid provider. Reports may be regenerated during integration; compare their manifests/hashes before quoting metrics. Older surfaced-confidence and system confidence-coverage values are not valid evidence for the new release methodology. No numeric performance result is invented here.
 
 ## 1. Executive Summary
 
-GreenPath implements four synthetic opportunity models, point-in-time Customer 360, evidence-aware relevance/abstention, deterministic physical impact, grounded explanations and customer/RM/portfolio workspaces. Propensity, Trust, validated confidence, physical impact and financial eligibility remain separate; eligibility is NOT_ASSESSED. Durable decisions and linked explanations, authorized local source-driven rescoring, SHAP audits and portfolio missingness/history analytics are now implemented. The inspected confidence report suppresses all four core products. No paid live LLM evidence, production readiness or observed bank conversion is claimed. See [SUBMISSION.md](SUBMISSION.md) and [ARCHITECTURE.md](ARCHITECTURE.md).
+Greenr implements four synthetic opportunity models, point-in-time Customer 360, evidence-aware relevance/abstention, deterministic physical impact, grounded explanations and customer/RM/portfolio workspaces. Propensity, Trust, validated confidence, physical impact and financial eligibility remain separate; eligibility is NOT_ASSESSED. Durable decisions and linked explanations, authorized local source-driven rescoring, SHAP audits and portfolio missingness/history analytics are now implemented. The inspected confidence report suppresses all four core products. No paid live LLM evidence, production readiness or observed bank conversion is claimed. See [SUBMISSION.md](SUBMISSION.md) and [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 2. Dataset And Provenance
 

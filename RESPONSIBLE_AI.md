@@ -1,6 +1,6 @@
 # Responsible AI Note
 
-GreenPath is a synthetic demonstration for sustainability conversations, not a deployed banking decision system. No real customer data is used. Public UK household energy aggregates anchor demand distributions, not individual behaviours or model validity.
+Greenr is a synthetic demonstration for sustainability conversations, not a deployed banking decision system. No real customer data is used. Public UK household energy aggregates anchor demand distributions, not individual behaviours or model validity.
 
 - **Separate decisions:** propensity estimates simulated interest; Trust measures evidence adequacy; confidence display uses reserved-cohort reliability validation, never release selection on final test. The inspected report suppresses all four core products. Impact describes a physical scenario. None establishes affordability, eligibility, approval or investment suitability.
 - **Fail closed:** missing critical evidence, conflicts, OOD, stale inputs and population exclusions support abstention/review rather than a forced recommendation. Missing factors or incompatible geography must not produce invented impact.
