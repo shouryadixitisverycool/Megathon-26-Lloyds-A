@@ -1,8 +1,10 @@
-import { Check, Circle } from "lucide-react";
+import { Check, Circle, RefreshCw } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useExplanation } from "../../api/hooks";
 import type { CustomerSnapshot, Recommendation } from "../../api/types";
 import { TrustIssues } from "../../components/TrustIssues";
-import { Callout, Disclosure, ErrorBox, KV, Loading } from "../../components/ui";
+import { Callout, Disclosure, ErrorBox, Info, KV, Loading, ToneBadge } from "../../components/ui";
+import { explanationOrigin } from "../../lib/ai";
 import { humanize } from "../../lib/format";
 import { featureLabel, MODEL_REASONS } from "../../lib/labels";
 
@@ -10,12 +12,45 @@ export function WhyTab({ row, snapshot }: { row: Recommendation; snapshot: Custo
   const explanation = useExplanation(row.customer_id, row.product);
   const modelReasons = row.propensity?.reason_codes ?? [];
   const data = explanation.data;
+  const origin = data ? explanationOrigin(data) : null;
+  const client = useQueryClient();
+  // Transient AI failures aren't cached by the API, so asking again makes a fresh attempt.
+  const retry = async () => {
+    await explanation.refetch();
+    client.invalidateQueries({ queryKey: ["explanation-metrics"] });
+  };
 
   return (
     <div className="stack" style={{ gap: 28 }}>
       <section className="stack-sm">
-        <h3 className="subhead">In plain words</h3>
+        <div className="row-between">
+          <h3 className="subhead" style={{ margin: 0 }}>In plain words</h3>
+          {origin && (
+            <span className="row" style={{ gap: 4 }}>
+              <ToneBadge tone={origin.tone}>{origin.badge}</ToneBadge>
+              <Info label="About who wrote this">
+                {origin.title ? <><b>{origin.title}.</b> </> : null}{origin.detail}
+              </Info>
+            </span>
+          )}
+        </div>
         {explanation.isPending && <Loading label="Writing a grounded explanation…" />}
+        {origin && origin.tone === "info" && (
+          <Callout kind="info" title={origin.title}>
+            {origin.detail} The standard wording below has the same approved facts.
+            {origin.retry && (
+              <div style={{ marginTop: 8 }}>
+                <button type="button" className="btn btn-sm" onClick={retry} disabled={explanation.isFetching}>
+                  <RefreshCw size={12} className={explanation.isFetching ? "spin" : undefined} aria-hidden="true" />
+                  {explanation.isFetching ? "Asking the AI again…" : "Ask the AI again"}
+                </button>
+              </div>
+            )}
+          </Callout>
+        )}
+        {data && !data.validation_passed && (
+          <Callout kind="warn" title="This explanation didn't pass its grounding check">Rely on the evidence below rather than the wording.</Callout>
+        )}
         {explanation.isError && (
           <>
             <ErrorBox error={explanation.error} what="the explanation" />
@@ -91,10 +126,10 @@ export function WhyTab({ row, snapshot }: { row: Recommendation; snapshot: Custo
           <KV items={[
             ["Reason codes", row.reason_codes.join(", ") || "None"],
             ...(data ? [
-              ["Written by", data.source === "llm" ? "Language model, validated against approved facts" : "Grounded template"],
-              ["Provider version", data.provider_version],
+              ["Written by", data.source === "llm" ? "AI, limited to approved sentences and checked" : "Standard wording (grounded template)"],
+              ["Writer version", data.provider_version],
               ["Grounding check", data.validation_passed ? "Passed" : "Failed"],
-              ["Template fallback", data.fallback_reason ? humanize(data.fallback_reason) : "Not used"],
+              ["Why the AI wasn't used", data.source === "llm" ? "Not applicable" : `${origin?.title ?? "Unknown"} (${data.fallback_reason ?? "no reason given"})`],
               ["Headline", data.headline ?? "Not provided"],
             ] as [string, string][] : []),
           ]} />

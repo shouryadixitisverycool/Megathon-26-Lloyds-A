@@ -53,6 +53,24 @@ Also added (all on demand): the trained-model SHAP attribution (`/customers/{id}
 
 Still API-only (not in Streamlit either): factual source updates and campaign closure. Both need the local admin token, which should stay server-side, so they need a backend route or session design before a browser can use them.
 
+## AI-written explanations
+
+The backend can have an LLM write each product's plain-language explanation (`src/greenpath/llm/`). The model only chooses the order of pre-approved sentences, and every fact, number and disclaimer is checked. Anything that fails falls back to the standard template wording, which states the same facts.
+
+It's off unless the API process has a key:
+
+```bash
+OPENAI_API_KEY=... make api    # or GREENPATH_LLM_API_KEY; model and settings come from llm/provider_manifest.json
+```
+
+That makes paid provider calls. Add `GREENPATH_LLM_INPUT_PRICE_PER_MILLION` and `GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION` to have cost measured.
+
+Where it appears in the UI:
+
+- **Why tab:** a badge says who wrote the explanation: "Written by AI", "Standard wording" (AI off), or "Standard wording, AI draft not used". In the last case a note explains why (timeout, busy, error, wrong format, changed a fact, dropped a sentence). Timeouts, busy and error failures get an "Ask the AI again" button.
+- **Sidebar:** shows whether explanations are AI-written or standard wording.
+- **Governance:** an "AI-written explanations" section with on/off status, model, live call counts, latency, tokens and cost, how grounding works, and the offline evaluation results.
+
 ## Design notes
 
 - **Verdict first.** Each customer gets a one-line briefing ("Two supported opportunities…" or "No supported opportunity right now"), and each product shows its next step for the planned channel. The briefing only restates the API's decisions.
