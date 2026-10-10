@@ -1,0 +1,125 @@
+{
+  "context": {
+    "period": {
+      "start": "2025-01-01",
+      "end": "2026-01-01"
+    },
+    "feature_cutoff": "2026-01-03T00:00:00Z",
+    "geography": "IN",
+    "synthetic_demo": true
+  },
+  "baseline_grid_import": {
+    "value": "4000",
+    "evidence": {
+      "reference": "synthetic-fixture:baseline-home",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    },
+    "unit": "kWh"
+  },
+  "scenario_grid_import": {
+    "value": "3000",
+    "evidence": {
+      "reference": "synthetic-fixture:scenario-home",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    },
+    "unit": "kWh"
+  },
+  "same_home": {
+    "value": true,
+    "evidence": {
+      "reference": "synthetic-fixture:home-id",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "comparable_service": {
+    "value": true,
+    "evidence": {
+      "reference": "synthetic-fixture:service-comparison",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "comparability_basis": {
+    "value": "Synthetic matched weather, occupancy and service demand",
+    "evidence": {
+      "reference": "synthetic-fixture:comparability",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "efficiency_assessment": {
+    "value": "Synthetic electricity-efficiency assessment",
+    "evidence": {
+      "reference": "synthetic-fixture:retrofit",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "fuel_use_unchanged": {
+    "value": true,
+    "evidence": {
+      "reference": "synthetic-fixture:unchanged-fuel",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "onsite_generation_unchanged": {
+    "value": true,
+    "evidence": {
+      "reference": "synthetic-fixture:unchanged-generation",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  }
+}

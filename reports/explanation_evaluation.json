@@ -1,0 +1,217 @@
+{
+  "evaluation_version": "fixed-adversarial-explanations-v1",
+  "synthetic_demo": true,
+  "provider": "offline fixed responses; no live LLM called",
+  "cases": [
+    {
+      "case": "valid:AVAILABLE",
+      "expected_acceptance": true,
+      "accepted": true,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": null,
+      "local_latency_ms": 0.881
+    },
+    {
+      "case": "reverse:AVAILABLE",
+      "expected_acceptance": true,
+      "accepted": true,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": null,
+      "local_latency_ms": 0.57
+    },
+    {
+      "case": "product:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.42
+    },
+    {
+      "case": "state:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.515
+    },
+    {
+      "case": "reason:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.41
+    },
+    {
+      "case": "number:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.498
+    },
+    {
+      "case": "units:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "SCHEMA_REJECTED",
+      "local_latency_ms": 0.443
+    },
+    {
+      "case": "eligibility:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.398
+    },
+    {
+      "case": "free_text:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "SCHEMA_REJECTED",
+      "local_latency_ms": 0.362
+    },
+    {
+      "case": "omit:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "SENTENCES_REJECTED",
+      "local_latency_ms": 0.364
+    },
+    {
+      "case": "duplicate:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "SENTENCES_REJECTED",
+      "local_latency_ms": 0.564
+    },
+    {
+      "case": "invent_sentence:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "SENTENCES_REJECTED",
+      "local_latency_ms": 0.732
+    },
+    {
+      "case": "malformed:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "SCHEMA_REJECTED",
+      "local_latency_ms": 0.583
+    },
+    {
+      "case": "error:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "PROVIDER_ERROR",
+      "local_latency_ms": 0.556
+    },
+    {
+      "case": "timeout:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "PROVIDER_TIMEOUT",
+      "local_latency_ms": 20.611
+    },
+    {
+      "case": "wrong_null:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.691
+    },
+    {
+      "case": "sign:AVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.69
+    },
+    {
+      "case": "number:UNAVAILABLE",
+      "expected_acceptance": false,
+      "accepted": false,
+      "passed": true,
+      "grounded": true,
+      "numeric_consistency": true,
+      "unsupported_claims": 0,
+      "fallback_reason": "CLAIMS_REJECTED",
+      "local_latency_ms": 0.256
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "passed": 18,
+    "groundedness_rate": 1.0,
+    "numeric_consistency_rate": 1.0,
+    "unsupported_claims": 0,
+    "fallback_rate": 0.8888888888888888,
+    "local_mean_latency_ms": 1.641,
+    "live_provider_latency_ms": null,
+    "live_provider_cost": null
+  },
+  "limitations": "Fixed offline validator cases do not establish live model performance. Live latency, token use and cost are unavailable."
+}

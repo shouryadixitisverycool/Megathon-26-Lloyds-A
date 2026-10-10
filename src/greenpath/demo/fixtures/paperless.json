@@ -1,0 +1,26 @@
+{
+  "context": {
+    "period": {
+      "start": "2025-01-01",
+      "end": "2026-01-01"
+    },
+    "feature_cutoff": "2026-01-03T00:00:00Z",
+    "geography": "IN",
+    "synthetic_demo": true
+  },
+  "avoided_sheets": {
+    "value": "24",
+    "evidence": {
+      "reference": "synthetic-fixture:paper-statements",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    },
+    "unit": "sheets"
+  }
+}

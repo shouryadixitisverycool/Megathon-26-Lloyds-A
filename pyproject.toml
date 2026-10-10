@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "greenpath-agent-b"
+version = "0.1.0"
+description = "GreenPath Agent B impact, recommendation, API and UI synthetic demo"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "httpx>=0.27,<1",
+    "plotly>=6,<7",
+    "pydantic>=2.12,<3",
+    "streamlit>=1.60,<2",
+    "uvicorn>=0.30,<1",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/greenpath"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

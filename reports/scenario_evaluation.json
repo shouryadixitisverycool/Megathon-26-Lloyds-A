@@ -1,0 +1,648 @@
+{
+  "evaluation_version": "agent-b-integrated-scenarios-v1",
+  "fixture_version": "agent-b-synthetic-personas-v1",
+  "synthetic_demo": true,
+  "feature_cutoff": "2026-01-03T00:00:00+00:00",
+  "cases": [
+    {
+      "customer_id": "GP-001",
+      "product": "EV_FINANCE",
+      "expected_state": "RECOMMEND",
+      "state": "RECOMMEND",
+      "reason_codes": [
+        "RELEVANCE_SUPPORTED",
+        "PROPENSITY_THRESHOLD_MET"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "553.19400",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-001",
+      "product": "GREEN_HOME",
+      "expected_state": "RECOMMEND",
+      "state": "RECOMMEND",
+      "reason_codes": [
+        "RELEVANCE_SUPPORTED",
+        "PROPENSITY_THRESHOLD_MET"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "716.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-001",
+      "product": "SOLAR_FINANCE",
+      "expected_state": "RECOMMEND",
+      "state": "RECOMMEND",
+      "reason_codes": [
+        "RELEVANCE_SUPPORTED",
+        "PROPENSITY_THRESHOLD_MET"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "1790.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-001",
+      "product": "PAPERLESS_BANKING",
+      "expected_state": "RECOMMEND",
+      "state": "RECOMMEND",
+      "reason_codes": [
+        "RELEVANCE_SUPPORTED",
+        "PROPENSITY_THRESHOLD_MET"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-002",
+      "product": "EV_FINANCE",
+      "expected_state": "INSUFFICIENT_INFORMATION",
+      "state": "INSUFFICIENT_INFORMATION",
+      "reason_codes": [
+        "MISSING_EVIDENCE"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-002",
+      "product": "GREEN_HOME",
+      "expected_state": "INSUFFICIENT_INFORMATION",
+      "state": "INSUFFICIENT_INFORMATION",
+      "reason_codes": [
+        "MISSING_EVIDENCE"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-002",
+      "product": "SOLAR_FINANCE",
+      "expected_state": "INSUFFICIENT_INFORMATION",
+      "state": "INSUFFICIENT_INFORMATION",
+      "reason_codes": [
+        "MISSING_EVIDENCE"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-002",
+      "product": "PAPERLESS_BANKING",
+      "expected_state": "INSUFFICIENT_INFORMATION",
+      "state": "INSUFFICIENT_INFORMATION",
+      "reason_codes": [
+        "MISSING_EVIDENCE"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-003",
+      "product": "EV_FINANCE",
+      "expected_state": "CONFLICT_REQUIRES_REVIEW",
+      "state": "CONFLICT_REQUIRES_REVIEW",
+      "reason_codes": [
+        "EVIDENCE_CONFLICT"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "553.19400",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-003",
+      "product": "GREEN_HOME",
+      "expected_state": "CONFLICT_REQUIRES_REVIEW",
+      "state": "CONFLICT_REQUIRES_REVIEW",
+      "reason_codes": [
+        "EVIDENCE_CONFLICT"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "716.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-003",
+      "product": "SOLAR_FINANCE",
+      "expected_state": "CONFLICT_REQUIRES_REVIEW",
+      "state": "CONFLICT_REQUIRES_REVIEW",
+      "reason_codes": [
+        "EVIDENCE_CONFLICT"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "1790.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-003",
+      "product": "PAPERLESS_BANKING",
+      "expected_state": "CONFLICT_REQUIRES_REVIEW",
+      "state": "CONFLICT_REQUIRES_REVIEW",
+      "reason_codes": [
+        "EVIDENCE_CONFLICT"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-004",
+      "product": "EV_FINANCE",
+      "expected_state": "NOT_APPLICABLE",
+      "state": "NOT_APPLICABLE",
+      "reason_codes": [
+        "ALREADY_ADOPTED"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "553.19400",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-004",
+      "product": "GREEN_HOME",
+      "expected_state": "NOT_APPLICABLE",
+      "state": "NOT_APPLICABLE",
+      "reason_codes": [
+        "ALREADY_ADOPTED"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "716.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-004",
+      "product": "SOLAR_FINANCE",
+      "expected_state": "NOT_APPLICABLE",
+      "state": "NOT_APPLICABLE",
+      "reason_codes": [
+        "ALREADY_ADOPTED"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "1790.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-004",
+      "product": "PAPERLESS_BANKING",
+      "expected_state": "NOT_APPLICABLE",
+      "state": "NOT_APPLICABLE",
+      "reason_codes": [
+        "ALREADY_ADOPTED"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-005",
+      "product": "EV_FINANCE",
+      "expected_state": "SUPPRESSED",
+      "state": "SUPPRESSED",
+      "reason_codes": [
+        "MARKETING_CONSENT_WITHDRAWN"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "553.19400",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-005",
+      "product": "GREEN_HOME",
+      "expected_state": "SUPPRESSED",
+      "state": "SUPPRESSED",
+      "reason_codes": [
+        "MARKETING_CONSENT_WITHDRAWN"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "716.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-005",
+      "product": "SOLAR_FINANCE",
+      "expected_state": "SUPPRESSED",
+      "state": "SUPPRESSED",
+      "reason_codes": [
+        "MARKETING_CONSENT_WITHDRAWN"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "1790.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-005",
+      "product": "PAPERLESS_BANKING",
+      "expected_state": "SUPPRESSED",
+      "state": "SUPPRESSED",
+      "reason_codes": [
+        "MARKETING_CONSENT_WITHDRAWN"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-006",
+      "product": "EV_FINANCE",
+      "expected_state": "DO_NOT_RECOMMEND",
+      "state": "DO_NOT_RECOMMEND",
+      "reason_codes": [
+        "PROPENSITY_BELOW_THRESHOLD"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "553.19400",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-006",
+      "product": "GREEN_HOME",
+      "expected_state": "DO_NOT_RECOMMEND",
+      "state": "DO_NOT_RECOMMEND",
+      "reason_codes": [
+        "PROPENSITY_BELOW_THRESHOLD"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "716.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-006",
+      "product": "SOLAR_FINANCE",
+      "expected_state": "DO_NOT_RECOMMEND",
+      "state": "DO_NOT_RECOMMEND",
+      "reason_codes": [
+        "PROPENSITY_BELOW_THRESHOLD"
+      ],
+      "impact_status": "AVAILABLE",
+      "impact_value": "1790.000",
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    },
+    {
+      "customer_id": "GP-006",
+      "product": "PAPERLESS_BANKING",
+      "expected_state": "DO_NOT_RECOMMEND",
+      "state": "DO_NOT_RECOMMEND",
+      "reason_codes": [
+        "PROPENSITY_BELOW_THRESHOLD"
+      ],
+      "impact_status": "UNAVAILABLE",
+      "impact_value": null,
+      "units": "kg CO2/year",
+      "explanation_source": "template",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "total": 24,
+    "passed": 24,
+    "states_covered": [
+      "CONFLICT_REQUIRES_REVIEW",
+      "DO_NOT_RECOMMEND",
+      "INSUFFICIENT_INFORMATION",
+      "NOT_APPLICABLE",
+      "RECOMMEND",
+      "SUPPRESSED"
+    ]
+  },
+  "portfolio": {
+    "total_customers": 6,
+    "total_recommendations": 24,
+    "recommended_count": 4,
+    "state_counts": {
+      "RECOMMEND": 4,
+      "DO_NOT_RECOMMEND": 4,
+      "INSUFFICIENT_INFORMATION": 4,
+      "CONFLICT_REQUIRES_REVIEW": 4,
+      "NOT_APPLICABLE": 4,
+      "SUPPRESSED": 4
+    },
+    "product_opportunities": [
+      {
+        "product": "EV_FINANCE",
+        "total": 6,
+        "recommended": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        },
+        "available_impact_count": 1
+      },
+      {
+        "product": "GREEN_HOME",
+        "total": 6,
+        "recommended": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        },
+        "available_impact_count": 1
+      },
+      {
+        "product": "SOLAR_FINANCE",
+        "total": 6,
+        "recommended": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        },
+        "available_impact_count": 1
+      },
+      {
+        "product": "PAPERLESS_BANKING",
+        "total": 6,
+        "recommended": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        },
+        "available_impact_count": 0
+      }
+    ],
+    "region_summaries": [
+      {
+        "name": "East",
+        "customer_count": 2,
+        "recommended_count": 0
+      },
+      {
+        "name": "North",
+        "customer_count": 1,
+        "recommended_count": 0
+      },
+      {
+        "name": "South",
+        "customer_count": 2,
+        "recommended_count": 4
+      },
+      {
+        "name": "West",
+        "customer_count": 1,
+        "recommended_count": 0
+      }
+    ],
+    "segment_summaries": [
+      {
+        "name": "Retired",
+        "customer_count": 2,
+        "recommended_count": 0
+      },
+      {
+        "name": "Salaried",
+        "customer_count": 2,
+        "recommended_count": 4
+      },
+      {
+        "name": "Self-employed",
+        "customer_count": 2,
+        "recommended_count": 0
+      }
+    ],
+    "available_impact_count": 3,
+    "synthetic_demo": true,
+    "disclaimer": "Synthetic fixture counts; potential opportunities are not realized reductions. No cross-product carbon total is calculated."
+  },
+  "trends": {
+    "observations": [
+      {
+        "month": "2025-10",
+        "product": "EV_FINANCE",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 2,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-10",
+        "product": "GREEN_HOME",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 2,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-10",
+        "product": "PAPERLESS_BANKING",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 2,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-10",
+        "product": "SOLAR_FINANCE",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 2,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-11",
+        "product": "EV_FINANCE",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 2,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-11",
+        "product": "GREEN_HOME",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 2,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-11",
+        "product": "PAPERLESS_BANKING",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 2,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-11",
+        "product": "SOLAR_FINANCE",
+        "customer_count": 6,
+        "recommended_count": 0,
+        "state_counts": {
+          "RECOMMEND": 0,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 2,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-12",
+        "product": "EV_FINANCE",
+        "customer_count": 6,
+        "recommended_count": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-12",
+        "product": "GREEN_HOME",
+        "customer_count": 6,
+        "recommended_count": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-12",
+        "product": "PAPERLESS_BANKING",
+        "customer_count": 6,
+        "recommended_count": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      },
+      {
+        "month": "2025-12",
+        "product": "SOLAR_FINANCE",
+        "customer_count": 6,
+        "recommended_count": 1,
+        "state_counts": {
+          "RECOMMEND": 1,
+          "DO_NOT_RECOMMEND": 1,
+          "INSUFFICIENT_INFORMATION": 1,
+          "CONFLICT_REQUIRES_REVIEW": 1,
+          "NOT_APPLICABLE": 1,
+          "SUPPRESSED": 1
+        }
+      }
+    ],
+    "synthetic_demo": true,
+    "disclaimer": "Historical states are synthetic fixtures, not predictions of real customer behavior."
+  },
+  "limitations": "Fixed fixtures verify Agent B integration. They do not train or evaluate Agent A models, establish predictive performance, or record realized carbon reductions."
+}

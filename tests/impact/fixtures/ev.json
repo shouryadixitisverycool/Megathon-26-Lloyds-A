@@ -1,0 +1,155 @@
+{
+  "context": {
+    "period": {
+      "start": "2025-01-01",
+      "end": "2026-01-01"
+    },
+    "feature_cutoff": "2026-01-03T00:00:00Z",
+    "geography": "IN",
+    "synthetic_demo": true
+  },
+  "baseline_fuel": {
+    "value": "unblended_fossil_motor_gasoline",
+    "evidence": {
+      "reference": "synthetic-fixture:fuel-composition",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "baseline_fuel_mass": {
+    "value": "600",
+    "evidence": {
+      "reference": "synthetic-fixture:fuel-mass",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    },
+    "unit": "kg"
+  },
+  "baseline_distance": {
+    "value": "12000",
+    "evidence": {
+      "reference": "synthetic-fixture:baseline-travel",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    },
+    "unit": "km"
+  },
+  "scenario_distance": {
+    "value": "12000",
+    "evidence": {
+      "reference": "synthetic-fixture:scenario-travel",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    },
+    "unit": "km"
+  },
+  "charging_electricity": {
+    "value": "1800",
+    "evidence": {
+      "reference": "synthetic-fixture:charging",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    },
+    "unit": "kWh"
+  },
+  "charging_measurement_point": {
+    "value": "charger_input",
+    "evidence": {
+      "reference": "synthetic-fixture:charging-boundary",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "baseline_powertrain": {
+    "value": "internal_combustion",
+    "evidence": {
+      "reference": "synthetic-fixture:baseline-vehicle",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "scenario_powertrain": {
+    "value": "battery_electric",
+    "evidence": {
+      "reference": "synthetic-fixture:scenario-vehicle",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "replaces_baseline": {
+    "value": true,
+    "evidence": {
+      "reference": "synthetic-fixture:replacement",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "charging_supply": {
+    "value": "indian_grid",
+    "evidence": {
+      "reference": "synthetic-fixture:charging-supply",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  }
+}

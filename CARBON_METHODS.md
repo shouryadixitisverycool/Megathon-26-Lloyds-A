@@ -142,3 +142,5 @@ These inputs are synthetic illustrations, not typical customer values or default
 - Paperless: `UNAVAILABLE` and null value even when a physical sheet count is known.
 
 Step 2 must add formula/unit tests and the invalid/missing/conflict cases above when implementing the four calculators. No application scaffold, canonical contracts, or calculator code is part of point 1.
+
+Step 2 is now implemented in `src/greenpath/impact/` with scoped tests and synthetic input fixtures in `tests/impact/`. The original factor/method release is unchanged. See [`AGENT_B_HANDOFF.md`](AGENT_B_HANDOFF.md) for setup, the replaceable contract mirrors, proposed integration mappings, and supported input precision.

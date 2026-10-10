@@ -1,0 +1,120 @@
+{
+  "context": {
+    "period": {
+      "start": "2025-01-01",
+      "end": "2026-01-01"
+    },
+    "feature_cutoff": "2026-01-03T00:00:00Z",
+    "geography": "IN",
+    "synthetic_demo": true
+  },
+  "intervals": [
+    {
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "baseline_grid_import": {
+        "value": "4000",
+        "evidence": {
+          "reference": "synthetic-fixture:baseline-solar",
+          "basis": "synthetic_demo",
+          "observed_at": "2026-01-02T00:00:00Z",
+          "period": {
+            "start": "2025-01-01",
+            "end": "2026-01-01"
+          },
+          "freshness": "current",
+          "conflicts": []
+        },
+        "unit": "kWh"
+      },
+      "self_consumed_solar": {
+        "value": "2500",
+        "evidence": {
+          "reference": "synthetic-fixture:matched-solar",
+          "basis": "synthetic_demo",
+          "observed_at": "2026-01-02T00:00:00Z",
+          "period": {
+            "start": "2025-01-01",
+            "end": "2026-01-01"
+          },
+          "freshness": "current",
+          "conflicts": []
+        },
+        "unit": "kWh"
+      },
+      "exported_solar": {
+        "value": "500",
+        "evidence": {
+          "reference": "synthetic-fixture:solar-exports",
+          "basis": "synthetic_demo",
+          "observed_at": "2026-01-02T00:00:00Z",
+          "period": {
+            "start": "2025-01-01",
+            "end": "2026-01-01"
+          },
+          "freshness": "current",
+          "conflicts": []
+        },
+        "unit": "kWh"
+      }
+    }
+  ],
+  "demand_unchanged": {
+    "value": true,
+    "evidence": {
+      "reference": "synthetic-fixture:unchanged-load",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "storage_used": {
+    "value": false,
+    "evidence": {
+      "reference": "synthetic-fixture:storage",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "displaces_grid_only": {
+    "value": true,
+    "evidence": {
+      "reference": "synthetic-fixture:grid-displacement",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  },
+  "measurement_point": {
+    "value": "net_ac_self_consumption",
+    "evidence": {
+      "reference": "synthetic-fixture:solar-meter-boundary",
+      "basis": "synthetic_demo",
+      "observed_at": "2026-01-02T00:00:00Z",
+      "period": {
+        "start": "2025-01-01",
+        "end": "2026-01-01"
+      },
+      "freshness": "current",
+      "conflicts": []
+    }
+  }
+}

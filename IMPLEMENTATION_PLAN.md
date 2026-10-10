@@ -1,8 +1,8 @@
 # GreenPath Intelligence — MVP Implementation Plan
 
-**Status:** Proposed plan  
+**Status:** Agent B points 1–6 implemented; Agent A and manual integration pending
 **Basis:** `GreenPath_PS1_Master_MVP_v2.md`  
-**Workspace state:** Greenfield; the specification is present, but no application code or project scaffold exists yet.
+**Workspace state:** Agent B is independently runnable with local contract mirrors and synthetic providers. Agent A's canonical contracts, data, and ML implementation are not present.
 
 ## 1. MVP outcome
 
@@ -105,7 +105,7 @@ Both agents build independently in their own repositories. Keep source ownership
 
 ### Agent B implementation sequence
 
-**Progress, 2026-10-10:** Point 1 is complete in [`CARBON_METHODS.md`](CARBON_METHODS.md) and the versioned [factor catalogue](src/greenpath/impact/factors/carbon_factors.v1.json). These freeze the synthetic India demo methods, source editions, boundaries, assumptions, and unavailable conditions. CEA's original PDF currently redirects to login; its official indexed table and that access limitation are recorded. Paperless carbon impact remains unavailable. Calculator implementation and contract reconciliation remain subsequent work.
+**Progress, 2026-10-10:** All six Agent B points are complete. Points 3–6 were implemented in separate subagents and integrated with the existing frozen [carbon methods](CARBON_METHODS.md) and [impact calculators](src/greenpath/impact/). The six-state recommendation engine, grounded optional explanation port with no-key fallback, FastAPI endpoints, and HTTP-only Streamlit customer/Why and portfolio/trend views use six stable synthetic personas. `make all` passes 447 tests, 18 adversarial explanation cases, and 24 integrated scenarios. Browser checks cover supported and abstaining customers and portfolio rendering; API tests and AppTests cover filtering. Paperless impact remains unavailable and CEA's original PDF limitation remains recorded. [`README.md`](README.md) contains startup and demo steps; [`AGENT_B_HANDOFF.md`](AGENT_B_HANDOFF.md) lists replaceable mirrors, artifacts, and limits. Agent A models, canonical contracts, and the later full integration gates remain pending.
 
 1. Freeze carbon-method sources, factor edition, system boundaries, and assumptions in `CARBON_METHODS.md`. Do not invent factors. If required inputs or a defensible factor are missing, return `UNAVAILABLE` rather than a fabricated estimate.
 2. Implement EV, Green Home, Solar, and Paperless impact calculators as separate modules with the common `ImpactResult` contract and formula/unit tests. Keep the headline EV boundary consistent; label exclusions and estimated inputs.

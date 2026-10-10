@@ -1,0 +1,52 @@
+"""Run with streamlit run src/greenpath/app/main.py or the installed package path."""
+
+import streamlit as st
+
+from greenpath.app.client import APIClient, APIError
+from greenpath.app.views import customer_view, portfolio_view
+
+st.set_page_config(page_title="GreenPath | Synthetic demo", page_icon=":material/forest:", layout="wide")
+
+
+@st.cache_data(ttl=15, max_entries=128, show_spinner=False)
+def load_json(base_url, path, params=()):
+    return APIClient(base_url).get(path, dict(params))
+
+
+st.title("GreenPath", icon=":material/forest:")
+st.caption("A FIELD GUIDE TO RESPONSIBLE OPPORTUNITIES")
+st.badge("Synthetic demo", color="orange", icon=":material/science:")
+st.caption("Product relevance only. This demonstration does not establish real-world predictive performance or credit eligibility.")
+
+with st.sidebar:
+    st.header("GreenPath", icon=":material/forest:")
+    view = st.radio("Workspace", ["Customer", "Portfolio"], key="workspace")
+    if st.button("Refresh data", icon=":material/refresh:", key="refresh", width="stretch"):
+        load_json.clear()
+    st.caption("API responses cache for up to 15 seconds. Refresh data requests fresh responses.")
+
+try:
+    client = APIClient()
+    health = client.get("/health")  # Never use cached data to conceal an unreachable service.
+    if health.get("status") != "ok" or health.get("synthetic_demo") is not True:
+        raise APIError("This app requires a healthy synthetic-demo API.")
+    st.sidebar.caption("Contract: " + health["contract_version"])
+
+    def load(path, params=None):
+        return load_json(client.base_url, path, tuple(sorted((params or {}).items())))
+
+    customers = load("/customers")
+    if not isinstance(customers, list):
+        raise APIError("The API customer list has an invalid response shape.")
+    if not customers:
+        st.info("No synthetic customers are available from the API.")
+    elif view == "Customer":
+        customer_view(customers, load)
+    else:
+        portfolio_view(customers, load)
+except APIError as error:
+    st.error(str(error), icon=":material/cloud_off:")
+    st.caption("No customer decisions or portfolio results are displayed while this request is unavailable.")
+except (KeyError, TypeError, ValueError) as error:
+    st.error("The API response does not match this UI contract. Refresh data or check the API version.")
+    st.caption("Incomplete results cannot be interpreted as a recommendation.")
