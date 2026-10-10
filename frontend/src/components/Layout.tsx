@@ -2,7 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 import { FlaskConical, LayoutDashboard, Megaphone, Moon, RefreshCw, ShieldCheck, Sun, SunMoon, Users } from "lucide-react";
-import { useHealth } from "../api/hooks";
+import { useExplanationMetrics, useHealth } from "../api/hooks";
+import { aiEnabled, aiModel } from "../lib/ai";
 import { Callout, Loading } from "./ui";
 
 export function Logo({ size = 30 }: { size?: number }) {
@@ -56,6 +57,8 @@ export function Layout() {
   const fetching = useIsFetching();
   const mode = health.data?.provider_mode;
   const healthy = health.data?.status === "ok" && health.data?.synthetic_demo === true;
+  const metrics = useExplanationMetrics();
+  const ai = aiEnabled(metrics.data);
 
   let content: ReactNode = <Outlet />;
   if (health.isPending) content = <div className="page"><Loading label="Connecting to the GreenPath API…" /></div>;
@@ -105,6 +108,11 @@ export function Layout() {
           <div className="nav-status" aria-live="polite">
             <span><i className="dot" data-down={String(!healthy)} />{healthy ? "API connected" : "API unavailable"}</span>
             {mode && <span>Data: <b>{mode === "trained" ? "Trained models" : mode === "fixture" ? "Demo personas" : mode}</b></span>}
+            {healthy && ai !== undefined && (
+              <span title={ai ? `AI explanations use ${aiModel(metrics.data) ?? "the configured model"}` : "No AI key is set on the API, so explanations use standard wording"}>
+                Explanations: <b>{ai ? "AI on" : "Standard wording"}</b>
+              </span>
+            )}
             {health.data?.contract_version && <span>Contract {health.data.contract_version}</span>}
             {health.data?.source_version && (
               <span title={health.data.source_version} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
