@@ -31,18 +31,42 @@ def make_labels(
     customer_ids: Iterable[str],
     cutoff: date | datetime,
     window_days: int = OUTCOME_WINDOW_DAYS,
+    coverage: pd.DataFrame | None = None,
+    outcome_as_of: date | datetime | None = None,
 ) -> pd.DataFrame:
-    """Return 0/1 take-up labels per customer and product.
+    """Return take-up labels per customer and product.
 
     The index is ``customer_id`` (in the order given). Columns are the ``Product`` values. A label is 1
     when the adoption date satisfies ``cutoff < adoption_date <= cutoff + window_days``.
+    With coverage, unobserved/incomplete negatives are null. Without coverage the
+    caller explicitly uses the legacy complete-simulation assumption (all 0/1).
+    ``outcome_as_of`` optionally limits evaluation to outcome evidence available then;
+    it is not the feature cutoff, since labels necessarily follow the feature window.
     """
     ids = _customer_index(customer_ids)
     start = pd.Timestamp(cutoff)
     end = start + pd.Timedelta(days=window_days)
     adoptions = _adoptions(outcomes, ids)
     in_window = adoptions[(adoptions["adoption_date"] > start) & (adoptions["adoption_date"] <= end)]
-    return _indicator_frame(in_window, ids)
+    labels = _indicator_frame(in_window, ids)
+    if coverage is None:
+        if outcome_as_of is not None:
+            raise ValueError("outcome_as_of requires coverage")
+        return labels
+    from greenpath.pipelines.schemas import OUTCOME_OBSERVATION, validate_table
+
+    validate_table(coverage, OUTCOME_OBSERVATION)
+    evidence = coverage[coverage["customer_id"].isin(ids)].copy()
+    if outcome_as_of is not None:
+        evidence = evidence[evidence["outcome_available_at"] <= pd.Timestamp(outcome_as_of)]
+    complete = evidence[evidence["complete_followup"] & (evidence["observation_end"] >= end)]
+    observed = _indicator_frame(complete, ids).astype(bool)
+    # A recorded positive is observable even with incomplete follow-up, but only
+    # when it falls within the explicitly observed part of that product's history.
+    positives = in_window.merge(evidence, on=["customer_id", "product"], how="inner")
+    positives = positives[positives["adoption_date"] <= positives["observation_end"]]
+    positive_mask = _indicator_frame(positives, ids).astype(bool)
+    return labels.astype("Int64").where(observed | positive_mask)
 
 
 def adopted_before(

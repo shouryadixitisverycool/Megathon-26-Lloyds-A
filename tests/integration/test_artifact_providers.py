@@ -136,12 +136,13 @@ def test_explicit_trained_scenario_exposes_available_co2e_through_api():
     from greenpath.contracts.impact_detail import ImpactResult
 
     runtime = FakeRuntime()
-    # Explicit scenario snapshot only: do not add efficiencies to production
-    # generation, model predictors, or adapter defaults.
-    runtime.source = runtime.source.model_copy(update={"features": {**runtime.source.features,
-        "ice_litres_per_100km": 6.5, "ev_kwh_per_100km": 18.0, "charging_efficiency": 0.9}})
-    repository = ArtifactRepository(runtime)
-    expected = repository.impact_calculators[Product.EV_FINANCE].calculate(runtime.source)
+    from greenpath.data_generation.scenarios import generate_scenario_table
+    from greenpath.pipelines.scenario_provider import ScenarioProvider
+    table = generate_scenario_table([runtime.source.customer_id],
+        effective_on=runtime.source.feature_cutoff, available_on=runtime.source.feature_cutoff)
+    scenarios = ScenarioProvider(table[table["product"] == Product.EV_FINANCE])
+    repository = ArtifactRepository(runtime, scenario_provider=scenarios)
+    expected = repository.impact_calculators[Product.EV_FINANCE].calculate(scenarios.attach(runtime.source, Product.EV_FINANCE))
     with TestClient(create_app(repository)) as client:
         rows = client.get("/customers/C10001/recommendations").json()["recommendations"]
         ev = next(row for row in rows if row["product"] == "EV_FINANCE")
@@ -159,6 +160,21 @@ def test_explicit_trained_scenario_exposes_available_co2e_through_api():
         assert explanation["units"] == "kg CO2e/year"
         assert "kg CO2e/year" in explanation["text"]
         assert client.get("/portfolio/summary").json()["available_impact_count"] == 1
+
+
+def test_injected_scenarios_use_historical_cutoff_without_reading_raw(monkeypatch):
+    import pandas as pd
+    from greenpath.data_generation.scenarios import generate_scenario_table
+    from greenpath.pipelines.scenario_provider import ScenarioProvider
+    runtime = FakeRuntime()
+    scenarios = ScenarioProvider(generate_scenario_table(["C10001"],
+        effective_on=date(2026, 6, 30), available_on=date(2026, 6, 30)))
+    monkeypatch.setattr(pd, "read_parquet", lambda *a, **kw: pytest.fail("Injected runtime must not load raw tables"))
+    repository = ArtifactRepository(runtime, scenario_provider=scenarios)
+    assert repository.get_impact_input("C10001", Product.EV_FINANCE).scenario
+    history = {row.month: row for row in repository.list_history() if row.product == Product.EV_FINANCE}
+    assert history["2026-05"].impact_status == "UNAVAILABLE"
+    assert history["2026-06"].impact_status == "AVAILABLE"
 
 
 def test_auto_fixture_and_partial_artifacts_fail_visibly(tmp_path, monkeypatch):

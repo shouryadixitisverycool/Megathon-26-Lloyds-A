@@ -19,6 +19,7 @@ class VehicleFacts(Contract):
     mileage_is_estimated: bool = False
     record_updated_at: date | None = None
     has_vehicle_finance: bool | None = None
+    state_effective_at: date | None = None
 
 
 class HomeFacts(Contract):
@@ -32,12 +33,20 @@ class HomeFacts(Contract):
 
 
 class EnergyFacts(Contract):
-    """Metered household energy over the 12 months up to the cutoff."""
+    """Annualised household energy from observed months, not necessarily metered 12m totals."""
 
     electricity_kwh_12m: float | None = Field(default=None, ge=0)
     gas_kwh_12m: float | None = Field(default=None, ge=0)
     energy_months_present: int = Field(default=0, ge=0, le=12)
     electricity_trend: float | None = None  # last-3m avg / 12m avg - 1
+    electricity_months_present: int | None = Field(default=None, ge=0, le=12)
+    gas_months_present: int | None = Field(default=None, ge=0, le=12)
+    electricity_kwh_observed: float | None = Field(default=None, ge=0)
+    gas_kwh_observed: float | None = Field(default=None, ge=0)
+    electricity_annualisation_factor: float | None = Field(default=None, ge=1)
+    gas_annualisation_factor: float | None = Field(default=None, ge=1)
+    electricity_is_estimated: bool | None = None
+    gas_is_estimated: bool | None = None
 
 
 class DigitalFacts(Contract):
@@ -47,6 +56,8 @@ class DigitalFacts(Contract):
     digital_statement_ratio: Probability | None = None
     digital_transactions_3m_avg: float | None = Field(default=None, ge=0)
     branch_visits_3m: int | None = Field(default=None, ge=0)
+    paperless_effective_at: date | None = None
+    paper_statements_post_paperless_3m: int | None = Field(default=None, ge=0)
 
 
 class SpendFacts(Contract):
@@ -62,6 +73,8 @@ class SpendFacts(Contract):
     utilities_spend_90d_monthly_avg: float | None = Field(default=None, ge=0)
     home_improvement_spend_12m: float | None = Field(default=None, ge=0)
     utility_spend_trend: float | None = None  # combined energy/utility 90d vs 12m ratio - 1
+    fuel_txn_count_post_vehicle_state_90d: int | None = Field(default=None, ge=0)
+    fuel_spend_post_vehicle_state_90d: float | None = Field(default=None, ge=0)
 
 
 class DataQualityEvidence(Contract):
@@ -107,4 +120,15 @@ class CustomerSnapshot(Contract):
         for field in ("source_versions", "source_events"):
             if not payload.get(field):
                 payload.pop(field, None)
+        # These optional facts were absent from shipped snapshots; retain their wire shape.
+        for group, fields in {
+            "vehicle": ("state_effective_at",),
+            "digital": ("paperless_effective_at", "paper_statements_post_paperless_3m"),
+            "spend": ("fuel_txn_count_post_vehicle_state_90d", "fuel_spend_post_vehicle_state_90d"),
+            "energy": tuple(f"{fuel}_{suffix}" for fuel in ("electricity", "gas") for suffix in
+                            ("months_present", "kwh_observed", "annualisation_factor", "is_estimated")),
+        }.items():
+            for field in fields:
+                if payload[group].get(field) is None:
+                    payload[group].pop(field, None)
         return payload

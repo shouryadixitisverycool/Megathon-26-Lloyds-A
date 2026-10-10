@@ -7,6 +7,7 @@ or network access are needed for the default deterministic explanation service.
 import json
 import math
 import os
+from pathlib import Path
 from threading import Lock
 
 import httpx
@@ -18,19 +19,25 @@ class HTTPExplanationProvider:
     def __init__(self, *, endpoint, model, model_version, api_key, prompt_version="grounded-selection-v1",
                  temperature=0.0, max_output_tokens=800, transport=None,
                  input_price_per_million=None, output_price_per_million=None,
-                 cached_input_price_per_million=None):
+                 cached_input_price_per_million=None, token_limit_parameter="max_tokens",
+                 timeout_seconds=30.0):
         if not endpoint or not model or not model_version or not api_key:
             raise ValueError("HTTP explanations require endpoint, exact model, model version and API key")
         for price in (input_price_per_million, output_price_per_million, cached_input_price_per_million):
             if price is not None and (not math.isfinite(price) or price < 0):
                 raise ValueError("Token pricing must be non-negative and finite")
-        if not math.isfinite(temperature) or not 0 <= temperature <= 2:
+        if temperature is not None and (not math.isfinite(temperature) or not 0 <= temperature <= 2):
             raise ValueError("Temperature must be between zero and two")
+        if token_limit_parameter not in {"max_tokens", "max_completion_tokens"}:
+            raise ValueError("Unsupported token limit parameter")
+        if isinstance(timeout_seconds, bool) or not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
+            raise ValueError("timeout_seconds must be positive and finite")
         if isinstance(max_output_tokens, bool) or not isinstance(max_output_tokens, int) or max_output_tokens < 1:
             raise ValueError("max_output_tokens must be a positive integer")
         self.endpoint, self.model, self.version, self.api_key = endpoint, model, model_version, api_key
         self.prompt_version, self.temperature, self.max_output_tokens = prompt_version, temperature, max_output_tokens
         self.transport = transport
+        self.token_limit_parameter, self.timeout_seconds = token_limit_parameter, timeout_seconds
         self.input_price, self.output_price = input_price_per_million, output_price_per_million
         self.cached_input_price = cached_input_price_per_million
         self._lock = Lock()
@@ -40,15 +47,17 @@ class HTTPExplanationProvider:
 
     def generate(self, request, *, timeout_seconds):
         payload = {
-            "model": self.model, "temperature": self.temperature, "max_tokens": self.max_output_tokens,
+            "model": self.model, self.token_limit_parameter: self.max_output_tokens,
             "messages": [
                 {"role": "system", "content": "Return the exact structured claims and every required sentence ID once. You may only reorder approved sentences. Do not invent facts, numbers, eligibility or new reasons."},
                 {"role": "user", "content": request.model_dump_json()},
             ],
             "response_format": {"type": "json_schema", "json_schema": {
-                "name": "grounded_explanation", "strict": True, "schema": ProviderExplanation.model_json_schema(),
+                "name": "grounded_explanation", "strict": True, "schema": strict_response_schema(),
             }},
         }
+        if self.temperature is not None:
+            payload["temperature"] = self.temperature
         # HTTP timeout and the service's bounded caller deadline both apply.
         with self._lock:
             self._attempts += 1
@@ -98,20 +107,48 @@ class HTTPExplanationProvider:
             }
 
 
-def configured_provider():
-    """No key means offline mode; partial keyed configuration is rejected clearly."""
-    api_key = os.environ.get("GREENPATH_LLM_API_KEY")
+def strict_response_schema():
+    """Require every object key, representing optional values as explicit nulls."""
+    schema = ProviderExplanation.model_json_schema()
+    def normalize(node):
+        if isinstance(node, dict):
+            node.pop("default", None)
+            if "properties" in node:
+                required = node.get("required", [])
+                for name, value in node["properties"].items():
+                    if name not in required:
+                        node["properties"][name] = {"anyOf": [value, {"type": "null"}]}
+                node["required"] = list(node["properties"])
+                node["additionalProperties"] = False
+            for value in node.values():
+                normalize(value)
+        elif isinstance(node, list):
+            for value in node:
+                normalize(value)
+    normalize(schema)
+    return schema
+
+
+def configured_provider(manifest=None):
+    """Use explicit environment overrides over the manifest; no key means offline."""
+    api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("GREENPATH_LLM_API_KEY")
     if not api_key:
         return None
+    config = manifest if manifest is not None else json.loads(
+        Path(__file__).with_name("provider_manifest.json").read_text(encoding="utf-8"))
     def price(name):
         value = os.environ.get(name)
         return float(value) if value else None
+    model = os.environ.get("LLM_MODEL", config["model"])
+    temperature = os.environ.get("TEMPERATURE", config["temperature"])
     return HTTPExplanationProvider(
-        endpoint=os.environ.get("GREENPATH_LLM_ENDPOINT"), model=os.environ.get("LLM_MODEL"),
-        model_version=os.environ.get("LLM_MODEL_VERSION"), api_key=api_key,
-        prompt_version=os.environ.get("PROMPT_VERSION", "grounded-selection-v1"),
-        temperature=float(os.environ.get("TEMPERATURE", "0")),
-        max_output_tokens=int(os.environ.get("MAX_OUTPUT_TOKENS", "800")),
+        endpoint=os.environ.get("GREENPATH_LLM_ENDPOINT", config["endpoint"]), model=model,
+        model_version=os.environ.get("LLM_MODEL_VERSION", model if "LLM_MODEL" in os.environ else config["model_version"]), api_key=api_key,
+        prompt_version=os.environ.get("PROMPT_VERSION", config["prompt_version"]),
+        temperature=float(temperature) if temperature not in (None, "") else None,
+        max_output_tokens=int(os.environ.get("MAX_OUTPUT_TOKENS", config["max_output_tokens"])),
+        token_limit_parameter=os.environ.get("GREENPATH_LLM_TOKEN_LIMIT_PARAMETER", config["token_limit_parameter"]),
+        timeout_seconds=float(os.environ.get("GREENPATH_LLM_TIMEOUT_SECONDS", config["timeout_seconds"])),
         input_price_per_million=price("GREENPATH_LLM_INPUT_PRICE_PER_MILLION"),
         output_price_per_million=price("GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION"),
         cached_input_price_per_million=price("GREENPATH_LLM_CACHED_INPUT_PRICE_PER_MILLION"),

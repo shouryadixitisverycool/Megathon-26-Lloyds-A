@@ -43,7 +43,7 @@ class ArtifactRepository:
 
     mode = "trained"
 
-    def __init__(self, runtime=None):
+    def __init__(self, runtime=None, scenario_provider=None):
         injected_runtime = runtime is not None
         self._outcome_path = config.ARTIFACT_DIR / "portfolio_scores.parquet" if runtime is None else None
         if runtime is None:
@@ -59,6 +59,13 @@ class ArtifactRepository:
         if set(runtime.bundles) != set(Product):
             raise ValueError("Trained provider requires a calibrated bundle for every product")
         self.runtime = runtime
+        if scenario_provider is None and not injected_runtime:
+            import pandas as pd
+            from greenpath.pipelines.scenario_provider import ScenarioProvider
+            path = config.RAW_DIR / "scenario_evidence.parquet"
+            if path.is_file():
+                scenario_provider = ScenarioProvider(pd.read_parquet(path))
+        self.scenario_provider = scenario_provider
         self.version = "trained:" + ",".join(runtime.bundles[p].model_version for p in Product)
         self.impact_calculators = build_uk_registry()
         self._cache = {}
@@ -161,7 +168,10 @@ class ArtifactRepository:
     def get_impact_input(self, customer_id, product):
         Product(product)
         snapshot = self.get_snapshot(customer_id)
-        return snapshot.source_snapshot if snapshot else None
+        if snapshot is None:
+            return None
+        return (self.scenario_provider.attach(snapshot.source_snapshot, product)
+                if self.scenario_provider is not None else snapshot.source_snapshot)
 
     def list_history(self):
         if self._history is None:
@@ -185,7 +195,12 @@ class ArtifactRepository:
                     def get_impact_input(self, customer_id, product):
                         Product(product)
                         snapshot = snapshots.get(customer_id)
-                        return snapshot.source_snapshot.model_copy(deep=True) if snapshot else None
+                        if snapshot is None:
+                            return None
+                        source = snapshot.source_snapshot.model_copy(deep=True)
+                        return (self.scenario_provider.attach(source, product)
+                                if self.scenario_provider is not None else source)
+                    scenario_provider = self.scenario_provider
                 provider = CutoffProvider()
                 # Evaluate against that month's evidence, never copy current decisions.
                 service = RecommendationService(provider, provider, provider,

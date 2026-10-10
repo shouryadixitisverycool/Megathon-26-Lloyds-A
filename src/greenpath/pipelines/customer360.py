@@ -16,7 +16,7 @@ Semantics (see DESIGN.md plus the decisions below)
   "Last 12 months" = the 12 most recent complete months; "3m" = the 3 most recent.
 * Vehicle = latest record with ``record_updated_at <= cutoff``; no record -> all vehicle
   features NaN (a missing record cannot be told apart from "no vehicle").
-* Customer profiles have no version history. Profile fields whose latest update is after
+* Optional customer_history supplies as-of profiles; without it, profile fields whose latest update is after
   the cutoff, or whose update date is missing, are unknown at that cutoff. Relationship
   tenure remains available from the separately dated account-opening record.
 * Products = ledger semantics: a flag is 1 if an active, non-INVALID row exists as of the
@@ -191,9 +191,13 @@ def _product_features(idx: pd.Index, fp: pd.DataFrame, cutoff: date) -> pd.DataF
     }, index=idx)
 
 
-def _vehicle_features(idx: pd.Index, veh: pd.DataFrame, cutoff: date) -> pd.DataFrame:
+def _vehicle_features(idx: pd.Index, veh: pd.DataFrame, cutoff: date,
+                      ownership: pd.DataFrame | None = None) -> pd.DataFrame:
     ts = pd.Timestamp(cutoff)
     v = veh[veh["customer_id"].isin(idx) & (veh["record_updated_at"] <= ts)]
+    v = v.sort_values(["customer_id", "record_updated_at"]).copy()
+    changed = v["customer_id"].ne(v["customer_id"].shift()) | v["fuel_type"].ne(v["fuel_type"].shift())
+    v["vehicle_state_effective_at"] = v["record_updated_at"].where(changed).ffill()
     v = (v.sort_values(["customer_id", "record_updated_at"])
          .drop_duplicates("customer_id", keep="last").set_index("customer_id").reindex(idx))
     has = v["record_updated_at"].notna().to_numpy()
@@ -204,7 +208,7 @@ def _vehicle_features(idx: pd.Index, veh: pd.DataFrame, cutoff: date) -> pd.Data
     def flag(mask: pd.Series) -> np.ndarray:
         return np.where(has, mask.to_numpy(dtype=bool).astype(float), _NAN)
 
-    return pd.DataFrame({
+    out = pd.DataFrame({
         "has_vehicle": np.where(has, 1.0, _NAN),
         "is_ice": flag(fuel.isin(["PETROL", "DIESEL"])),
         "is_ev": flag(fuel == "EV"),
@@ -215,7 +219,17 @@ def _vehicle_features(idx: pd.Index, veh: pd.DataFrame, cutoff: date) -> pd.Data
         "vehicle_record_age_days": age_days,
         "vehicle_record_updated_at": v["record_updated_at"],
         "fuel_type": v["fuel_type"],
+        "vehicle_state_effective_at": v["vehicle_state_effective_at"],
     }, index=idx)
+    if ownership is not None:
+        own = ownership.loc[ownership["record_updated_at"] <= ts].sort_values(
+            ["customer_id", "record_updated_at"]).drop_duplicates("customer_id", keep="last").set_index("customer_id")
+        known = idx.isin(own.index)
+        out.loc[known, "has_vehicle"] = _float01(own.reindex(idx)["has_vehicle"])[known]
+        absent = out["has_vehicle"] == 0
+        out.loc[absent, :] = np.nan
+        out.loc[absent, "has_vehicle"] = 0.0
+    return out
 
 
 def _home_features(base: pd.DataFrame, cutoff: date) -> pd.DataFrame:
@@ -269,12 +283,21 @@ def _energy_features(idx: pd.Index, en: pd.DataFrame, cutoff: date) -> pd.DataFr
     present = (e["electricity_kwh"].notna() | e["gas_kwh"].notna()).groupby(e["customer_id"]).sum()
     with np.errstate(divide="ignore", invalid="ignore"):
         trend = np.where(elec_mean > 0, elec3 / elec_mean - 1.0, _NAN)
-    return pd.DataFrame({
+    out = pd.DataFrame({
         "electricity_kwh_12m": elec_mean * 12.0,
         "gas_kwh_12m": gas_mean * 12.0,
         "electricity_trend": trend,
         "energy_months_present": present.reindex(idx).fillna(0).clip(0, 12).astype(float),
     }, index=idx)
+    for fuel in ("electricity", "gas"):
+        count = _per_customer(g[f"{fuel}_kwh"].count(), idx).fillna(0)
+        out[f"{fuel}_months_present"] = count
+        out[f"{fuel}_kwh_observed"] = _per_customer(g[f"{fuel}_kwh"].sum(min_count=1), idx)
+        out[f"{fuel}_annualisation_factor"] = 12.0 / count.replace(0, np.nan)
+        estimated = e[f"{fuel}_kwh"].notna() & e["source_quality"].ne("SMART_METER")
+        out[f"{fuel}_is_estimated"] = ((count > 0) & ((count < 12) | estimated.groupby(
+            e["customer_id"]).any().reindex(idx).fillna(False))).astype(float).where(count > 0)
+    return out
 
 
 def _digital_features(idx: pd.Index, dg: pd.DataFrame, cutoff: date) -> pd.DataFrame:
@@ -283,7 +306,16 @@ def _digital_features(idx: pd.Index, dg: pd.DataFrame, cutoff: date) -> pd.DataF
     d["mi"] = _month_index(d["month"])
     d = d[d["mi"] <= last_mi].sort_values(["customer_id", "mi"])
     latest = d.drop_duplicates("customer_id", keep="last").set_index("customer_id")
-    d["digital_statements"] = d["digital_statements"].astype(float)
+    d["digital_statements"] = pd.Series(_float01(d["digital_statements"]), index=d.index)
+    contiguous_true = (d["customer_id"].eq(d["customer_id"].shift()) &
+                       d["mi"].eq(d["mi"].shift() + 1) &
+                       d["digital_statements"].eq(1) & d["digital_statements"].shift().eq(1))
+    run = (~contiguous_true).fillna(True).astype(np.int64).cumsum()
+    inferred = d.groupby(run)["month"].transform("min").where(d["digital_statements"].eq(1))
+    d["paperless_effective_at"] = (pd.to_datetime(d["paperless_effective_at"]).fillna(inferred)
+                                  if "paperless_effective_at" in d else inferred)
+    d["paperless_effective_at"] = d["paperless_effective_at"].where(d["digital_statements"].eq(1))
+    effective = d.drop_duplicates("customer_id", keep="last").set_index("customer_id")["paperless_effective_at"]
     w12 = d[d["mi"] > last_mi - 12]
     w3 = d[d["mi"] > last_mi - 3]
     g12, g3 = w12.groupby("customer_id"), w3.groupby("customer_id")
@@ -293,7 +325,7 @@ def _digital_features(idx: pd.Index, dg: pd.DataFrame, cutoff: date) -> pd.DataF
     with np.errstate(divide="ignore", invalid="ignore"):
         logins_trend = np.where(logins12 > 0, logins3 / logins12 - 1.0, _NAN)
     return pd.DataFrame({
-        "is_paperless": _per_customer(latest["digital_statements"].astype(float), idx),
+        "is_paperless": pd.Series(_float01(latest["digital_statements"]), index=latest.index).reindex(idx),
         "paper_statements_3m": _per_customer(g3["paper_statements"].sum(min_count=1), idx),
         "paper_statements_12m": _per_customer(g12["paper_statements"].sum(min_count=1), idx),
         "digital_statement_ratio": _per_customer(g12["digital_statements"].mean(), idx),
@@ -302,6 +334,10 @@ def _digital_features(idx: pd.Index, dg: pd.DataFrame, cutoff: date) -> pd.DataF
         "app_logins_trend": logins_trend,
         "branch_visits_3m": _per_customer(g3["branch_visits"].sum(min_count=1), idx),
         "digital_months_present": _per_customer(g12.size(), idx).fillna(0).clip(0, 12),
+        "paperless_effective_at": effective.reindex(idx),
+        "paper_statements_post_paperless_3m": _per_customer(
+            w3.loc[w3["month"] >= effective.reindex(w3["customer_id"]).set_axis(w3.index)].groupby("customer_id")[
+                "paper_statements"].sum(min_count=1), idx),
     }, index=idx)
 
 
@@ -325,7 +361,8 @@ def build_customer360(tables: Mapping[str, pd.DataFrame], categorised_txns: pd.D
     # Older caller-supplied frames without ingestion metadata retain event-time semantics;
     # persisted generated tables require available_at through schema validation.
     tables = dict(tables)
-    for name in ("financial_products", "vehicles", "energy_usage", "digital_usage"):
+    for name in ("financial_products", "vehicles", "energy_usage", "digital_usage",
+                 "customer_history", "vehicle_ownership"):
         if name in tables and "available_at" in tables[name]:
             tables[name] = tables[name].loc[tables[name]["available_at"] <= pd.Timestamp(cutoff)]
     if "available_at" in categorised_txns:
@@ -344,19 +381,36 @@ def build_customer360(tables: Mapping[str, pd.DataFrame], categorised_txns: pd.D
     if "available_at" in base:
         base = base.copy()
         base.loc[base["available_at"].isna() | (base["available_at"] > pd.Timestamp(cutoff)), "record_updated_at"] = pd.NaT
+    if "customer_history" in tables:
+        history = tables["customer_history"]
+        history = history.loc[history["record_updated_at"] <= pd.Timestamp(cutoff)].sort_values(
+            ["customer_id", "record_updated_at"]).drop_duplicates("customer_id", keep="last").set_index("customer_id")
+        profile_columns = [c for c in base.columns if c != "customer_since"]
+        base[profile_columns] = history.reindex(base.index)[profile_columns]
     idx = base.index
 
     txn = _transaction_features(idx, categorised_txns, cutoff)
     prod = _product_features(idx, tables["financial_products"], cutoff)
-    veh = _vehicle_features(idx, tables["vehicles"], cutoff)
+    veh = _vehicle_features(idx, tables["vehicles"], cutoff, tables.get("vehicle_ownership"))
     home = _home_features(base, cutoff)
     energy = _energy_features(idx, tables["energy_usage"], cutoff)
     digital = _digital_features(idx, tables["digital_usage"], cutoff)
 
     df = pd.concat([txn, prod, veh, home, energy, digital], axis=1)
+    # A post-state zero requires observable transaction activity in that window.
+    post = categorised_txns.loc[categorised_txns["date"] <= pd.Timestamp(cutoff)].copy()
+    effective = post["customer_id"].map(df["vehicle_state_effective_at"])
+    post = post.loc[(post["date"] >= effective) &
+                    (post["date"] > pd.Timestamp(cutoff) - pd.Timedelta(days=90))]
+    observed = idx.isin(post["customer_id"])
+    fuel = post.loc[post["category"].eq("FUEL") & post["debit_credit"].eq("DEBIT")]
+    counts = fuel.groupby("customer_id").size().reindex(idx).fillna(0)
+    sums = fuel.groupby("customer_id")["amount"].sum(min_count=1).reindex(idx)
+    df["fuel_txn_count_post_vehicle_state_90d"] = counts.where(observed)
+    df["fuel_spend_post_vehicle_state_90d"] = sums.where(counts > 0, 0.0).where(observed)
 
     # Data-quality lists
-    has_vehicle = df["has_vehicle"].notna()
+    has_vehicle = df["has_vehicle"] == 1
     missing = pd.DataFrame({
         "home_owner": df["home_owner"].isna(),
         "region": df["region"].isna(),
@@ -364,7 +418,7 @@ def build_customer360(tables: Mapping[str, pd.DataFrame], categorised_txns: pd.D
         "heating_type": df["heating_type"].isna(),
         "property_type": df["property_type"].isna(),
         "has_existing_solar": df["has_existing_solar"].isna(),
-        "vehicle": ~has_vehicle,
+        "vehicle": df["has_vehicle"].isna(),
         "annual_mileage_km": has_vehicle & df["annual_mileage_km"].isna(),
         "vehicle_age_years": has_vehicle & df["vehicle_age_years"].isna(),
         "energy": df["energy_months_present"] == 0,

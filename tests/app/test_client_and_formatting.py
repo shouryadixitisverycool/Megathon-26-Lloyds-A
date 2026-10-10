@@ -58,6 +58,20 @@ def test_timeout_is_visible(monkeypatch):
         APIClient().get("/health")
 
 
+@pytest.mark.parametrize("method", ["get", "post"])
+def test_requests_allow_trained_api_read_time(monkeypatch, method):
+    def request(url, **kwargs):
+        assert kwargs["timeout"].read == 45.0
+        assert kwargs["timeout"].connect == 2.0
+        return httpx.Response(200, json={}, request=httpx.Request(method.upper(), url))
+    monkeypatch.setattr(httpx, method, request)
+    client = APIClient()
+    if method == "get":
+        client.get("/health")
+    else:
+        client.post("/feedback", {})
+
+
 def test_post_is_uncached_and_preserves_json(monkeypatch):
     calls = []
     def post(url, **kwargs):

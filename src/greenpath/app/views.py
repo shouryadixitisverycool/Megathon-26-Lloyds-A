@@ -24,9 +24,11 @@ def bullets(items):
 
 def customer_view(customers, load, save=None, provider_mode=None):
     lookup = {item["customer_id"]: item for item in customers}
+    if st.session_state.get("customer_id") not in lookup and "C10001" in lookup:
+        st.session_state["customer_id"] = "C10001"
     with st.sidebar:
         st.caption("CUSTOMER FIELD NOTES")
-        abstention_id = "C10004" if "C10004" in lookup else "GP-002" if "GP-002" in lookup else None
+        abstention_id = "C10005" if "C10005" in lookup else "GP-002" if "GP-002" in lookup else None
         if abstention_id:
             def abstention():
                 st.session_state["customer_id"] = abstention_id
@@ -34,7 +36,7 @@ def customer_view(customers, load, save=None, provider_mode=None):
         customer_id = safe_select("Customer", list(lookup), "customer_id",
                                   format_func=lambda key: f"{key} · {lookup[key]['display_name']}")
         if "C10001" in lookup:
-            st.caption("C10001 EV candidate · C10002 solar candidate · C10004 sparse evidence · C10005 conflicting records · C10006 already green")
+            st.caption("C10001 EV candidate · C10002 solar candidate · C10003 paperless candidate · C10004 conflicting records · C10005 sparse evidence · C10006 already green")
         elif "GP-001" in lookup:
             st.caption("GP-001 supported · GP-002 missing evidence · GP-003 conflict · GP-004 adopted · GP-005 suppressed · GP-006 low propensity")
     customer = load(f"/customers/{customer_id}")
@@ -119,6 +121,8 @@ def customer_view(customers, load, save=None, provider_mode=None):
                      "Freshness": value["freshness"], "Reference": value["reference"],
                      "Conflicts": "; ".join(value.get("conflicts", []))} for name, value in customer["features"].items()]
         st.dataframe(features, hide_index=True, alt="Approved customer evidence with freshness and conflicts")
+        if customer.get("source_snapshot"):
+            st.json(customer["source_snapshot"])
     with st.expander("Versions and decision exclusions"):
         propensity = row.get("propensity") or {}
         st.text(f"Cutoff: {row['feature_cutoff']}\nDecision timestamp: {row['timestamp']}\nRules: {row['rules_version']}\nModel: {propensity.get('model_version', 'Unavailable')}\nCalibration: {propensity.get('calibration_version') or 'Unavailable'}\nTrust: {row['trust'].get('version', 'Unavailable')}\nContract: {row['contract_version']}")

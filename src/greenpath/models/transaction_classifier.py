@@ -20,6 +20,9 @@ unique normalised strings, so it stays fast on millions of rows.
 Boundary rules, in the order they are checked (first match wins). ``BOUNDARY_RULE_DOCS``
 holds the same list in machine-readable form for the evaluation report.
 
+- ``ev_charging``: explicit EV CHARGING / EV CHARGE / EV CHARGER -> AUTOMOTIVE,
+  before fuel brands and markers. Refunds retain activity category; amounts and
+  refund netting belong to spend aggregation, never physical consumption evidence.
 - ``fuel_marker``: PFS, PETROL or UNLEADED anywhere in the text -> FUEL. This is what
   separates a supermarket forecourt ("TESCO PFS") from the supermarket's grocery sales.
   DIESEL is not a marker because it is also a clothing brand.
@@ -74,6 +77,8 @@ _UTILITIES = TransactionCategory.UTILITIES.value
 _OTHER = TransactionCategory.OTHER.value
 
 BOUNDARY_RULE_DOCS: tuple[tuple[str, str, str], ...] = (
+    ("ev_charging", _AUTOMOTIVE,
+     "EV CHARGING / EV CHARGE / EV CHARGER is automotive activity, not liquid fuel or household supply."),
     ("fuel_marker", _FUEL,
      "PFS, PETROL or UNLEADED token anywhere in the text (e.g. 'TESCO PFS', 'SHELL PETROL')."),
     ("automotive_service", _AUTOMOTIVE,
@@ -167,6 +172,8 @@ def _boundary_category(tokens: Sequence[str]) -> str | None:
     """Return the category from the hand-written boundary rules, or None (see BOUNDARY_RULE_DOCS)."""
     words = set(tokens)
     bigrams = set(zip(tokens, tokens[1:], strict=False))
+    if bigrams & {("EV", "CHARGING"), ("EV", "CHARGE"), ("EV", "CHARGER")}:
+        return _AUTOMOTIVE
     if words & _FUEL_MARKERS:
         return _FUEL
     if words & _AUTOMOTIVE_MARKERS or bigrams & _AUTOMOTIVE_PHRASES:

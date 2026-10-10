@@ -61,6 +61,11 @@ CONTEXT_COLUMNS: tuple[str, ...] = (
     "region", "segment", "customer_since", "first_txn_date", "last_txn_date",
     "vehicle_record_updated_at", "fuel_type", "heating_type", "property_type",
     "invalid_product_records", "missing_fields", "estimated_fields",
+    "vehicle_state_effective_at", "fuel_txn_count_post_vehicle_state_90d",
+    "fuel_spend_post_vehicle_state_90d", "paperless_effective_at",
+    "paper_statements_post_paperless_3m",
+    *[f"{fuel}_{suffix}" for fuel in ("electricity", "gas") for suffix in
+      ("months_present", "kwh_observed", "annualisation_factor", "is_estimated")],
 )
 
 # Joined from `customers` for fairness audits only; never present in the Customer 360 frame.
@@ -96,7 +101,7 @@ _OTHER: dict[str, tuple[str, str, str | None, str]] = {
                             "Total debit spend over 365 days / 12 (GBP/month)"),
     "tenure_months": ("banking_relationship", "customers", "customer_since",
                       "Whole months from customer_since to the cutoff"),
-    "has_vehicle": ("vehicle", "vehicles", "record_updated_at", "1 if a vehicle record exists as of the cutoff, NaN if not recorded"),
+    "has_vehicle": ("vehicle", "vehicles,vehicle_ownership", "record_updated_at", "Latest optional ownership flag; otherwise 1 if an as-of vehicle record exists, NaN if unknown"),
     "is_ice": ("vehicle", "vehicles", "record_updated_at", "Latest vehicle fuel type is PETROL or DIESEL"),
     "is_ev": ("vehicle", "vehicles", "record_updated_at", "Latest vehicle fuel type is EV"),
     "is_hybrid": ("vehicle", "vehicles", "record_updated_at", "Latest vehicle fuel type is HYBRID"),
@@ -161,6 +166,22 @@ _AUDIT_META = {
     "income_band": "Income band (fairness audit only; excluded by proxy-risk policy)",
     "postcode_sector": "Postcode sector (fairness audit only; never a feature)",
 }
+
+_CONTEXT_META.update({
+    "vehicle_state_effective_at": ("context", "vehicles", "record_updated_at", "First record of the current contiguous fuel-type state"),
+    "fuel_txn_count_post_vehicle_state_90d": ("context", "transactions,vehicles", "date", "Fuel debits since current vehicle state, within 90 days; unknown without post-state activity"),
+    "fuel_spend_post_vehicle_state_90d": ("context", "transactions,vehicles", "date", "Observed fuel debit spend since current vehicle state, within 90 days (GBP)"),
+    "paperless_effective_at": ("context", "digital_usage", "month", "First observable true month in the current contiguous paperless run"),
+    "paper_statements_post_paperless_3m": ("context", "digital_usage", "month", "Paper statements since paperless effective month, within 3 complete months"),
+})
+for _fuel in ("electricity", "gas"):
+    for _suffix, _desc in {
+        "months_present": "Non-null fuel observations in the last 12 complete months",
+        "kwh_observed": "Sum of observed fuel kWh; unknown if none",
+        "annualisation_factor": "12 / fuel months present; unknown if none",
+        "is_estimated": "Annual usage is estimated when coverage is partial or a source is not SMART_METER",
+    }.items():
+        _CONTEXT_META[f"{_fuel}_{_suffix}"] = ("energy", "energy_usage", "month", _desc)
 
 
 def _build_registry() -> dict[str, FeatureSpec]:

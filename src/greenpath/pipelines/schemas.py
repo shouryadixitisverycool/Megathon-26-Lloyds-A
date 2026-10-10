@@ -160,12 +160,14 @@ DIGITAL_USAGE = TableSchema(
         "customer_id": "str",
         "month": "date",
         "digital_statements": "bool",  # paperless preference set during this month
+        "paperless_effective_at": "date",
         "paper_statements": "int",
         "digital_transactions": "int",
         "app_logins": "int",
         "branch_visits": "int",
     },
     primary_key=("customer_id", "month"),
+    nullable=frozenset({"paperless_effective_at"}),
     event_time_column="month",
 )
 
@@ -200,6 +202,41 @@ ALL_TABLES = RAW_TABLES | TRUTH_TABLES
 for _schema in (CUSTOMERS, TRANSACTIONS, FINANCIAL_PRODUCTS, VEHICLES, ENERGY_USAGE, DIGITAL_USAGE):
     _schema.columns["available_at"] = "date"
 
+CUSTOMER_HISTORY = TableSchema(
+    name="customer_history", columns=dict(CUSTOMERS.columns),
+    primary_key=("customer_id", "record_updated_at"), nullable=CUSTOMERS.nullable,
+    allowed_values=CUSTOMERS.allowed_values, event_time_column="record_updated_at",
+)
+VEHICLE_OWNERSHIP = TableSchema(
+    name="vehicle_ownership",
+    columns={"customer_id": "str", "has_vehicle": "bool", "record_updated_at": "date", "available_at": "date"},
+    primary_key=("customer_id", "record_updated_at"), nullable=frozenset({"has_vehicle"}),
+    event_time_column="record_updated_at",
+)
+OUTCOME_OBSERVATION = TableSchema(
+    name="outcome_observation",
+    columns={"customer_id": "str", "product": "category", "observation_end": "date",
+             "outcome_available_at": "date", "complete_followup": "bool"},
+    primary_key=("customer_id", "product"), allowed_values=CUSTOMER_OUTCOMES.allowed_values,
+)
+RAW_TABLES.update({s.name: s for s in (CUSTOMER_HISTORY, VEHICLE_OWNERSHIP)})
+TRUTH_TABLES[OUTCOME_OBSERVATION.name] = OUTCOME_OBSERVATION
+ALL_TABLES.update(RAW_TABLES | TRUTH_TABLES)
+SCENARIO_EVIDENCE = TableSchema(
+    name="scenario_evidence",
+    columns={"customer_id": "str", "product": "category", "field": "str", "value": "str",
+             "unit": "str", "assumption_id": "str", "source_id": "str", "effective_on": "date",
+             "available_on": "date", "basis": "category", "description": "str"},
+    primary_key=("customer_id", "product", "field", "effective_on", "available_on"),
+    nullable=frozenset({"unit"}),
+    allowed_values={"product": CUSTOMER_OUTCOMES.allowed_values["product"],
+                    "basis": frozenset({"SYNTHETIC_SCENARIO", "REVIEWED_PVGIS", "EXPLICIT_FORECAST"})},
+    event_time_column="effective_on",
+)
+# Engineering assumptions are neither observed feature sources nor outcome truth.
+ALL_TABLES[SCENARIO_EVIDENCE.name] = SCENARIO_EVIDENCE
+OPTIONAL_TABLES = frozenset({"customer_history", "vehicle_ownership", "outcome_observation", "scenario_evidence"})
+
 
 class SchemaError(ValueError):
     pass
@@ -214,13 +251,6 @@ def validate_table(df: pd.DataFrame, schema: TableSchema) -> None:
     for col in expected - schema.nullable:
         if df[col].isna().any():
             raise SchemaError(f"{schema.name}.{col}: unexpected nulls")
-    if "available_at" in expected:
-        event_col = schema.event_time_column or "record_updated_at"
-        earliest = df[event_col]
-        if schema.name in {"energy_usage", "digital_usage"}:
-            earliest = earliest + pd.offsets.MonthEnd(0)
-        if (df["available_at"] < earliest).any():
-            raise SchemaError(f"{schema.name}: available_at precedes event completion")
     if df.duplicated(list(schema.primary_key)).any():
         raise SchemaError(f"{schema.name}: duplicate primary key {schema.primary_key}")
     for col, allowed in schema.allowed_values.items():
@@ -246,6 +276,13 @@ def validate_table(df: pd.DataFrame, schema: TableSchema) -> None:
             raise SchemaError(f"{schema.name}.{col}: expected boolean values")
         if kind in {"str", "category"} and not observed.map(lambda value: isinstance(value, str)).all():
             raise SchemaError(f"{schema.name}.{col}: expected string values")
+    if "available_at" in expected:
+        event_col = schema.event_time_column or "record_updated_at"
+        earliest = df[event_col]
+        if schema.name in {"energy_usage", "digital_usage"}:
+            earliest = earliest + pd.offsets.MonthEnd(0)
+        if (df["available_at"] < earliest).any():
+            raise SchemaError(f"{schema.name}: available_at precedes event completion")
     if schema.name == "transactions" and (df["amount"] <= 0).any():
         raise SchemaError("transactions.amount: must be positive")
     nonnegative = {
@@ -258,5 +295,68 @@ def validate_table(df: pd.DataFrame, schema: TableSchema) -> None:
             raise SchemaError(f"{schema.name}.{col}: must be non-negative")
     if schema.name == "financial_products" and (df["end_date"] < df["start_date"]).any():
         raise SchemaError("financial_products: end_date precedes start_date")
-    if schema.name == "customers" and not df["sustainability_preference"].dropna().between(1, 5).all():
+    if schema.name in {"customers", "customer_history"} and not df["sustainability_preference"].dropna().between(1, 5).all():
         raise SchemaError("customers.sustainability_preference: must be in 1..5")
+    if schema.name == "outcome_observation" and (df["outcome_available_at"] < df["observation_end"]).any():
+        raise SchemaError("outcome_observation: availability precedes observation end")
+    if schema.name == "scenario_evidence":
+        from greenpath.pipelines.scenario_provider import ScenarioProvider
+        try:
+            ScenarioProvider(df)
+        except (ValueError, TypeError) as exc:
+            raise SchemaError(f"scenario_evidence: invalid evidence: {exc}") from exc
+
+
+def validate_dataset(tables: dict[str, pd.DataFrame]) -> dict:
+    """Validate schemas, all foreign keys and the exact transaction/truth correspondence.
+
+    Missing optional evidence is reported as unsupported, not as a passed check.
+    """
+    missing = set(ALL_TABLES) - OPTIONAL_TABLES - set(tables)
+    if missing:
+        raise SchemaError(f"dataset: missing tables {sorted(missing)}")
+    unknown = set(tables) - set(ALL_TABLES)
+    if unknown:
+        raise SchemaError(f"dataset: unknown tables {sorted(unknown)}")
+    for name, df in tables.items():
+        validate_table(df, ALL_TABLES[name])
+    customers = set(tables["customers"]["customer_id"])
+    for name, df in tables.items():
+        if "customer_id" in df and not set(df["customer_id"]).issubset(customers):
+            raise SchemaError(f"{name}: orphan customer_id")
+    truth = tables["transaction_truth"]
+    if set(truth["transaction_id"]) != set(tables["transactions"]["transaction_id"]):
+        raise SchemaError("transaction_truth: transaction_id must be bijective with transactions")
+    merchants = tables["merchants"].set_index("merchant_id")["true_category"]
+    if not set(truth["merchant_id"]).issubset(set(merchants.index)):
+        raise SchemaError("transaction_truth: orphan merchant_id")
+    if (truth["merchant_id"].map(merchants).to_numpy() != truth["true_category"].to_numpy()).any():
+        raise SchemaError("transaction_truth: category disagrees with merchant catalogue")
+    vehicles = tables["vehicles"]
+    per_fuel = {}
+    for fuel in sorted(_vals(FuelType)):
+        group = vehicles[vehicles["fuel_type"] == fuel]
+        per_fuel[fuel] = {"status": "SUPPORTED" if len(group) else "UNSUPPORTED",
+                          "rows": len(group), "missingness": group.isna().mean().to_dict()}
+    coverage = tables.get("outcome_observation")
+    expected_pairs = len(customers) * len(CUSTOMER_OUTCOMES.allowed_values["product"])
+    coverage_rows = 0 if coverage is None else len(coverage)
+    complete_rows = 0 if coverage is None else int(coverage["complete_followup"].sum())
+    coverage_status = ("UNSUPPORTED" if not coverage_rows else
+                       "SUPPORTED" if complete_rows == expected_pairs else "PARTIAL")
+    return {
+        "integrity": {"status": "PASS", "checks": ["schemas", "primary_keys", "foreign_keys", "truth_bijection", "merchant_truth"]},
+        "optional_sources": {name: "PRESENT" if name in tables else "UNSUPPORTED" for name in sorted(OPTIONAL_TABLES)},
+        "missingness": {name: df.isna().mean().to_dict() for name, df in tables.items()},
+        "source_customer_coverage": {
+            name: {"customers_with_rows": int(df["customer_id"].nunique()),
+                   "customers_without_rows": len(customers) - int(df["customer_id"].nunique())}
+            for name, df in tables.items() if "customer_id" in df and name != "customers"
+        },
+        "vehicle_missingness_per_fuel": per_fuel,
+        "outcome_coverage": {"status": coverage_status, "rows": coverage_rows,
+                             "expected_customer_product_pairs": expected_pairs,
+                             "missing_customer_product_pairs": expected_pairs - coverage_rows,
+                             "complete_followup_rows": complete_rows,
+                             "detail": "Observed negatives require complete coverage of the requested label window."},
+    }

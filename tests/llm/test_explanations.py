@@ -134,12 +134,15 @@ def test_co2e_explanation_grounds_signed_numbers_and_rejects_co2_relabelling(cha
     from greenpath.contracts.customer import CustomerSnapshot
     from greenpath.contracts.fixtures import load_model
     from greenpath.impact.uk_adapter import UKImpactCalculator
+    from greenpath.data_generation.scenarios import generate_scenario_table
+    from greenpath.pipelines.scenario_provider import ScenarioProvider, UKImpactInput
 
     snapshot = load_model("customer_snapshot_C10001", CustomerSnapshot)
-    snapshot = snapshot.model_copy(update={"features": {**snapshot.features,
-        "ice_litres_per_100km": 6.5, "ev_kwh_per_100km": 18.0,
-        "charging_efficiency": charging}})
-    impact = UKImpactCalculator(Product.EV_FINANCE).calculate(snapshot)
+    scenarios = ScenarioProvider(generate_scenario_table([snapshot.customer_id],
+        effective_on=snapshot.feature_cutoff, available_on=snapshot.feature_cutoff))
+    rows = tuple(row.model_copy(update={"value": charging}) if row.field == "charging_efficiency" else row
+                 for row in scenarios.get_scenario(snapshot.customer_id, Product.EV_FINANCE, snapshot.feature_cutoff))
+    impact = UKImpactCalculator(Product.EV_FINANCE).calculate(UKImpactInput(snapshot=snapshot, scenario=rows))
     rec = synthetic_recommendation().model_copy(update={"impact": impact})
     provider = FixedProvider()
     result = ExplanationService(provider).explain(rec)

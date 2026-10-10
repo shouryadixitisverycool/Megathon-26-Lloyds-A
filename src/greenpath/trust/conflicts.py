@@ -70,6 +70,16 @@ def _ev_recurring_fuel_conflict(snapshot: CustomerSnapshot) -> TrustIssue | None
         return None
     txn_count = snapshot.features.get("fuel_txn_freq_90d")
     monthly_spend = snapshot.features.get("fuel_spend_90d_avg")
+    fields = ["fuel_type", "fuel_txn_freq_90d", "fuel_spend_90d_avg"]
+    window = "in 90 days"
+    if snapshot.vehicle.state_effective_at is not None:
+        txn_count = snapshot.spend.fuel_txn_count_post_vehicle_state_90d
+        spend = snapshot.spend.fuel_spend_post_vehicle_state_90d
+        days = min(90, (snapshot.feature_cutoff - snapshot.vehicle.state_effective_at).days + 1)
+        monthly_spend = None if spend is None or days <= 0 else spend * 30 / days
+        fields = ["fuel_type", "vehicle_state_effective_at", "fuel_txn_count_post_vehicle_state_90d",
+                  "fuel_spend_post_vehicle_state_90d"]
+        window = "since the current EV state (within 90 days)"
     if txn_count is None or monthly_spend is None:
         return None
     if txn_count < RECURRING_FUEL_TXN_MIN or monthly_spend <= RECURRING_FUEL_MONTHLY_GBP:
@@ -78,9 +88,9 @@ def _ev_recurring_fuel_conflict(snapshot: CustomerSnapshot) -> TrustIssue | None
         TrustIssueCode.EV_RECORD_WITH_RECURRING_FUEL_SPEND,
         Severity.HIGH,
         f"Vehicle record is EV but fuel is bought recurrently ({int(txn_count)} fuel transactions "
-        f"in 90 days, GBP {monthly_spend:.0f}/month). Possible second vehicle, stale record or "
+        f"{window}, GBP {monthly_spend:.0f}/month). Possible second vehicle, stale record or "
         "merchant misclassification: review before recommending EV Finance.",
-        ["fuel_type", "fuel_txn_freq_90d", "fuel_spend_90d_avg"],
+        fields,
     )
 
 
@@ -98,14 +108,21 @@ def _non_owner_mortgage_conflict(snapshot: CustomerSnapshot) -> TrustIssue | Non
 
 def _paperless_conflict(snapshot: CustomerSnapshot) -> TrustIssue | None:
     digital = snapshot.digital
-    if digital.is_paperless is not True or not digital.paper_statements_3m:
+    count = digital.paper_statements_3m
+    fields = ["is_paperless", "paper_statements_3m"]
+    window = "last three months"
+    if digital.paperless_effective_at is not None:
+        count = digital.paper_statements_post_paperless_3m
+        fields = ["is_paperless", "paperless_effective_at", "paper_statements_post_paperless_3m"]
+        window = "period since paperless became observable (within three months)"
+    if digital.is_paperless is not True or not count:
         return None
     return _conflict(
         TrustIssueCode.PAPERLESS_FLAG_WITH_PAPER_STATEMENTS,
         Severity.HIGH,
-        f"Flagged paperless but {digital.paper_statements_3m} paper statement(s) were issued in the "
-        "last three months. Paperless status needs confirming.",
-        ["is_paperless", "paper_statements_3m"],
+        f"Flagged paperless but {count} paper statement(s) were issued in the "
+        f"{window}. Paperless status needs confirming.",
+        fields,
     )
 
 

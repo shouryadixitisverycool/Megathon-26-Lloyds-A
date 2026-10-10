@@ -28,7 +28,7 @@ class APIClient:
     def _request(self, method: str, path: str, **kwargs) -> Any:
         try:
             response = getattr(httpx, method)(self.base_url + path, **kwargs,
-                                              timeout=httpx.Timeout(30.0 if method == "post" else 5.0, connect=2.0))
+                                              timeout=httpx.Timeout(45.0, connect=2.0))
             response.raise_for_status()
             result = response.json()
         except httpx.TimeoutException as error:

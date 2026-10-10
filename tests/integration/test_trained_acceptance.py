@@ -38,6 +38,27 @@ def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
     run.stage_train()
 
     with TestClient(create_app()) as client:
+        repository = client.app.state.repository
+        ev_input = repository.get_impact_input("C10001", Product.EV_FINANCE)
+        ev_impact = repository.impact_calculators[Product.EV_FINANCE].calculate(ev_input)
+        assert ev_impact.status == "AVAILABLE"
+        assert any(e.basis == "SYNTHETIC_SCENARIO" for e in ev_impact.evidence)
+        assert not repository.scenario_provider.get_scenario("C200001", Product.EV_FINANCE, config.FEATURE_CUTOFF)
+        paperless_input = repository.get_impact_input("C10001", Product.PAPERLESS_BANKING)
+        from greenpath.pipelines.scenario_provider import UKImpactInput
+        # Ingestion delays leave an incomplete annual window; only an explicit forecast may fill it.
+        source = paperless_input.snapshot
+        assert source.data_quality.digital_months_present < 12
+        incomplete = repository.impact_calculators[Product.PAPERLESS_BANKING].calculate(paperless_input)
+        assert incomplete.status == "UNAVAILABLE"
+        forecast = paperless_input.scenario[0].model_copy(update={"field": "annual_statements",
+            "value": 12, "unit": "statements/year", "basis": "EXPLICIT_FORECAST",
+            "description": "Caller-selected annual statement forecast, not measured"})
+        paperless = repository.impact_calculators[Product.PAPERLESS_BANKING].calculate(
+            UKImpactInput(snapshot=source, scenario=(*paperless_input.scenario, forecast)))
+        assert paperless.status == "NOT_CLAIMED"
+        assert paperless.secondary_metrics[1].value == 24
+        assert any(e.basis == "EXPLICIT_FORECAST" for e in paperless.evidence)
         health = client.get("/health")
         assert health.status_code == 200
         assert health.json()["provider_mode"] == "trained"

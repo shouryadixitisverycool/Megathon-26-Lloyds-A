@@ -32,9 +32,13 @@ import numpy as np
 import pandas as pd
 
 from greenpath.contracts import PRODUCT_IDS, Product
+from greenpath import config
+from greenpath.data_generation.outcome_coverage import generate_outcome_coverage
+from greenpath.data_generation.scenarios import generate_scenario_table
 from greenpath.data_generation.config import PRODUCTS, GeneratorConfig
 from greenpath.data_generation.merchants import MerchantCatalogue, build_catalogue, category_weights
 from greenpath.data_generation.public_anchors import anchored_demand, anchor_manifest
+from greenpath.data_generation.source_history import customer_history, vehicle_ownership
 from greenpath.pipelines.schemas import ALL_TABLES, validate_table
 
 __all__ = ["generate", "write_dataset", "TimeGrid"]
@@ -324,10 +328,8 @@ def _customers(cfg, p, adopt, rng, tg) -> pd.DataFrame:
     pre = p["solar_pre"]
     solar_day[pre] = _day("2013-01-01") + rng.integers(0, 12 * 365, pre.sum())
     solar_day[pre & (rng.random(n) < 0.3)] = NONE_DAY  # installed at unknown date
-    adopted = adopt["SOLAR_FINANCE"] < NONE_DAY
-    solar_day[adopted] = adopt["SOLAR_FINANCE"][adopted]
-    has_solar = pd.array(pre | adopted, dtype="boolean")
-    has_solar[~(pre | adopted) & (rng.random(n) < miss["has_solar_pv"])] = pd.NA
+    has_solar = pd.array(pre, dtype="boolean")
+    has_solar[~pre & (rng.random(n) < miss["has_solar_pv"])] = pd.NA
 
     pref = np.clip(np.round(3 + 1.1 * _z(p["green"]) + rng.normal(0, 0.75, n)), 1, 5).astype(int)
     pref = pd.array(pref, dtype="Int64")
@@ -335,7 +337,6 @@ def _customers(cfg, p, adopt, rng, tg) -> pd.DataFrame:
 
     upd = np.maximum(p["join_day"] + rng.integers(0, 60, n),
                      _day("2025-06-01") + rng.integers(0, 480, n))
-    upd = np.where(adopted, np.maximum(upd, solar_day + rng.integers(1, 30, n)), upd)
     upd = np.minimum(upd, tg.end_day)
     return pd.DataFrame({
         "customer_id": p["customer_id"],
@@ -467,13 +468,18 @@ def _vehicles(cfg, p, adopt, rng, tg, ev_conflict: np.ndarray) -> pd.DataFrame:
             "mileage_source": src, "record_updated_at": _to_dt(rec_day[idx])})
 
     vage = np.nan_to_num(p["vage"], nan=5.0)
-    frames = [obs(has_rec, first, p["fuel"], vage, p["mileage"]),
-              obs(renew, second, p["fuel"], vage, p["mileage"])]
     # EV adoption -> new EV record (unless the record is left stale: conflict type 1)
     ev_day = adopt["EV_FINANCE"]
     new_rec_day = ev_day + rng.integers(3, 26, n)
     ev_rec = (ev_day < NONE_DAY) & (ev_conflict != 1) & (new_rec_day <= tg.end_day)
     new_age = rng.uniform(0.0, 1.5, n) + (cutoff - new_rec_day) / 365.25  # age as of the cutoff
+    frames = []
+    # A later baseline observation must describe the adopted vehicle, except deliberate stale records.
+    for mask, rec_day in ((has_rec, first), (renew, second)):
+        switched = (ev_day <= rec_day) & (ev_conflict != 1)
+        frames.append(obs(mask, rec_day, np.where(switched, 3, p["fuel"]),
+                          np.where(switched, new_age, vage),
+                          np.where(switched, p["mileage"] * 1.05, p["mileage"])))
     frames.append(obs(ev_rec, new_rec_day, np.full(n, 3), new_age, p["mileage"] * 1.05))
     veh = pd.concat(frames, ignore_index=True)
     veh = veh.sort_values(["customer_id", "record_updated_at"], kind="stable")
@@ -547,6 +553,10 @@ def _digital_usage(cfg, p, adopt, rng, tg) -> pd.DataFrame:
         "customer_id": p["customer_id"][ci],
         "month": _to_dt(tg.month_start[mi]),
         "digital_statements": paperless[ci, mi].astype(bool),
+        "paperless_effective_at": _to_dt(np.where(
+            paperless[ci, mi], np.where(p["paperless_pre"][ci],
+                                      np.maximum(p["join_day"][ci], tg.start_day),
+                                      adopt["PAPERLESS_BANKING"][ci]), NONE_DAY)),
         "paper_statements": paper[ci, mi].astype(np.int64),
         "digital_transactions": dtx[ci, mi].astype(np.int64),
         "app_logins": logins[ci, mi].astype(np.int64),
@@ -595,10 +605,13 @@ class _TxnBuilder:
         pref = self.pick(category, ("card",), self.n)
         merch = np.where(rng.random(len(ci)) < loyalty, pref[ci], self.pick(category, ("card",), len(ci)))
         amt = amount_mean[ci] * np.exp(rng.normal(0, sigma, len(ci)) - sigma**2 / 2)
+        # Draw before adoption filtering so future deletions cannot shift earlier source noise.
+        variant = rng.integers(0, self.K, len(ci))
         if keep_fn is not None:
             keep = keep_fn(ci, day)
             ci, day, merch, amt = ci[keep], day[keep], merch[keep], amt[keep]
-        self.add(ci, day, merch, np.maximum(amt, 0.5))
+            variant = variant[keep]
+        self.add(ci, day, merch, np.maximum(amt, 0.5), variant=variant)
 
     def monthly_stream(self, mask: np.ndarray, merch_per_cust: np.ndarray, amount_cm: np.ndarray,
                        tg: TimeGrid, credit=False, day_of_month=None):
@@ -643,10 +656,14 @@ def _transactions(cfg, p, adopt, rng, tg, cat: MerchantCatalogue, ev_conflict) -
     elec_m, gas_m = _energy_monthly(p, adopt, tg)
     q = (tg.year - 2025) * 4 + (tg.month - 1) // 3
     tariff = np.array([1.0, 0.98, 0.95, 0.97, 1.02, 0.99, 1.03, 1.04])[np.clip(q, 0, 7)]
-    # DD amounts are smoothed (annual estimate) and re-set every 6 months
-    half = np.arange(M) // 6
-    elec_sm = np.stack([elec_m[:, half == h].mean(axis=1) for h in half], axis=1)
-    gas_sm = np.stack([gas_m[:, half == h].mean(axis=1) for h in half], axis=1)
+    # Six-month resets use only completed usage; the first reset uses the known initial baseline.
+    elec_sm, gas_sm = np.empty_like(elec_m), np.empty_like(gas_m)
+    for reset in range(0, M, 6):
+        prior = slice(max(0, reset - 6), reset)
+        e_est = elec_m[:, prior].mean(axis=1) if reset else p["elec"] / 12 * np.where(p["solar_pre"], 0.75, 1.0)
+        g_est = gas_m[:, prior].mean(axis=1) if reset else p["gas"] / 12
+        elec_sm[:, reset:reset + 6] = e_est[:, None]
+        gas_sm[:, reset:reset + 6] = g_est[:, None]
     e_cost = np.round(elec_sm * 0.245 * tariff + 16.0)
     g_cost = np.round(gas_sm * 0.063 * tariff + 9.0)
     supply = np.where(rng.random(n) < 0.10, 3,  # pays energy elsewhere / in rent
@@ -807,9 +824,14 @@ def generate(cfg: GeneratorConfig, verbose: bool = False) -> dict[str, pd.DataFr
     if verbose:
         print(f"  population + adoption: {time.time() - t0:.1f}s")
 
-    customers = _customers(cfg, p, adopt, rngs["customers"], tg)
+    baseline = _customers(cfg, p, adopt, rngs["customers"], tg)
+    customers, history = customer_history(baseline, _to_dt(adopt["SOLAR_FINANCE"]), pd.Timestamp(cfg.history_start))
+    declaration_rng = np.random.default_rng(np.random.SeedSequence([cfg.seed, 918]))
     tables: dict[str, pd.DataFrame] = {
         "customers": customers,
+        "customer_history": history,
+        "vehicle_ownership": vehicle_ownership(p, _to_dt(adopt["EV_FINANCE"]), declaration_rng,
+                                               pd.Timestamp(cfg.history_start), cfg.vehicle_declaration_missing_rate),
         "financial_products": _financial_products(cfg, p, adopt, rngs["products"], tg, customers["home_owner"]),
         "vehicles": _vehicles(cfg, p, adopt, rngs["vehicles"], tg, ev_conflict),
         "energy_usage": _energy_usage(cfg, p, adopt, rngs["energy"], tg),
@@ -841,7 +863,7 @@ def generate(cfg: GeneratorConfig, verbose: bool = False) -> dict[str, pd.DataFr
     tables["merchants"] = cat.table.drop(columns=["kind"])
     tables["customers"] = tables["customers"].sort_values("customer_id", ignore_index=True)
     availability_rng = np.random.default_rng(np.random.SeedSequence([cfg.seed, 917]))
-    for name in ("customers", "transactions", "financial_products", "vehicles", "energy_usage", "digital_usage"):
+    for name in ("customer_history", "vehicle_ownership", "transactions", "financial_products", "vehicles", "energy_usage", "digital_usage"):
         schema = ALL_TABLES[name]
         event = tables[name][schema.event_time_column or "record_updated_at"]
         monthly = name in {"energy_usage", "digital_usage"}
@@ -849,6 +871,13 @@ def generate(cfg: GeneratorConfig, verbose: bool = False) -> dict[str, pd.DataFr
         # Explicitly synthetic ingestion delays, never represented as public-source observations.
         delay = availability_rng.integers(1 if monthly else 0, 15 if monthly else 8, len(event))
         tables[name]["available_at"] = completed + pd.to_timedelta(delay, unit="D")
+    tables["customers"] = tables["customer_history"].sort_values(
+        ["customer_id", "record_updated_at"], kind="stable"
+    ).drop_duplicates("customer_id", keep="last").sort_values("customer_id", ignore_index=True)
+    tables["outcome_observation"] = generate_outcome_coverage(tables["customers"], cfg.history_end)
+    tables["scenario_evidence"] = generate_scenario_table(
+        [cid for cid in config.DEMO_PERSONA_IDS if cid in set(tables["customers"]["customer_id"])],
+        effective_on=config.FEATURE_CUTOFF, available_on=config.FEATURE_CUTOFF)
     tables = _ensure_dtypes(tables)
     for name, df in tables.items():
         validate_table(df, ALL_TABLES[name])
@@ -869,12 +898,12 @@ def write_dataset(tables: dict[str, pd.DataFrame], out_dir: Path, cfg: Generator
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     shas = {}
-    for name in ALL_TABLES:
+    for name in tables:
         path = out_dir / f"{name}.parquet"
         tables[name].to_parquet(path, index=False)
         shas[path.name] = _file_sha(path)
     meta = {"config": cfg.to_dict(), "config_hash": cfg.config_hash(), "file_sha256": shas,
-            "row_counts": {n: int(len(tables[n])) for n in ALL_TABLES},
+            "row_counts": {n: int(len(df)) for n, df in tables.items()},
             "public_anchors": anchor_manifest(tables["energy_usage"])}
     (out_dir / "generator_config.json").write_text(json.dumps(meta, indent=2, sort_keys=True))
     return meta

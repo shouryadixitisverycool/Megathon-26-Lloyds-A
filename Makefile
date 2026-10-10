@@ -1,4 +1,4 @@
-.PHONY: setup test test-trained test-impact api app all pipeline data perturbed train evaluate evaluate-llm scenarios evaluate-system schemas build
+.PHONY: setup test test-trained test-impact api app all pipeline data perturbed train evaluate evaluate-llm scenarios evaluate-system schemas build manifest
 .NOTPARALLEL: all
 
 CUSTOMERS ?= 4000
@@ -54,4 +54,7 @@ evaluate-system:
 scenarios:
 	uv run --locked python -m greenpath.demo.evaluate
 
-all: setup pipeline test evaluate-llm scenarios evaluate-system
+manifest:
+	uv run --locked python -m greenpath.pipelines.run manifest
+
+all: setup pipeline test evaluate-llm scenarios evaluate-system manifest

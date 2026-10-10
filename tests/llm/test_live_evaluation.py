@@ -83,6 +83,7 @@ def test_live_cli_requires_authorization_and_credentials(monkeypatch, tmp_path):
         main()
     assert error.value.code == 2
     monkeypatch.delenv("GREENPATH_LLM_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setattr(sys, "argv", ["live_evaluation", "--allow-paid-provider", "--output", str(tmp_path / "report.json")])
     with pytest.raises(SystemExit) as error:
         main()
@@ -128,11 +129,13 @@ def test_co2e_limit_wording_tracks_units():
     from greenpath.contracts.fixtures import load_model
     from greenpath.impact import Product
     from greenpath.impact.uk_adapter import UKImpactCalculator
+    from greenpath.data_generation.scenarios import generate_scenario_table
+    from greenpath.pipelines.scenario_provider import ScenarioProvider
 
     snapshot = load_model("customer_snapshot_C10001", CustomerSnapshot)
-    snapshot = snapshot.model_copy(update={"features": {**snapshot.features,
-        "ice_litres_per_100km": 6.5, "ev_kwh_per_100km": 18.0, "charging_efficiency": .9}})
-    impact = UKImpactCalculator(Product.EV_FINANCE).calculate(snapshot)
+    scenarios = ScenarioProvider(generate_scenario_table([snapshot.customer_id],
+        effective_on=snapshot.feature_cutoff, available_on=snapshot.feature_cutoff))
+    impact = UKImpactCalculator(Product.EV_FINANCE).calculate(scenarios.attach(snapshot, Product.EV_FINANCE))
     rec = synthetic_recommendation().model_copy(update={"impact": impact})
     result = ExplanationService().explain(rec)
     assert "operational CO2e" in result.estimated_impact_text

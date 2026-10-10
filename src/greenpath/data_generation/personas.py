@@ -25,6 +25,7 @@ import numpy as np
 import pandas as pd
 
 from greenpath.data_generation.merchants import MerchantCatalogue
+from greenpath.data_generation.source_history import customer_history
 
 D = date.fromisoformat
 
@@ -234,7 +235,7 @@ def build_personas(cat: MerchantCatalogue, rng: np.random.Generator, tg) -> dict
     hist_start = pd.Timestamp(tg.start_day.astype("datetime64[D]")).date()
     months = [pd.Timestamp(m).date() for m in tg.month_start.astype("datetime64[D]")]
     tx = _Txns(cat, rng, end)
-    cust, prods, vehs, energy, digital, outcomes = [], [], [], [], [], []
+    cust, prods, vehs, energy, digital, outcomes, ownership = [], [], [], [], [], [], []
     for ps in persona_specs():
         cid = ps.customer_id
         since = D(ps.since)
@@ -245,6 +246,9 @@ def build_personas(cat: MerchantCatalogue, rng: np.random.Generator, tg) -> dict
                      "heating_type": ps.heating_type, "has_solar_pv": ps.has_solar_pv,
                      "solar_installed_at": pd.Timestamp(ps.solar_installed_at) if ps.solar_installed_at else pd.NaT,
                      "sustainability_preference": ps.pref, "record_updated_at": pd.Timestamp(upd)})
+        ownership.append({"customer_id": cid,
+                          "has_vehicle": None if cid == "C10005" else bool(ps.vehicles),
+                          "record_updated_at": pd.Timestamp(max(since, hist_start))})
         prods.append({"customer_id": cid, "product": "CURRENT_ACCOUNT", "start_date": pd.Timestamp(since),
                       "end_date": pd.NaT, "balance": 2_400.0, "status": "ACTIVE"})
         for product, start, stop, bal, status in ps.products:
@@ -277,6 +281,8 @@ def build_personas(cat: MerchantCatalogue, rng: np.random.Generator, tg) -> dict
                     continue
                 paperless = pf == "always" or (pf_month is not None and m >= pf_month)
                 digital.append({"customer_id": cid, "month": pd.Timestamp(m), "digital_statements": paperless,
+                                "paperless_effective_at": (pd.Timestamp(max(since, hist_start)) if pf == "always"
+                                                          else pd.Timestamp(pf) if paperless else pd.NaT),
                                 "paper_statements": 0 if paperless else int(dg["paper"]),
                                 "digital_transactions": int(rng.poisson(dg["dtx"])),
                                 "app_logins": int(rng.poisson(dg["logins"])),
@@ -300,8 +306,12 @@ def build_personas(cat: MerchantCatalogue, rng: np.random.Generator, tg) -> dict
         if ps.salary:
             tx.monthly(cid, start, ps.salary[0], ps.salary[1], 25, credit=True)
 
+    customers, history = customer_history(pd.DataFrame(cust), np.full(len(cust), np.datetime64("NaT", "ns")),
+                                         pd.Timestamp(hist_start))
     return {
-        "customers": pd.DataFrame(cust),
+        "customers": customers,
+        "customer_history": history,
+        "vehicle_ownership": pd.DataFrame(ownership),
         "financial_products": pd.DataFrame(prods),
         "vehicles": pd.DataFrame(vehs),
         "energy_usage": pd.DataFrame(energy),

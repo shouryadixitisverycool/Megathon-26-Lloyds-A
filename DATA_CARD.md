@@ -9,22 +9,26 @@
 | Synthetic labels | customer_outcomes: adoption dates simulated from latent stochastic drivers + noise (spec 8.2) |
 | Simulator-derived evaluation truth | transaction_truth, merchants (categorisation evaluation only) |
 
-Generator config hash: `5b189503ed5002a61e17e2f25cd384774a6d2455c5a218f2f6ffbbf1f4648a93`; seed 42; perturbed generator seed 45.
+Generator config hash: `b11a3aa0edee13cb15147ad54ec83a311a6639a41daa65372520affd6352d0cb`; seed 42; perturbed generator seed 45.
 
 ## Tables
 
 | table | rows | sha256 |
 |---|---|---|
-| customers | 4010 | `ddd99568535e92dc` |
-| transactions | 874498 | `fd04669e19c6c078` |
-| financial_products | 13182 | `06feb0686caba491` |
-| vehicles | 4744 | `aa23c6c01f1b95ba` |
-| energy_usage | 72752 | `d0baf2f1b0f20ada` |
-| digital_usage | 80119 | `9f935754ac884e37` |
+| customers | 4010 | `4d530a0658d34306` |
+| transactions | 877757 | `c62e1f9c0ad67a4f` |
+| financial_products | 13182 | `3b499158118a07dd` |
+| vehicles | 4747 | `93d5a5be99cc5e33` |
+| energy_usage | 72752 | `7a5690cee3d71189` |
+| digital_usage | 80119 | `f958b1c4033dd8c7` |
 | green_product_catalogue | 4 | `21c19a60e8e5438f` |
-| transaction_truth | 874498 | `528550173d46d5ff` |
-| merchants | 146 | `33520abe59bb2d33` |
+| transaction_truth | 877757 | `5c6f725c8ca70aad` |
+| merchants | 146 | `106a1ee96472d91b` |
 | customer_outcomes | 6879 | `41dcf66dd9ecd779` |
+| customer_history | 9550 | `8de5d74e2209e4c0` |
+| vehicle_ownership | 5660 | `3accbdc2ac88b6d0` |
+| outcome_observation | 16040 | `ec0f4d888e0f0d52` |
+| scenario_evidence | 100 | `0c232a8012045251` |
 
 ## Public energy anchors
 
@@ -99,7 +103,7 @@ Every feature is labelled with source, event time, prediction-time availability 
 | txn_count_12m | transaction | transactions | date | True | True | False | feature_v1 |
 | total_spend_12m_avg | transaction | transactions | date | True | True | False | feature_v1 |
 | tenure_months | banking_relationship | customers | customer_since | True | True | False | feature_v1 |
-| has_vehicle | vehicle | vehicles | record_updated_at | True | True | False | feature_v1 |
+| has_vehicle | vehicle | vehicles,vehicle_ownership | record_updated_at | True | True | False | feature_v1 |
 | is_ice | vehicle | vehicles | record_updated_at | True | True | False | feature_v1 |
 | is_ev | vehicle | vehicles | record_updated_at | True | True | False | feature_v1 |
 | is_hybrid | vehicle | vehicles | record_updated_at | True | True | False | feature_v1 |
@@ -145,6 +149,19 @@ Every feature is labelled with source, event time, prediction-time availability 
 | invalid_product_records | data_quality | financial_products | start_date | True | False | False | feature_v1 |
 | missing_fields | data_quality | multiple | nan | True | False | False | feature_v1 |
 | estimated_fields | data_quality | multiple | nan | True | False | False | feature_v1 |
+| vehicle_state_effective_at | context | vehicles | record_updated_at | True | False | False | feature_v1 |
+| fuel_txn_count_post_vehicle_state_90d | context | transactions,vehicles | date | True | False | False | feature_v1 |
+| fuel_spend_post_vehicle_state_90d | context | transactions,vehicles | date | True | False | False | feature_v1 |
+| paperless_effective_at | context | digital_usage | month | True | False | False | feature_v1 |
+| paper_statements_post_paperless_3m | context | digital_usage | month | True | False | False | feature_v1 |
+| electricity_months_present | energy | energy_usage | month | True | False | False | feature_v1 |
+| electricity_kwh_observed | energy | energy_usage | month | True | False | False | feature_v1 |
+| electricity_annualisation_factor | energy | energy_usage | month | True | False | False | feature_v1 |
+| electricity_is_estimated | energy | energy_usage | month | True | False | False | feature_v1 |
+| gas_months_present | energy | energy_usage | month | True | False | False | feature_v1 |
+| gas_kwh_observed | energy | energy_usage | month | True | False | False | feature_v1 |
+| gas_annualisation_factor | energy | energy_usage | month | True | False | False | feature_v1 |
+| gas_is_estimated | energy | energy_usage | month | True | False | False | feature_v1 |
 | age_band | audit_only | customers | record_updated_at | True | False | True | feature_v1 |
 | income_band | audit_only | customers | record_updated_at | True | False | True | feature_v1 |
 | postcode_sector | audit_only | customers | record_updated_at | True | False | False | feature_v1 |

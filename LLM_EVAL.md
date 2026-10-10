@@ -80,12 +80,49 @@ Errors and rejected output still use the same approved deterministic fallback.
 
 ## Selected Versus Evaluated
 
-`src/greenpath/llm/provider_manifest.json` selects OpenAI's known dated snapshot
-`gpt-4.1-mini-2025-04-14`, with the exact endpoint, model/version, prompt version,
-temperature, output cap and live-evaluator timeout. It supports structured output
-and is selected for the bounded sentence-composition task. No current access,
-availability, best-model comparison or live quality claim has been verified.
+`src/greenpath/llm/provider_manifest.json` selects the user-requested identifier
+`gpt-6-luna` at OpenAI's chat-completions endpoint. This is an alias, **not an
+exact dated snapshot pin**. Availability, structured-output support, request-option
+support, current pricing, latency and quality are unverified. The configured request
+uses `max_completion_tokens=1600` and omits temperature; these are configuration
+choices, not claims of documented support for this model. The response schema
+requires all object properties, forbids extra keys and permits explicit null impact.
 `src/greenpath/llm/config.env.example` contains matching nonsecret settings.
+
+Runtime and live evaluation read the manifest by default. `OPENAI_API_KEY` takes
+precedence over the fallback `GREENPATH_LLM_API_KEY`. With neither key, runtime
+remains deterministic/offline. Explicit `GREENPATH_LLM_ENDPOINT`, `LLM_MODEL`,
+`LLM_MODEL_VERSION`, `PROMPT_VERSION`, `TEMPERATURE`, `MAX_OUTPUT_TOKENS`,
+`GREENPATH_LLM_TOKEN_LIMIT_PARAMETER` and `GREENPATH_LLM_TIMEOUT_SECONDS` override
+manifest defaults. An empty `TEMPERATURE` omits that field. If only `LLM_MODEL`
+is overridden, its identifier is also used as the version label; this does not
+assert immutable snapshot identity. Errors or unsupported requests retain explicit
+deterministic fallback. No credential was available and no live call was made.
+
+### Local Credentials
+
+The provider does not auto-load `.env` or search other directories for credentials.
+You can set `OPENAI_API_KEY` in your shell/secret manager, or explicitly load a
+repository-root `.env` with the existing `uv` launcher, without adding a dependency:
+
+```bash
+uv run --locked --env-file .env uvicorn greenpath.api.main:app --reload
+```
+
+Keep `.env` untracked and never put keys in the manifest or example file. Starting
+the app does not itself make an explanation request, but requesting explanations
+with a configured key can incur charges. To enable configuration without making
+any API call, set the key locally and do not request explanations or authorize the
+live evaluator. Focused tests use mock transports only.
+
+**Runtime timeout handoff:** the configured provider exposes `timeout_seconds=30`
+(or the environment override), and the live evaluator uses it. The current API
+constructs `ExplanationService(configured_provider())`, whose default remains two
+seconds. The owner of `service.py` should let an omitted service timeout inherit
+`provider.timeout_seconds`, keeping two seconds for providers without that setting
+and preserving all explicitly supplied deadlines. Alternatively, the API owner
+can pass the configured provider timeout explicitly. Neither file was changed in
+this scoped task; until that wiring is applied, runtime may fall back prematurely.
 
 ## Optional Live Run
 
@@ -95,7 +132,8 @@ No paid provider was called for this implementation. The optional command is:
 uv run --locked python scripts/evaluate_llm_live.py --allow-paid-provider --cases 100 --output reports/llm_live_evaluation.json
 ```
 
-Requirements: explicit paid-call opt-in, existing `GREENPATH_LLM_API_KEY`, and
+Requirements: explicit paid-call opt-in, existing `OPENAI_API_KEY` (or fallback
+`GREENPATH_LLM_API_KEY`), and
 current user-configured `GREENPATH_LLM_INPUT_PRICE_PER_MILLION`,
 `GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION`, and
 `GREENPATH_LLM_CACHED_INPUT_PRICE_PER_MILLION`. Prices must use one currency per
@@ -120,7 +158,7 @@ live suite is not a jailbreak-resistance score.
 
 ## Local Verification
 
-`uv run --locked pytest tests/llm`: **196 passed**, including all **200** offline
+`uv run --locked pytest tests/llm`: **201 passed**, including all **200** offline
 evaluation cases and mock-only live evaluator accounting/authorization checks.
 Focused `tests/app/test_app.py` and `tests/app/test_client_and_formatting.py`:
 **40 passed**. These measurements are local tests, not real-provider results.

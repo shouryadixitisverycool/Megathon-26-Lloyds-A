@@ -12,32 +12,32 @@ Reasons:
 - Spearman(bin, error): n/a (need <= -0.6)
 - Error top 30% confidence: n/a; bottom 30%: n/a (need top <= 0.5 x bottom, bottom >= 0.02)
 
-Standardised coefficients: margin=+0.262, local_cal_error=+0.860, ood_score=+0.362, instability=-0.547, recency_days=+0.182, intercept=+2.393
+Standardised coefficients: margin=+0.148, local_cal_error=-0.284, ood_score=+0.032, instability=-1.143, recency_days=-0.193, intercept=+1.954
 
 ### Ablation
 
 | variant | held-out AUC | passed |
 |---|---|---|
-| full | 0.851 | False |
-| drop_margin | 0.857 | False |
-| drop_local_cal_error | 0.742 | False |
-| drop_ood_score | 0.890 | False |
-| drop_instability | 0.853 | False |
-| drop_recency_days | 0.840 | False |
+| full | 0.899 | False |
+| drop_margin | 0.895 | False |
+| drop_local_cal_error | 0.885 | False |
+| drop_ood_score | 0.899 | False |
+| drop_instability | 0.843 | False |
+| drop_recency_days | 0.899 | False |
 
 ### Stress scenarios
 
 | scenario | n | passed | Spearman | top30 err | bottom30 err |
 |---|---|---|---|---|---|
-| perturbed_generator | 2226 | True | -0.942 | 0.030 | 0.350 |
-| missing_data_30pct | 346 | True | -0.671 | 0.048 | 0.327 |
+| perturbed_generator | 2225 | True | -0.891 | 0.034 | 0.512 |
+| missing_data_30pct | 345 | True | -0.915 | 0.010 | 0.529 |
 
 ## GREEN_HOME
 
 **Decision: SUPPRESSED**  (n=95)
 
 Reasons:
-- Confidence suppressed: validation has 197 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.
+- Confidence suppressed: validation has 198 rows and 2 correctness classes; at least 200 rows and both correct and incorrect decisions are required.
 
 - Spearman(bin, error): n/a (need <= -0.6)
 - Error top 30% confidence: n/a; bottom 30%: n/a (need top <= 0.5 x bottom, bottom >= 0.02)
@@ -51,38 +51,38 @@ Reasons:
 
 | scenario | n | passed | Spearman | top30 err | bottom30 err |
 |---|---|---|---|---|---|
-| perturbed_generator | 1790 | False | n/a | n/a | n/a |
-| missing_data_30pct | 279 | False | n/a | n/a | n/a |
+| perturbed_generator | 1793 | False | n/a | n/a | n/a |
+| missing_data_30pct | 277 | False | n/a | n/a | n/a |
 
 ## SOLAR_FINANCE
 
-**Decision: SUPPRESSED**  (n=115)
+**Decision: SUPPRESSED**  (n=114)
 
 Reasons:
-- insufficient data: 115 rows < 200
+- insufficient data: 114 rows < 200
 
 - Spearman(bin, error): n/a (need <= -0.6)
 - Error top 30% confidence: n/a; bottom 30%: n/a (need top <= 0.5 x bottom, bottom >= 0.02)
 
-Standardised coefficients: margin=-0.017, local_cal_error=-1.493, ood_score=-0.108, instability=-0.359, recency_days=-0.290, intercept=+4.110
+Standardised coefficients: margin=+0.335, local_cal_error=-0.442, ood_score=-0.059, instability=-1.352, recency_days=+0.126, intercept=+2.638
 
 ### Ablation
 
 | variant | held-out AUC | passed |
 |---|---|---|
-| full | 0.869 | False |
-| drop_margin | 0.871 | False |
-| drop_local_cal_error | 0.921 | False |
-| drop_ood_score | 0.875 | False |
-| drop_instability | 0.858 | False |
-| drop_recency_days | 0.863 | False |
+| full | 0.864 | False |
+| drop_margin | 0.856 | False |
+| drop_local_cal_error | 0.865 | False |
+| drop_ood_score | 0.860 | False |
+| drop_instability | 0.784 | False |
+| drop_recency_days | 0.869 | False |
 
 ### Stress scenarios
 
 | scenario | n | passed | Spearman | top30 err | bottom30 err |
 |---|---|---|---|---|---|
-| perturbed_generator | 2398 | False | -0.511 | 0.004 | 0.306 |
-| missing_data_30pct | 354 | False | -0.567 | 0.009 | 0.283 |
+| perturbed_generator | 2394 | True | -0.976 | 0.013 | 0.538 |
+| missing_data_30pct | 354 | True | -0.791 | 0.028 | 0.264 |
 
 ## PAPERLESS_BANKING
 

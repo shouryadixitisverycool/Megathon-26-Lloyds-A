@@ -20,9 +20,9 @@
 <text x="580.0" y="397" text-anchor="middle" font-family="sans-serif" font-size="12">1.0</text>
 <text x="68" y="59.0" text-anchor="end" font-family="sans-serif" font-size="12">1.0</text>
 <polyline points="80.00,375.00 580.00,55.00" stroke="#9ca3af" stroke-dasharray="6 4" fill="none"/>
-<polyline points="108.13,353.36 147.57,326.52 206.05,215.00 267.45,375.00 313.96,375.00" stroke="#047857" stroke-width="2.5" fill="none"/>
+<polyline points="103.20,352.03 151.96,326.70 199.51,295.00 253.50,268.33 280.75,375.00 363.97,375.00 418.11,375.00" stroke="#047857" stroke-width="2.5" fill="none"/>
 <text x="80" y="446" fill="#047857" font-family="sans-serif" font-size="12">before</text>
-<polyline points="107.59,356.38 149.41,331.16 199.43,301.15 261.96,55.00 322.13,375.00 377.58,375.00" stroke="#1d4ed8" stroke-width="2.5" fill="none"/>
+<polyline points="108.31,352.71 147.91,331.36 204.49,237.86 299.07,375.00" stroke="#1d4ed8" stroke-width="2.5" fill="none"/>
 <text x="250" y="446" fill="#1d4ed8" font-family="sans-serif" font-size="12">after</text>
 <text x="330" y="424" text-anchor="middle" font-family="sans-serif" font-size="13">Mean predicted probability</text>
 <text transform="translate(22 215) rotate(-90)" text-anchor="middle" font-family="sans-serif" font-size="13">Observed adoption rate</text>

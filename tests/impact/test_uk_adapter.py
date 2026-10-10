@@ -10,7 +10,8 @@ from greenpath.contracts.fixtures import load_model
 from greenpath.contracts.impact import ImpactResult as ScoringImpactResult
 from greenpath.contracts.impact_detail import ImpactResult
 from greenpath.extensions import uk_impact
-from greenpath.impact.uk_adapter import UKImpactCalculator
+from greenpath.impact.uk_adapter import UKImpactCalculator as BaseUKImpactCalculator, INPUT_MODELS, UNITS
+from greenpath.pipelines.scenario_provider import ScenarioEvidence, UKImpactInput
 
 
 NOW = datetime(2026, 10, 10, tzinfo=timezone.utc)
@@ -18,6 +19,28 @@ NOW = datetime(2026, 10, 10, tzinfo=timezone.utc)
 
 def source():
     return load_model("customer_snapshot_C10001", CustomerSnapshot)
+
+
+def scenario_input(snapshot):
+    rows = tuple(ScenarioEvidence.model_construct(customer_id=snapshot.customer_id,
+        product=product, field=field, value=value, unit=UNITS.get(field),
+        assumption_id="test:" + field, source_id="explicit-test-engineering",
+        effective_on=snapshot.feature_cutoff, available_on=snapshot.feature_cutoff,
+        basis="REVIEWED_PVGIS" if field == "annual_generation_kwh" else "SYNTHETIC_SCENARIO",
+        description="Explicit test-only evidence")
+        for product, model in INPUT_MODELS.items()
+        for field, value in snapshot.features.items()
+        if field in model.model_fields or (product == Product.GREEN_HOME and field in uk_impact.HeatPumpInputs.model_fields))
+    return rows
+
+
+class UKImpactCalculator(BaseUKImpactCalculator):
+    """Translate legacy test fixture setup to the separate typed input port."""
+    def _prepare(self, payload):
+        if isinstance(payload, CustomerSnapshot):
+            payload = UKImpactInput(snapshot=payload,
+                scenario=tuple(row for row in scenario_input(payload) if row.product == self.product))
+        return super()._prepare(payload)
 
 
 def ev_source():
@@ -46,7 +69,7 @@ def test_ev_co2e_contract_matches_reviewed_formula_and_preserves_provenance():
     assert result.data_cutoff == snapshot.feature_cutoff
     assert result.calculation_timestamp == NOW
     assert len(result.factor_ids) == 6
-    assert all(a.source.startswith(f"customer360:{snapshot.feature_version}:{snapshot.feature_cutoff}:")
+    assert all(a.source.startswith(("customer360:", "explicit-test-engineering:"))
                for a in result.assumptions)
     assert ScoringImpactResult.model_validate_json(result.model_dump_json()) == result
 

@@ -32,6 +32,10 @@ try:
     if health.get("status") != "ok" or health.get("synthetic_demo") is not True:
         raise APIError("This app requires a healthy synthetic-demo API.")
     st.sidebar.caption("Contract: " + health["contract_version"])
+    if health.get("provider_mode"):
+        st.sidebar.caption("Data source: " + health["provider_mode"])
+    if health.get("source_version"):
+        st.sidebar.caption("Source version: " + health["source_version"])
 
     def load(path, params=None):
         return load_json(client.base_url, path, tuple(sorted((params or {}).items())))

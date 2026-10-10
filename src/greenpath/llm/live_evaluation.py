@@ -4,7 +4,6 @@ import argparse
 import json
 import math
 import os
-import re
 import time
 from pathlib import Path
 
@@ -12,7 +11,7 @@ from greenpath.contracts.product import RecommendationState
 from greenpath.impact import Product
 
 from .evaluation import case_categories, confidence_recommendation, synthetic_recommendation
-from .http_provider import HTTPExplanationProvider
+from .http_provider import configured_provider
 from .service import ExplanationService
 
 
@@ -127,10 +126,9 @@ def main():
     if not 100 <= args.cases <= 200:
         parser.error("Live evaluation requires 100-200 cases")
     config = json.loads(args.manifest.read_text(encoding="utf-8"))
-    key = os.environ.get(config["api_key_environment"])
+    key = os.environ.get("OPENAI_API_KEY") or os.environ.get("GREENPATH_LLM_API_KEY")
     if not key:
         parser.error("No configured API key; no provider was called")
-    prices = {}
     for kind in ("INPUT", "OUTPUT", "CACHED_INPUT"):
         raw = os.environ.get(f"GREENPATH_LLM_{kind}_PRICE_PER_MILLION")
         if not raw:
@@ -141,14 +139,14 @@ def main():
             parser.error("Prices must be numeric")
         if not math.isfinite(value) or value < 0:
             parser.error("Prices must be finite and non-negative")
-        prices[f"{kind.lower()}_price_per_million"] = value
-    if config["model"] != config["model_version"] or not re.fullmatch(r"[a-zA-Z0-9._-]+-\d{4}-\d{2}-\d{2}", config["model"]):
-        parser.error("Manifest must pin an exact dated model snapshot as model and model_version")
-    provider = HTTPExplanationProvider(**{name: config[name] for name in (
-        "endpoint", "model", "model_version", "prompt_version", "temperature", "max_output_tokens",
-    )}, api_key=key, **prices)
-    report = run_live_evaluation(provider, count=args.cases, timeout_seconds=config["timeout_seconds"])
-    report["selection_manifest"] = {name: value for name, value in config.items() if name != "api_key_environment"}
+    provider = configured_provider(config)
+    report = run_live_evaluation(provider, count=args.cases, timeout_seconds=provider.timeout_seconds)
+    report["selection_manifest"] = config
+    report["effective_configuration"] = {name: getattr(provider, name) for name in (
+        "endpoint", "model", "prompt_version", "temperature", "max_output_tokens",
+        "token_limit_parameter", "timeout_seconds",
+    )}
+    report["effective_configuration"]["model_version"] = provider.version
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     return 0 if report["complete"] else 1
