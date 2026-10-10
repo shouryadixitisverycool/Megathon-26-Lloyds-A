@@ -57,6 +57,8 @@ class MemoryStore:
                 yield
             # Entries are known durable only after the outer transaction commits.
             self._recommendations.update(pending)
+            while len(self._recommendations) > 256:
+                self._recommendations.pop(next(iter(self._recommendations)))
         finally:
             self._local.connection = None
             self._local.recommendations = None
@@ -134,6 +136,9 @@ class MemoryStore:
             result = recommendation.__class__.model_validate_json(stored[0])
         target = pending if pending is not None else self._recommendations
         target[payload["decision_id"]] = (evidence, result)
+        # Provenance can include large source snapshots; do not retain the full cohort.
+        if len(target) > 256:
+            target.pop(next(iter(target)))
         return result.model_copy(deep=True)
 
     def get_recommendation(self, decision_id):

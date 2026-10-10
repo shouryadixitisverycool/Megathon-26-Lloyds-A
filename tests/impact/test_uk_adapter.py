@@ -112,6 +112,16 @@ def test_factor_checksum_failure_has_no_numbers_or_factors(tmp_path, monkeypatch
     assert calculator.calculate_scoring(ev_source()).status == ImpactStatus.UNAVAILABLE
 
 
+def test_missing_2026_catalogue_does_not_fall_back_to_2025(tmp_path, monkeypatch):
+    monkeypatch.setattr(uk_impact, "FACTOR_PATH", tmp_path / "missing_2026.json")
+    calculator = UKImpactCalculator(Product.EV_FINANCE)
+    result = calculator.calculate(ev_source())
+    assert result.status == ImpactStatus.UNAVAILABLE
+    assert result.value is None and not result.factors
+    assert result.issues[0].code == "FACTOR_NOT_ESTABLISHED"
+    assert calculator.calculate_scoring(ev_source()).status == ImpactStatus.UNAVAILABLE
+
+
 def test_future_vehicle_record_is_rejected():
     snapshot = ev_source()
     snapshot = snapshot.model_copy(update={"vehicle": snapshot.vehicle.model_copy(update={

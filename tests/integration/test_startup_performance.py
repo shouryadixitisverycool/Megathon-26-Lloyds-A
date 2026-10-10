@@ -17,6 +17,7 @@ from fastapi.testclient import TestClient
 from greenpath import config
 from greenpath.api.main import create_app
 from greenpath.demo.providers import DemoRepository
+from greenpath.demo import run
 from greenpath.extensions.store import MemoryStore
 from greenpath.recommendation.service import RecommendationService
 
@@ -65,6 +66,35 @@ def test_cache_entries_publish_only_after_commit(tmp_path):
     with store.transaction():
         store.save_recommendation(original)
     assert MemoryStore(store.path).get_recommendation(original.decision_id)
+
+
+def test_launcher_default_explicitly_allows_full_trained_warmup(monkeypatch):
+    assert run._wait_for_api.__defaults__ == (300,)
+    monkeypatch.setattr(run, "_require_free_port", lambda port: None)
+    processes = []
+
+    class Process:
+        def __init__(self, *args, **kwargs):
+            self.stopped = False
+            processes.append(self)
+
+        def poll(self):
+            return 0 if self.stopped else None
+
+        def terminate(self):
+            self.stopped = True
+
+        def wait(self, **kwargs):
+            return 0
+
+    def wait(process, base_url, timeout):
+        assert timeout == 300
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(run.subprocess, "Popen", Process)
+    monkeypatch.setattr(run, "_wait_for_api", wait)
+    assert run.main([]) == 0
+    assert len(processes) == 1 and processes[0].stopped
 
 
 def test_trained_warmup_persists_cohort_in_one_transaction(tmp_path, monkeypatch):
