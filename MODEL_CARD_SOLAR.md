@@ -18,7 +18,7 @@ Population: customers not already holding the product at the cutoff. Heuristic b
 
 ## Evaluation
 
-Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `solar_finance_logreg_v1`; calibration **platt** `solar_finance_logreg_platt_v2_f629e13f268d1f5d` fitted on validation only.
+Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `solar_finance_logreg_v1`; calibration **platt** `solar_finance_logreg_platt_v2_cebcd49fd52a6c5f` fitted on validation only.
 Train 1783 (103 positive), validation 249 (17), held-out test 354 (24).
 
 **Held-out test metrics** (calibrated probabilities; confusion metrics at each model's validation-chosen F1 threshold):

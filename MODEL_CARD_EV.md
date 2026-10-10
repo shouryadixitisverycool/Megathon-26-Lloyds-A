@@ -18,7 +18,7 @@ Population: customers not already holding the product at the cutoff. Heuristic b
 
 ## Evaluation
 
-Selected model (by validation ROC-AUC, Brier tie-break): **GRADIENT_BOOSTING** `ev_finance_gbm_v1`; calibration **platt** `ev_finance_gbm_platt_v2_6c65431d4157428a` fitted on validation only.
+Selected model (by validation ROC-AUC, Brier tie-break): **GRADIENT_BOOSTING** `ev_finance_gbm_v1`; calibration **platt** `ev_finance_gbm_platt_v2_e5f58c62d216b11e` fitted on validation only.
 Train 1714 (104 positive), validation 230 (16), held-out test 345 (28).
 
 **Held-out test metrics** (calibrated probabilities; confusion metrics at each model's validation-chosen F1 threshold):

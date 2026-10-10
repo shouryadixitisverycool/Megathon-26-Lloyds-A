@@ -18,7 +18,7 @@ Population: customers not already holding the product at the cutoff. Heuristic b
 
 ## Evaluation
 
-Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `green_home_logreg_v1`; calibration **platt** `green_home_logreg_platt_v2_499192a15c57436c` fitted on validation only.
+Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `green_home_logreg_v1`; calibration **platt** `green_home_logreg_platt_v2_bd70c12346380a73` fitted on validation only.
 Train 1422 (113 positive), validation 198 (17), held-out test 277 (26).
 
 **Held-out test metrics** (calibrated probabilities; confusion metrics at each model's validation-chosen F1 threshold):

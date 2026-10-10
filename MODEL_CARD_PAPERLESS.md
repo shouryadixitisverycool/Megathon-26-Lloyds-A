@@ -18,7 +18,7 @@ Population: customers not already holding the product at the cutoff. Heuristic b
 
 ## Evaluation
 
-Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `paperless_banking_logreg_v1`; calibration **platt** `paperless_banking_logreg_platt_v2_0096b0e8b327dad0` fitted on validation only.
+Selected model (by validation ROC-AUC, Brier tie-break): **LOGISTIC** `paperless_banking_logreg_v1`; calibration **platt** `paperless_banking_logreg_platt_v2_363bf79ca87b3290` fitted on validation only.
 Train 530 (67 positive), validation 60 (10), held-out test 105 (20).
 
 **Held-out test metrics** (calibrated probabilities; confusion metrics at each model's validation-chosen F1 threshold):
