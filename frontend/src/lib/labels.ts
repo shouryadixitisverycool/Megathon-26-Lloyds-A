@@ -1,4 +1,4 @@
-import type { Channel, DecisionState, Product, TrustStatus } from "../api/types";
+import type { Channel, DecisionState, GreenPurpose, OptionalProduct, Product, TrustStatus } from "../api/types";
 
 export const PRODUCT_ORDER: Product[] = ["EV_FINANCE", "GREEN_HOME", "SOLAR_FINANCE", "PAPERLESS_BANKING"];
 
@@ -211,3 +211,80 @@ export const FUNNEL: { key: string; label: string }[] = [
 ];
 
 export const QUALITY_ORDER: TrustStatus[] = ["TRUSTED", "LIMITED", "CONFLICT", "OOD"];
+
+/** Customer wording for the same reason codes (customer_wording in reason_codes.py). */
+export const CUSTOMER_REASONS: Record<string, string> = {
+  ICE_VEHICLE_OWNER: "You drive a petrol or diesel car.",
+  HIGH_FUEL_SPEND: "Your monthly fuel spend is higher than most customers'.",
+  HIGH_ANNUAL_MILEAGE: "You drive more miles each year than most customers.",
+  OLDER_VEHICLE: "Your car is older than most.",
+  EXISTING_VEHICLE_FINANCE: "You already finance your car, so you are used to spreading the cost.",
+  HOMEOWNER: "You own your home.",
+  MORTGAGE_CUSTOMER: "You have a mortgage with us.",
+  NO_EXISTING_SOLAR: "We have no record of solar panels at your home.",
+  HIGH_ELECTRICITY_USE: "Your estimated annual electricity use is higher than most customers'.",
+  HIGH_GAS_USE: "Your estimated annual gas use is higher than most customers'.",
+  RECENT_HOME_IMPROVEMENT_SPEND: "You have recently spent money on improving your home.",
+  UTILITY_SPEND_RISING: "Your utility bills have been rising recently.",
+  PAPER_STATEMENTS_ACTIVE: "You are still receiving paper statements.",
+  HIGH_DIGITAL_ENGAGEMENT: "You use our app more often than most customers.",
+  STATED_SUSTAINABILITY_PREFERENCE: "You told us that sustainability matters to you.",
+};
+
+/** Customer-facing call to action per product. Targets are placeholders until built (UI_FEATURE_BACKLOG.md). */
+export const PRODUCT_CTAS: Record<Product, { label: string; backlog: string }> = {
+  EV_FINANCE: { label: "Explore EV options", backlog: "EV options explorer" },
+  GREEN_HOME: { label: "Explore home upgrades", backlog: "Home upgrade explorer" },
+  SOLAR_FINANCE: { label: "Explore solar for your home", backlog: "Solar explorer" },
+  PAPERLESS_BANKING: { label: "Go paperless", backlog: "Paperless switch" },
+};
+
+export const OPTIONAL_PRODUCTS: Record<OptionalProduct, { name: string; blurb: string; cta: string; guardrail: string }> = {
+  GREEN_INVESTMENTS: {
+    name: "Green Investments",
+    blurb: "Sustainable funds and investment options for customers who already invest.",
+    cta: "Explore green investments",
+    guardrail: "Not investment advice. It does not assess financial suitability or eligibility.",
+  },
+  GREEN_LOANS: {
+    name: "Green Loans",
+    blurb: "Lending for a declared green purpose, such as insulation, a heat pump or EV charging.",
+    cta: "Start a green loan enquiry",
+    guardrail: "Opportunity signal only. No credit approval or eligibility check.",
+  },
+};
+
+export const OPTIONAL_STATUS: Record<string, { label: string; tone: Tone; help: string }> = {
+  OPPORTUNITY_SIGNAL: { label: "Opportunity signal", tone: "supported", help: "The experimental model's likelihood meets its cut-off." },
+  LOW_RELEVANCE: { label: "Low relevance", tone: "neutral", help: "The experimental model's likelihood is below its cut-off." },
+  NOT_RELEVANT: { label: "Not relevant", tone: "muted", help: "A precondition isn't met, such as existing investments or borrowing." },
+  INSUFFICIENT_INFORMATION: { label: "More information needed", tone: "info", help: "Evidence is missing or conflicting, so nothing is scored." },
+  NOT_AVAILABLE: { label: "Not available", tone: "muted", help: "The experimental models aren't loaded for this customer." },
+};
+
+export const OPTIONAL_REASONS: Record<string, string> = {
+  EXISTING_INVESTMENT_ACTIVITY: "Already holds investments.",
+  STATED_SUSTAINABILITY_PREFERENCE: "Said sustainability matters to them.",
+  HIGH_DIGITAL_ENGAGEMENT: "Uses the app more than most customers.",
+  NO_EXISTING_INVESTMENT_ACTIVITY: "No existing investment activity on record.",
+  INVESTMENT_HOLDING_OR_PREFERENCE_UNKNOWN: "Investment holdings or sustainability preference are unknown.",
+  EXISTING_BORROWING_RELATIONSHIP: "Already borrows with us (mortgage or vehicle finance).",
+  EXISTING_BORROWING_NOT_CONFIRMED: "No existing borrowing relationship is confirmed.",
+  DOCUMENTED_GREEN_PURPOSE_REQUIRED: "Choose a declared green purpose to score a green loan.",
+  DECLARED_GREEN_PURPOSE_INSULATION: "Declared purpose: insulation.",
+  DECLARED_GREEN_PURPOSE_HEAT_PUMP: "Declared purpose: heat pump.",
+  DECLARED_GREEN_PURPOSE_EV_CHARGING: "Declared purpose: EV charging.",
+  RECENT_HOME_IMPROVEMENT_ACTIVITY: "Recent home-improvement spending is above typical levels.",
+  HIGH_HEATING_ENERGY_USE: "Heating energy use is above typical levels.",
+  TRUSTED_RECORD_CONFLICT: "Customer records conflict, so nothing is scored until they're reviewed.",
+  TRAINED_SOURCE_REQUIRED: "Needs a trained Customer 360 record.",
+  INVALID_PRODUCT_RECORDS: "Product records failed validation.",
+  OPTIONAL_MODEL_CUTOFF_MISMATCH: "The experimental model was trained for a different data date.",
+};
+
+export const GREEN_PURPOSES: { value: GreenPurpose | ""; label: string }[] = [
+  { value: "", label: "No purpose declared" },
+  { value: "INSULATION", label: "Insulation" },
+  { value: "HEAT_PUMP", label: "Heat pump" },
+  { value: "EV_CHARGING", label: "EV charging" },
+];

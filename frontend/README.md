@@ -51,6 +51,8 @@ If you host the build behind your own reverse proxy, set `VITE_API_BASE` at buil
 
 Also added (all on demand): the trained-model SHAP attribution (`/customers/{id}/shap/{product}`), explanation-service counters (`/explanations/metrics`), the full stored audit record for each decision, and audit lookup from Governance.
 
+Also added: experimental **Green Investments / Green Loans** cards on the customer page (`/customers/{id}/optional-opportunities`), a **customer view** preview at `/customers/{id}/hub`, and a **demo readiness** check in Governance. Placeholders for features without a backend yet (Explore EV options, green loan enquiry and others) are listed in [UI_FEATURE_BACKLOG.md](../UI_FEATURE_BACKLOG.md).
+
 Still API-only (not in Streamlit either): factual source updates and campaign closure. Both need the local admin token, which should stay server-side, so they need a backend route or session design before a browser can use them.
 
 ## Design notes

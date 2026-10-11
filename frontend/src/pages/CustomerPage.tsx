@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { CalendarDays, ChevronRight, CornerDownRight, MapPin, Users } from "lucide-react";
+import { CalendarDays, ChevronRight, CornerDownRight, Eye, MapPin, Users } from "lucide-react";
 import { useCustomer, useCustomerIndex, useNextActions } from "../api/hooks";
 import type { Channel, CustomerSnapshot, DecisionState, Product, Recommendation } from "../api/types";
 import { Drawer } from "../components/Drawer";
@@ -16,6 +16,8 @@ import {
 } from "../lib/labels";
 import { trustTone } from "./CustomersPage";
 import { ProductDetail, ProductDetailHeader, type DetailTab } from "./product/ProductDetail";
+import { OptionalOpportunities } from "./OptionalOpportunities";
+import { PlaceholderButton } from "../components/Placeholder";
 
 const GROUP: Record<DecisionState, number> = {
   RECOMMEND: 0, CONFLICT_REQUIRES_REVIEW: 1, INSUFFICIENT_INFORMATION: 1,
@@ -152,6 +154,8 @@ export function CustomerPage() {
         </>
       )}
 
+      {snapshot && <OptionalOpportunities customerId={customerId} />}
+
       {snapshot && <CustomerData snapshot={snapshot} />}
 
       <Drawer open={!!selected} onClose={close} label={selected ? `${productName(selected.product)} details` : "Details"}
@@ -192,6 +196,9 @@ function CustomerHeader({ snapshot }: { snapshot: CustomerSnapshot }) {
             <Info>Data trust describes how complete, current and consistent this customer's evidence is. It is separate from model confidence.</Info>
           </span>
         </div>
+        <Link to={`/customers/${encodeURIComponent(snapshot.customer_id)}/hub`} className="btn btn-sm" style={{ marginTop: 12 }}>
+          <Eye size={14} aria-hidden="true" /> Preview customer view
+        </Link>
       </div>
       <form className="field" style={{ minWidth: 220 }} onSubmit={(event) => {
         event.preventDefault();
@@ -305,6 +312,14 @@ function CustomerData({ snapshot }: { snapshot: CustomerSnapshot }) {
               ]} />
           </Disclosure>
         )}
+        <Disclosure title="Record a factual update" hint="Coming soon">
+          <p className="small muted">
+            Correct a fact on file (for example, the customer has gone paperless or bought an EV) and re-run the decisions without
+            rewriting past ones. The API route exists (<code>POST /customers/{"{id}"}/source-updates</code>) but needs the admin
+            token, so it waits for a server-side session design.
+          </p>
+          <div style={{ marginTop: 10 }}><PlaceholderButton feature="Factual source updates" small>Record an update</PlaceholderButton></div>
+        </Disclosure>
         <Disclosure title="Raw customer snapshot" hint="Exactly as returned by the API">
           <JsonView value={{ ...snapshot, source_snapshot: source ? "(shown under Source record)" : null }} />
         </Disclosure>

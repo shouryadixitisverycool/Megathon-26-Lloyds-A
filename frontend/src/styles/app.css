@@ -329,6 +329,7 @@ input[type="range"] { width: 100%; accent-color: var(--leaf); }
 .toast { display: flex; gap: var(--space-3); align-items: flex-start; padding: var(--space-3) var(--space-4); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-pop); font-size: var(--t-sm); animation: fade 160ms ease; }
 .toast[data-kind="success"] svg.lead { color: var(--tone-supported-mark); }
 .toast[data-kind="error"] svg.lead { color: var(--error-ink); }
+.toast[data-kind="info"] svg.lead { color: var(--ink-3); }
 .toast > div { flex: 1; display: grid; gap: 2px; min-width: 0; }
 .toast small { color: var(--ink-3); overflow-wrap: anywhere; }
 
@@ -495,3 +496,36 @@ input[type="range"] { width: 100%; accent-color: var(--leaf); }
 .shap-bar span { position: absolute; top: 0; height: 100%; }
 .shap-bar span.pos { left: 50%; background: var(--p-ev); border-radius: 0 4px 4px 0; }
 .shap-bar span.neg { right: 50%; background: var(--p-solar); border-radius: 4px 0 0 4px; }
+
+/* ------------------------------------------------------------------ placeholders */
+
+.placeholder-badge { gap: 4px; }
+.placeholder-panel { border-style: dashed; background: var(--surface-sunk); }
+
+/* ------------------------------------------------------------------ optional opportunities */
+
+.optional-card { display: grid; align-content: start; }
+.optional-card[data-tone="supported"] { border-color: var(--tone-supported-mark); }
+
+/* ------------------------------------------------------------------ customer green hub */
+
+.hub-preview {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4); margin-bottom: var(--space-5);
+  border: 1px dashed var(--line-strong); border-radius: var(--radius-md);
+  background: var(--surface-sunk); color: var(--ink-2); font-size: var(--t-sm);
+}
+.hub-preview .btn { margin-left: auto; }
+.hub-head { margin-bottom: var(--space-5); }
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--space-4); }
+.hub-card {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-5); background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
+}
+.hub-card-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.hub-card-top .swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.hub-card-title { font-family: var(--font-display); font-size: var(--t-lg); font-stretch: 90%; font-weight: 650; margin-right: auto; }
+.hub-impact { display: grid; gap: 2px; padding: var(--space-3); border-radius: var(--radius-md); background: var(--tone-supported-wash); }
+.hub-impact b { font-size: var(--t-lg); }
+.hub-why { display: grid; gap: var(--space-2); padding-top: var(--space-3); border-top: 1px solid var(--line); }
