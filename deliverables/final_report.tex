@@ -1,0 +1,95 @@
+% Build from repository root:
+% pdflatex -interaction=nonstopmode -halt-on-error -output-directory=/tmp/opencode deliverables/final_report.tex
+% The layout follows deliverables/M1.pdf: Computer Modern, black type, 25 mm margins.
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=25mm,top=22mm,bottom=24mm,headheight=12pt,headsep=16pt]{geometry}
+\usepackage{fancyhdr,booktabs,titlesec,microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Greenr: Final report for Lloyds PS1},pdfauthor={Team 24}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Team 24}
+\fancyhead[R]{\small Megathon X\quad Final}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{10pt}{}
+\titlespacing*{\section}{0pt}{16pt}{6pt}
+\newcommand{\coe}{CO\textsubscript{2}e}
+\raggedbottom
+\begin{document}
+
+{\LARGE\bfseries Greenr}\par
+\vspace{2pt}
+{\large Final report for Lloyds PS1: Green Customer Insights Platform}\par
+\vspace{8pt}\hrule
+
+\section{Solution}
+Greenr uses customer banking data to identify relevant green products, estimate their potential sustainability impact and explain the recommendation. It covers the four opportunities in the brief: EV Finance, Green Home, Solar Finance and Paperless Banking.
+
+The customer view, relationship-manager workspace and portfolio dashboard use the same versioned decision. Each decision contains a propensity score, checks on the quality of the evidence, a recommendation state, reasons and an impact estimate where the inputs support one. Missing or conflicting information leads to an explicit refusal to recommend, rather than a guessed score or saving. A recommendation is not a credit approval or an eligibility assessment.
+
+\section{Approach}
+\textbf{Data.} The latest seeded run creates 10,000 UK customers plus ten demonstration personas, with 2.20 million transactions, products, vehicle ownership, household energy and digital usage. Public domestic-energy statistics anchor the energy assumptions. No real customer data is used. Features include only records available by 30 June 2026; labels describe adoption in the following 90 days. Incomplete follow-up is treated as unknown, not as non-adoption.
+
+\textbf{Features and models.} Merchant rules categorise transactions first, with a TF--IDF and logistic-regression fallback. For each product, we compare a heuristic, logistic regression and XGBoost. Customers are split into training, validation and test sets, so their transactions cannot appear on both sides of an evaluation. Model selection, calibration and thresholds use validation data only. Age, income and location are excluded from the default propensity features and retained for auditing.
+
+\textbf{Trust and confidence.} Trust checks whether the inputs are complete, recent, consistent and similar to the training population. Confidence is separate: it is shown only when an independent held-out cohort supports its reliability. Deterministic rules produce six states: recommend, do not recommend, insufficient information, conflict requires review, not applicable and suppressed. Existing adoption and contact restrictions cannot be overridden by a high propensity score.
+
+\textbf{Impact.} What-if calculations compare baseline and scenario activity in annual kilograms of \coe, using pinned DESNZ 2025 operational well-to-wheel factors. EV estimates need mileage and fuel or charging assumptions; home estimates need energy and intervention inputs; solar needs supported generation and self-consumption inputs. Every estimate retains its sources, units and assumptions. Missing inputs mean unavailable impact. Paperless banking has no carbon-saving claim, and manufacturing emissions are outside the boundary.
+
+\textbf{Explanations.} The optional language model can only arrange approved sentences drawn from the decision. A validator checks the state, numbers, units and disclosures; invalid output falls back to a template. Raw merchant text is never sent to the model. It does not predict adoption, calculate emissions or decide eligibility. The service works without language-model credentials.
+
+\newpage
+\section{Features delivered}
+\textbf{Relationship-manager workspace.} A searchable customer directory opens a briefing with the four product opportunities. Staff can inspect each recommendation's reasons, evidence dates, Trust issues and impact assumptions, then explore a what-if scenario or record a review. Contact permissions and the next permitted action are shown separately from the product score. Audit details retain the model and rule versions behind a decision.
+
+\textbf{Customer Green Hub.} The customer-facing view presents supported opportunities in plain language, with a visible data cutoff and potential impact labelled as an estimate. Customers can explore EV, solar and green-home options without seeing internal model diagnostics. The hub reads the same API decisions as the staff workspace; it does not independently recalculate scores or emissions.
+
+\textbf{Partner exploration.} An editable catalogue provides illustrative EV, solar and home-improvement options. Staff can choose which options to promote, and customers can preview a handoff. These are demonstration concepts, not confirmed partnerships or live Lloyds offers. The preview sends no application, lead or customer information. Referral fees and finance or leasing income are a proposed commercial route, not realised revenue.
+
+\textbf{Portfolio and campaign planning.} Business users filter opportunities by product, region, segment and evidence quality, inspect funnels and trends, and open individual customer records. Impact totals are grouped only where units, methods and periods are comparable; there is no combined cross-product carbon headline. Campaign planning simulates contact selection with consent, cooling-off and capacity controls. It sends no messages, and does not invent a composite priority when confidence or comparable impact is unavailable.
+
+\textbf{Memory and review.} SQLite stores served decisions, explanations, preferences, responses, reviews and contact history. Feedback changes outreach behaviour, not model probabilities or physical estimates. Separately authorised source updates can change customer facts and rerun inference. Earlier decisions remain available, so a reviewer can see what the system knew at the time rather than only the latest state.
+
+\textbf{Governance and promotional copy.} Governance views expose model comparisons, confidence release, robustness, fairness diagnostics and audit records. A separate copy service drafts push, banner, card and email previews using fixed calls to action and disclosures. Its validator rejects unsupported financial, eligibility and environmental claims. This is a controlled drafting tool, not automated campaign delivery.
+
+\textbf{Interfaces and demonstration.} React and Streamlit share a FastAPI backend and versioned contracts. Six fixture personas cover a supported opportunity, low propensity, missing evidence, conflicting records, an already-adopted product and suppressed contact. Trained mode serves saved model artifacts and point-in-time snapshots; missing or corrupt artifacts fail visibly instead of silently switching to demonstration scores.
+
+\section{What changed since mid-submission}
+The final prototype adds the React workspace, Customer Green Hub, editable partner exploration and controlled promotional-copy previews. The core decision, impact and explanation boundaries remain shared across these views. The result is a working journey from customer evidence to a reviewed recommendation, rather than a model score presented on its own.
+
+\newpage
+\section{Results}
+The latest evaluation uses 10,000 synthetic customers plus ten demonstration personas, with data seed 42 and split seed 43. Model and confidence results match the saved run manifest. They are prototype evidence, not measurements of real bank customers. All four selected models are logistic regression, chosen on validation data. Test cohorts exclude personas and customers who already hold the relevant product.
+
+\begin{center}
+\setlength{\tabcolsep}{9pt}
+\begin{tabular}{lrrrr}
+\toprule
+Product & Test customers & ROC-AUC & Heuristic AUC & PR-AUC \\
+\midrule
+EV Finance & 862 & 0.656 & 0.626 & 0.160 \\
+Green Home & 739 & 0.693 & 0.692 & 0.169 \\
+Solar Finance & 917 & 0.783 & 0.714 & 0.149 \\
+Paperless Banking & 262 & 0.578 & 0.526 & 0.209 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Product ranking.} ROC-AUC measures how well a model ranks adopters above non-adopters; PR-AUC focuses on the relatively small adoption class. EV and Solar improve over their heuristics, while Green Home is almost tied. Top-decile lift is 1.887 for EV, 2.151 for Green Home, 2.990 for Solar and 1.565 for Paperless. Paperless remains the weakest overall ranking model. These relationships are synthetic, and we do not reselect models after looking at test labels.
+
+\textbf{Confidence release.} EV, Green Home and Solar pass on independent release cohorts of 884, 724 and 931 customers, respectively. Confidence can be shown for their eligible decisions. Paperless remains suppressed: on 290 release customers, its most confident 30\% have a 40.2\% error rate, more than half the least confident group's 78.2\%. The gate validates error separation, not superiority over a propensity-derived correctness baseline. Test labels do not determine release.
+
+\textbf{Merchant generalisation.} On a 300,000-transaction sample, including 83,863 transactions from unseen merchants, the hybrid categoriser achieves macro F1 of 0.528 versus 0.453 for the raw-text baseline. Known-merchant F1 is 0.999. The gap is substantial: rules cover only 14.3\% of unseen transactions, and unseen home-improvement F1 is zero. Merchant generalisation is a priority for further work.
+
+\textbf{Decision and explanation checks.} Separate saved checks pass all 24 customer--product fixture scenarios. The offline explanation suite passes 200 fixed cases with exact numeric consistency and no unsupported claims in final output. Adversarial responses trigger template fallback in 63\% of cases; this is not a measured live-traffic rate. The promotional-copy validator passes 122 cases and accepts none of the 81 unsafe drafts. These checks establish behaviour on saved cases, not live-provider quality or accuracy on the 10,000-customer cohort.
+
+\section{Limits and next steps}
+Greenr is an end-to-end prototype on synthetic data. It demonstrates shared decisions, inspectable evidence, bounded explanations and the ability to decline a recommendation. It does not establish real-world adoption accuracy, realised carbon savings or production readiness.
+
+Before deployment, the models need validation on appropriately governed real outcomes, stronger unseen-merchant classification and production release checks. Production identity and access controls, real-bank ingestion, actual partner agreements and message delivery remain outside the demonstration. Impact estimates use frozen 2025 factors and exclude lifecycle emissions; they are potential scenario changes, not offsets or realised savings. Live language-model quality and production latency remain unmeasured.
+
+\end{document}
