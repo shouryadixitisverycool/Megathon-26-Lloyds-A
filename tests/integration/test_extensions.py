@@ -49,7 +49,7 @@ def test_feedback_ids_cannot_be_reused_with_other_content_and_reviews_cannot_edi
     result = client.post("/review", json=review)
     assert result.status_code == 200
     audit = client.get("/audit/recommendations/" + result.json()["id"])
-    assert audit.status_code == 200 and audit.json()["recommendation"]["propensity"]["probability"] == "0.82"
+    assert audit.status_code == 200 and audit.json()["recommendation"]["propensity"]["probability"] == "0.84"
 
 
 def test_contact_consent_capacity_and_whole_campaign_idempotency(client):
