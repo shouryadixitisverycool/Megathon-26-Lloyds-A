@@ -5,9 +5,9 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from greenpath.partners import PartnerCatalogue, get_promoted_catalogue, load_catalogue
+from greenr.partners import PartnerCatalogue, get_promoted_catalogue, load_catalogue
 
-CATALOGUE_PATH = Path("src/greenpath/partners/catalogue.json")
+CATALOGUE_PATH = Path("src/greenr/partners/catalogue.json")
 EXPECTED_CATEGORIES = {"EV_FINANCE", "SOLAR_FINANCE", "GREEN_HOME"}
 TOP_LEVEL_FIELDS = {
     "version",
@@ -92,7 +92,7 @@ def test_explicit_path_precedes_environment_override(tmp_path, monkeypatch):
     payload["products"] = payload["products"][:1]
     env_path = tmp_path / "environment.json"
     env_path.write_text(json.dumps(payload), encoding="utf-8")
-    monkeypatch.setenv("GREENPATH_PARTNER_CATALOGUE", str(env_path))
+    monkeypatch.setenv("GREENR_PARTNER_CATALOGUE", str(env_path))
 
     assert len(load_catalogue().products) == 1
     assert len(load_catalogue(CATALOGUE_PATH).products) == 3

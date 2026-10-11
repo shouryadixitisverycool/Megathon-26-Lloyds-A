@@ -6,9 +6,9 @@ from urllib.parse import urlparse
 import httpx
 from streamlit.testing.v1 import AppTest
 
-from greenpath.extensions.optional_models import unavailable
+from greenr.extensions.optional_models import unavailable
 
-APP = Path(__file__).resolve().parents[2] / "src/greenpath/app/main.py"
+APP = Path(__file__).resolve().parents[2] / "src/greenr/app/main.py"
 
 
 def test_optional_cards_and_purpose_request(api_fixture, monkeypatch):

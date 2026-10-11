@@ -2,10 +2,10 @@
 
 import pytest
 
-from greenpath.contracts.product import RecommendationState
-from greenpath.impact import Product
-from greenpath.llm import ExplanationService
-from greenpath.llm.evaluation import (
+from greenr.contracts.product import RecommendationState
+from greenr.impact import Product
+from greenr.llm import ExplanationService
+from greenr.llm.evaluation import (
     INJECTION_MARKER, MALICIOUS_FIELDS, FixedProvider, evaluation_cases,
     run_evaluation, synthetic_recommendation,
 )

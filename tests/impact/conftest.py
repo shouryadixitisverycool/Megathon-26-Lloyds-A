@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from greenpath.impact import Product, build_registry
+from greenr.impact import Product, build_registry
 
 NOW = datetime(2026, 10, 10, 12, 0, tzinfo=timezone.utc)
 CASES = {

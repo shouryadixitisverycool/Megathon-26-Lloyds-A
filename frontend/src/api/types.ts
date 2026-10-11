@@ -1,4 +1,4 @@
-// Shapes returned by the GreenPath FastAPI service. Decimals arrive as JSON strings.
+// Shapes returned by the Greenr FastAPI service. Decimals arrive as JSON strings.
 
 export type Product = "EV_FINANCE" | "GREEN_HOME" | "SOLAR_FINANCE" | "PAPERLESS_BANKING";
 export type DecisionState =

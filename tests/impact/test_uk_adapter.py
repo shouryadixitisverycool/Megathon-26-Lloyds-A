@@ -4,14 +4,14 @@ from datetime import date, datetime, timezone
 
 import pytest
 
-from greenpath.contracts.customer import CustomerSnapshot
-from greenpath.contracts.enums import ImpactStatus, Product
-from greenpath.contracts.fixtures import load_model
-from greenpath.contracts.impact import ImpactResult as ScoringImpactResult
-from greenpath.contracts.impact_detail import ImpactResult
-from greenpath.extensions import uk_impact
-from greenpath.impact.uk_adapter import UKImpactCalculator as BaseUKImpactCalculator, INPUT_MODELS, UNITS
-from greenpath.pipelines.scenario_provider import ScenarioEvidence, UKImpactInput
+from greenr.contracts.customer import CustomerSnapshot
+from greenr.contracts.enums import ImpactStatus, Product
+from greenr.contracts.fixtures import load_model
+from greenr.contracts.impact import ImpactResult as ScoringImpactResult
+from greenr.contracts.impact_detail import ImpactResult
+from greenr.extensions import uk_impact
+from greenr.impact.uk_adapter import UKImpactCalculator as BaseUKImpactCalculator, INPUT_MODELS, UNITS
+from greenr.pipelines.scenario_provider import ScenarioEvidence, UKImpactInput
 
 
 NOW = datetime(2026, 10, 10, tzinfo=timezone.utc)
@@ -115,7 +115,7 @@ def test_invalid_scenario_fails_closed(value):
 
 def test_unsupported_hybrid_is_not_treated_as_petrol():
     snapshot = ev_source()
-    from greenpath.contracts.enums import FuelType
+    from greenr.contracts.enums import FuelType
     snapshot = snapshot.model_copy(update={"vehicle": snapshot.vehicle.model_copy(update={"fuel_type": FuelType.HYBRID})})
     # Validate the source so its enum is restored before passing to the adapter.
     snapshot = CustomerSnapshot.model_validate(snapshot.model_dump())

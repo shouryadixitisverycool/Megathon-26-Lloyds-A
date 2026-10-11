@@ -1,7 +1,7 @@
 # Greenr carbon methods
 
-Legacy India method release: `greenpath-carbon-v1.0.0`
-Factor catalogue: `src/greenpath/impact/factors/carbon_factors.v1.json`  
+Legacy India method release: `greenr-carbon-v1.0.0`
+Factor catalogue: `src/greenr/impact/factors/carbon_factors.v1.json`
 Frozen on: 2026-10-10  
 UK method release: `uk-physical-scenarios-v1`; reviewed factor edition: DESNZ 2026 (`desnz_2026_v1`)
 
@@ -145,7 +145,7 @@ These inputs are synthetic illustrations, not typical customer values or default
 
 Step 2 must add formula/unit tests and the invalid/missing/conflict cases above when implementing the four calculators. No application scaffold, canonical contracts, or calculator code is part of point 1.
 
-Step 2 is now implemented in `src/greenpath/impact/` with scoped tests and synthetic input fixtures in `tests/impact/`. The original factor/method release is unchanged. See [`AGENT_B_HANDOFF.md`](AGENT_B_HANDOFF.md) for setup, the replaceable contract mirrors, proposed integration mappings, and supported input precision.
+Step 2 is now implemented in `src/greenr/impact/` with scoped tests and synthetic input fixtures in `tests/impact/`. The original factor/method release is unchanged. See [`AGENT_B_HANDOFF.md`](AGENT_B_HANDOFF.md) for setup, the replaceable contract mirrors, proposed integration mappings, and supported input precision.
 
 ## UK Frozen Method and Source Review
 
@@ -164,7 +164,7 @@ UK Solar compares baseline grid demand with demand minus annual AC generation ti
 
 ## Regional Solar Generation
 
-`impact/solar_generation.py` implements the public JRC **PVGIS 5.3 fixed, grid-connected PVcalc** interface, evidence version `greenpath-pvgis-5.3-fixed-v1`. The [official API documentation](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/using-pvgis-5/api-non-interactive-service_en) was accessible on 2026-10-10 and documents versioned endpoints, mandatory kW peak power and percent system losses. A direct sample API request was rejected by the upstream access policy; **no real regional yield was obtained, pinned or fabricated in this release**.
+`impact/solar_generation.py` implements the public JRC **PVGIS 5.3 fixed, grid-connected PVcalc** interface, evidence version `greenr-pvgis-5.3-fixed-v1`. The [official API documentation](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/using-pvgis-5/api-non-interactive-service_en) was accessible on 2026-10-10 and documents versioned endpoints, mandatory kW peak power and percent system losses. A direct sample API request was rejected by the upstream access policy; **no real regional yield was obtained, pinned or fabricated in this release**.
 
 The estimator requires the caller's regional/site label, coordinates, kW peak capacity, loss percent, tilt, azimuth (0=south), PV technology, mounting, radiation database and horizon treatment. There is no invented region-to-coordinate mapping or representative regional yield. Fixed mounting/no tracking/no optimization are method boundaries sent explicitly, not guessed physical inputs. PVGIS source radiation years are retained; its long-term annual generation is not a 2026 weather forecast.
 

@@ -1,6 +1,6 @@
 """Optional paid-provider entry point; requires CLI opt-in, credentials and prices."""
 
-from greenpath.llm.live_evaluation import main
+from greenr.llm.live_evaluation import main
 
 
 if __name__ == "__main__":

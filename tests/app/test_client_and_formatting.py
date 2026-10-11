@@ -5,8 +5,8 @@ from pathlib import Path
 import httpx
 import pytest
 
-from greenpath.app.client import APIClient, APIError
-from greenpath.app.presentation import decimal_number, impact_label, percentage, trends_chart
+from greenr.app.client import APIClient, APIError
+from greenr.app.presentation import decimal_number, impact_label, percentage, trends_chart
 
 
 @pytest.mark.parametrize("value", [None, True, False, "NaN", "Infinity", "-Infinity", "invalid"])
@@ -31,7 +31,7 @@ def test_invalid_api_url(url):
 
 
 def test_configured_api_and_encoded_id(monkeypatch):
-    monkeypatch.setenv("GREENPATH_API_URL", "https://example.org/api/")
+    monkeypatch.setenv("GREENR_API_URL", "https://example.org/api/")
     assert APIClient().base_url == "https://example.org/api"
     assert APIClient.customer_path("a/b c") == "/customers/a%2Fb%20c"
 
@@ -93,8 +93,8 @@ def test_post_conflict_shows_actionable_reason(monkeypatch):
 
 
 def test_ui_has_no_domain_imports():
-    directory = Path(__file__).resolve().parents[2] / "src/greenpath/app"
-    forbidden = ("greenpath.impact", "greenpath.recommendation", "greenpath.models", "greenpath.llm", "greenpath.demo", "greenpath.api")
+    directory = Path(__file__).resolve().parents[2] / "src/greenr/app"
+    forbidden = ("greenr.impact", "greenr.recommendation", "greenr.models", "greenr.llm", "greenr.demo", "greenr.api")
     for file in directory.glob("*.py"):
         tree = ast.parse(file.read_text())
         for node in ast.walk(tree):

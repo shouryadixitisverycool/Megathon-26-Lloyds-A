@@ -6,11 +6,11 @@ import threading
 import httpx
 import pytest
 
-from greenpath.contracts.product import RecommendationState
-from greenpath.impact import Product
-from greenpath.llm.evaluation import synthetic_recommendation
-from greenpath.llm.http_provider import HTTPExplanationProvider
-from greenpath.llm.promo import (
+from greenr.contracts.product import RecommendationState
+from greenr.impact import Product
+from greenr.llm.evaluation import synthetic_recommendation
+from greenr.llm.http_provider import HTTPExplanationProvider
+from greenr.llm.promo import (
     CTA_LABEL, LIMITS, PROMO_DISCLAIMER, TEMPLATES, PromoRequest, PromoService, impact_phrase, validate_promo,
 )
 
@@ -202,7 +202,7 @@ def test_state_is_not_reinterpreted_by_the_promo_service():
 
 
 def test_fixed_promo_evaluation_passes_with_no_unsafe_copy_accepted():
-    from greenpath.llm.promo_evaluation import run_evaluation
+    from greenr.llm.promo_evaluation import run_evaluation
 
     summary = run_evaluation()["summary"]
     assert summary["passed"] == summary["total"] >= 100

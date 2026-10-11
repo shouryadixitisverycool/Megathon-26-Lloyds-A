@@ -1,6 +1,6 @@
 # Responsible AI Note
 
-GreenPath helps identify sustainability opportunities using synthetic banking data. The project team has selected jagruti-1.5b to explain results. Product rules, prediction models and the impact calculator produce those results. The LLM does not decide credit eligibility or calculate carbon savings.
+Greenr helps identify sustainability opportunities using synthetic banking data. The project team has selected jagruti-1.5b to explain results. Product rules, prediction models and the impact calculator produce those results. The LLM does not decide credit eligibility or calculate carbon savings.
 
 Our approach follows the trustworthiness principles discussed in [TrustLLM (Huang et al., ICML 2024)](https://proceedings.mlr.press/v235/huang24x.html). We use these principles to guide our safeguards and responsible AI practices.
 
@@ -36,4 +36,4 @@ Our saved [offline explanation tests](reports/explanation_evaluation.json) passe
 
 These results document the behaviour of our explanation safeguards under the evaluated test cases.
 
-This note records GreenPath's responsible AI safeguards, evaluation evidence and approach to trustworthy sustainability insights. It is intended to support transparent, evidence-based recommendations for green financial products.
+This note records Greenr's responsible AI safeguards, evaluation evidence and approach to trustworthy sustainability insights. It is intended to support transparent, evidence-based recommendations for green financial products.

@@ -33,13 +33,13 @@ async function request<T>(method: "GET" | "POST", path: string, init: { params?:
     });
   } catch (error) {
     if ((error as Error)?.name === "AbortError") throw error;
-    throw new APIError("Can't reach the GreenPath API. Start it with make api (or make app), then refresh.");
+    throw new APIError("Can't reach the Greenr API. Start it with make api (or make app), then refresh.");
   }
   if (!response.ok) {
     const code = response.status;
     let message =
       code === 404 ? "Customer or product not found." :
-      code === 502 || code === 503 || code === 504 ? "Can't reach the GreenPath API. Start it with make api (or make app), then refresh." :
+      code === 502 || code === 503 || code === 504 ? "Can't reach the Greenr API. Start it with make api (or make app), then refresh." :
       "The API couldn't complete this request.";
     if (code === 409 || code === 422 || code === 403) {
       try {

@@ -3,13 +3,13 @@ from decimal import Decimal
 
 import pytest
 
-from greenpath.contracts.product import (
+from greenr.contracts.product import (
     APPROVED_FEATURES, ELIGIBILITY_DISCLAIMER, CustomerSnapshot, FeatureEvidence,
     PropensityResult, Recommendation, RecommendationState as State,
     TrustAssessment, TrustIssue,
 )
-from greenpath.impact import ImpactStatus, Product, build_registry
-from greenpath.recommendation import PRODUCT_RULES, REASON_MESSAGES, RecommendationService
+from greenr.impact import ImpactStatus, Product, build_registry
+from greenr.recommendation import PRODUCT_RULES, REASON_MESSAGES, RecommendationService
 
 NOW = datetime(2026, 1, 4, tzinfo=timezone.utc)
 CUTOFF = NOW - timedelta(days=1)
@@ -274,7 +274,7 @@ def test_decision_evidence_links_supporting_fields(providers):
 
 
 def test_fixed_demo_personas_cover_all_six_states_and_impact_is_independent():
-    from greenpath.demo.providers import DemoRepository, PERSONAS
+    from greenr.demo.providers import DemoRepository, PERSONAS
 
     repository = DemoRepository()
     service = RecommendationService(repository, repository, repository, clock=lambda: NOW)
@@ -292,7 +292,7 @@ def test_fixed_demo_personas_cover_all_six_states_and_impact_is_independent():
 
 
 def test_impact_after_snapshot_cutoff_is_unavailable(providers):
-    from greenpath.demo.providers import DemoRepository
+    from greenr.demo.providers import DemoRepository
 
     providers.payloads[Product.EV_FINANCE] = DemoRepository().get_impact_input("GP-001", Product.EV_FINANCE)
     providers.snapshot = providers.snapshot.model_copy(update={"feature_cutoff": CUTOFF - timedelta(hours=1)})

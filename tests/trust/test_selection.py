@@ -3,9 +3,9 @@ import json
 import numpy as np
 import pandas as pd
 
-from greenpath.contracts import Product
-from greenpath.trust.ood import OODDetector
-from greenpath.trust.selection import load_thresholds, select_thresholds
+from greenr.contracts import Product
+from greenr.trust.ood import OODDetector
+from greenr.trust.selection import load_thresholds, select_thresholds
 
 
 def test_validation_scenario_selection_persists_and_ignores_test(tmp_path):
@@ -27,7 +27,7 @@ def test_validation_scenario_selection_persists_and_ignores_test(tmp_path):
 
 
 def test_confidence_release_never_reads_test(monkeypatch, tmp_path):
-    from greenpath.pipelines import run
+    from greenr.pipelines import run
     seen = []
 
     def rows(*args):

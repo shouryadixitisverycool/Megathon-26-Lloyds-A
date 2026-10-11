@@ -9,11 +9,11 @@ import pytest
 from fastapi.testclient import TestClient
 from streamlit.testing.v1 import AppTest
 
-from greenpath.contracts.product import PropensityResult
-from greenpath.contracts.propensity import PropensityResult as ScoringResult
-from greenpath.demo.providers import DemoRepository
-from greenpath.demo.readiness import generate_readiness, read_report, report_hash
-from greenpath.impact import Product
+from greenr.contracts.product import PropensityResult
+from greenr.contracts.propensity import PropensityResult as ScoringResult
+from greenr.demo.providers import DemoRepository
+from greenr.demo.readiness import generate_readiness, read_report, report_hash
+from greenr.impact import Product
 
 
 def test_fixtures_are_blocked_with_actual_states_and_no_confidence():
@@ -33,7 +33,7 @@ def test_fixtures_are_blocked_with_actual_states_and_no_confidence():
 
 
 def test_report_rejects_stale_artifacts_and_modified_content(tmp_path, monkeypatch):
-    monkeypatch.setattr("greenpath.demo.readiness.confidence_decisions_hash", lambda: None)
+    monkeypatch.setattr("greenr.demo.readiness.confidence_decisions_hash", lambda: None)
     report = generate_readiness(DemoRepository())
     path = tmp_path / "readiness.json"
     path.write_text(json.dumps(report))
@@ -44,7 +44,7 @@ def test_report_rejects_stale_artifacts_and_modified_content(tmp_path, monkeypat
     assert read_report(path, report["artifact_signature"]) is None
     report["report_sha256"] = report_hash(report)
     path.write_text(json.dumps(report))
-    monkeypatch.setattr("greenpath.demo.readiness.confidence_decisions_hash", lambda: "new-release-decision")
+    monkeypatch.setattr("greenr.demo.readiness.confidence_decisions_hash", lambda: "new-release-decision")
     assert read_report(path, report["artifact_signature"]) is None
 
 
@@ -109,10 +109,10 @@ def test_ready_requires_live_validated_source_and_available_impact():
 
 
 def test_endpoint_uses_raw_service_and_caches_scan(tmp_path, monkeypatch):
-    monkeypatch.setenv("GREENPATH_PROVIDER", "fixture")
-    from greenpath.api.main import create_app
-    from greenpath.recommendation.service import RecommendationService
-    from greenpath.extensions.store import MemoryStore
+    monkeypatch.setenv("GREENR_PROVIDER", "fixture")
+    from greenr.api.main import create_app
+    from greenr.recommendation.service import RecommendationService
+    from greenr.extensions.store import MemoryStore
 
     repository = DemoRepository()
     calls = []
@@ -127,7 +127,7 @@ def test_endpoint_uses_raw_service_and_caches_scan(tmp_path, monkeypatch):
         pytest.fail("Readiness must not persist recommendations or call explanations")
 
     monkeypatch.setattr(MemoryStore, "save_recommendation", forbidden)
-    monkeypatch.setattr("greenpath.demo.readiness.REPORT_PATH", tmp_path / "missing.json")
+    monkeypatch.setattr("greenr.demo.readiness.REPORT_PATH", tmp_path / "missing.json")
     application = create_app(repository, recommendation_service=Service(),
                              explanation_service=SimpleNamespace(explain=forbidden),
                              memory_path=tmp_path / "memory.sqlite3")
@@ -156,7 +156,7 @@ def test_manifest_shortcut_and_specific_suppression(api_fixture, monkeypatch):
         return api_fixture["get"](url, **kwargs)
 
     monkeypatch.setattr(httpx, "get", get)
-    app_path = Path(__file__).resolve().parents[3] / "src/greenpath/app/main.py"
+    app_path = Path(__file__).resolve().parents[3] / "src/greenr/app/main.py"
     app = AppTest.from_file(str(app_path), default_timeout=15).run()
     assert not app.exception
     app.button(key="open_showcase").click().run()

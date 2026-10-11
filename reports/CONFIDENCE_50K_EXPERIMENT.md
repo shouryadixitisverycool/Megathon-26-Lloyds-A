@@ -47,7 +47,7 @@ tuning/calibration and confidence fitting. Final test/stress are reporting-only.
 - Dataset integrity no longer builds huge Python transaction-ID sets. Unique
   primary keys, equal counts and membership still prove exact truth bijection.
 
-Workspace: `/tmp/opencode/greenpath-confidence-50k-20261011`.
+Workspace: `/tmp/opencode/greenr-confidence-50k-20261011`.
 Reviewable machine-readable results, configuration/source fingerprints and artifact
 hashes are retained in `reports/confidence_50k_evidence.json` in this checkout.
 See its `reports/CONFIDENCE_VALIDATION.md`, `reports/confidence_validation.json`,
@@ -86,13 +86,13 @@ before promotion. Do not lower the existing gate or change simulated rates to pa
 ## Reproduction
 
 ```bash
-export GREENPATH_WORKSPACE=/tmp/opencode/greenpath-confidence-50k-reproduction
+export GREENR_WORKSPACE=/tmp/opencode/greenr-confidence-50k-reproduction
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
-uv run --locked python -m greenpath.data_generation --customers 50000
-uv run --locked python -m greenpath.data_generation --perturbed --customers 50000
-uv run --locked python scripts/confidence_experiment.py prepare --workspace "$GREENPATH_WORKSPACE"
-uv run --locked python scripts/confidence_experiment.py train --workspace "$GREENPATH_WORKSPACE"
-uv run --locked python scripts/confidence_experiment.py evaluate --workspace "$GREENPATH_WORKSPACE"
+uv run --locked python -m greenr.data_generation --customers 50000
+uv run --locked python -m greenr.data_generation --perturbed --customers 50000
+uv run --locked python scripts/confidence_experiment.py prepare --workspace "$GREENR_WORKSPACE"
+uv run --locked python scripts/confidence_experiment.py train --workspace "$GREENR_WORKSPACE"
+uv run --locked python scripts/confidence_experiment.py evaluate --workspace "$GREENR_WORKSPACE"
 ```
 
 Use a fresh isolated workspace; this focused experiment intentionally does not

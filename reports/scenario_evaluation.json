@@ -369,7 +369,7 @@
             "boundary": "vehicle_fuel_combustion_and_charging_generation_co2",
             "period": "{'start': '2025-01-01', 'end': '2026-01-01'}",
             "method_version": "ev-operational-co2-v1",
-            "factor_catalogue_version": "greenpath-carbon-factors-v1.0.0",
+            "factor_catalogue_version": "greenr-carbon-factors-v1.0.0",
             "value": "553.19400"
           },
           {
@@ -378,7 +378,7 @@
             "boundary": "home_grid_electricity_generation_co2",
             "period": "{'start': '2025-01-01', 'end': '2026-01-01'}",
             "method_version": "home-electricity-operational-co2-v1",
-            "factor_catalogue_version": "greenpath-carbon-factors-v1.0.0",
+            "factor_catalogue_version": "greenr-carbon-factors-v1.0.0",
             "value": "716.000"
           },
           {
@@ -387,7 +387,7 @@
             "boundary": "solar_reduction_in_grid_import_generation_co2",
             "period": "{'start': '2025-01-01', 'end': '2026-01-01'}",
             "method_version": "solar-self-consumption-operational-co2-v1",
-            "factor_catalogue_version": "greenpath-carbon-factors-v1.0.0",
+            "factor_catalogue_version": "greenr-carbon-factors-v1.0.0",
             "value": "1790.000"
           }
         ],

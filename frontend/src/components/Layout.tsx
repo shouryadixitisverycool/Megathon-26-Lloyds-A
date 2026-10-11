@@ -26,7 +26,7 @@ type Theme = "system" | "light" | "dark";
 
 function readTheme(): Theme {
   try {
-    const value = localStorage.getItem("greenpath-theme");
+    const value = localStorage.getItem("greenr-theme");
     return value === "light" || value === "dark" ? value : "system";
   } catch {
     return "system";
@@ -38,7 +38,7 @@ function ThemeButton() {
   useEffect(() => {
     if (theme === "system") delete document.documentElement.dataset.theme;
     else document.documentElement.dataset.theme = theme;
-    try { localStorage.setItem("greenpath-theme", theme); } catch { /* storage may be unavailable */ }
+    try { localStorage.setItem("greenr-theme", theme); } catch { /* storage may be unavailable */ }
   }, [theme]);
   const next: Theme = theme === "system" ? "light" : theme === "light" ? "dark" : "system";
   const Icon = theme === "light" ? Sun : theme === "dark" ? Moon : SunMoon;
@@ -60,11 +60,11 @@ export function Layout() {
   const ai = aiEnabled(metrics.data);
 
   let content: ReactNode = <Outlet />;
-  if (health.isPending) content = <div className="page"><Loading label="Connecting to the GreenPath API…" /></div>;
+  if (health.isPending) content = <div className="page"><Loading label="Connecting to the Greenr API…" /></div>;
   else if (health.isError || !healthy) {
     content = (
       <div className="page">
-        <h1 className="page-title">Can't reach GreenPath</h1>
+        <h1 className="page-title">Can't reach Greenr</h1>
         <p className="lede">No customer decisions or portfolio results are shown while the API is unavailable.</p>
         <div className="stack" style={{ marginTop: 24, maxWidth: 680 }}>
           <Callout kind="error" title={health.isError ? "The API isn't responding" : "This API isn't a healthy synthetic-demo service"}>
@@ -74,7 +74,7 @@ export function Layout() {
             <p><b>To start it</b>, run this from the repository root:</p>
             <pre className="json">make api</pre>
             <p className="small muted">
-              The frontend expects the API at <code>http://127.0.0.1:8000</code>. Set <code>GREENPATH_API_URL</code> before
+              The frontend expects the API at <code>http://127.0.0.1:8000</code>. Set <code>GREENR_API_URL</code> before
               <code> npm run dev</code> to point elsewhere. Trained mode can take a few minutes to warm up.
             </p>
             <div><button className="btn btn-primary" type="button" onClick={() => health.refetch()}>Try again</button></div>
@@ -113,7 +113,7 @@ export function Layout() {
           <div className="masthead-inner">
             <NavLink to="/customers" className="brand">
               <Logo />
-              <span className="brand-word">GreenPath</span>
+              <span className="brand-word">Greenr</span>
             </NavLink>
             <span className="brand-tag">Sustainable opportunities</span>
             <div className="masthead-actions">

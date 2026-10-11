@@ -1,0 +1,123 @@
+{
+  "catalogue_version": "greenr-carbon-factors-v1.0.0",
+  "method_release": "greenr-carbon-v1.0.0",
+  "frozen_on": "2026-10-10",
+  "owner": "Agent B",
+  "scope": "Synthetic India demo; operational CO2 only",
+  "sources": [
+    {
+      "source_id": "CEA_CO2_BASELINE_V19",
+      "publisher": "Central Electricity Authority, Government of India",
+      "title": "CO2 Baseline Database for the Indian Power Sector, User Guide",
+      "edition": "19.0",
+      "url": "https://cea.nic.in/wp-content/uploads/baseline/2024/04/User_Guide__Version_19.0.pdf",
+      "verified_on": "2026-10-10",
+      "verification_basis": "Indexed text of the official CEA PDF, table 5, printed page 13; original PDF redirects to login",
+      "sha256": null,
+      "verified_selected_row": {
+        "fiscal_year": "2022-23",
+        "table": "5",
+        "row": "Including cross-border power transfers; inclusive of captive power injection and RES",
+        "column": "Average",
+        "value": "0.716",
+        "unit": "t CO2/MWh"
+      },
+      "limitation": "Complete PDF not archived; historical demo factor only; retrieve, hash and review before non-demo use"
+    },
+    {
+      "source_id": "IPCC2006_V2_CH3",
+      "publisher": "Intergovernmental Panel on Climate Change",
+      "title": "2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2, Chapter 3, Mobile Combustion",
+      "edition": "2006 Guidelines; official PDF bytes retrieved 2026-10-10",
+      "url": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_3_Ch3_Mobile_Combustion.pdf",
+      "verified_on": "2026-10-10",
+      "verification_basis": "Downloaded PDF; pdftotext table 3.2.1, printed page 3.16",
+      "sha256": "b0b7d96d5ac90ecf359cdb74e932448cfba041c6cec0e1dc24f2def444508c30"
+    },
+    {
+      "source_id": "IPCC2006_V2_CH1",
+      "publisher": "Intergovernmental Panel on Climate Change",
+      "title": "2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2, Chapter 1, Introduction",
+      "edition": "2006 Guidelines; official PDF bytes retrieved 2026-10-10",
+      "url": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_1_Ch1_Introduction.pdf",
+      "verified_on": "2026-10-10",
+      "verification_basis": "Downloaded PDF; pdftotext table 1.2, printed page 1.18",
+      "sha256": "e391cd4676d0891cd77f67d3bd76e0e6775386b468ce5ce7ebe2311a6ea1ac45"
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "CEA_GRID_IN_FY2022_23_V19",
+      "source_id": "CEA_CO2_BASELINE_V19",
+      "source_locator": "Table 5, printed page 13, Average including cross-border transfers and RES",
+      "original_value": "0.716",
+      "original_unit": "t CO2/MWh",
+      "value": "0.716",
+      "unit": "kg CO2/kWh",
+      "geography": "IN",
+      "activity_period": "FY2022-23",
+      "boundary": "National average electricity generation CO2 including RES, captive injection and cross-border transfers; no T&D loss uplift",
+      "applicability": "Grid electricity in synthetic India demos; historical constant-grid assumption must be disclosed"
+    },
+    {
+      "factor_id": "IPCC2006_ROAD_GASOLINE_CO2",
+      "source_id": "IPCC2006_V2_CH3",
+      "source_locator": "Table 3.2.1, printed page 3.16, Motor Gasoline",
+      "original_value": "69300",
+      "original_unit": "kg CO2/TJ",
+      "value": "0.0693",
+      "unit": "kg CO2/MJ",
+      "geography": "Global default",
+      "fuel": "unblended_fossil_motor_gasoline",
+      "boundary": "Fuel combustion CO2; 100 percent oxidation; net calorific basis",
+      "applicability": "Documented matching fossil fuel composition; no unknown or biofuel blends"
+    },
+    {
+      "factor_id": "IPCC2006_ROAD_DIESEL_CO2",
+      "source_id": "IPCC2006_V2_CH3",
+      "source_locator": "Table 3.2.1, printed page 3.16, Gas/Diesel Oil",
+      "original_value": "74100",
+      "original_unit": "kg CO2/TJ",
+      "value": "0.0741",
+      "unit": "kg CO2/MJ",
+      "geography": "Global default",
+      "fuel": "unblended_fossil_gas_diesel_oil",
+      "boundary": "Fuel combustion CO2; 100 percent oxidation; net calorific basis",
+      "applicability": "Documented matching fossil fuel composition; no unknown or biofuel blends"
+    },
+    {
+      "factor_id": "IPCC2006_GASOLINE_NCV",
+      "source_id": "IPCC2006_V2_CH1",
+      "source_locator": "Table 1.2, printed page 1.18, Motor Gasoline",
+      "original_value": "44.3",
+      "original_unit": "TJ/Gg",
+      "value": "44.3",
+      "unit": "MJ/kg",
+      "geography": "Global default",
+      "fuel": "unblended_fossil_motor_gasoline",
+      "boundary": "Net calorific value; not an emissions factor",
+      "applicability": "Convert matching fossil fuel mass to net energy; no assumed density"
+    },
+    {
+      "factor_id": "IPCC2006_DIESEL_NCV",
+      "source_id": "IPCC2006_V2_CH1",
+      "source_locator": "Table 1.2, printed page 1.18, Gas/Diesel Oil",
+      "original_value": "43.0",
+      "original_unit": "TJ/Gg",
+      "value": "43.0",
+      "unit": "MJ/kg",
+      "geography": "Global default",
+      "fuel": "unblended_fossil_gas_diesel_oil",
+      "boundary": "Net calorific value; not an emissions factor",
+      "applicability": "Convert matching fossil fuel mass to net energy; no assumed density"
+    }
+  ],
+  "unavailable_methods": [
+    {
+      "method_id": "paperless-carbon-unavailable-v1",
+      "reason_code": "FACTOR_NOT_ESTABLISHED",
+      "value": null,
+      "reason": "No reviewed matched paper-statement and digital-delivery carbon boundary and factors"
+    }
+  ]
+}

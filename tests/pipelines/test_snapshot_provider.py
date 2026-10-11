@@ -5,12 +5,12 @@ from datetime import date
 import pytest
 from .fixtures_c360 import CUTOFF, make_tables
 
-from greenpath import config
-from greenpath.contracts import CustomerSnapshot, FuelType, HeatingType
-from greenpath.pipelines import feature_registry as fr
-from greenpath.pipelines.customer360 import build_customer360
-from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider, row_to_snapshot
-from greenpath.ports import CustomerSnapshotProvider
+from greenr import config
+from greenr.contracts import CustomerSnapshot, FuelType, HeatingType
+from greenr.pipelines import feature_registry as fr
+from greenr.pipelines.customer360 import build_customer360
+from greenr.pipelines.snapshot_provider import Customer360SnapshotProvider, row_to_snapshot
+from greenr.ports import CustomerSnapshotProvider
 
 
 @pytest.fixture(scope="module")

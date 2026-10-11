@@ -15,16 +15,16 @@ from test_app import APP, displayed
 from streamlit.testing.v1 import AppTest
 
 
-@pytest.mark.skipif(os.getenv("GREENPATH_APP_TRAINED_SMOKE") != "1", reason="Opt-in trained artifact HTTP smoke")
+@pytest.mark.skipif(os.getenv("GREENR_APP_TRAINED_SMOKE") != "1", reason="Opt-in trained artifact HTTP smoke")
 def test_current_trained_demo_over_http(tmp_path, monkeypatch):
-    monkeypatch.setenv("GREENPATH_PROVIDER", "fixture")
-    monkeypatch.setenv("GREENPATH_LLM_API_KEY", "")
-    from greenpath import config
-    from greenpath.api.main import create_app
-    from greenpath.demo.artifacts import ArtifactRepository
-    from greenpath.pipelines.runtime import load_runtime
-    from greenpath.pipelines.scenario_provider import ScenarioProvider
-    from greenpath.pipelines.snapshot_provider import customer360_path
+    monkeypatch.setenv("GREENR_PROVIDER", "fixture")
+    monkeypatch.setenv("GREENR_LLM_API_KEY", "")
+    from greenr import config
+    from greenr.api.main import create_app
+    from greenr.demo.artifacts import ArtifactRepository
+    from greenr.pipelines.runtime import load_runtime
+    from greenr.pipelines.scenario_provider import ScenarioProvider
+    from greenr.pipelines.snapshot_provider import customer360_path
 
     cutoffs = [c for c in config.TREND_CUTOFFS if customer360_path(c).is_file()]
     runtime = load_runtime(cutoffs=cutoffs)
@@ -39,7 +39,7 @@ def test_current_trained_demo_over_http(tmp_path, monkeypatch):
         port = listener.getsockname()[1]
     server = uvicorn.Server(uvicorn.Config(api, host="127.0.0.1", port=port, log_level="error"))
     thread = threading.Thread(target=server.run, daemon=True)
-    monkeypatch.setenv("GREENPATH_API_URL", f"http://127.0.0.1:{port}")
+    monkeypatch.setenv("GREENR_API_URL", f"http://127.0.0.1:{port}")
     st.cache_data.clear()
     thread.start()
     try:
@@ -91,7 +91,7 @@ def test_current_trained_demo_over_http(tmp_path, monkeypatch):
             app.radio(key="workspace").set_value(workspace).run()
             assert not app.exception
             assert not app.error
-        metrics = httpx.get(os.environ["GREENPATH_API_URL"] + "/explanations/metrics").json()
+        metrics = httpx.get(os.environ["GREENR_API_URL"] + "/explanations/metrics").json()
         assert metrics["provider_attempts"] == 0
     finally:
         server.should_exit = True

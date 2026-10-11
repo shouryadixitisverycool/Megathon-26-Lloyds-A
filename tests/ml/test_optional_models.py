@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath import config
-from greenpath.extensions.optional_models import (
+from greenr import config
+from greenr.extensions.optional_models import (
     FEATURES, OPPORTUNITIES, OptionalOpportunityProvider, matrix, optional_outcomes, train,
 )
 
@@ -141,6 +141,6 @@ def test_heldout_feature_changes_cannot_change_fitted_model_or_calibration(train
 
 
 def test_optional_opportunities_do_not_extend_the_core_product_contract():
-    from greenpath.contracts import Product
+    from greenr.contracts import Product
     assert len(list(Product)) == 4
     assert not set(OPPORTUNITIES) & {product.value for product in Product}

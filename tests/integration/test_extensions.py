@@ -6,8 +6,8 @@ from copy import deepcopy
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath.api.main import create_app
-from greenpath.extensions.store import MemoryStore
+from greenr.api.main import create_app
+from greenr.extensions.store import MemoryStore
 
 
 @pytest.fixture

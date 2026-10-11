@@ -3,12 +3,12 @@ from datetime import date
 import pandas as pd
 import pytest
 
-from greenpath.contracts import Product, ReasonCode
-from greenpath.models.propensity.reason_codes import REASON_CODE_CATALOGUE
-from greenpath.pipelines.customer360 import build_customer360
-from greenpath.pipelines.feature_registry import CONTEXT_COLUMNS, FEATURE_REGISTRY
-from greenpath.pipelines.snapshot_provider import row_to_snapshot
-from greenpath.trust.conflicts import detect_conflicts
+from greenr.contracts import Product, ReasonCode
+from greenr.models.propensity.reason_codes import REASON_CODE_CATALOGUE
+from greenr.pipelines.customer360 import build_customer360
+from greenr.pipelines.feature_registry import CONTEXT_COLUMNS, FEATURE_REGISTRY
+from greenr.pipelines.snapshot_provider import row_to_snapshot
+from greenr.trust.conflicts import detect_conflicts
 from .fixtures_c360 import CUTOFF, make_tables
 
 

@@ -6,14 +6,14 @@ from datetime import date, timedelta
 import pandas as pd
 import pytest
 
-from greenpath.config import (
+from greenr.config import (
     DEMO_PERSONA_IDS,
     FEATURE_CUTOFF,
     OUTCOME_WINDOW_END,
     SEED_SPLIT,
 )
-from greenpath.contracts import Product
-from greenpath.pipelines.split import (
+from greenr.contracts import Product
+from greenr.pipelines.split import (
     adopted_before,
     make_labels,
     split_customers,

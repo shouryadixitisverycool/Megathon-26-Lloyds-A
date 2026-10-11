@@ -14,12 +14,12 @@ from urllib.request import urlopen
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath import config
-from greenpath.api.main import create_app
-from greenpath.demo.providers import DemoRepository
-from greenpath.demo import run
-from greenpath.extensions.store import MemoryStore
-from greenpath.recommendation.service import RecommendationService
+from greenr import config
+from greenr.api.main import create_app
+from greenr.demo.providers import DemoRepository
+from greenr.demo import run
+from greenr.extensions.store import MemoryStore
+from greenr.recommendation.service import RecommendationService
 
 
 def decision():
@@ -156,8 +156,8 @@ def test_summary_scoring_failure_rolls_back_the_cohort(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("mode", ["fixture", "trained"])
 def test_real_launcher_startup_and_owned_cleanup(tmp_path, mode):
-    if mode == "trained" and os.environ.get("GREENPATH_TEST_REAL_TRAINED") != "1":
-        pytest.skip("Set GREENPATH_TEST_REAL_TRAINED=1 for full deployed artifact warmup")
+    if mode == "trained" and os.environ.get("GREENR_TEST_REAL_TRAINED") != "1":
+        pytest.skip("Set GREENR_TEST_REAL_TRAINED=1 for full deployed artifact warmup")
     data = tmp_path / "data"
     data.mkdir()
     if mode == "trained":
@@ -169,9 +169,9 @@ def test_real_launcher_startup_and_owned_cleanup(tmp_path, mode):
         with socket.socket() as listener:
             listener.bind(("127.0.0.1", 0))
             ports.append(listener.getsockname()[1])
-    environment = dict(os.environ, GREENPATH_PROVIDER=mode, GREENPATH_WORKSPACE=str(tmp_path))
+    environment = dict(os.environ, GREENR_PROVIDER=mode, GREENR_WORKSPACE=str(tmp_path))
     started = time.monotonic()
-    process = subprocess.Popen([sys.executable, "-m", "greenpath.demo.run",
+    process = subprocess.Popen([sys.executable, "-m", "greenr.demo.run",
                                 "--api-port", str(ports[0]), "--ui-port", str(ports[1])], env=environment)
     try:
         deadline = started + 310
@@ -194,7 +194,7 @@ def test_real_launcher_startup_and_owned_cleanup(tmp_path, mode):
         with urlopen(f"http://127.0.0.1:{ports[0]}/customers/{'C10001' if mode == 'trained' else 'GP-001'}/recommendations", timeout=30) as response:
             recommendations = json.load(response)["recommendations"]
         assert len(recommendations) == 4
-        store = MemoryStore(data / "greenpath.sqlite3")
+        store = MemoryStore(data / "greenr.sqlite3")
         assert all(store.get_recommendation(row["decision_id"]) for row in recommendations)
     finally:
         process.send_signal(signal.SIGTERM)

@@ -1,6 +1,6 @@
-# GreenPath frontend
+# Greenr frontend
 
-A React workspace for the GreenPath API. It covers everything the Streamlit app does, in a layout built for the people who act on it: relationship managers, campaign planners and reviewers. Each page leads with the decision and the next step. Evidence, methods and raw records open only when you ask for them.
+A React workspace for the Greenr API. It covers everything the Streamlit app does, in a layout built for the people who act on it: relationship managers, campaign planners and reviewers. Each page leads with the decision and the next step. Evidence, methods and raw records open only when you ask for them.
 
 It talks to the existing FastAPI service over HTTP and never computes a decision, score or carbon figure itself.
 
@@ -10,7 +10,7 @@ The RM customer page and Customer Green Hub preview offer **Explore EV**, **Expl
 
 ```bash
 # 1. Start the API from the repository root (fixture or trained, see the root README)
-make api                       # or: GREENPATH_PROVIDER=fixture make api
+make api                       # or: GREENR_PROVIDER=fixture make api
 
 # 2. Start the frontend
 cd frontend
@@ -18,10 +18,10 @@ npm install
 npm run dev                    # http://127.0.0.1:5173
 ```
 
-The dev server proxies `/api/*` to the API, because the API has no CORS policy. Point it somewhere else with `GREENPATH_API_URL`:
+The dev server proxies `/api/*` to the API, because the API has no CORS policy. Point it somewhere else with `GREENR_API_URL`:
 
 ```bash
-GREENPATH_API_URL=http://127.0.0.1:8001 npm run dev
+GREENR_API_URL=http://127.0.0.1:8001 npm run dev
 ```
 
 | Script | What it does |
@@ -60,15 +60,15 @@ Still API-only (not in Streamlit either): factual source updates and campaign cl
 
 ## AI-written explanations
 
-The backend can have an LLM write each product's plain-language explanation (`src/greenpath/llm/`). The model only chooses the order of pre-approved sentences, and every fact, number and disclaimer is checked. Anything that fails falls back to the standard template wording, which states the same facts.
+The backend can have an LLM write each product's plain-language explanation (`src/greenr/llm/`). The model only chooses the order of pre-approved sentences, and every fact, number and disclaimer is checked. Anything that fails falls back to the standard template wording, which states the same facts.
 
 It's off unless the API process has a key:
 
 ```bash
-OPENAI_API_KEY=... make api    # or GREENPATH_LLM_API_KEY; model and settings come from llm/provider_manifest.json
+OPENAI_API_KEY=... make api    # or GREENR_LLM_API_KEY; model and settings come from llm/provider_manifest.json
 ```
 
-That makes paid provider calls. Add `GREENPATH_LLM_INPUT_PRICE_PER_MILLION` and `GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION` to have cost measured.
+That makes paid provider calls. Add `GREENR_LLM_INPUT_PRICE_PER_MILLION` and `GREENR_LLM_OUTPUT_PRICE_PER_MILLION` to have cost measured.
 
 Where it appears in the UI:
 
@@ -88,7 +88,7 @@ Where it appears in the UI:
 
 - **Trained mode is slow on some routes.** `/portfolio/opportunities`, `/portfolio/scenarios` and `/campaigns/optimise` re-score all 4,010 customers on every call (1–2+ minutes locally), and the first filtered `/portfolio/summary` per filter combination takes about as long before the API caches it. The UI shows elapsed time, keeps previous results visible and caches responses, but the fix belongs in the API.
 - `/customers` returns about 38 MB in trained mode. The directory fetches it once and keeps only a slim index in memory.
-- Two API processes must not share one `data/greenpath.sqlite3`: long trained transactions will fail with `database is locked`. Use `GREENPATH_WORKSPACE` to give a second instance its own store.
+- Two API processes must not share one `data/greenr.sqlite3`: long trained transactions will fail with `database is locked`. Use `GREENR_WORKSPACE` to give a second instance its own store.
 
 ## Layout
 

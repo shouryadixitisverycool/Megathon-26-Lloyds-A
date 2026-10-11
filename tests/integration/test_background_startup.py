@@ -5,8 +5,8 @@ from time import monotonic, sleep
 
 from fastapi.testclient import TestClient
 
-from greenpath.api.main import create_app
-from greenpath.demo.providers import DemoRepository
+from greenr.api.main import create_app
+from greenr.demo.providers import DemoRepository
 
 
 def test_background_history_does_not_block_health_or_customer(tmp_path):

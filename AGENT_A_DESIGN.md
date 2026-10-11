@@ -1,10 +1,10 @@
 # Agent A design — data, ML and reliability
 
-Repository: `greenpath-agent-a/` (Agent A's own repository; Agent B works elsewhere).
+Repository: `greenr-agent-a/` (Agent A's own repository; Agent B works elsewhere).
 Python 3.12, `uv` (lock: `uv.lock`). Run everything with `uv run ...`. pandas is **3.x** (copy-on-write, default string dtype): never rely on chained assignment.
 
 Canonical, already written — **do not edit without the orchestrator**:
-`src/greenpath/contracts/*`, `src/greenpath/ports.py`, `src/greenpath/config.py`, `src/greenpath/pipelines/schemas.py`.
+`src/greenr/contracts/*`, `src/greenr/ports.py`, `src/greenr/config.py`, `src/greenr/pipelines/schemas.py`.
 
 ## Timeline (config.py)
 Feature cutoff 2026-06-30; label = adoption in (cutoff, cutoff+90d] → window end 2026-09-28; prediction timestamp 2026-10-10.

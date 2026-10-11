@@ -44,9 +44,9 @@ Routes still not called by the UI, on purpose:
 
 ## Fixture mode realism (demo without trained models)
 
-Changes so a fixture-mode demo (`GREENPATH_PROVIDER=fixture`) shows the same kinds of evidence as trained mode:
+Changes so a fixture-mode demo (`GREENR_PROVIDER=fixture`) shows the same kinds of evidence as trained mode:
 
-- **Model reason codes.** Each persona has synthetic model inputs (fuel spend, mileage, vehicle age, energy use, statements, app logins, sustainability preference) in `src/greenpath/demo/providers.py`. Reason codes are derived from them by the real catalogue (`derive_reason_codes`, default thresholds), never hand-written. They appear in "What the model picked up on", the opportunity list, the grounded explanation and the customer view.
+- **Model reason codes.** Each persona has synthetic model inputs (fuel spend, mileage, vehicle age, energy use, statements, app logins, sustainability preference) in `src/greenr/demo/providers.py`. Reason codes are derived from them by the real catalogue (`derive_reason_codes`, default thresholds), never hand-written. They appear in "What the model picked up on", the opportunity list, the grounded explanation and the customer view.
 - **Varied probabilities.** Each persona and product has its own fixed probability. GP-001 still clears 0.60 for every product and GP-006 still misses it for every product.
 - **Optional opportunities.** Fixture Green Investments and Green Loans follow the trained rule order in `extensions/optional_models.py`, with fixed probabilities and a 0.50 cut-off. Confidence stays suppressed.
 

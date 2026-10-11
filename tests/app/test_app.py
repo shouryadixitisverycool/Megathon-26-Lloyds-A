@@ -4,7 +4,7 @@ import httpx
 import pytest
 from streamlit.testing.v1 import AppTest
 
-APP = Path(__file__).resolve().parents[2] / "src/greenpath/app/main.py"
+APP = Path(__file__).resolve().parents[2] / "src/greenr/app/main.py"
 
 
 def start():

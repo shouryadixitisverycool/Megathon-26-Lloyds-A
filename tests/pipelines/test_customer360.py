@@ -8,8 +8,8 @@ import pytest
 from .fixtures_c360 import CUTOFF, add_post_cutoff_events, make_tables
 from pandas.testing import assert_frame_equal
 
-from greenpath.pipelines import feature_registry as fr
-from greenpath.pipelines.customer360 import build_customer360, build_customer360_many
+from greenr.pipelines import feature_registry as fr
+from greenr.pipelines.customer360 import build_customer360, build_customer360_many
 
 LIST_COLS = ["missing_fields", "estimated_fields"]
 

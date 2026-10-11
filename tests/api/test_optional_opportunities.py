@@ -7,9 +7,9 @@ import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath import config
-from greenpath.api.main import create_app
-from greenpath.extensions.optional_models import OPPORTUNITIES, OptionalModelLoader, train
+from greenr import config
+from greenr.api.main import create_app
+from greenr.extensions.optional_models import OPPORTUNITIES, OptionalModelLoader, train
 from tests.ml.test_optional_models import frame, trained, snapshot
 
 

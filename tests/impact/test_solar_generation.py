@@ -9,7 +9,7 @@ import httpx
 import pytest
 from pydantic import ValidationError
 
-from greenpath.impact.solar_generation import GenerationInputs, estimate_generation
+from greenr.impact.solar_generation import GenerationInputs, estimate_generation
 
 
 NOW = datetime(2026, 10, 10, tzinfo=timezone.utc)
@@ -40,7 +40,7 @@ def test_generation_and_yield_dimensions_and_pinned_provenance():
     result = estimate(response())
     assert result.annual_generation_kwh == Decimal("1800")
     assert result.annual_yield_kwh_per_kw == Decimal("900")
-    assert result.generation_evidence_version == "greenpath-pvgis-5.3-fixed-v1"
+    assert result.generation_evidence_version == "greenr-pvgis-5.3-fixed-v1"
     assert "/v5_3/PVcalc?" in result.source_url
     fields = result.scenario_fields()
     assert fields["annual_generation_kwh"] == 1800.0

@@ -7,9 +7,9 @@ import pytest
 from fastapi.testclient import TestClient
 from streamlit.testing.v1 import AppTest
 
-from greenpath.api.main import create_app
-from greenpath.extensions.service import prioritise
-from greenpath.extensions.store import MemoryStore
+from greenr.api.main import create_app
+from greenr.extensions.service import prioritise
+from greenr.extensions.store import MemoryStore
 
 
 def opportunity(customer_id="GP-001", probability="0.8"):
@@ -93,7 +93,7 @@ def test_planning_ui_identifies_unavailable_rank_and_propensity_fallback():
     rows = prioritise([row])
     script = f'''
 import json
-from greenpath.app.workspaces import planning_view
+from greenr.app.workspaces import planning_view
 rows = json.loads({json.dumps(rows)!r})
 planning_view([{{"customer_id": "GP-001", "region": "UK", "segment": "test"}}],
               lambda path, params: {{"disclaimer": "Test", "opportunities": rows}},

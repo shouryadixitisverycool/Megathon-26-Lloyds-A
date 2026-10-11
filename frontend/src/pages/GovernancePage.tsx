@@ -350,8 +350,8 @@ function AiExplanations({ evaluation }: { evaluation?: any }) {
             {!enabled && (
               <Callout kind="info" title="AI writing is switched off">
                 Every explanation uses the standard wording, which states the same approved facts. To switch the AI on, start the API with
-                <code> OPENAI_API_KEY</code> (or <code>GREENPATH_LLM_API_KEY</code>) set. This makes paid calls to the provider; the model and
-                settings come from <code>src/greenpath/llm/provider_manifest.json</code>, which is selected but not yet live-evaluated.
+                <code> OPENAI_API_KEY</code> (or <code>GREENR_LLM_API_KEY</code>) set. This makes paid calls to the provider; the model and
+                settings come from <code>src/greenr/llm/provider_manifest.json</code>, which is selected but not yet live-evaluated.
               </Callout>
             )}
           </>

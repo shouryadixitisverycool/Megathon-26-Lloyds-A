@@ -11,7 +11,7 @@ from streamlit.testing.v1 import AppTest
 
 from tests.app.conftest import api_fixture
 
-APP = Path(__file__).resolve().parents[1] / "src/greenpath/app/main.py"
+APP = Path(__file__).resolve().parents[1] / "src/greenr/app/main.py"
 HANDOFF_NOTICE = "Demo only. No application submitted. No customer details shared."
 _DEFAULT_CATALOGUE = object()
 
