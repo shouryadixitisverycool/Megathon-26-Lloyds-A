@@ -238,6 +238,22 @@ def uk_scenario_tools(customer_id, product, template, save):
                     st.text("Source SHA-256: " + impact["factor_source_sha256"])
 
 
+def promo_preview(path, product, channel, load):
+    try:
+        banner, card = (load(path + "/promos/" + product, {"format": fmt, "channel": channel}) for fmt in ("one_liner", "short"))
+    except APIError as error:
+        st.error(str(error))
+        return
+    if banner["status"] == "WITHHELD":
+        st.info(f"No message suggested: {banner['withheld_reason']}.")
+        return
+    for label, promo in (("Banner", banner), ("Card", card)):
+        source = "AI-written, passed copy checks" if promo["source"] == "llm" else f"Template ({promo['fallback_reason']})"
+        st.markdown(f"**{label}** · {source}")
+        st.markdown("  \n".join(promo["lines"]) + f"  \n`{promo['cta_label']}`")
+    st.caption(banner["disclaimer"] + " Copy is written only from the decision, its reason themes and the carbon estimate.")
+
+
 def rm_view(customers, load, save):
     st.header("Relationship Manager", icon=":material/support_agent:")
     st.caption("Evidence before outreach. Review actions affect communication; customer scores and impact calculations stay governed by their source records.")
@@ -261,6 +277,8 @@ def rm_view(customers, load, save):
             else:
                 submit(save, "/review", {"customer_id": customer_id, "product": product, "action": action,
                                           "reviewer": reviewer, "note": note})
+    with st.expander("Suggested message", expanded=row["next_action"]["action"] in {"SHOW_EDUCATION", "RM_DISCUSSION"}):
+        promo_preview(path, product, channel, load)
     graph = load(path + "/evidence-graph/" + product)
     with st.expander("Evidence provenance graph", expanded=True):
         lines = ["digraph evidence { rankdir=LR;"]

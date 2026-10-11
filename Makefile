@@ -29,6 +29,7 @@ app:
 
 evaluate-llm:
 	uv run --locked python -m greenr.llm.evaluate
+	uv run --locked python -m greenr.llm.promo_evaluation
 
 pipeline:
 	uv run --locked python -m greenr.pipelines.run all --customers $(CUSTOMERS)

@@ -4,6 +4,7 @@
   "model": "gpt-6-luna",
   "model_version": "gpt-6-luna",
   "prompt_version": "grounded-selection-v1",
+  "promo_prompt_version": "promo-copy-v1",
   "temperature": null,
   "token_limit_parameter": "max_completion_tokens",
   "max_output_tokens": 1600,

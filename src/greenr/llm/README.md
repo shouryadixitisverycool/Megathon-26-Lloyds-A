@@ -81,6 +81,28 @@ failures and malicious fields that must never enter the provider prompt.
 Each case records a stable unique identifier, product, state and impact variant.
 See `LLM_EVAL.md` for the coverage breakdown and offline limitations.
 
+## Promo copy (short ads)
+
+`llm/promo.py::PromoService` drafts four ad sizes from a recommendation:
+`push` (1 line, 50 chars), `one_liner` (banner, 80 chars), `short` (card,
+2-4 lines) and `medium` (email block, 3-5 lines). `GET
+/customers/{id}/promos/{product}?format=&channel=` returns `AVAILABLE` copy
+only when `extensions.service.communication()` returns an engage action;
+otherwise `WITHHELD` with the rule's reason. `preview=true` also returns
+`PREVIEW` copy for a `RECOMMEND` decision blocked only by contact rules.
+
+Unlike explanations, a provider writes the lines itself, under mechanical
+checks (`validate_promo`): no digits or currency, only the `{impact}`
+placeholder (short/medium, available positive annual impact; code renders the
+rounded carbon-engine value labelled "(estimate)"), no eligibility, savings,
+absolute-green or personal-data claims, no links, markup or other product names,
+and per-format line/character limits. Product and format must be echoed. Any
+failure, timeout or missing key returns a deterministic template with a
+controlled `fallback_reason`. The call-to-action label and disclaimer are always
+attached by code. The provider request contains closed reason themes and limits,
+never customer values. `PROMO_PROMPT_VERSION` (default `promo-copy-v1`) versions
+the prompt; `GET /promos/metrics` reports requests, cache hits and fallbacks.
+
 ## Selected provider and optional live evaluation
 
 `provider_manifest.json` pins OpenAI `gpt-4.1-mini-2025-04-14`, the exact dated
