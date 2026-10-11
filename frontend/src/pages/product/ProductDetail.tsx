@@ -4,6 +4,7 @@ import { Info, StateBadge, Tabs, ToneBadge, Unavailable } from "../../components
 import { impactAvailable, impactLabel, percentage } from "../../lib/format";
 import { PRODUCTS, STATES, trustLabel } from "../../lib/labels";
 import { trustTone } from "../CustomersPage";
+import { AdStylesTab } from "./AdStylesTab";
 import { AuditTab } from "./AuditTab";
 import { EngageTab } from "./EngageTab";
 import { ImpactDetails } from "./ImpactDetails";
@@ -11,7 +12,7 @@ import { ReviewTab } from "./ReviewTab";
 import { WhatIfTab } from "./WhatIfTab";
 import { WhyTab } from "./WhyTab";
 
-export type DetailTab = "why" | "impact" | "whatif" | "engage" | "review" | "audit";
+export type DetailTab = "why" | "impact" | "whatif" | "engage" | "review" | "ads" | "audit";
 
 const TABS: { id: DetailTab; label: string }[] = [
   { id: "why", label: "Why" },
@@ -19,6 +20,7 @@ const TABS: { id: DetailTab; label: string }[] = [
   { id: "whatif", label: "What-if" },
   { id: "engage", label: "Contact & history" },
   { id: "review", label: "Review" },
+  { id: "ads", label: "Ad styles" },
   { id: "audit", label: "Audit trail" },
 ];
 
@@ -76,6 +78,7 @@ export function ProductDetail({ row, snapshot, tab, channel }: {
       {tab === "whatif" && <WhatIfTab row={row} snapshot={snapshot} />}
       {tab === "engage" && <EngageTab row={row} snapshot={snapshot} channel={channel} />}
       {tab === "review" && <ReviewTab row={row} snapshot={snapshot} />}
+      {tab === "ads" && <AdStylesTab row={row} channel={channel} />}
       {tab === "audit" && <AuditTab row={row} snapshot={snapshot} />}
     </div>
   );

@@ -3,7 +3,7 @@ import { api, customerPath, requestId } from "./client";
 import type {
   Channel, CounterfactualResult, CustomerIndexEntry, CustomerSnapshot, EvidenceGraph, Explanation,
   GovernanceDiagnostics, Health, HistoryResponse, PlanResult, PortfolioSummary, PortfolioTrends,
-  Preferences, Product, Recommendation, SensitivityResult, ShapAudit, SimulationResult, SimulationTemplate,
+  Preferences, Product, PromoCopy, PromoFormat, Recommendation, SensitivityResult, ShapAudit, SimulationResult, SimulationTemplate,
 } from "./types";
 
 // Mirrors the Streamlit cache: responses are reused for 15 seconds unless refreshed.
@@ -70,6 +70,16 @@ export function useExplanation(customerId: string, product: Product | undefined)
     enabled: !!product,
     staleTime: STALE_MS,
     queryFn: ({ signal }) => api.get<Explanation>(customerPath(customerId, `/explanations/${product}`), undefined, signal),
+  });
+}
+
+/** Promo copy for one product; withheld unless the next action is an engagement. */
+export function usePromo(customerId: string, product: Product, format: PromoFormat, channel: Channel, preview = false) {
+  return useQuery({
+    queryKey: ["customer", customerId, "promo", product, format, channel, preview],
+    staleTime: STALE_MS,
+    queryFn: ({ signal }) =>
+      api.get<PromoCopy>(customerPath(customerId, `/promos/${product}`), { format, channel, preview: String(preview) }, signal),
   });
 }
 

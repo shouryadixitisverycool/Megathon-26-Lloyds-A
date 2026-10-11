@@ -26,6 +26,7 @@ app:
 
 evaluate-llm:
 	uv run --locked python -m greenpath.llm.evaluate
+	uv run --locked python -m greenpath.llm.promo_evaluation
 
 pipeline:
 	uv run --locked python -m greenpath.pipelines.run all --customers $(CUSTOMERS)

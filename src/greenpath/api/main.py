@@ -49,6 +49,7 @@ def create_app(
     history_provider: PortfolioHistoryProvider | None = None,
     recommendation_service: RecommendationServicePort | None = None,
     explanation_service: ExplanationServicePort | None = None,
+    promo_service=None,
     memory_path: Path | None = None,
     background_warmup: bool | None = None,
 ) -> FastAPI:
@@ -83,6 +84,11 @@ def create_app(
         from greenpath.llm.http_provider import configured_provider
 
         explanation_service = ExplanationService(configured_provider())
+    if promo_service is None:
+        from greenpath.llm.promo import PromoService
+        from greenpath.llm.http_provider import configured_provider
+
+        promo_service = PromoService(configured_provider())
 
     from greenpath.extensions.store import MemoryStore
     from greenpath import config
@@ -184,6 +190,7 @@ def create_app(
     application.state.history_provider = history_provider
     application.state.recommendation_service = served_recommendations
     application.state.explanation_service = served_explanations
+    application.state.promo_service = promo_service
     application.state.memory_store = store
     application.state.invalidate_summary = summary_cache.clear
     application.state.portfolio_warmup = warmup
