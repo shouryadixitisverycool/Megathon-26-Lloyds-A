@@ -6,16 +6,18 @@ import { PRODUCTS, STATES, trustLabel } from "../../lib/labels";
 import { trustTone } from "../CustomersPage";
 import { AuditTab } from "./AuditTab";
 import { EngageTab } from "./EngageTab";
+import { ExploreTab } from "./ExploreTab";
 import { ImpactDetails } from "./ImpactDetails";
 import { ReviewTab } from "./ReviewTab";
 import { WhatIfTab } from "./WhatIfTab";
 import { WhyTab } from "./WhyTab";
 
-export type DetailTab = "why" | "impact" | "whatif" | "engage" | "review" | "audit";
+export type DetailTab = "why" | "impact" | "explore" | "whatif" | "engage" | "review" | "audit";
 
 const TABS: { id: DetailTab; label: string }[] = [
   { id: "why", label: "Why" },
   { id: "impact", label: "Impact" },
+  { id: "explore", label: "Explore partners" },
   { id: "whatif", label: "What-if" },
   { id: "engage", label: "Contact & history" },
   { id: "review", label: "Review" },
@@ -26,6 +28,7 @@ export function ProductDetailHeader({ row, snapshot, tab, onTab }: {
   row: Recommendation; snapshot: CustomerSnapshot; tab: DetailTab; onTab: (tab: DetailTab) => void;
 }) {
   const product = PRODUCTS[row.product];
+  const tabs = row.product === "PAPERLESS_BANKING" ? TABS.filter((item) => item.id !== "explore") : TABS;
   const confidence = row.propensity?.confidence_validated ? percentage(row.propensity.confidence) : null;
   return (
     <>
@@ -35,7 +38,7 @@ export function ProductDetailHeader({ row, snapshot, tab, onTab }: {
         <StateBadge state={row.state} />
         <span className="small muted">{STATES[row.state]?.help}</span>
       </div>
-      <div className="stats detail-stats" style={{ marginTop: 20 }}>
+      {tab !== "explore" && <div className="stats detail-stats" style={{ marginTop: 20 }}>
         <div className="stat"><ThresholdRail propensity={row.propensity} /></div>
         <div className="stat">
           <span className="stat-label">Model confidence
@@ -58,9 +61,9 @@ export function ProductDetailHeader({ row, snapshot, tab, onTab }: {
           <span className="stat-value is-small">{impactAvailable(row.impact) ? impactLabel(row.impact) : <Unavailable />}</span>
           <span className="stat-note">{impactAvailable(row.impact) ? "Modelled, per year" : "No defensible estimate"}</span>
         </div>
-      </div>
+      </div>}
       <div style={{ marginTop: 16 }}>
-        <Tabs label="Product details" tabs={TABS} value={tab} onChange={onTab} />
+        <Tabs label="Product details" tabs={tabs} value={tab} onChange={onTab} />
       </div>
     </>
   );
@@ -73,6 +76,7 @@ export function ProductDetail({ row, snapshot, tab, channel }: {
     <div className="tab-panel" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
       {tab === "why" && <WhyTab row={row} snapshot={snapshot} />}
       {tab === "impact" && <ImpactDetails impact={row.impact} />}
+      {tab === "explore" && row.product !== "PAPERLESS_BANKING" && <ExploreTab product={row.product} state={row.state} />}
       {tab === "whatif" && <WhatIfTab row={row} snapshot={snapshot} />}
       {tab === "engage" && <EngageTab row={row} snapshot={snapshot} channel={channel} />}
       {tab === "review" && <ReviewTab row={row} snapshot={snapshot} />}

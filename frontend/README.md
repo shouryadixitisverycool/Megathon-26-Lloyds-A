@@ -4,6 +4,8 @@ A React workspace for the GreenPath API. It covers everything the Streamlit app 
 
 It talks to the existing FastAPI service over HTTP and never computes a decision, score or carbon figure itself.
 
+The RM customer page and Customer Green Hub preview offer **Explore EV**, **Explore solar** and **Explore green home** journeys: a polished shortlist of illustrative partner products, with details and a preview-only handoff. These are demo placeholders, not confirmed Lloyds offers. Lloyds can choose which products to promote through the shared `/partners/catalogue` configuration; see the root README for catalogue editing. Exploration never overrides the customer's decision or contact restrictions, submits an application, or shares customer details.
+
 ## Run it
 
 ```bash
@@ -39,6 +41,7 @@ If you host the build behind your own reverse proxy, set `VITE_API_BASE` at buil
 | Customer workspace: customer picker, persona captions, abstention shortcut | **Customers**: searchable, filterable directory with walkthrough cards for each demo persona |
 | Data Trust metric, feature cutoff, trust issues | Customer header, plus one grouped callout for trust issues (extra issues expand on request) |
 | Product cards: state, propensity, confidence, impact | Ranked opportunity list, with each product's likelihood shown against its cut-off |
+| Explore EV, solar and green-home partner options | Three exploration entry points and an **Explore** product-drawer tab, with curated placeholder offers and a local handoff preview |
 | Why this result: explanation, evidence, reason codes, versions, exclusions | Product drawer, **Why** and **Audit trail** tabs |
 | Impact method, factors and assumptions | **Impact** tab: headline figure, baseline vs scenario, then assumptions, exclusions, inputs, factors and method behind disclosures |
 | Customer evidence and data quality, source snapshot JSON | **Customer data** section: approved facts, grouped source record, per-product trust, raw JSON |

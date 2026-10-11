@@ -43,6 +43,13 @@
   --on-canopy-muted: #c4c4c4;
   --sprout: #11b67a;
 
+  /* Partner showcase artwork and paper-toned surfaces. */
+  --partner-paper: color-mix(in srgb, var(--surface) 93%, var(--mint) 7%);
+  --partner-green: var(--leaf);
+  --partner-ink: var(--leaf-strong);
+  --partner-accent: #d7aa5b;
+  --partner-panel: var(--mint-line);
+
   /* Surfaces & ink */
   --page: #ffffff;
   --surface: #ffffff;

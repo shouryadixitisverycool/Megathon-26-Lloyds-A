@@ -872,6 +872,18 @@
           "default": null,
           "title": "Confidence"
         },
+        "confidence_limitation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence Limitation"
+        },
         "confidence_validated": {
           "default": false,
           "title": "Confidence Validated",
