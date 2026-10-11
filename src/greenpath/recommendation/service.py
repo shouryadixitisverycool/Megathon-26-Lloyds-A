@@ -20,6 +20,7 @@ from greenpath.ports import (
 from greenpath.impact import Product, build_registry
 from greenpath.ports import ProductImpactCalculator as ImpactCalculator
 from greenpath.impact.common import Clock, utc_now
+from greenpath.models.propensity.reason_codes import REASON_CODE_CATALOGUE
 
 from .reasons import REASON_MESSAGES
 
@@ -220,8 +221,14 @@ class RecommendationService:
             return None
         # A model's free-form reason vocabulary cannot authorize relevance reasons.
         # The rules derive reasons directly from approved snapshot evidence.
+        # Without a scoring source (fixtures), only applicable catalogue codes survive.
+        if result.source_result is not None:
+            model_codes = tuple(code.value for code in result.source_result.reason_codes)
+        else:
+            model_codes = tuple(code for code in result.reason_codes if code in REASON_CODE_CATALOGUE
+                                and product in REASON_CODE_CATALOGUE[code].applicable_products)
         return result.model_copy(update={
-            "reason_codes": tuple(code.value for code in result.source_result.reason_codes) if result.source_result else (),
+            "reason_codes": model_codes,
             "confidence": result.confidence if result.confidence_validated else None,
         })
 

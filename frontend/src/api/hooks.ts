@@ -2,8 +2,8 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import { api, customerPath, requestId } from "./client";
 import type { ExplanationMetrics } from "../lib/ai";
 import type {
-  Channel, CounterfactualResult, CustomerIndexEntry, CustomerSnapshot, EvidenceGraph, Explanation,
-  GovernanceDiagnostics, Health, HistoryResponse, PlanResult, PortfolioSummary, PortfolioTrends,
+  Channel, CounterfactualResult, CustomerIndexEntry, CustomerSnapshot, DemoReadiness, EvidenceGraph, Explanation,
+  GovernanceDiagnostics, GreenPurpose, Health, OptionalOpportunitiesResponse, HistoryResponse, PlanResult, PortfolioSummary, PortfolioTrends,
   Preferences, Product, Recommendation, SensitivityResult, ShapAudit, SimulationResult, SimulationTemplate,
 } from "./types";
 
@@ -116,6 +116,18 @@ export function useShap(customerId: string, product: Product, enabled: boolean) 
   });
 }
 
+/** Experimental Green Investments / Green Loans. A declared purpose is needed to score a loan. */
+export function useOptionalOpportunities(customerId: string, purpose: GreenPurpose | "") {
+  return useQuery({
+    queryKey: ["customer", customerId, "optional", purpose],
+    enabled: !!customerId,
+    staleTime: STALE_MS,
+    placeholderData: keepPreviousData,
+    queryFn: ({ signal }) => api.get<OptionalOpportunitiesResponse>(
+      customerPath(customerId, "/optional-opportunities"), purpose ? { purpose } : undefined, signal),
+  });
+}
+
 export type PortfolioFilters = { region?: string; segment?: string; product?: Product };
 
 export function usePortfolioSummary(filters: PortfolioFilters) {
@@ -168,6 +180,16 @@ export function useGovernance() {
     queryKey: ["governance"],
     staleTime: 60_000,
     queryFn: ({ signal }) => api.get<GovernanceDiagnostics>("/governance/diagnostics", undefined, signal),
+  });
+}
+
+export function useDemoReadiness(enabled: boolean) {
+  return useQuery({
+    queryKey: ["demo-readiness"],
+    enabled,
+    staleTime: 60_000,
+    retry: false,
+    queryFn: ({ signal }) => api.get<DemoReadiness>("/demo/readiness", undefined, signal),
   });
 }
 

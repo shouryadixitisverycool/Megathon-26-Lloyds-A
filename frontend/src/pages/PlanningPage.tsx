@@ -8,6 +8,7 @@ import { BarList } from "../components/charts/BarList";
 import { STATE_COLORS } from "../components/charts/common";
 import { Scatter } from "../components/charts/Scatter";
 import { DataTable } from "../components/DataTable";
+import { PlaceholderButton } from "../components/Placeholder";
 import { Callout, Disclosure, Empty, ErrorBox, KV, RangeField, Segmented, SelectField, SlowLoading, Stat, StateBadge, Unavailable } from "../components/ui";
 import { count, decimal, humanize, plural, impactAvailable, impactLabel, percentage, periodLabel, prettyUnit, toNumber } from "../lib/format";
 import { CHANNEL_ORDER, CHANNELS, PRODUCT_ORDER, PRODUCTS, productName, QUALITY_ORDER, STATE_ORDER, STATES, TRUST } from "../lib/labels";
@@ -281,6 +282,12 @@ function PlanOutcome({ result }: { result: PlanResult }) {
       </div>
       <p className="xsmall muted">{result.disclaimer}</p>
       {result.execution_note && <Callout kind="success" title={result.execution_note}>{result.campaign_event_id && <>Campaign event <code>{result.campaign_event_id}</code></>}</Callout>}
+      {result.campaign_event_id && (
+        <div className="row" style={{ gap: 8 }}>
+          <PlaceholderButton feature="Campaign closure" small>Close this campaign</PlaceholderButton>
+          <span className="xsmall muted">Closing frees channel capacity. The API route exists but needs the admin token, which must stay server-side.</span>
+        </div>
+      )}
 
       <div className="grid-2">
         <section className="panel">

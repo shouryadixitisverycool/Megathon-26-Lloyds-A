@@ -6,21 +6,20 @@ import { useExplanationMetrics, useHealth } from "../api/hooks";
 import { aiEnabled, aiModel } from "../lib/ai";
 import { Callout, Loading } from "./ui";
 
-export function Logo({ size = 30 }: { size?: number }) {
+export function Logo({ size = 34 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="var(--canopy-raised)" />
-      <path d="M9 21c0-7 5-12 14-12-1 8-5 13-12 13" fill="none" stroke="var(--sprout)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M9 23l7-7" stroke="var(--sprout)" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M6 25c0-10 7-18 21-19-1 12-8 19-18 19" fill="currentColor" />
+      <path d="M5 27l11-11" stroke="var(--brand)" strokeWidth="2.2" strokeLinecap="round" />
     </svg>
   );
 }
 
 const LINKS = [
-  { to: "/customers", label: "Customers", note: "What to discuss, and why", icon: Users },
-  { to: "/portfolio", label: "Portfolio", note: "Opportunities across the book", icon: LayoutDashboard },
-  { to: "/planning", label: "Campaign planning", note: "Target and size campaigns", icon: Megaphone },
-  { to: "/governance", label: "Governance", note: "Model quality and audit", icon: ShieldCheck },
+  { to: "/customers", label: "Customers", note: "What to discuss, and why" },
+  { to: "/portfolio", label: "Portfolio", note: "Opportunities across the book" },
+  { to: "/planning", label: "Campaign planning", note: "Target and size campaigns" },
+  { to: "/governance", label: "Governance", note: "Model quality and audit" },
 ];
 
 type Theme = "system" | "light" | "dark";
@@ -45,8 +44,8 @@ function ThemeButton() {
   const Icon = theme === "light" ? Sun : theme === "dark" ? Moon : SunMoon;
   const label = { system: "Theme: match system", light: "Theme: light", dark: "Theme: dark" }[theme];
   return (
-    <button type="button" className="btn btn-sm" onClick={() => setTheme(next)} title={label} aria-label={`${label}. Switch theme`}>
-      <Icon size={14} aria-hidden="true" /> {theme === "system" ? "Auto" : theme === "light" ? "Light" : "Dark"}
+    <button type="button" className="masthead-action" onClick={() => setTheme(next)} title={label} aria-label={`${label}. Switch theme`}>
+      <Icon size={18} aria-hidden="true" /> {theme === "system" ? "Auto" : theme === "light" ? "Light" : "Dark"}
     </button>
   );
 }
@@ -120,23 +119,31 @@ export function Layout() {
               </span>
             )}
           </div>
-          <div className="nav-row">
-            <button type="button" className="btn btn-sm" onClick={() => client.invalidateQueries()}
-              title="Fetch fresh data from the API. Responses are otherwise reused for up to 15 seconds.">
-              <RefreshCw size={14} className={fetching ? "spin" : undefined} aria-hidden="true" /> Refresh
-            </button>
-            <ThemeButton />
+        </div>
+        <div className="brandbar">
+          <div className="masthead-inner">
+            <NavLink to="/customers" className="brand">
+              <Logo />
+              <span className="brand-word">GreenPath</span>
+            </NavLink>
+            <span className="brand-tag">Sustainable opportunities</span>
+            <div className="masthead-actions">
+              <button type="button" className="masthead-action" onClick={() => client.invalidateQueries()}
+                title="Fetch fresh data from the API. Responses are otherwise reused for up to 15 seconds.">
+                <RefreshCw size={18} className={fetching ? "spin" : undefined} aria-hidden="true" /> Refresh
+              </button>
+              <ThemeButton />
+            </div>
           </div>
         </div>
-      </nav>
-      </div>
-      <div className="main">
         <div className="demo-strip">
-          <FlaskConical size={14} aria-hidden="true" />
-          <span>Synthetic demo. Shows product relevance only, not credit eligibility or approval.</span>
+          <div className="masthead-inner">
+            <FlaskConical size={14} aria-hidden="true" />
+            <span>Synthetic demo. Shows product relevance only, not credit eligibility or approval.</span>
+          </div>
         </div>
-        {content}
-      </div>
+      </header>
+      <main className="main">{content}</main>
     </div>
   );
 }

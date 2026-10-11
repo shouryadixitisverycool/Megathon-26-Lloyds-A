@@ -51,6 +51,8 @@ If you host the build behind your own reverse proxy, set `VITE_API_BASE` at buil
 
 Also added (all on demand): the trained-model SHAP attribution (`/customers/{id}/shap/{product}`), explanation-service counters (`/explanations/metrics`), the full stored audit record for each decision, and audit lookup from Governance.
 
+Also added: experimental **Green Investments / Green Loans** cards on the customer page (`/customers/{id}/optional-opportunities`), a **customer view** preview at `/customers/{id}/hub`, and a **demo readiness** check in Governance. Placeholders for features without a backend yet (Explore EV options, green loan enquiry and others) are listed in [UI_FEATURE_BACKLOG.md](../UI_FEATURE_BACKLOG.md).
+
 Still API-only (not in Streamlit either): factual source updates and campaign closure. Both need the local admin token, which should stay server-side, so they need a backend route or session design before a browser can use them.
 
 ## AI-written explanations
@@ -77,7 +79,7 @@ Where it appears in the UI:
 - **Threshold rail.** Likelihood is a dot on a 0–100% line with the product's cut-off marked, so "supported" vs "not recommended" can be seen at a glance even when trained cut-offs are near 10%.
 - **Unavailable is never zero.** Missing impact, confidence or priority is labelled as such, styled differently from numbers, and never filled in.
 - **Honest colour.** Product and decision-state colours were checked for colour-blind separation. The "nothing to do" states stay neutral on purpose. Every chart has a legend and a table view.
-- Type: Bricolage Grotesque for headings, Public Sans for UI and tables (self-hosted via Fontsource, so it works offline). Light and dark themes follow the system, with a manual toggle in the sidebar.
+- Look: styled after Lloyds Bank (black workspace strip, bright green brand bar, mint feature bands, black outlined buttons). Literata for headings, Figtree for UI and tables (self-hosted via Fontsource, so it works offline). Light and dark themes follow the system, with a manual toggle in the header.
 
 ## Things to know
 
