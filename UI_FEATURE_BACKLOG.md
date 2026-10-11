@@ -2,15 +2,12 @@
 
 What the React frontend (`frontend/`) shows that has no backend yet, plus what was wired up on 2026-10-11. Sources: the PS1 spec (`Greenr_PS1_Master_MVP_v2.md` §1.1, §3, §42–45, §60–61) and an audit of FastAPI routes against what the frontend calls.
 
-Every placeholder in the UI uses `PlaceholderButton`, `PlaceholderBadge` or `PlaceholderPanel` from `frontend/src/components/Placeholder.tsx`. Each one has a `data-placeholder="<feature>"` attribute named as in the tables below, so `grep -rn 'feature="' frontend/src` finds them all. Clicking a placeholder shows a "coming soon" toast and calls no API.
+Unimplemented action placeholders use `PlaceholderButton`, `PlaceholderBadge` or `PlaceholderPanel` from `frontend/src/components/Placeholder.tsx`. Each one has a `data-placeholder="<feature>"` attribute named as in the table below, so `grep -rn 'feature="' frontend/src` finds them all. Clicking these placeholders shows a "coming soon" toast and calls no API. The partner explorers instead show functioning, read-only journeys with illustrative offer concepts; these are not live partner offers.
 
 ## Placeholders waiting for a backend
 
 | Feature (`data-placeholder`) | Where in the UI | What it should do | Backend needed |
 |---|---|---|---|
-| EV options explorer | Customer view, EV Finance card: **Explore EV options** | Compare EVs against the customer's current car: running cost, CO₂e and finance illustration (spec §42) | New route, e.g. `GET /customers/{id}/ev-options`. Reuse the UK EV scenario inputs (`/simulation-inputs/EV_FINANCE`). Needs a vehicle catalogue |
-| Home upgrade explorer | Customer view, Green Home card: **Explore home upgrades** | Insulation and heat-pump options with modelled savings | New route over the existing insulation/heat-pump UK scenarios |
-| Solar explorer | Customer view, Solar Finance card: **Explore solar for your home** | Roof and system-size illustration with generation estimate | Needs PVGIS-backed generation evidence (`impact/solar_generation.py` requires reviewed inputs) |
 | Paperless switch | Customer view, Paperless card: **Go paperless** | Customer switches statements to digital | A customer-authorised version of `POST /customers/{id}/source-updates` (`digital.is_paperless`), which then closes the journey |
 | Explore green investments | Customer view ("You might also be interested in") and RM page Green Investments card | Show sustainable fund options | Product catalogue route. Must keep the "not investment advice" guardrail (spec §60) |
 | Start a green loan enquiry | RM page Green Loans card (shown when a purpose is declared and the signal fires) | Capture a green-loan enquiry for the declared purpose | Enquiry route that records purpose and consent. No credit decision (spec §61) |
@@ -19,7 +16,19 @@ Every placeholder in the UI uses `PlaceholderButton`, `PlaceholderBadge` or `Pla
 | Factual source updates | RM page, Customer data → **Record a factual update** | Correct a fact and re-run decisions without rewriting history | Route exists: `POST /customers/{id}/source-updates`. It needs the admin token, which must stay server-side, so a session or proxy design is needed first |
 | Campaign closure | Campaign planning, after recording a simulated campaign: **Close this campaign** | Close a campaign and free channel capacity | Route exists: `POST /campaigns/{id}/close`. Same admin-token constraint as above |
 
-## Wired up in this pass (backend already existed)
+## Partner explorers now wired up
+
+EV, solar and green-home CTAs in the RM workspace, Customer Green Hub and Streamlit open `/partners/catalogue`. Lloyds can configure which partner products to promote; the current catalogue contains two explicitly illustrative concepts per category. Details and handoff previews are local, with no application, lead or customer-data sharing. Proposed referral/finance income is not an agreed or realised revenue claim.
+
+The following extensions remain future work, not capabilities of the illustrative catalogue:
+
+| Journey | Future extension | Backend needed |
+|---|---|---|
+| EV options explorer | Compare EVs against the customer's current car: running cost, CO₂e and finance illustration (spec §42) | New route, e.g. `GET /customers/{id}/ev-options`. Reuse the UK EV scenario inputs (`/simulation-inputs/EV_FINANCE`). Needs a reviewed vehicle catalogue |
+| Home upgrade explorer | Insulation and heat-pump options with modelled savings | New route over the existing insulation/heat-pump UK scenarios |
+| Solar explorer | Roof and system-size illustration with generation estimate | Needs PVGIS-backed generation evidence (`impact/solar_generation.py` requires reviewed inputs) |
+
+## Previously wired up (backend already existed)
 
 | Feature | Route | Where |
 |---|---|---|
