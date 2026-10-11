@@ -1,0 +1,1768 @@
+{
+  "audit_date": "2026-10-11",
+  "branch": "research-papers-integration",
+  "commit": "29b95a78edd8ac979661c9f23c13c7fd7a431a60",
+  "scope": "Read-only static code/document review and saved-JSON/byte checks. No training, inference, application tests or live LLM evaluation.",
+  "manifest_checks": {
+    "artifacts_sha256": {
+      "counts": {
+        "match": 1,
+        "mismatch": 37,
+        "missing": 1
+      },
+      "files": [
+        {
+          "path": "data/artifacts/confidence/decisions.json",
+          "expected": "691ef621ca2bf4a0c5786e9a3cee7b79279ff7abe8c3b6562b922838ce0beef0",
+          "actual": "b4b92e6b80158f5d808e8f8b8637820fd8b21a354780ae86d78c79b0546dfe38",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/confidence/ev_finance.joblib",
+          "expected": "d478174d768612362bb386a6b76958de7f0a0369a5c2bba461926165ad45f91f",
+          "actual": "cd202d640c9f43ee6687c8872e896f3cf88f9021bb58bfa0ae0bba547e90ab57",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/confidence/solar_finance.joblib",
+          "expected": "0a60a169565a694c9a642d7a2ba019122c1c6bc4f23633f8a66842a930f0b65d",
+          "actual": "22f7b8a9c6f357ee5bcf65732687d45dda969ca414fe6da1c474a285ba609a4d",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10001.json",
+          "expected": "15737f36348cf8f201c1f9ad6cc6c636878f0407a4d88ca6e62035d8fa2c977b",
+          "actual": "a8579265e91491937a8b9746e59a6cbd7b45c068ba4a5cdf3cc7fa452feec9ab",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10002.json",
+          "expected": "a7043ad2ffecb81a4aeec6b02f1b986a2e56b182cfeccc21258f93940c9df2c5",
+          "actual": "dc339ef6dfadf859a2be233daafdaca8cb00cebf2396a97980104a86cbd33bc2",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10003.json",
+          "expected": "a1dff6e6e94b026620fa82dbbbd3d40c63b64da0b483c84547772ce0628df4af",
+          "actual": "2ee8ede027e548c892c31cad42716a4c0a889a60a7f3865dbe9d6148848d6e37",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10004.json",
+          "expected": "2a09ffcf85772dab02a8e43511de13db97067ce8db0141b69e474b5620103389",
+          "actual": "8e758a134add5b42f67276c0125ca38508e10fb0aeaa30c262fe9baa7e5de4eb",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10005.json",
+          "expected": "b26c2097f6e8c11123f1b80f97aa3adcc4419bd0c87411babf314a0a6a6923a9",
+          "actual": "4e2f54007edaa807691fdcbc490123a5911827acfe4defb3328a70ecaaba3608",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10006.json",
+          "expected": "433d22cada270b2f62022377a93d792dcbf28a55f5aaa7a55c010b8f73640244",
+          "actual": "c59b83d3b8be9012d36166891aedefe8e9a34c93045878cb07756282c547b1f3",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10007.json",
+          "expected": "a6b6dcc72d875232e025d254c4c818909cb23f1631824c449673864130d4527e",
+          "actual": "d875d2727a6c59d3ce2648fd62f6e2b14c4901c6699df11af9d3c4d94ceb061f",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10008.json",
+          "expected": "002e0a9bdab8361a327b4adcb3ef7c574df89b5022bb4dcfafcb8670ad3bcfb6",
+          "actual": "8f46bed055ab33e9f19a7305f67c001338101537939cfb6abf937ee94c012ec0",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10009.json",
+          "expected": "af314c3f554acbbc2a0404aa84777a7c51d74c6dcc7cdec53a6610d84bba2eca",
+          "actual": "b92d2cd16ddc2b9011ba39ca06de9e0a7ce90525959827f92ffb3c9168c65aeb",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/C10010.json",
+          "expected": "339e219f05534f5dc519fc45d53c6ea5ec76ab533867fcfd7eb3a746164ef3a5",
+          "actual": "4baaf11761c4dd117b12cf36eb4828083fef8b024cbb79df8b803b180f4e384a",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/demo/index.json",
+          "expected": "45b3ce0504e92913ccd514281b07bcd77777aa1fc7d2282e19a05089d10b4374",
+          "actual": "45b3ce0504e92913ccd514281b07bcd77777aa1fc7d2282e19a05089d10b4374",
+          "status": "match"
+        },
+        {
+          "path": "data/artifacts/greenpath.db",
+          "expected": "0a76464df41f8aa5f8f85e5d06a50db4209fdb929cab0afd871a90a3543949b0",
+          "actual": "95a3d4ccf5e270921cc6b0b2c08b81bd62ddc53ccfdfdb0902930d39bd648d9b",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/ev_finance/bundle.joblib",
+          "expected": "96f00033221fa0a2cbd373d3e199f871d35ce7f79667bf99cc97207771ae9859",
+          "actual": "d62564b42a7f68dc88beed09b3b6d7de0496ce4a957adceb02d603141ee083aa",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/ev_finance/manifest.json",
+          "expected": "5e3a8fe1316e21f8e000f465e93d54f2a9b47c459680072f5976fc79a0a0fd3f",
+          "actual": "28a4016a42c83475f1afaafa3dd8ca646cd045c12db05e503f2b5dfde6007ec9",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/ev_finance_proxy/bundle.joblib",
+          "expected": "c1e72ae81c1af7b98d797b13935aead49a6870cb290f1415e3381cc265ecb4f3",
+          "actual": "a186810c46076133b3fbef26042389ee25b806c5bc32d83c9a484b6244898e6d",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/ev_finance_proxy/manifest.json",
+          "expected": "4f4f9b64e149bdf92b67bd3cb4f08e24836d4a475d9acb8373b7055618574769",
+          "actual": "0b5fa5ee448d676fdcdf526c6807e0c80077b70ff019c577fcf660dfc73c89bc",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/green_home/bundle.joblib",
+          "expected": "53613e14e738e51567016496130907fc180abdaff8e659aa7f6e81ce0893bf13",
+          "actual": "d345ebad00f18263d0c7dae963979e331d705fd1bd96b526ab2d789e71d2b6fe",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/green_home/manifest.json",
+          "expected": "d2d405bbbb1e66c9365abe5e4efef1d040eb134d6c3881b0f550c25d3defa69c",
+          "actual": "62badd62fd28dbaa3c5a16d92ec17bb0721e57d758b062cef1ab4fd748013dec",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/green_home_proxy/bundle.joblib",
+          "expected": "0437e014b00b2153d1715faf081c57cca4935e9b79774ac7f39eeeed866d1017",
+          "actual": "9e668b9f632326cfcfbdd5d9765d0e8c61ec0198827b61c70fc1cb8124e66ab8",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/green_home_proxy/manifest.json",
+          "expected": "ec6039be3e5abbde46bd61bfbd1f21cf9d3b1fa18bdba6bd882900b8c1260b6c",
+          "actual": "2c7344f04ea968423ff46ae7aebf1965d25a497098266843a05c53d81f173dd3",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/manifest.json",
+          "expected": "beae24b46fe53c48e4e7cf2155583459c110c70de396f2f638a77050d8656c03",
+          "actual": "f3d46fd9d63a57e80582026d6d3e455a2133647e361a7eb52c6880bc36406cb4",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/paperless_banking/bundle.joblib",
+          "expected": "f0476313b7d94a791aca0fbe13677c82d574d03b45888b2ee7be21afaa66ba69",
+          "actual": "0aafab2275a3a6acd45d563f8e0350396473fbaeb2e2e397eaef1e4c13ad9f8a",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/paperless_banking/manifest.json",
+          "expected": "a005a2e81e22185fe3677ec76bf6d5a61a8a3c444da82dcd86f2bf685c10cf11",
+          "actual": "8d4b0b6e50647a63a485ba11c416b8d0f251425e1742236902ebb4b5aefc8116",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/paperless_banking_proxy/bundle.joblib",
+          "expected": "7c7fbc560d1d68903dfa949f63bdfc0a83f186649699926f236fa21c99730bb9",
+          "actual": "477d4b83b15036c70d9f194ffc51a1526023effa984b31747912e1d720a90c96",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/paperless_banking_proxy/manifest.json",
+          "expected": "bfa96af864d2f03723ad48bf7733ce90d66d68a978dc144a3c2e158c55c01ead",
+          "actual": "bf3e7c15f2239c28ee62e22b03e1223ec36ae30269ee9d62e076f67874b36526",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/solar_finance/bundle.joblib",
+          "expected": "c84304aec2d6db55e2888a877d655c8ac6aa3c4a95751202995ae0e0a49a4fe6",
+          "actual": "78ee9b7ee60754f6fa245d54e9a9a8c1cacd8e2b3944a9079a592e7f09324e40",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/solar_finance/manifest.json",
+          "expected": "b245d2107f314bd4fc1033868c8251dbb38e7094dbe3f7d69525627893c96a92",
+          "actual": "5014f0ff02e4c6b156a599d3b2e0638876fcf0a95c47e5b84e550df80943be2a",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/solar_finance_proxy/bundle.joblib",
+          "expected": "60fadecc31207eb52702ea17a723fccc2310d598aca9e2e188beefe6f504a248",
+          "actual": "f75af2e8c637a1589c58f0e23e7a36d7a0be451eb3344a5aa827575610d94054",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/models/solar_finance_proxy/manifest.json",
+          "expected": "33dc598a8e02db13cd3fab46418bd51ec42663b3e3942a0c39fe4bb99d915dc8",
+          "actual": "621c9ebe0e2650030e009d9320952ab1526c7c452bc20f5922afa7280bb7ab43",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/ood/ev_finance.joblib",
+          "expected": "99b919f73dfd7711831d616dd5b629b65da68516a01f1da63d4d9403f060633a",
+          "actual": "9a14354aea1916bc6e343c9a811d1bf59bed5a415e9c500fcbb156ff034a619b",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/ood/green_home.joblib",
+          "expected": "f7b08096d151eecc54fe337dc89f786cd60727be9380e8b9ccf4e323bb197efe",
+          "actual": "b6fc629faeaec148315f89c14ab0702233002e2f4fd0574486c6cfaf8394fc5b",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/ood/paperless_banking.joblib",
+          "expected": "92189e6ee3496e3b9915ec45885076019fda9e1b7e859341c7684430bae97ddc",
+          "actual": "77089ffebe6d2b877c66afb5957599afe4f5bebe3899e30007c427249696cc0f",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/ood/solar_finance.joblib",
+          "expected": "a7e3300ab0d6c08d92a85eae68517f4d4228f1467123648455b48ac31d158ee3",
+          "actual": "2a799f9572b3621e996eff4ff22dda2ea3618bfc9890ed2a67abab08d3a65e22",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/portfolio_scores.parquet",
+          "expected": "55d3358edf4f61763dae6c6cc3e34b5f5a1c017df88b51b9549548bd40be88d6",
+          "actual": "4efa7b4f1c2dc60e25525ac498bda878c300324d3362641a89e1764300013c77",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/transaction_categoriser.joblib",
+          "expected": "de4ebcfffc43645f7efbdbb97b36d2bb06871b1f8402f7fb9c65eb95b01d3e13",
+          "actual": "8e70f14ceb531b8319d1b6222d37f85e4cd4a9b09f2d479befe6f40407b2b83a",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/artifacts/trust_thresholds.json",
+          "expected": "3edbcb6d858bbe5d52460857dbda79e7a35e68191c9c3613c1ae70d60be8fe4a",
+          "actual": null,
+          "status": "missing"
+        }
+      ]
+    },
+    "inputs_sha256": {
+      "counts": {
+        "match": 8,
+        "mismatch": 14,
+        "missing": 0
+      },
+      "files": [
+        {
+          "path": "data/synthetic/customer_outcomes.parquet",
+          "expected": "41dcf66dd9ecd779ed2c320e2f7cc4b0a006361c46ddcef6a13fb4b24f335315",
+          "actual": "41dcf66dd9ecd779ed2c320e2f7cc4b0a006361c46ddcef6a13fb4b24f335315",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic/customers.parquet",
+          "expected": "ddd99568535e92dc9b8176445c172870a17694a5967af3bc4dedf0a94f6d01d4",
+          "actual": "2e018260e5ae73d6213630f7bc6fa9facb111c2716fd4aab062c85f37f6dc679",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic/digital_usage.parquet",
+          "expected": "9f935754ac884e3763f4e45cec946fd2776b49e2ad59d0beb6063ea16fa99b4d",
+          "actual": "5653fb4acbeb392745cefa6d12f76d586335a8b48c2eb112678d1b79e7b26ff2",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic/energy_usage.parquet",
+          "expected": "d0baf2f1b0f20adaf431a0313f136aa711c062c77dabe9223f832d27d726d0f2",
+          "actual": "6b04e6739e11dc96a0bd761b8ee48a342b0b2c4b68efa249bb4e5766bea15c6d",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic/financial_products.parquet",
+          "expected": "06feb0686caba491220e326fdafda679f2c3ef18ca9282eb7f7d28bf05bdcf7a",
+          "actual": "92dea03962ebd1a2ef00807c2196ae1099217f7a62d3b5a30b03d6da04719712",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic/generator_config.json",
+          "expected": "27b928e94179d3980eede1e3a7175f5687ab65ab888c4e6ac5141d3007f1fbe8",
+          "actual": "8069bbc329587fe05ad7aebd113402aac4e0e9e0e5c16b824680c29a91c17bf0",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic/green_product_catalogue.parquet",
+          "expected": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+          "actual": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic/merchants.parquet",
+          "expected": "33520abe59bb2d339830935e04326a0c32357b4b4d84e4e5f6b9dc88fc3ec39b",
+          "actual": "33520abe59bb2d339830935e04326a0c32357b4b4d84e4e5f6b9dc88fc3ec39b",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic/transaction_truth.parquet",
+          "expected": "528550173d46d5fffc87e5bb60ba8ad5fa9f9e63c268c431b656daa336a6e75c",
+          "actual": "528550173d46d5fffc87e5bb60ba8ad5fa9f9e63c268c431b656daa336a6e75c",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic/transactions.parquet",
+          "expected": "fd04669e19c6c078eed6e18a59ec99c6fa5935c1f90326c273a1b53830fe0ee2",
+          "actual": "39d52a0955e5e65abd68f598cb95c0f9d52514798ce2cafbbaa8233d00004195",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic/vehicles.parquet",
+          "expected": "aa23c6c01f1b95ba7cb136d3eeddc25a3cd061da8422cf5570d1681ecae28868",
+          "actual": "acc858b262cac69b6324882647e03ab962df129a17d7e9d2664d63b44d975193",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic_perturbed/customer_outcomes.parquet",
+          "expected": "b480fde26cb976a264ab3a6158e13d5eed503df56638dd271491d775d07af946",
+          "actual": "b480fde26cb976a264ab3a6158e13d5eed503df56638dd271491d775d07af946",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic_perturbed/customers.parquet",
+          "expected": "9093952669eb8ef188817ce4f153d7cb3fba93daf98e9b481db7473919ef6c6e",
+          "actual": "fd83ea50921eb664949c480d24bb66cb4590896ed850dbf146ba634893c1d638",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic_perturbed/digital_usage.parquet",
+          "expected": "360a0d4417a660ee371842c1a49fcf09d0b23dc2631c15e98cf7704f64fe9bdc",
+          "actual": "f49c78eff0d9654e28f59167127c9b5fedb7ae30c2a60654d2f1a88a8cc8283a",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic_perturbed/energy_usage.parquet",
+          "expected": "7756dd720f750173f8b44a44ef31dc6c627fb924986f7e0526d3eb381f921e1b",
+          "actual": "291bec1e6224fe96a791c993f6f05366fb8245eeced1c41984fc4e16796025da",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic_perturbed/financial_products.parquet",
+          "expected": "1adf815d1381065c9e68a6397c8125cb345bebad26d5f961e77c62b97185604b",
+          "actual": "33f11450f90bc93217b5ec878441b733dd8a3710c402222ebcafad5f74c19c09",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic_perturbed/generator_config.json",
+          "expected": "c88515bfb14e96b8121c0054336dfc468d636f6fd7991c27b265c0d8e9235280",
+          "actual": "c273d4e6f8abd8fc080f423868d2d3e4bd87a737c78a4a4830a2446915d1c311",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic_perturbed/green_product_catalogue.parquet",
+          "expected": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+          "actual": "21c19a60e8e5438f66cc98aa944d925ba129e0f88164d9e652914faf52e61c51",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic_perturbed/merchants.parquet",
+          "expected": "33520abe59bb2d339830935e04326a0c32357b4b4d84e4e5f6b9dc88fc3ec39b",
+          "actual": "33520abe59bb2d339830935e04326a0c32357b4b4d84e4e5f6b9dc88fc3ec39b",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic_perturbed/transaction_truth.parquet",
+          "expected": "161ac6e9d5324a302e03d488f23bf151badfba45360f9bf8b70c6527765eae30",
+          "actual": "161ac6e9d5324a302e03d488f23bf151badfba45360f9bf8b70c6527765eae30",
+          "status": "match"
+        },
+        {
+          "path": "data/synthetic_perturbed/transactions.parquet",
+          "expected": "75be4c958d44aed89c5bf18a6df1139e79606e41c13a05552fa4f41caf7fe1ea",
+          "actual": "05c4d2859b055168284220638f87ff108fa4edb42274dc00fc346f8d312f0f08",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/synthetic_perturbed/vehicles.parquet",
+          "expected": "961ea29e1e7cda369015ac3b7aad362ac47d0f77556b5306f37ef78b1c941529",
+          "actual": "8cc3596b74bf586ee58ed7de7586d9e89e61612da489ab18e770caf275d16be2",
+          "status": "mismatch"
+        }
+      ]
+    },
+    "processed_sha256": {
+      "counts": {
+        "match": 1,
+        "mismatch": 9,
+        "missing": 0
+      },
+      "files": [
+        {
+          "path": "data/processed/customer360_2026-01-31.parquet",
+          "expected": "2f1499e794e16466400b4e5c5dc204c2e5a10896f46600bbbeae087ea8d9f598",
+          "actual": "de4763fa96e56add8bd1a69bf2a5427c43998133e2cf21e6dc9de5428f098b89",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/customer360_2026-02-28.parquet",
+          "expected": "20699048515c63aa74b7a28bc12a5e8706ee5839e650cc520565f6e63fcac15c",
+          "actual": "aa306fb17abaf3d7ea192b1dd25981239fac6ec702dc2d4e2114c99978d38b2d",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/customer360_2026-03-31.parquet",
+          "expected": "17da60f5faca872273d79b6c9a8ac3199ded821701e0b9786556dccf40cc65a8",
+          "actual": "31694a2bc4123c8e0410c406b53dbaf353c18f44abd4c31ff2f6fab5b99f1faa",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/customer360_2026-04-30.parquet",
+          "expected": "1b56d35f5ef96af0856a9c4672e3650e9e0f26bcae922b3e0888fa6bfee7988c",
+          "actual": "235a592461640fac6ce5da927f788eeebab70bd698305c398bb855244fe5c1c2",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/customer360_2026-05-31.parquet",
+          "expected": "54be81eb0a9a3ce2e39effe4f768a93e08621e9d39d25a70376ff1813e2e961a",
+          "actual": "afe9196eb8a482421e0ef91b6b8ef3bf93901e45055f819ad06ed6a092091a4c",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/customer360_2026-06-30.parquet",
+          "expected": "a1cf927a4b454e0f4d24e6323f3a47128a878888543ac7f9686fd605900d914e",
+          "actual": "ff3d514e9d7248f59927ef83ada4a8105a180b4add0bd9789cd0ecaee3be7717",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/labels.parquet",
+          "expected": "1bdd8755f2b361b583ea4e5892d79fb471f7482cb9d5f156f10d981aaf68c315",
+          "actual": "1bdd8755f2b361b583ea4e5892d79fb471f7482cb9d5f156f10d981aaf68c315",
+          "status": "match"
+        },
+        {
+          "path": "data/processed/split_manifest.csv",
+          "expected": "6e0ff54c48037622d172a8522ea057098544fd10302d9f52cada2e5c7bffeb12",
+          "actual": "45197c61dd726cb80e915debaf1ff298685e7166e39a04a7a886b17c160701f9",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/split_manifest.csv.sha256",
+          "expected": "b1c81b4e3f7ba1c08bc11f6b61bac6324b287ca6516ad9ebdcdebf1b93101d1b",
+          "actual": "9a726e8a1b33e3cd9b008610b859dd768d120eecf8505a9c1682b8061aa08c10",
+          "status": "mismatch"
+        },
+        {
+          "path": "data/processed/transactions_categorised.parquet",
+          "expected": "d5db309343e72d0452fb5a9fc15bede35ea12be604c1bacfb540a538f1d7bf89",
+          "actual": "281dfa976519600e68a84f6ce472b08e4ac7812f042bdc519b04c6229013b8fd",
+          "status": "mismatch"
+        }
+      ]
+    },
+    "outputs_sha256": {
+      "counts": {
+        "match": 33,
+        "mismatch": 4,
+        "missing": 0
+      },
+      "files": [
+        {
+          "path": "reports/CONFIDENCE_VALIDATION.md",
+          "expected": "fa03f0398f1a84c8e30040464fe838ceee6a30c8aa312722cbd2e8fb881194a1",
+          "actual": "fa03f0398f1a84c8e30040464fe838ceee6a30c8aa312722cbd2e8fb881194a1",
+          "status": "match"
+        },
+        {
+          "path": "reports/TRANSACTION_CATEGORISATION.md",
+          "expected": "ad8c32f0c93848c7c8c6b651715b5d08955d0d04af105e98227bde24a92cde25",
+          "actual": "ad8c32f0c93848c7c8c6b651715b5d08955d0d04af105e98227bde24a92cde25",
+          "status": "match"
+        },
+        {
+          "path": "reports/confidence_validation.json",
+          "expected": "211ac7c81f25e66ae40d3307bed4e706616a0608546786362b14aec64f459a84",
+          "actual": "211ac7c81f25e66ae40d3307bed4e706616a0608546786362b14aec64f459a84",
+          "status": "match"
+        },
+        {
+          "path": "reports/explanation_evaluation.json",
+          "expected": "b7e7aa0e39a1f17e0af4915abff33a37f303ecc5e57aee031ba5dcd0790c67fa",
+          "actual": "73f2f12426d319c8aa0e67fce0f2ccca69b0b5f43eedada8d98320c5a9c8f2b4",
+          "status": "mismatch"
+        },
+        {
+          "path": "reports/feature_drift.json",
+          "expected": "63dd83f0b466f8ed9cdabc75a8059f555a417ecb2ebd4111a5a921237c9c4b56",
+          "actual": "63dd83f0b466f8ed9cdabc75a8059f555a417ecb2ebd4111a5a921237c9c4b56",
+          "status": "match"
+        },
+        {
+          "path": "reports/leakage_checks.json",
+          "expected": "ddb9614587a76ae3636f6437d0f9e109714e64cf44952ff819653f3e6474f0b7",
+          "actual": "ddb9614587a76ae3636f6437d0f9e109714e64cf44952ff819653f3e6474f0b7",
+          "status": "match"
+        },
+        {
+          "path": "reports/ml_evaluation.json",
+          "expected": "c035c5242106ef748017807b872788c8b70e351120cdb0417bbe11ae0bdf35da",
+          "actual": "c035c5242106ef748017807b872788c8b70e351120cdb0417bbe11ae0bdf35da",
+          "status": "match"
+        },
+        {
+          "path": "reports/optional_evaluation.json",
+          "expected": "bf7d1ab5c42dfa0ddf54ab9dc720104f38c55fcc1a1d2306542b4fa6cca1ef85",
+          "actual": "bf7d1ab5c42dfa0ddf54ab9dc720104f38c55fcc1a1d2306542b4fa6cca1ef85",
+          "status": "match"
+        },
+        {
+          "path": "reports/pipeline_timings.json",
+          "expected": "143f6e5517db95207f74ff6e326fb423852c090c18695fee370f40faf6a280b9",
+          "actual": "143f6e5517db95207f74ff6e326fb423852c090c18695fee370f40faf6a280b9",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/ev_finance_calibration.svg",
+          "expected": "05f027ef0cf9d43e78f4445b3e6776744bdac1369e85e9aec96ac4b1084d80b4",
+          "actual": "05f027ef0cf9d43e78f4445b3e6776744bdac1369e85e9aec96ac4b1084d80b4",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/ev_finance_precision_recall.svg",
+          "expected": "60b45e1cca7b914a84c63a5093b9f4409f7e515d515bc9302b6ad12d6ac1b4c1",
+          "actual": "60b45e1cca7b914a84c63a5093b9f4409f7e515d515bc9302b6ad12d6ac1b4c1",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/ev_finance_roc.svg",
+          "expected": "1255475814c60cb4ddcfd808d31c1e041d241a2a6e8d11a01fa984591b3693b2",
+          "actual": "1255475814c60cb4ddcfd808d31c1e041d241a2a6e8d11a01fa984591b3693b2",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/green_home_calibration.svg",
+          "expected": "5fe582b409a8012d6142b882b818aade19fb24afe2dc19b46d2fe10b03ce052d",
+          "actual": "5fe582b409a8012d6142b882b818aade19fb24afe2dc19b46d2fe10b03ce052d",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/green_home_precision_recall.svg",
+          "expected": "cac6b7c3d37672915b75bb5b0d206e38892e2424767f16e8dfed558922181297",
+          "actual": "cac6b7c3d37672915b75bb5b0d206e38892e2424767f16e8dfed558922181297",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/green_home_roc.svg",
+          "expected": "3b15567cbe94dd385032ba126c6e5669f054f648a35bf6fffc84197ae0101121",
+          "actual": "3b15567cbe94dd385032ba126c6e5669f054f648a35bf6fffc84197ae0101121",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/paperless_banking_calibration.svg",
+          "expected": "ce6b65fb654538a4bf32b5c9408e06277655bbd680fdc8a4fb96c816ea21384d",
+          "actual": "ce6b65fb654538a4bf32b5c9408e06277655bbd680fdc8a4fb96c816ea21384d",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/paperless_banking_precision_recall.svg",
+          "expected": "ee774dd29d1700cbfa8c71903a4a240d8fe357aa435307b74e3fd948b10ee247",
+          "actual": "ee774dd29d1700cbfa8c71903a4a240d8fe357aa435307b74e3fd948b10ee247",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/paperless_banking_roc.svg",
+          "expected": "6129366b1cbee21f91c027d221444271e1d0167a19e6683ac9e1d5d6f682ed0a",
+          "actual": "6129366b1cbee21f91c027d221444271e1d0167a19e6683ac9e1d5d6f682ed0a",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/solar_finance_calibration.svg",
+          "expected": "64b29929c23c1d44873b1ed608544da53355075c0f49b6cb8041d31ae126307c",
+          "actual": "64b29929c23c1d44873b1ed608544da53355075c0f49b6cb8041d31ae126307c",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/solar_finance_precision_recall.svg",
+          "expected": "01bfc0c9ff592e41e3ea067056b3b3604de88b6ddb1095091ffb2c4fc2d4039a",
+          "actual": "01bfc0c9ff592e41e3ea067056b3b3604de88b6ddb1095091ffb2c4fc2d4039a",
+          "status": "match"
+        },
+        {
+          "path": "reports/plots/solar_finance_roc.svg",
+          "expected": "f3d472cc47a48ea73623311d3ce763362635f1addb30f13465cae1975e61d217",
+          "actual": "f3d472cc47a48ea73623311d3ce763362635f1addb30f13465cae1975e61d217",
+          "status": "match"
+        },
+        {
+          "path": "reports/predictions/test_predictions.csv",
+          "expected": "e271a2c7a3dd3f9e0d5f4c9e8703cff80705c7c0bad0b6f04734dc1d6cc6e55c",
+          "actual": "e271a2c7a3dd3f9e0d5f4c9e8703cff80705c7c0bad0b6f04734dc1d6cc6e55c",
+          "status": "match"
+        },
+        {
+          "path": "reports/scenario_evaluation.json",
+          "expected": "18db8de10169660ba4d57a93dd3b1cfd8ae695357e69967631ad6beb9c7e860a",
+          "actual": "c3a58a0e938e0a33b521fc9338e999fdb85a53da86abeed015eebd0a3723397f",
+          "status": "mismatch"
+        },
+        {
+          "path": "reports/shap/ev_finance.json",
+          "expected": "80cf50f5c23138d8ae0401bfa47d785daaf6b91fe67017d80be2b8ef7094d21b",
+          "actual": "80cf50f5c23138d8ae0401bfa47d785daaf6b91fe67017d80be2b8ef7094d21b",
+          "status": "match"
+        },
+        {
+          "path": "reports/shap/green_home.json",
+          "expected": "f38375e364ca53019d7e64fbf90dcda96c07fc80b1455594688c45ccab31152b",
+          "actual": "f38375e364ca53019d7e64fbf90dcda96c07fc80b1455594688c45ccab31152b",
+          "status": "match"
+        },
+        {
+          "path": "reports/shap/paperless_banking.json",
+          "expected": "15a55a105297f91b7b36ff3dd6b94af215f2ec551bb494a80138556ba09c28f4",
+          "actual": "15a55a105297f91b7b36ff3dd6b94af215f2ec551bb494a80138556ba09c28f4",
+          "status": "match"
+        },
+        {
+          "path": "reports/shap/solar_finance.json",
+          "expected": "f3795f44bc19a755db21a97f9aa183c77239b315a67d69d465d245701192dcad",
+          "actual": "f3795f44bc19a755db21a97f9aa183c77239b315a67d69d465d245701192dcad",
+          "status": "match"
+        },
+        {
+          "path": "reports/system_performance.json",
+          "expected": "6ff5f0b2f0e277aba5fa555644af2dff4196e2db3df76a5b364d36303ccd68e4",
+          "actual": "e400b8213b021c3483050597295239903bc9d98b6502e15ebdbdd7ec09d67038",
+          "status": "mismatch"
+        },
+        {
+          "path": "reports/transaction_eval.json",
+          "expected": "e7794389172287d906c713b503ef718dc356784415c0aefc682e7f44cb49c9ea",
+          "actual": "e7794389172287d906c713b503ef718dc356784415c0aefc682e7f44cb49c9ea",
+          "status": "match"
+        },
+        {
+          "path": "DATA_CARD.md",
+          "expected": "5030cc4441ab81536dce10dd00fe8536ba0f45fc6e9347d0b420b4452ced2249",
+          "actual": "5030cc4441ab81536dce10dd00fe8536ba0f45fc6e9347d0b420b4452ced2249",
+          "status": "match"
+        },
+        {
+          "path": "EVALUATION_REPORT_AGENT_A.md",
+          "expected": "e87ff9c78d5a184293811fae0e2cd6e29ae09ded7c024bbc1cb06286b7188e14",
+          "actual": "e87ff9c78d5a184293811fae0e2cd6e29ae09ded7c024bbc1cb06286b7188e14",
+          "status": "match"
+        },
+        {
+          "path": "LEAKAGE_AUDIT.md",
+          "expected": "ded0c07ba9f924470e88e5ca4cec68014f010bc9240657fa53773eb886113f94",
+          "actual": "ded0c07ba9f924470e88e5ca4cec68014f010bc9240657fa53773eb886113f94",
+          "status": "match"
+        },
+        {
+          "path": "MODEL_CARD_EV.md",
+          "expected": "15c8877ffa7fa7a7eaa45c1c6b9a7a68bf6197a723b3245f8bb7c115b2f84fbb",
+          "actual": "15c8877ffa7fa7a7eaa45c1c6b9a7a68bf6197a723b3245f8bb7c115b2f84fbb",
+          "status": "match"
+        },
+        {
+          "path": "MODEL_CARD_GREEN_HOME.md",
+          "expected": "2f586f27e8ab0a795e84fd8d9f2443caa79fc05fb598a5a501a9718d9c0eaf37",
+          "actual": "2f586f27e8ab0a795e84fd8d9f2443caa79fc05fb598a5a501a9718d9c0eaf37",
+          "status": "match"
+        },
+        {
+          "path": "MODEL_CARD_OPTIONAL.md",
+          "expected": "1f6013dad211aec55b290359084e73709bbd015eb9d7f96712578f70f19516e6",
+          "actual": "d99195ff280fde70a064ebd3377130803d930b2da00944e2f223385e97e715cf",
+          "status": "mismatch"
+        },
+        {
+          "path": "MODEL_CARD_PAPERLESS.md",
+          "expected": "22e68ae2f807f378525dc6c06674e0ed6ce583b1344fc54badfa78e962bbe39c",
+          "actual": "22e68ae2f807f378525dc6c06674e0ed6ce583b1344fc54badfa78e962bbe39c",
+          "status": "match"
+        },
+        {
+          "path": "MODEL_CARD_SOLAR.md",
+          "expected": "d8287b174954ec764d28608dffe5afddc7bd02319cb66aa0784a3c5a0876683a",
+          "actual": "d8287b174954ec764d28608dffe5afddc7bd02319cb66aa0784a3c5a0876683a",
+          "status": "match"
+        }
+      ]
+    },
+    "factor_files_sha256": {
+      "counts": {
+        "match": 43,
+        "mismatch": 0,
+        "missing": 0
+      },
+      "files": [
+        {
+          "path": "data/factors/ghg-conversion-factors-2025-flat-format.xlsx",
+          "expected": "8bfdb45b81ec4a88e3bdf4584637330f62e6bd09ce1940e654c5d7b7f736de94",
+          "actual": "8bfdb45b81ec4a88e3bdf4584637330f62e6bd09ce1940e654c5d7b7f736de94",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/customer_snapshot_C10001.json",
+          "expected": "54b8915f2fcd17cc21895c9b6fd3e5a676ac862d65672ed8cb391d4082cd61e4",
+          "actual": "54b8915f2fcd17cc21895c9b6fd3e5a676ac862d65672ed8cb391d4082cd61e4",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/customer_snapshot_C10005.json",
+          "expected": "d7b7a696c8b29a769d002d444dc4421bfb0300e557efdc88d41179c842fb3ee1",
+          "actual": "d7b7a696c8b29a769d002d444dc4421bfb0300e557efdc88d41179c842fb3ee1",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/explanation_template.json",
+          "expected": "6686bf4dd10f9c8ffab1f21a30ff03187bc81b10d35bb397bf1bd3818660790c",
+          "actual": "6686bf4dd10f9c8ffab1f21a30ff03187bc81b10d35bb397bf1bd3818660790c",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/impact_result_ev_available.json",
+          "expected": "da10fd1532641eacd6c2b6c925b1e9febc7401c4af4f760aad78b989299f5651",
+          "actual": "da10fd1532641eacd6c2b6c925b1e9febc7401c4af4f760aad78b989299f5651",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/impact_result_paperless_not_claimed.json",
+          "expected": "e537561dc327d1df5a4bda5ca6ddf099ff179611d217cc3022d7a65e742b238c",
+          "actual": "e537561dc327d1df5a4bda5ca6ddf099ff179611d217cc3022d7a65e742b238c",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/impact_result_solar_unavailable.json",
+          "expected": "9e3363888bd8590e1a5f3a5dc4eda658ada762868edd9e4282960d617c4c4c22",
+          "actual": "9e3363888bd8590e1a5f3a5dc4eda658ada762868edd9e4282960d617c4c4c22",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/portfolio_summary.json",
+          "expected": "8e56eacac1fc67510b57a4730ad55f911c930f839cad5fb306f71a9ee982ba25",
+          "actual": "8e56eacac1fc67510b57a4730ad55f911c930f839cad5fb306f71a9ee982ba25",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/portfolio_trends.json",
+          "expected": "13229e260dfb695a7c0997f39e87cd47d66f4dd239b64d8df54f9dbd91c978cd",
+          "actual": "13229e260dfb695a7c0997f39e87cd47d66f4dd239b64d8df54f9dbd91c978cd",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/propensity_result_C10001_EV.json",
+          "expected": "5f3fb92916efb7e68a2c055574ec195e3f4311925d7ca2d1f279a6ee46ba5a8d",
+          "actual": "5f3fb92916efb7e68a2c055574ec195e3f4311925d7ca2d1f279a6ee46ba5a8d",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/propensity_result_C10005_SOLAR.json",
+          "expected": "8cba4f4629e72e769bd1db89f1d86312f14d5157cba88df55a1e86baec9b0f3c",
+          "actual": "8cba4f4629e72e769bd1db89f1d86312f14d5157cba88df55a1e86baec9b0f3c",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/recommendation_CONFLICT_REQUIRES_REVIEW.json",
+          "expected": "e964c1657e0150a161b88473cea810c5cd857902043299a22e65b5401bb5c9b6",
+          "actual": "e964c1657e0150a161b88473cea810c5cd857902043299a22e65b5401bb5c9b6",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/recommendation_DO_NOT_RECOMMEND.json",
+          "expected": "835cfa11b3fd939741cb9769ab5cb1ce025a7ed726fca930ac2e08ab3036fc76",
+          "actual": "835cfa11b3fd939741cb9769ab5cb1ce025a7ed726fca930ac2e08ab3036fc76",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/recommendation_INSUFFICIENT_INFORMATION.json",
+          "expected": "d6b0d0c03a98e1ff7cbe2300687404b5ed99390646305627ea1a094f61bf1187",
+          "actual": "d6b0d0c03a98e1ff7cbe2300687404b5ed99390646305627ea1a094f61bf1187",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/recommendation_NOT_APPLICABLE.json",
+          "expected": "d27d169fbffd47249d737ab044b5f9425757f594875ae3f03c66129e726c7652",
+          "actual": "d27d169fbffd47249d737ab044b5f9425757f594875ae3f03c66129e726c7652",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/recommendation_RECOMMEND.json",
+          "expected": "eaa57c41743afdd7b0cff2573be6031d92a7ae99bf60f38181cc20585d632df6",
+          "actual": "eaa57c41743afdd7b0cff2573be6031d92a7ae99bf60f38181cc20585d632df6",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/recommendation_SUPPRESSED.json",
+          "expected": "1721fb08b54553d920d39e30da2e60886959defdac4c1ec0b9779d5d3171c5fc",
+          "actual": "1721fb08b54553d920d39e30da2e60886959defdac4c1ec0b9779d5d3171c5fc",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/trust_assessment_C10001_EV.json",
+          "expected": "fdd0331ef3016ccbe3abc20a87ad3aa6d324c30a9f5e7f8567f6405506c6a458",
+          "actual": "fdd0331ef3016ccbe3abc20a87ad3aa6d324c30a9f5e7f8567f6405506c6a458",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/trust_assessment_C10004_EV.json",
+          "expected": "afb0277e43c5f6d3fec5194b758aa6d00a484f4b2aad75f22ceb2b6d3444069e",
+          "actual": "afb0277e43c5f6d3fec5194b758aa6d00a484f4b2aad75f22ceb2b6d3444069e",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/fixtures/trust_assessment_C10005_SOLAR.json",
+          "expected": "0bd395d2e7debb703c99b4d89eb816c84723ecbabe573442a328481d788fd6ae",
+          "actual": "0bd395d2e7debb703c99b4d89eb816c84723ecbabe573442a328481d788fd6ae",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/customer_snapshot.schema.json",
+          "expected": "cf17940ee70fd824816ebbd11bcfa02a1bbc924684b474e02424b0f913a00131",
+          "actual": "cf17940ee70fd824816ebbd11bcfa02a1bbc924684b474e02424b0f913a00131",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/explanation.schema.json",
+          "expected": "cf7c6ca1596b4e9f4c893cfd0bd48e54a78a6cb36a814e86d8fea8b884922361",
+          "actual": "cf7c6ca1596b4e9f4c893cfd0bd48e54a78a6cb36a814e86d8fea8b884922361",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/impact_result.schema.json",
+          "expected": "202b4e1fa91a5e3f8707def043e6094386721815cb1e778dd281d7933dfd67d2",
+          "actual": "202b4e1fa91a5e3f8707def043e6094386721815cb1e778dd281d7933dfd67d2",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/portfolio_summary.schema.json",
+          "expected": "ba660557165b37ace643f25f54e725378c0fbd16a4c1eb1ca1cbf362c0c3669b",
+          "actual": "ba660557165b37ace643f25f54e725378c0fbd16a4c1eb1ca1cbf362c0c3669b",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/portfolio_trends.schema.json",
+          "expected": "4bada915f82287afd59836bc4d14d1e77fe8118e4342d48d56a827e57e04e4c4",
+          "actual": "4bada915f82287afd59836bc4d14d1e77fe8118e4342d48d56a827e57e04e4c4",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/product_customer_snapshot.schema.json",
+          "expected": "415d8f45acb7ce88d4e728dbba57e2b3843f5d0bed87a0864ae2d7cfe84c0fdb",
+          "actual": "415d8f45acb7ce88d4e728dbba57e2b3843f5d0bed87a0864ae2d7cfe84c0fdb",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/product_explanation.schema.json",
+          "expected": "30f82baa545e8b3a52b9f90722fb6fb1bea040b2ba16b43031607f927de0c088",
+          "actual": "30f82baa545e8b3a52b9f90722fb6fb1bea040b2ba16b43031607f927de0c088",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/product_history_record.schema.json",
+          "expected": "67fd501bf4af07c45ba2eebb29a409192826700ef9d6825d444ec56226a98efc",
+          "actual": "67fd501bf4af07c45ba2eebb29a409192826700ef9d6825d444ec56226a98efc",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/product_recommendation.schema.json",
+          "expected": "e56321b31ffbba0bf483265d7459a121538b7f1794e9afbd3df2920e8e3a62e4",
+          "actual": "e56321b31ffbba0bf483265d7459a121538b7f1794e9afbd3df2920e8e3a62e4",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/propensity_result.schema.json",
+          "expected": "35a7ffb045b0bc54b57f71745a5a8e4fa1e074036f6da1a793275f1bcba898eb",
+          "actual": "35a7ffb045b0bc54b57f71745a5a8e4fa1e074036f6da1a793275f1bcba898eb",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/reason_code_definition.schema.json",
+          "expected": "cfc5915072c543712d3916c64c7c204d47a28146b3693b3192dd93f3d0b271fe",
+          "actual": "cfc5915072c543712d3916c64c7c204d47a28146b3693b3192dd93f3d0b271fe",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/recommendation.schema.json",
+          "expected": "7ee356d9705c1297cec9893e7fd6deb614497f84330aae426a4eb9da2c0e32a1",
+          "actual": "7ee356d9705c1297cec9893e7fd6deb614497f84330aae426a4eb9da2c0e32a1",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/segment_row.schema.json",
+          "expected": "08c4d700ba7158ce2e0095dc9bb8814edd583b3bae57747fe54be76ce66045a5",
+          "actual": "08c4d700ba7158ce2e0095dc9bb8814edd583b3bae57747fe54be76ce66045a5",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/source_update_request.schema.json",
+          "expected": "a749acb30c2abb698d59a3f46a8b25e4b38a436ae94c58f843b49a1e06a8f293",
+          "actual": "a749acb30c2abb698d59a3f46a8b25e4b38a436ae94c58f843b49a1e06a8f293",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/contracts/schemas/trust_assessment.schema.json",
+          "expected": "0479a79cca8bafd23f124eac257a4494503d68496b76389d0adc158e5a14d276",
+          "actual": "0479a79cca8bafd23f124eac257a4494503d68496b76389d0adc158e5a14d276",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/data_generation/public_energy_anchor.json",
+          "expected": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+          "actual": "ee32eacd62c162d19ee0c674e05aa6b1209c19a0fff41ccb476acb7ea7f1a2cb",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/demo/fixtures/ev.json",
+          "expected": "a0e92812e6aab6a8eef1c3b1168551cde91792763add7b4859d64677debd7c25",
+          "actual": "a0e92812e6aab6a8eef1c3b1168551cde91792763add7b4859d64677debd7c25",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/demo/fixtures/green_home.json",
+          "expected": "0757e46b2f0dd0494152a31b49071392b5d8c3d40aa84329f57b30d03e0ee40e",
+          "actual": "0757e46b2f0dd0494152a31b49071392b5d8c3d40aa84329f57b30d03e0ee40e",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/demo/fixtures/paperless.json",
+          "expected": "37342067bd079326061168617f652d73095ca45dfbe9a9d9ec107a4c55eedda5",
+          "actual": "37342067bd079326061168617f652d73095ca45dfbe9a9d9ec107a4c55eedda5",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/demo/fixtures/solar.json",
+          "expected": "3443a183e83337b5fedf77cfd7d54965b96f7977560d437f77b97e0333f66602",
+          "actual": "3443a183e83337b5fedf77cfd7d54965b96f7977560d437f77b97e0333f66602",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/extensions/uk_factors_2025.json",
+          "expected": "a1c1f18e1c1fa6a66bb50d36cf7245bc0236964c994c045e4fc0d726dfc4a3b8",
+          "actual": "a1c1f18e1c1fa6a66bb50d36cf7245bc0236964c994c045e4fc0d726dfc4a3b8",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/impact/factors/carbon_factors.v1.json",
+          "expected": "ed367c475920a66d1d7903cc6349b9580f07beb60e8440f61ebcc54607ebbd3c",
+          "actual": "ed367c475920a66d1d7903cc6349b9580f07beb60e8440f61ebcc54607ebbd3c",
+          "status": "match"
+        },
+        {
+          "path": "greenpath/llm/provider_manifest.json",
+          "expected": "0bdadbfa3350436579b8c66dd186bc3b08fc2e03b58001de51c4548b79674e84",
+          "actual": "0bdadbfa3350436579b8c66dd186bc3b08fc2e03b58001de51c4548b79674e84",
+          "status": "match"
+        }
+      ]
+    }
+  },
+  "split": {
+    "path": "data/processed/split_manifest.csv",
+    "expected": "6e0ff54c48037622d172a8522ea057098544fd10302d9f52cada2e5c7bffeb12",
+    "actual": "45197c61dd726cb80e915debaf1ff298685e7166e39a04a7a886b17c160701f9",
+    "status": "mismatch"
+  },
+  "saved_products": {
+    "EV_FINANCE": {
+      "selected_model": "LOGISTIC",
+      "calibration": {
+        "method": "platt",
+        "version": "ev_finance_logreg_platt_v2_2583bf6eda9d1b1b",
+        "cv_brier": {
+          "isotonic": 0.0712532958128042,
+          "platt": 0.0650518047532724
+        }
+      },
+      "counts": {
+        "n_train": 1715,
+        "n_train_positive": 104,
+        "n_validation": 230,
+        "n_validation_positive": 16,
+        "n_test": 346,
+        "n_test_positive": 28
+      },
+      "test": {
+        "HEURISTIC": {
+          "n": 346.0,
+          "base_rate": 0.08092485549132948,
+          "threshold": 0.0860108669558855,
+          "k_frac": 0.1,
+          "k": 35.0,
+          "roc_auc": 0.7037286612758311,
+          "pr_auc": 0.1399935568311412,
+          "brier": 0.0732097395115998,
+          "ece": 0.010553123727604419,
+          "precision_at_k": 0.14285714285714285,
+          "recall_at_k": 0.17857142857142858,
+          "lift_at_k": 1.7653061224489794,
+          "tp": 0.0,
+          "fp": 6.0,
+          "tn": 312.0,
+          "fn": 28.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "fpr": 0.018867924528301886,
+          "fnr": 1.0
+        },
+        "LOGISTIC": {
+          "n": 346.0,
+          "base_rate": 0.08092485549132948,
+          "threshold": 0.11765092623316127,
+          "k_frac": 0.1,
+          "k": 35.0,
+          "roc_auc": 0.7665094339622642,
+          "pr_auc": 0.30912704171847005,
+          "brier": 0.06967813077158896,
+          "ece": 0.013510339424265033,
+          "precision_at_k": 0.22857142857142856,
+          "recall_at_k": 0.2857142857142857,
+          "lift_at_k": 2.824489795918367,
+          "tp": 8.0,
+          "fp": 22.0,
+          "tn": 296.0,
+          "fn": 20.0,
+          "precision": 0.26666666666666666,
+          "recall": 0.2857142857142857,
+          "f1": 0.27586206896551724,
+          "fpr": 0.06918238993710692,
+          "fnr": 0.7142857142857143,
+          "brier_uncalibrated": 0.0679336014190981,
+          "ece_uncalibrated": 0.01956992585442039
+        },
+        "GRADIENT_BOOSTING": {
+          "n": 346.0,
+          "base_rate": 0.08092485549132948,
+          "threshold": 0.09204019301311141,
+          "k_frac": 0.1,
+          "k": 35.0,
+          "roc_auc": 0.7388814016172507,
+          "pr_auc": 0.23338474098368128,
+          "brier": 0.07263424073082193,
+          "ece": 0.012003092021322399,
+          "precision_at_k": 0.3142857142857143,
+          "recall_at_k": 0.39285714285714285,
+          "lift_at_k": 3.883673469387755,
+          "tp": 9.0,
+          "fp": 20.0,
+          "tn": 298.0,
+          "fn": 19.0,
+          "precision": 0.3103448275862069,
+          "recall": 0.32142857142857145,
+          "f1": 0.3157894736842105,
+          "fpr": 0.06289308176100629,
+          "fnr": 0.6785714285714286,
+          "brier_uncalibrated": 0.07002992602706919,
+          "ece_uncalibrated": 0.02543099588432586
+        }
+      }
+    },
+    "GREEN_HOME": {
+      "selected_model": "LOGISTIC",
+      "calibration": {
+        "method": "platt",
+        "version": "green_home_logreg_platt_v2_2148edc4018ec513",
+        "cv_brier": {
+          "isotonic": 0.07346398128402618,
+          "platt": 0.07325249521341112
+        }
+      },
+      "counts": {
+        "n_train": 1423,
+        "n_train_positive": 113,
+        "n_validation": 197,
+        "n_validation_positive": 17,
+        "n_test": 279,
+        "n_test_positive": 26
+      },
+      "test": {
+        "HEURISTIC": {
+          "n": 279.0,
+          "base_rate": 0.0931899641577061,
+          "threshold": 0.10380576735367927,
+          "k_frac": 0.1,
+          "k": 28.0,
+          "roc_auc": 0.6681362116144725,
+          "pr_auc": 0.15264177161922263,
+          "brier": 0.0842959975432258,
+          "ece": 0.037321794256675325,
+          "precision_at_k": 0.14285714285714285,
+          "recall_at_k": 0.15384615384615385,
+          "lift_at_k": 1.5329670329670328,
+          "tp": 10.0,
+          "fp": 47.0,
+          "tn": 206.0,
+          "fn": 16.0,
+          "precision": 0.17543859649122806,
+          "recall": 0.38461538461538464,
+          "f1": 0.24096385542168675,
+          "fpr": 0.1857707509881423,
+          "fnr": 0.6153846153846154
+        },
+        "LOGISTIC": {
+          "n": 279.0,
+          "base_rate": 0.0931899641577061,
+          "threshold": 0.10940891081242138,
+          "k_frac": 0.1,
+          "k": 28.0,
+          "roc_auc": 0.6704165399817574,
+          "pr_auc": 0.19060793638498896,
+          "brier": 0.08231456339180808,
+          "ece": 0.011329407185455033,
+          "precision_at_k": 0.17857142857142858,
+          "recall_at_k": 0.19230769230769232,
+          "lift_at_k": 1.916208791208791,
+          "tp": 14.0,
+          "fp": 64.0,
+          "tn": 189.0,
+          "fn": 12.0,
+          "precision": 0.1794871794871795,
+          "recall": 0.5384615384615384,
+          "f1": 0.2692307692307692,
+          "fpr": 0.25296442687747034,
+          "fnr": 0.46153846153846156,
+          "brier_uncalibrated": 0.08212206094240791,
+          "ece_uncalibrated": 0.0188852636720507
+        },
+        "GRADIENT_BOOSTING": {
+          "n": 279.0,
+          "base_rate": 0.0931899641577061,
+          "threshold": 0.08527450168560094,
+          "k_frac": 0.1,
+          "k": 28.0,
+          "roc_auc": 0.6906354515050167,
+          "pr_auc": 0.17264894821642096,
+          "brier": 0.08407127696766281,
+          "ece": 0.006834242349061603,
+          "precision_at_k": 0.21428571428571427,
+          "recall_at_k": 0.23076923076923078,
+          "lift_at_k": 2.2994505494505493,
+          "tp": 21.0,
+          "fp": 136.0,
+          "tn": 117.0,
+          "fn": 5.0,
+          "precision": 0.1337579617834395,
+          "recall": 0.8076923076923077,
+          "f1": 0.22950819672131148,
+          "fpr": 0.5375494071146245,
+          "fnr": 0.19230769230769232,
+          "brier_uncalibrated": 0.08395147016810009,
+          "ece_uncalibrated": 0.03292283535798123
+        }
+      }
+    },
+    "SOLAR_FINANCE": {
+      "selected_model": "LOGISTIC",
+      "calibration": {
+        "method": "platt",
+        "version": "solar_finance_logreg_platt_v2_3985ad186d2e8558",
+        "cv_brier": {
+          "isotonic": 0.043065857471267247,
+          "platt": 0.05037201018937191
+        }
+      },
+      "counts": {
+        "n_train": 1793,
+        "n_train_positive": 103,
+        "n_validation": 252,
+        "n_validation_positive": 17,
+        "n_test": 354,
+        "n_test_positive": 24
+      },
+      "test": {
+        "HEURISTIC": {
+          "n": 354.0,
+          "base_rate": 0.06779661016949153,
+          "threshold": 0.06157736713365504,
+          "k_frac": 0.1,
+          "k": 36.0,
+          "roc_auc": 0.6261363636363636,
+          "pr_auc": 0.09450271328362356,
+          "brier": 0.06280832531424203,
+          "ece": 0.0011404206501624548,
+          "precision_at_k": 0.08333333333333333,
+          "recall_at_k": 0.125,
+          "lift_at_k": 1.2291666666666665,
+          "tp": 16.0,
+          "fp": 182.0,
+          "tn": 148.0,
+          "fn": 8.0,
+          "precision": 0.08080808080808081,
+          "recall": 0.6666666666666666,
+          "f1": 0.14414414414414414,
+          "fpr": 0.5515151515151515,
+          "fnr": 0.3333333333333333
+        },
+        "LOGISTIC": {
+          "n": 354.0,
+          "base_rate": 0.06779661016949153,
+          "threshold": 0.23416387789048038,
+          "k_frac": 0.1,
+          "k": 36.0,
+          "roc_auc": 0.9590909090909091,
+          "pr_auc": 0.5596222734067585,
+          "brier": 0.040700149101028066,
+          "ece": 0.031196048056165812,
+          "precision_at_k": 0.4722222222222222,
+          "recall_at_k": 0.7083333333333334,
+          "lift_at_k": 6.965277777777778,
+          "tp": 19.0,
+          "fp": 21.0,
+          "tn": 309.0,
+          "fn": 5.0,
+          "precision": 0.475,
+          "recall": 0.7916666666666666,
+          "f1": 0.59375,
+          "fpr": 0.06363636363636363,
+          "fnr": 0.20833333333333334,
+          "brier_uncalibrated": 0.04398921740825319,
+          "ece_uncalibrated": 0.04237532066346454
+        },
+        "GRADIENT_BOOSTING": {
+          "n": 354.0,
+          "base_rate": 0.06779661016949153,
+          "threshold": 0.13565080371592372,
+          "k_frac": 0.1,
+          "k": 36.0,
+          "roc_auc": 0.9361111111111111,
+          "pr_auc": 0.4797107302912181,
+          "brier": 0.04453634835184369,
+          "ece": 0.026996968706901717,
+          "precision_at_k": 0.4444444444444444,
+          "recall_at_k": 0.6666666666666666,
+          "lift_at_k": 6.555555555555555,
+          "tp": 19.0,
+          "fp": 33.0,
+          "tn": 297.0,
+          "fn": 5.0,
+          "precision": 0.36538461538461536,
+          "recall": 0.7916666666666666,
+          "f1": 0.5,
+          "fpr": 0.1,
+          "fnr": 0.20833333333333334,
+          "brier_uncalibrated": 0.04584337872588544,
+          "ece_uncalibrated": 0.027925076924059225
+        }
+      }
+    },
+    "PAPERLESS_BANKING": {
+      "selected_model": "LOGISTIC",
+      "calibration": {
+        "method": "platt",
+        "version": "paperless_banking_logreg_platt_v2_7ab04ddfcfcb17a4",
+        "cv_brier": {
+          "isotonic": 0.14867672989931507,
+          "platt": 0.13843733638482625
+        }
+      },
+      "counts": {
+        "n_train": 530,
+        "n_train_positive": 67,
+        "n_validation": 60,
+        "n_validation_positive": 10,
+        "n_test": 105,
+        "n_test_positive": 20
+      },
+      "test": {
+        "HEURISTIC": {
+          "n": 105.0,
+          "base_rate": 0.19047619047619047,
+          "threshold": 0.15098202971350505,
+          "k_frac": 0.1,
+          "k": 11.0,
+          "roc_auc": 0.5335294117647059,
+          "pr_auc": 0.20916305916305916,
+          "brier": 0.17326052683471582,
+          "ece": 0.04646134184878557,
+          "precision_at_k": 0.09090909090909091,
+          "recall_at_k": 0.05,
+          "lift_at_k": 0.4772727272727273,
+          "tp": 19.0,
+          "fp": 80.0,
+          "tn": 5.0,
+          "fn": 1.0,
+          "precision": 0.1919191919191919,
+          "recall": 0.95,
+          "f1": 0.31932773109243695,
+          "fpr": 0.9411764705882353,
+          "fnr": 0.05
+        },
+        "LOGISTIC": {
+          "n": 105.0,
+          "base_rate": 0.19047619047619047,
+          "threshold": 0.1982497956419575,
+          "k_frac": 0.1,
+          "k": 11.0,
+          "roc_auc": 0.6123529411764707,
+          "pr_auc": 0.3131647127806557,
+          "brier": 0.15012768976341104,
+          "ece": 0.05309083654462871,
+          "precision_at_k": 0.18181818181818182,
+          "recall_at_k": 0.1,
+          "lift_at_k": 0.9545454545454546,
+          "tp": 3.0,
+          "fp": 11.0,
+          "tn": 74.0,
+          "fn": 17.0,
+          "precision": 0.21428571428571427,
+          "recall": 0.15,
+          "f1": 0.17647058823529413,
+          "fpr": 0.12941176470588237,
+          "fnr": 0.85,
+          "brier_uncalibrated": 0.1552553473273841,
+          "ece_uncalibrated": 0.08348556763018797
+        },
+        "GRADIENT_BOOSTING": {
+          "n": 105.0,
+          "base_rate": 0.19047619047619047,
+          "threshold": 0.15273963919316602,
+          "k_frac": 0.1,
+          "k": 11.0,
+          "roc_auc": 0.6805882352941177,
+          "pr_auc": 0.43695617969201156,
+          "brier": 0.1493415714860848,
+          "ece": 0.042586637880834846,
+          "precision_at_k": 0.5454545454545454,
+          "recall_at_k": 0.3,
+          "lift_at_k": 2.8636363636363638,
+          "tp": 17.0,
+          "fp": 54.0,
+          "tn": 31.0,
+          "fn": 3.0,
+          "precision": 0.23943661971830985,
+          "recall": 0.85,
+          "f1": 0.37362637362637363,
+          "fpr": 0.6352941176470588,
+          "fnr": 0.15,
+          "brier_uncalibrated": 0.14787702754509802,
+          "ece_uncalibrated": 0.0897634882657301
+        }
+      }
+    }
+  },
+  "saved_transaction_evaluation": {
+    "split": {
+      "method": "GroupShuffleSplit on merchant_id; seeded row holdout of training merchants for known-merchant test",
+      "unseen_merchant_fraction": 0.3,
+      "known_holdout_fraction": 0.2,
+      "merchants_total": 127,
+      "merchants_train": 88,
+      "merchants_unseen": 39,
+      "rows_fit": 172675,
+      "rows_known_holdout": 43169,
+      "rows_unseen": 84156,
+      "merchants_per_category": {
+        "train": {
+          "FUEL": 5,
+          "ELECTRICITY": 6,
+          "GAS": 7,
+          "PUBLIC_TRANSPORT": 14,
+          "HOME_IMPROVEMENT": 12,
+          "AUTOMOTIVE": 9,
+          "UTILITIES": 10,
+          "OTHER": 25
+        },
+        "unseen": {
+          "FUEL": 11,
+          "ELECTRICITY": 2,
+          "GAS": 0,
+          "PUBLIC_TRANSPORT": 3,
+          "HOME_IMPROVEMENT": 3,
+          "AUTOMOTIVE": 7,
+          "UTILITIES": 4,
+          "OTHER": 9
+        }
+      }
+    },
+    "models": {
+      "hybrid": {
+        "unseen_merchants": {
+          "rows": 84156,
+          "accuracy": 0.561504824373782,
+          "macro_f1": 0.5289749821661901,
+          "per_category": {
+            "FUEL": {
+              "precision": 0.9779808890735355,
+              "recall": 0.1345065996228787,
+              "f1": 0.23648784408278078,
+              "support": 17501
+            },
+            "ELECTRICITY": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2173
+            },
+            "GAS": {
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "support": 0
+            },
+            "PUBLIC_TRANSPORT": {
+              "precision": 0.7050791595550585,
+              "recall": 0.7406491499227202,
+              "f1": 0.7224265814388229,
+              "support": 16175
+            },
+            "HOME_IMPROVEMENT": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 2795
+            },
+            "AUTOMOTIVE": {
+              "precision": 0.9315589353612167,
+              "recall": 0.1959303358805758,
+              "f1": 0.3237647749798106,
+              "support": 11254
+            },
+            "UTILITIES": {
+              "precision": 0.7820039738858927,
+              "recall": 1.0,
+              "f1": 0.8776680471487734,
+              "support": 8265
+            },
+            "OTHER": {
+              "precision": 0.41581904683783116,
+              "recall": 0.7800946408648483,
+              "f1": 0.5424776275131425,
+              "support": 25993
+            }
+          },
+          "rule_coverage": 0.15303721659774705
+        },
+        "known_merchants": {
+          "rows": 43169,
+          "accuracy": 0.9954133753387848,
+          "macro_f1": 0.9924071156776906,
+          "per_category": {
+            "FUEL": {
+              "precision": 1.0,
+              "recall": 0.987460815047022,
+              "f1": 0.9936908517350158,
+              "support": 957
+            },
+            "ELECTRICITY": {
+              "precision": 1.0,
+              "recall": 0.9373665480427046,
+              "f1": 0.967670830271859,
+              "support": 2810
+            },
+            "GAS": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2289
+            },
+            "PUBLIC_TRANSPORT": {
+              "precision": 1.0,
+              "recall": 0.9981877491844872,
+              "f1": 0.9990930527843279,
+              "support": 5518
+            },
+            "HOME_IMPROVEMENT": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1988
+            },
+            "AUTOMOTIVE": {
+              "precision": 0.9963503649635036,
+              "recall": 1.0,
+              "f1": 0.9981718464351006,
+              "support": 2730
+            },
+            "UTILITIES": {
+              "precision": 0.9625133120340789,
+              "recall": 1.0,
+              "f1": 0.980898632515737,
+              "support": 4519
+            },
+            "OTHER": {
+              "precision": 0.9994635672776039,
+              "recall": 1.0,
+              "f1": 0.9997317116794849,
+              "support": 22358
+            }
+          },
+          "rule_coverage": 0.9693993374875489
+        }
+      },
+      "model_only_normalised": {
+        "unseen_merchants": {
+          "rows": 84156,
+          "accuracy": 0.5320119777555967,
+          "macro_f1": 0.46413902538197993,
+          "per_category": {
+            "FUEL": {
+              "precision": 0.9779808890735355,
+              "recall": 0.1345065996228787,
+              "f1": 0.23648784408278078,
+              "support": 17501
+            },
+            "ELECTRICITY": {
+              "precision": 0.6996136509980683,
+              "recall": 1.0,
+              "f1": 0.823261981435878,
+              "support": 2173
+            },
+            "GAS": {
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "support": 0
+            },
+            "PUBLIC_TRANSPORT": {
+              "precision": 0.7035470988959361,
+              "recall": 0.7406491499227202,
+              "f1": 0.7216215402222691,
+              "support": 16175
+            },
+            "HOME_IMPROVEMENT": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 2795
+            },
+            "AUTOMOTIVE": {
+              "precision": 0.8019559902200489,
+              "recall": 0.0582903856406611,
+              "f1": 0.10868124585818423,
+              "support": 11254
+            },
+            "UTILITIES": {
+              "precision": 0.7608966376089664,
+              "recall": 0.8871143375680581,
+              "f1": 0.8191721132897604,
+              "support": 8265
+            },
+            "OTHER": {
+              "precision": 0.41262056896341215,
+              "recall": 0.7800946408648483,
+              "f1": 0.5397484527849871,
+              "support": 25993
+            }
+          },
+          "rule_coverage": 0.0
+        },
+        "known_merchants": {
+          "rows": 43169,
+          "accuracy": 0.9994903750376427,
+          "macro_f1": 0.9988359328292411,
+          "per_category": {
+            "FUEL": {
+              "precision": 1.0,
+              "recall": 0.987460815047022,
+              "f1": 0.9936908517350158,
+              "support": 957
+            },
+            "ELECTRICITY": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2810
+            },
+            "GAS": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2289
+            },
+            "PUBLIC_TRANSPORT": {
+              "precision": 1.0,
+              "recall": 0.9981877491844872,
+              "f1": 0.9990930527843279,
+              "support": 5518
+            },
+            "HOME_IMPROVEMENT": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1988
+            },
+            "AUTOMOTIVE": {
+              "precision": 0.9963503649635036,
+              "recall": 1.0,
+              "f1": 0.9981718464351006,
+              "support": 2730
+            },
+            "UTILITIES": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 4519
+            },
+            "OTHER": {
+              "precision": 0.9994635672776039,
+              "recall": 1.0,
+              "f1": 0.9997317116794849,
+              "support": 22358
+            }
+          },
+          "rule_coverage": 0.0
+        }
+      },
+      "plain_tfidf_lr_raw": {
+        "unseen_merchants": {
+          "rows": 84156,
+          "accuracy": 0.48926992727791246,
+          "macro_f1": 0.45162806128428673,
+          "per_category": {
+            "FUEL": {
+              "precision": 0.7806938159879336,
+              "recall": 0.14787726415633393,
+              "f1": 0.24865488086087625,
+              "support": 17501
+            },
+            "ELECTRICITY": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2173
+            },
+            "GAS": {
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "support": 0
+            },
+            "PUBLIC_TRANSPORT": {
+              "precision": 0.7595221996844715,
+              "recall": 0.8333848531684699,
+              "f1": 0.7947410311588008,
+              "support": 16175
+            },
+            "HOME_IMPROVEMENT": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 2795
+            },
+            "AUTOMOTIVE": {
+              "precision": 0.8631578947368421,
+              "recall": 0.0582903856406611,
+              "f1": 0.10920592641917763,
+              "support": 11254
+            },
+            "UTILITIES": {
+              "precision": 0.398185060847671,
+              "recall": 0.9184513006654568,
+              "f1": 0.5555270957590838,
+              "support": 8265
+            },
+            "OTHER": {
+              "precision": 0.3784138926105328,
+              "recall": 0.5650367406609472,
+              "f1": 0.4532674947920685,
+              "support": 25993
+            }
+          },
+          "rule_coverage": 0.0
+        },
+        "known_merchants": {
+          "rows": 43169,
+          "accuracy": 0.996895920683824,
+          "macro_f1": 0.9914455768916688,
+          "per_category": {
+            "FUEL": {
+              "precision": 0.8771769019248395,
+              "recall": 1.0,
+              "f1": 0.9345703125,
+              "support": 957
+            },
+            "ELECTRICITY": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2810
+            },
+            "GAS": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2289
+            },
+            "PUBLIC_TRANSPORT": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 5518
+            },
+            "HOME_IMPROVEMENT": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1988
+            },
+            "AUTOMOTIVE": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2730
+            },
+            "UTILITIES": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 4519
+            },
+            "OTHER": {
+              "precision": 1.0,
+              "recall": 0.9940066195545219,
+              "f1": 0.9969943026333498,
+              "support": 22358
+            }
+          },
+          "rule_coverage": 0.0
+        }
+      }
+    }
+  },
+  "saved_confidence_report": {
+    "EV_FINANCE": {
+      "decision": "SUPPRESSED",
+      "n": 128
+    },
+    "GREEN_HOME": {
+      "decision": "SUPPRESSED",
+      "n": 95
+    },
+    "SOLAR_FINANCE": {
+      "decision": "SUPPRESSED",
+      "n": 115
+    },
+    "PAPERLESS_BANKING": {
+      "decision": "SUPPRESSED",
+      "n": 39
+    }
+  },
+  "local_confidence_decisions": {
+    "EV_FINANCE": {
+      "surfaced": true,
+      "n": 344
+    },
+    "GREEN_HOME": {
+      "surfaced": true,
+      "n": 277
+    },
+    "SOLAR_FINANCE": {
+      "surfaced": true,
+      "n": 354
+    },
+    "PAPERLESS_BANKING": {
+      "surfaced": false,
+      "n": 99
+    }
+  },
+  "local_model_calibration_versions": {
+    "ev_finance_proxy": "ev_finance_proxy_platt_v1",
+    "green_home_proxy": "green_home_proxy_platt_v1",
+    "solar_finance_proxy": "solar_finance_proxy_platt_v1",
+    "paperless_banking_proxy": "paperless_banking_proxy_platt_v1",
+    "ev_finance": "ev_finance_platt_v1",
+    "green_home": "green_home_platt_v1",
+    "solar_finance": "solar_finance_platt_v1",
+    "paperless_banking": "paperless_banking_platt_v1"
+  }
+}
