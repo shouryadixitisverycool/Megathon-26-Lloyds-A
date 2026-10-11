@@ -1,11 +1,14 @@
 {
-  "data_loading_seconds": 39.784265083028004,
-  "transaction_categorisation_seconds": 11.65788104198873,
-  "customer360_seconds": 39.91330666700378,
-  "point_in_time_and_leakage_seconds": 163.94859720789827,
-  "propensity_training_seconds": 4.738838416989893,
-  "ood_and_trust_selection_seconds": 2.193540875101462,
-  "confidence_training_seconds": 1.3621290000155568,
-  "train_seconds": 263.67022490501404,
-  "process_peak_rss_bytes": 1300660224
+  "data_loading_seconds": 3.4420025830004306,
+  "transaction_categorisation_seconds": 0.9925844999997935,
+  "customer360_seconds": 1.2168325839993486,
+  "point_in_time_and_leakage_seconds": 1.9691625000014028,
+  "propensity_training_seconds": 0.7223805419998826,
+  "ood_and_trust_selection_seconds": 0.4369110000006913,
+  "confidence_training_seconds": 0.25242966700170655,
+  "train_seconds": 9.033536911010742,
+  "process_peak_rss_bytes": 1163755520,
+  "evaluation_seconds": 6.916615962982178,
+  "all_command_seconds": 26.58376800000042,
+  "command_process_peak_rss_bytes": 1439907840
 }

@@ -3,6 +3,9 @@
 
 CUSTOMERS ?= 20000
 
+# Keep source imports available even when Python skips an editable-install .pth file.
+export PYTHONPATH := $(CURDIR)/src$(if $(PYTHONPATH),:$(PYTHONPATH))
+
 setup:
 	uv sync --locked
 

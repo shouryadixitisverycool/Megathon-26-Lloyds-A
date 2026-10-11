@@ -68,10 +68,16 @@ def attach_extensions(application, memory_path: Path | None = None):
             conflict = snap.trust.status in {"CONFLICT", "OOD"} or any(
                 evidence.conflicts for evidence in snap.features.values()) or any(
                 issue.severity == "HIGH" for issue in snap.trust.issues)
+            # Fixture personas have no Customer 360 source; the demo repository mirrors the rules.
+            fixture = getattr(state.snapshot_provider, "optional_opportunity", None) if source is None else None
             outputs = []
             for name in OPPORTUNITIES:
                 declared = purpose.value if purpose is not None and name == "GREEN_LOANS" else None
-                if provider is None:
+                if fixture is not None and conflict:
+                    result = unavailable(name, "INSUFFICIENT_INFORMATION", "TRUSTED_RECORD_CONFLICT", declared)
+                elif fixture is not None:
+                    result = fixture(customer_id, name, declared)
+                elif provider is None:
                     result = unavailable(name, status, "TRAINED_SOURCE_REQUIRED" if source is None else "OPTIONAL_" + status, declared)
                 elif conflict:
                     result = unavailable(name, "INSUFFICIENT_INFORMATION", "TRUSTED_RECORD_CONFLICT", declared)

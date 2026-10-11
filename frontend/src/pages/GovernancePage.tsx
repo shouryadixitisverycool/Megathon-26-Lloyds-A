@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useExplanationMetrics, useGovernance } from "../api/hooks";
+import { useDemoReadiness, useExplanationMetrics, useGovernance } from "../api/hooks";
 import type { Product } from "../api/types";
 import { BarList } from "../components/charts/BarList";
 import { LineChart } from "../components/charts/LineChart";
@@ -7,6 +7,8 @@ import { ChartFrame } from "../components/ChartFrame";
 import { DataTable } from "../components/DataTable";
 import { formatScalar, METRIC_LABELS, ReportView } from "../components/ReportView";
 import { Callout, Disclosure, ErrorBox, JsonView, KV, Segmented, SelectField, SlowLoading, Stat, ToneBadge } from "../components/ui";
+import { Check } from "lucide-react";
+import { aiEnabled, aiModel } from "../lib/ai";
 import { humanize, percentage } from "../lib/format";
 import { PRODUCT_ORDER, PRODUCTS, productName } from "../lib/labels";
 import { AuditLookup } from "./product/AuditTab";
@@ -61,6 +63,7 @@ export function GovernancePage() {
           </section>
 
           <ReleaseStatus reports={reports} />
+          <DemoReadinessPanel />
 
           <div className="section">
             <div className="section-head">
@@ -109,11 +112,10 @@ export function GovernancePage() {
                   </Disclosure>
                 );
               })}
-              <Disclosure title="Explanation service" hint="Live counters since the API started">
-                <ExplanationMetrics />
-              </Disclosure>
             </div>
           </section>
+
+          <AiExplanations evaluation={reports.explanation_evaluation} />
 
           <section className="section">
             <div className="section-head"><h2 className="section-title">Look up an audit event</h2></div>
@@ -316,9 +318,125 @@ function ReportSummary({ name, report }: { name: string; report: any }) {
   return <ReportView value={report} />;
 }
 
-function ExplanationMetrics() {
+function AiExplanations({ evaluation }: { evaluation?: any }) {
   const metrics = useExplanationMetrics();
-  if (metrics.isPending) return <SlowLoading label="Loading…" />;
-  if (metrics.isError) return <ErrorBox error={metrics.error} what="explanation metrics" />;
-  return <ReportView value={metrics.data} />;
+  const data = metrics.data;
+  const enabled = aiEnabled(data);
+  const measured = data?.provider_measurements;
+  const summary = evaluation?.summary;
+  const ms = (value: number | null | undefined) => (value === null || value === undefined ? "Not measured" : `${value.toFixed(1)} ms`);
+  return (
+    <section className="section">
+      <div className="section-head">
+        <h2 className="section-title">AI-written explanations</h2>
+        <p className="section-note">How the plain-language explanations on each product are produced, and how they're kept to the facts.</p>
+      </div>
+      <div className="stack">
+        {metrics.isPending && <SlowLoading label="Checking the explanation service…" />}
+        {metrics.isError && <ErrorBox error={metrics.error} what="explanation service status" />}
+        {data && (
+          <>
+            <div className="stats">
+              <Stat label="AI writing" value={enabled ? "On" : "Off"} small
+                note={enabled ? `Model ${aiModel(data) ?? "configured"}` : "Standard wording is used everywhere"} />
+              <Stat label="Explanations served" value={data.requests.toLocaleString("en-GB")} small
+                note={`${percentage(data.cache_hit_rate, 0)} reused from cache`} />
+              <Stat label="AI calls completed" value={enabled ? `${data.provider_completed} of ${data.provider_attempts}` : "None"} small
+                note={enabled ? `Average AI response ${ms(data.live_provider_latency_ms)}` : `Average local time ${ms(data.average_latency_ms)}`} />
+              <Stat label="AI cost so far" small
+                value={data.live_provider_cost !== null && data.live_provider_cost !== undefined ? data.live_provider_cost.toFixed(4) : enabled ? "Not measured" : "None"}
+                note={enabled ? (measured?.pricing_basis === "explicit configured token prices" ? "From configured token prices" : "Set token prices on the API to measure") : "No paid calls are made"} />
+            </div>
+            {!enabled && (
+              <Callout kind="info" title="AI writing is switched off">
+                Every explanation uses the standard wording, which states the same approved facts. To switch the AI on, start the API with
+                <code> OPENAI_API_KEY</code> (or <code>GREENPATH_LLM_API_KEY</code>) set. This makes paid calls to the provider; the model and
+                settings come from <code>src/greenpath/llm/provider_manifest.json</code>, which is selected but not yet live-evaluated.
+              </Callout>
+            )}
+          </>
+        )}
+        <div className="grid-2">
+          <section className="panel">
+            <h3 className="panel-title">How it stays grounded</h3>
+            <ul className="tick-list" style={{ marginTop: 12 }}>
+              {[
+                "The AI only sees approved reasons, the product, the decision, the exact carbon figure and the disclaimer. Raw transaction text and customer identifiers are never sent.",
+                "It can only choose the order of pre-approved sentences. It can't write new claims.",
+                "Every fact, number, unit and disclaimer is checked before display. Any mismatch, timeout or error falls back to the standard wording.",
+                "It can't change a score, an impact estimate or eligibility.",
+              ].map((item) => <li key={item}><Check size={14} aria-hidden="true" /><span className="small">{item}</span></li>)}
+            </ul>
+          </section>
+          <section className="panel">
+            <h3 className="panel-title">Offline evaluation</h3>
+            <p className="panel-sub">{evaluation?.provider ? `Run with ${evaluation.provider}.` : "Saved from the last pipeline run."}</p>
+            {summary ? (
+              <KV items={[
+                ["Cases passed", `${summary.passed} of ${summary.total}`],
+                ["Grounded", percentage(summary.groundedness_rate, 0)],
+                ["Numbers consistent", percentage(summary.numeric_consistency_rate, 0)],
+                ["Unsupported claims", String(summary.unsupported_claims)],
+                ["Fell back to standard wording", percentage(summary.fallback_rate, 0)],
+                ["Live AI latency and cost", summary.live_provider_latency_ms === null ? "Not measured (no live run)" : ms(summary.live_provider_latency_ms)],
+              ]} />
+            ) : <p className="small muted">The explanation evaluation report hasn't been generated. Run <code>make evaluate-llm</code>.</p>}
+          </section>
+        </div>
+        {data && (
+          <div className="panel">
+            <Disclosure title="All service counters" hint="Live since the API started">
+              <ReportView value={data} />
+            </Disclosure>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** /demo/readiness: whether each product has a live, defensible example to demo. Loaded on request. */
+function DemoReadinessPanel() {
+  const [open, setOpen] = useState(false);
+  const readiness = useDemoReadiness(open);
+  const data = readiness.data;
+  const tone = (status: string) => (status === "READY" ? "supported" : status === "BLOCKED" ? "conflict" : "neutral");
+  return (
+    <section className="panel" style={{ marginTop: 16 }}>
+      <h2 className="panel-title">Demo readiness</h2>
+      <p className="panel-sub">
+        Checks the served models and evidence for a live example per product. A product is blocked until it has a supported
+        decision with validated confidence, so fixture mode and suppressed confidence always show as blocked.
+      </p>
+      <Disclosure title="Run the readiness check" hint="Can take a while in trained mode" onToggle={setOpen}>
+        {readiness.isPending && <SlowLoading label="Checking demo readiness…" />}
+        {readiness.isError && <ErrorBox error={readiness.error} what="demo readiness" />}
+        {data && (
+          <div className="stack">
+            <div className="row">
+              <ToneBadge tone={tone(data.status)}>Overall: {humanize(data.status)}</ToneBadge>
+              <span className="small muted">
+                {humanize(data.provider_mode)} mode
+                {data.live_checked_customers !== undefined && <>, {data.live_checked_customers} customers checked live</>}
+              </span>
+            </div>
+            <DataTable rows={PRODUCT_ORDER.filter((product) => data.products[product])} rowKey={(product) => product} caption="Readiness by product"
+              columns={[
+                { key: "product", header: "Product", render: (product) => productName(product) },
+                { key: "status", header: "Status", render: (product) => <ToneBadge tone={tone(data.products[product]!.status)}>{humanize(data.products[product]!.status)}</ToneBadge> },
+                { key: "scored", header: "Scored", numeric: true, render: (product) => data.products[product]!.coverage?.scored_customers ?? "–" },
+                { key: "above", header: "Above cut-off", numeric: true, render: (product) => data.products[product]!.coverage?.above_threshold ?? "–" },
+                { key: "validated", header: "Validated confidence", numeric: true, render: (product) => data.products[product]!.coverage?.validated_confidence ?? "–" },
+                { key: "example", header: "Example customer", render: (product) => data.products[product]!.candidate?.customer_id ?? "None" },
+              ]} />
+            {data.missing_features.length > 0 && (
+              <Callout kind="warn" title="Missing"><ul>{data.missing_features.map((item) => <li key={item}>{item}</li>)}</ul></Callout>
+            )}
+            {data.limitation && <p className="xsmall muted">{data.limitation}</p>}
+            <Disclosure title="Raw readiness report"><JsonView value={data} /></Disclosure>
+          </div>
+        )}
+      </Disclosure>
+    </section>
+  );
 }

@@ -6,6 +6,12 @@ Synthetic sustainability opportunity demo integrating Agent A's data, calibrated
 
 Requires Python 3.12 and `uv`; default explanations need no credentials.
 
+Make targets add `src` to `PYTHONPATH`. If a direct `uv run` command reports `No module named 'greenpath'` (for example, when macOS marks the editable installation's `.pth` file hidden), run it with an explicit source path:
+
+```bash
+PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}" uv run --locked python -m greenpath.pipelines.run all --customers 4000
+```
+
 ```bash
 make all
 make app
@@ -14,6 +20,14 @@ make app
 `make all` runs, in order, `setup`, `pipeline`, `test`, `evaluate-llm`, `scenarios`, and `evaluate-system`. The pipeline generates base and perturbed data, builds point-in-time Customer 360, trains/calibrates/evaluates models and writes predictions and manifests. The test command sets fixture mode; integration tests also train fresh temporary models and explicitly exercise trained mode. Default dataset size is 4,000 generated customers plus base personas; override with `make all CUSTOMERS=4000`. The main owner is running final integration gates; this documentation pass does not certify their outcome or counts. Earlier verification is historical, not evidence for the changed implementation. See `IMPLEMENTATION_PLAN.md`.
 
 Open http://127.0.0.1:8501; API docs: http://127.0.0.1:8000/docs. The launcher stops its owned API/UI processes on termination. Alternate ports: `uv run --locked python -m greenpath.demo.run --api-port 8001 --ui-port 8502`. Separate API: `make api`; separate UI: `uv run --locked streamlit run src/greenpath/app/main.py`. `GREENPATH_API_URL` defaults to `http://127.0.0.1:8000`.
+
+## Partner exploration demo
+
+The Customer workspace's **Explore EV**, **Explore solar** and **Explore green home** journeys show two illustrative partner-product concepts each. The Customer Green Hub preview (`/customers/{id}/hub`) opens the same catalogue from its corresponding product buttons. They are placeholders, not real Lloyds offers, confirmed partnerships, quotes or credit approvals. The same read-only `/partners/catalogue` API supplies Streamlit and React. Browsing or previewing a handoff does not submit an application, send a lead, share customer details or change consent.
+
+Lloyds can curate the exact products to promote by editing `src/greenpath/partners/catalogue.json`, or by setting `GREENPATH_PARTNER_CATALOGUE` to an operator-managed JSON file. Set an option's `promoted` flag to `false` to hide it; add or replace options within a category to choose the shortlist. For a future live offer, replace the demo copy, set `placeholder` to `false`, and supply an approved HTTPS destination and source with accurate relationship, suitability and disclosure text. Placeholder entries cannot contain live links. Catalogue edits are validated on each API request; a bad catalogue disables only partner exploration, not customer evidence.
+
+The **proposed** commercial model is a separately agreed completion-based referral fee and, where appropriate, finance or leasing income. No commission contract, revenue rate or realised revenue is claimed, and the demo has no referral-tracking integration. A live launch would also need approved offers, commercial agreements, compliance review and a consent-aware handoff.
 
 ## Provider Modes
 

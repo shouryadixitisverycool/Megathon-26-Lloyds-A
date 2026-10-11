@@ -25,6 +25,7 @@ from greenpath.ports import (
     ProductPropensityProvider as PropensityProvider,
 )
 from greenpath.impact import Product
+from greenpath.partners import PartnerCatalogue, load_catalogue
 
 from .portfolio import historical_trends, summarize
 
@@ -226,6 +227,16 @@ def create_app(
             result["portfolio_warmup"] = dict(warmup)
         return result
 
+    @application.get("/partners/catalogue", response_model=PartnerCatalogue)
+    def partner_catalogue():
+        # This is editorial content, not a customer decision or a lead submission.
+        # An invalid operator catalogue must not hide the customer's evidence.
+        try:
+            return load_catalogue()
+        except (OSError, ValueError):
+            logger.exception("Partner catalogue could not be loaded")
+            raise HTTPException(status_code=503, detail="Partner options are unavailable. Customer evidence remains available.") from None
+
     @application.get("/demo/readiness")
     def demo_readiness():
         from greenpath.demo.readiness import (
@@ -304,8 +315,11 @@ def create_app(
         selected = filtered_snapshots(region, segment)
         # Persist complete evidence, but aggregation does not need another cohort-sized
         # copy of source provenance in memory.
-        decisions = {item.customer_id: tuple(r.model_copy(update={"provenance": {}})
-                     for r in served_recommendations.recommendations(item.customer_id)) for item in selected}
+        decisions = {}
+        if selected:
+            with store.transaction():
+                decisions = {item.customer_id: tuple(r.model_copy(update={"provenance": {}})
+                             for r in served_recommendations.recommendations(item.customer_id)) for item in selected}
         result = summarize(selected, decisions, product)
         if cacheable:
             summary_cache[key] = result

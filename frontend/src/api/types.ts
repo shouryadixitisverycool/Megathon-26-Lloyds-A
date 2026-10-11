@@ -496,3 +496,55 @@ export interface GovernanceDiagnostics {
   model_source: string;
   limitations: string[];
 }
+
+export type OptionalProduct = "GREEN_INVESTMENTS" | "GREEN_LOANS";
+export type GreenPurpose = "INSULATION" | "HEAT_PUMP" | "EV_CHARGING";
+
+/** Experimental Green Investments / Green Loans signal. Confidence is always suppressed. */
+export interface OptionalOpportunity {
+  product: OptionalProduct;
+  status: "OPPORTUNITY_SIGNAL" | "LOW_RELEVANCE" | "NOT_RELEVANT" | "INSUFFICIENT_INFORMATION" | "NOT_AVAILABLE" | string;
+  experimental: true;
+  probability: number | null;
+  threshold?: number;
+  confidence: null;
+  confidence_status: string;
+  confidence_limitation: string;
+  model_version: string | null;
+  calibration_version: string | null;
+  feature_version: string | null;
+  cutoff: string | null;
+  reason_codes: string[];
+  reason_evidence: { code: string; field: string; value: unknown; reference?: string; limitation?: string }[];
+  eligibility: "NOT_ASSESSED";
+  impact: { status: string; value: null };
+  purpose: GreenPurpose | null;
+  outcome_window_days: number;
+  disclaimer: string;
+}
+
+export interface OptionalOpportunitiesResponse {
+  customer_id: string;
+  experimental: true;
+  opportunities: OptionalOpportunity[];
+}
+
+export interface DemoReadinessProduct {
+  status: string;
+  coverage?: Record<string, number>;
+  candidate?: { customer_id: string; state: string } | null;
+  [key: string]: unknown;
+}
+
+export interface DemoReadiness {
+  status: string;
+  provider_mode: string;
+  source_version?: string;
+  population_customers?: number;
+  live_checked_customers?: number;
+  limitation?: string;
+  missing_features: string[];
+  products: Partial<Record<Product, DemoReadinessProduct>>;
+  examples: Record<string, { customer_id: string; product: Product; state: string } | null>;
+  [key: string]: unknown;
+}

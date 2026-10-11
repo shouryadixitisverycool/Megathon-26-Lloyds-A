@@ -4,6 +4,8 @@ A React workspace for the GreenPath API. It covers everything the Streamlit app 
 
 It talks to the existing FastAPI service over HTTP and never computes a decision, score or carbon figure itself.
 
+The RM customer page and Customer Green Hub preview offer **Explore EV**, **Explore solar** and **Explore green home** journeys: a polished shortlist of illustrative partner products, with details and a preview-only handoff. These are demo placeholders, not confirmed Lloyds offers. Lloyds can choose which products to promote through the shared `/partners/catalogue` configuration; see the root README for catalogue editing. Exploration never overrides the customer's decision or contact restrictions, submits an application, or shares customer details.
+
 ## Run it
 
 ```bash
@@ -39,6 +41,7 @@ If you host the build behind your own reverse proxy, set `VITE_API_BASE` at buil
 | Customer workspace: customer picker, persona captions, abstention shortcut | **Customers**: searchable, filterable directory with walkthrough cards for each demo persona |
 | Data Trust metric, feature cutoff, trust issues | Customer header, plus one grouped callout for trust issues (extra issues expand on request) |
 | Product cards: state, propensity, confidence, impact | Ranked opportunity list, with each product's likelihood shown against its cut-off |
+| Explore EV, solar and green-home partner options | Three exploration entry points and an **Explore** product-drawer tab, with curated placeholder offers and a local handoff preview |
 | Why this result: explanation, evidence, reason codes, versions, exclusions | Product drawer, **Why** and **Audit trail** tabs |
 | Impact method, factors and assumptions | **Impact** tab: headline figure, baseline vs scenario, then assumptions, exclusions, inputs, factors and method behind disclosures |
 | Customer evidence and data quality, source snapshot JSON | **Customer data** section: approved facts, grouped source record, per-product trust, raw JSON |
@@ -51,7 +54,27 @@ If you host the build behind your own reverse proxy, set `VITE_API_BASE` at buil
 
 Also added (all on demand): the trained-model SHAP attribution (`/customers/{id}/shap/{product}`), explanation-service counters (`/explanations/metrics`), the full stored audit record for each decision, and audit lookup from Governance.
 
+Also added: experimental **Green Investments / Green Loans** cards on the customer page (`/customers/{id}/optional-opportunities`), a **customer view** preview at `/customers/{id}/hub`, and a **demo readiness** check in Governance. Placeholders for features without a backend yet (Explore EV options, green loan enquiry and others) are listed in [UI_FEATURE_BACKLOG.md](../UI_FEATURE_BACKLOG.md).
+
 Still API-only (not in Streamlit either): factual source updates and campaign closure. Both need the local admin token, which should stay server-side, so they need a backend route or session design before a browser can use them.
+
+## AI-written explanations
+
+The backend can have an LLM write each product's plain-language explanation (`src/greenpath/llm/`). The model only chooses the order of pre-approved sentences, and every fact, number and disclaimer is checked. Anything that fails falls back to the standard template wording, which states the same facts.
+
+It's off unless the API process has a key:
+
+```bash
+OPENAI_API_KEY=... make api    # or GREENPATH_LLM_API_KEY; model and settings come from llm/provider_manifest.json
+```
+
+That makes paid provider calls. Add `GREENPATH_LLM_INPUT_PRICE_PER_MILLION` and `GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION` to have cost measured.
+
+Where it appears in the UI:
+
+- **Why tab:** a badge says who wrote the explanation: "Written by AI", "Standard wording" (AI off), or "Standard wording, AI draft not used". In the last case a note explains why (timeout, busy, error, wrong format, changed a fact, dropped a sentence). Timeouts, busy and error failures get an "Ask the AI again" button.
+- **Sidebar:** shows whether explanations are AI-written or standard wording.
+- **Governance:** an "AI-written explanations" section with on/off status, model, live call counts, latency, tokens and cost, how grounding works, and the offline evaluation results.
 
 ## Design notes
 
@@ -59,7 +82,7 @@ Still API-only (not in Streamlit either): factual source updates and campaign cl
 - **Threshold rail.** Likelihood is a dot on a 0–100% line with the product's cut-off marked, so "supported" vs "not recommended" can be seen at a glance even when trained cut-offs are near 10%.
 - **Unavailable is never zero.** Missing impact, confidence or priority is labelled as such, styled differently from numbers, and never filled in.
 - **Honest colour.** Product and decision-state colours were checked for colour-blind separation. The "nothing to do" states stay neutral on purpose. Every chart has a legend and a table view.
-- Type: Bricolage Grotesque for headings, Public Sans for UI and tables (self-hosted via Fontsource, so it works offline). Light and dark themes follow the system, with a manual toggle in the sidebar.
+- Look: styled after Lloyds Bank (black workspace strip, bright green brand bar, mint feature bands, black outlined buttons). Literata for headings, Figtree for UI and tables (self-hosted via Fontsource, so it works offline). Light and dark themes follow the system, with a manual toggle in the header.
 
 ## Things to know
 

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
-import { CheckCircle2, Copy, OctagonX, X } from "lucide-react";
+import { CheckCircle2, Copy, Info, OctagonX, X } from "lucide-react";
 
-interface Toast { id: number; kind: "success" | "error"; title: string; detail?: string; auditId?: string }
+interface Toast { id: number; kind: "success" | "error" | "info"; title: string; detail?: string; auditId?: string }
 
 const ToastContext = createContext<(toast: Omit<Toast, "id">) => void>(() => {});
 
@@ -23,7 +23,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div className="toasts" aria-live="polite" aria-atomic="false">
         {toasts.map((toast) => {
-          const Icon = toast.kind === "success" ? CheckCircle2 : OctagonX;
+          const Icon = toast.kind === "success" ? CheckCircle2 : toast.kind === "info" ? Info : OctagonX;
           return (
             <div key={toast.id} className="toast" data-kind={toast.kind} role={toast.kind === "error" ? "alert" : "status"}>
               <Icon className="lead" size={18} aria-hidden="true" />

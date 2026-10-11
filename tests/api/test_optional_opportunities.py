@@ -54,8 +54,16 @@ def test_fixture_and_unknown_customer_do_not_load_models(tmp_path):
     app = create_app(provider_mode="fixture", memory_path=tmp_path / "memory.sqlite3")
     app.state.optional_model_loader.load = lambda: pytest.fail("Fixture must not load models")
     client = TestClient(app)
-    rows = client.get("/customers/GP-001/optional-opportunities").json()["opportunities"]
-    assert all(row["status"] == "NOT_AVAILABLE" and row["probability"] is None for row in rows)
+    rows = {row["product"]: row for row in client.get("/customers/GP-001/optional-opportunities").json()["opportunities"]}
+    assert rows["GREEN_INVESTMENTS"]["status"] == "OPPORTUNITY_SIGNAL"
+    assert rows["GREEN_INVESTMENTS"]["model_version"] == "synthetic-optional-fixture-v1"
+    assert rows["GREEN_LOANS"]["status"] == "INSUFFICIENT_INFORMATION" and rows["GREEN_LOANS"]["probability"] is None
+    assert rows["GREEN_LOANS"]["reason_codes"] == ["DOCUMENTED_GREEN_PURPOSE_REQUIRED"]
+    loans = client.get("/customers/GP-001/optional-opportunities", params={"purpose": "HEAT_PUMP"}).json()["opportunities"][1]
+    assert loans["status"] == "OPPORTUNITY_SIGNAL" and "DECLARED_GREEN_PURPOSE_HEAT_PUMP" in loans["reason_codes"]
+    assert all(row["confidence"] is None and row["eligibility"] == "NOT_ASSESSED" for row in rows.values())
+    conflict = client.get("/customers/GP-003/optional-opportunities").json()["opportunities"]
+    assert all(row["reason_codes"] == ["TRUSTED_RECORD_CONFLICT"] for row in conflict)
     assert client.get("/customers/unknown/optional-opportunities").status_code == 404
 
 
