@@ -5,8 +5,8 @@ from datetime import date
 import pandas as pd
 import pytest
 
-from greenpath.contracts import Product
-from greenpath.pipelines.leakage_checks import (
+from greenr.contracts import Product
+from greenr.pipelines.leakage_checks import (
     DEFAULT_AUDIT_COLUMNS,
     EventSource,
     LeakageError,
@@ -212,7 +212,7 @@ def test_source_availability_after_cutoff_fails():
     import pandas as pd
     import pytest
     from datetime import date
-    from greenpath.pipelines.leakage_checks import EventSource, LeakageError, run_all_checks
+    from greenr.pipelines.leakage_checks import EventSource, LeakageError, run_all_checks
     frame = pd.DataFrame({"date": pd.to_datetime(["2026-06-01"]),
                           "available_at": pd.to_datetime(["2026-07-01"])})
     with pytest.raises(LeakageError, match="source_available_within_cutoff"):

@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath import config
-from greenpath.contracts import (
+from greenr import config
+from greenr.contracts import (
     ConfidenceBucket,
     ConfidenceResult,
     ConfidenceStatus,
@@ -27,7 +27,7 @@ from greenpath.contracts import (
     SpendFacts,
     VehicleFacts,
 )
-from greenpath.models.propensity import (
+from greenr.models.propensity import (
     PRODUCT_FEATURES,
     PROXY_ABLATION_FEATURES,
     REASON_CODE_CATALOGUE,
@@ -42,9 +42,9 @@ from greenpath.models.propensity import (
     save_all,
     train_product,
 )
-from greenpath.models.propensity.features import FORBIDDEN_FEATURES, check_features
-from greenpath.models.propensity.heuristics import HeuristicModel
-from greenpath.models.propensity.training import logistic_contributions
+from greenr.models.propensity.features import FORBIDDEN_FEATURES, check_features
+from greenr.models.propensity.heuristics import HeuristicModel
+from greenr.models.propensity.training import logistic_contributions
 
 PRODUCTS = list(Product)
 N = 3000
@@ -191,7 +191,7 @@ def test_proxy_variant_still_rejects_leakage(data, feature):
 # ---- heuristics ------------------------------------------------------------------------------
 def test_heuristic_scores_in_unit_interval_and_thresholds_from_train(data):
     f, y, s = data
-    from greenpath.models.propensity.features import prepare_matrix
+    from greenr.models.propensity.features import prepare_matrix
     X = prepare_matrix(f, PRODUCT_FEATURES[Product.EV_FINANCE])
     h = HeuristicModel.fit(Product.EV_FINANCE, X[(s == "train").to_numpy()])
     sc = h.score(X)
@@ -290,7 +290,7 @@ def test_training_is_deterministic(data):
 def test_deployed_shap_additivity_background_and_persistence(bundles, data, tmp_path, model_type):
     from dataclasses import replace
     import json
-    from greenpath.models.propensity.shap_audit import audit_shap
+    from greenr.models.propensity.shap_audit import audit_shap
     b = replace(bundles[Product.EV_FINANCE], selected_model_type=model_type)
     f = data[0].iloc[:30].copy()
     f.iloc[0] = np.nan

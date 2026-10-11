@@ -3,8 +3,8 @@ from decimal import Decimal as D, Inexact, localcontext
 
 import pytest
 
-from greenpath.impact import ImpactResult, ImpactStatus, Product, build_registry, display_value
-from greenpath.impact.inputs import EVInput, GreenHomeInput, PaperlessInput, SolarInput
+from greenr.impact import ImpactResult, ImpactStatus, Product, build_registry, display_value
+from greenr.impact.inputs import EVInput, GreenHomeInput, PaperlessInput, SolarInput
 
 from .conftest import NOW
 
@@ -183,7 +183,7 @@ def test_ev_provenance_and_boundary_are_complete(payload, calculator):
     assert len(result.factors) == 3
     assert result.boundary == "vehicle_fuel_combustion_and_charging_generation_co2"
     assert result.scenario.emissions_kg_co2 > 0
-    assert result.factor_catalogue_version == "greenpath-carbon-factors-v1.0.0"
+    assert result.factor_catalogue_version == "greenr-carbon-factors-v1.0.0"
     assert len(result.factor_catalogue_sha256) == 64
     for factor in result.factors:
         assert factor.source_url.startswith("https://")

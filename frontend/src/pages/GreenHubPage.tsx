@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Check, ChevronDown, Eye } from "lucide-react";
 import { useCustomer, useNextActions, useOptionalOpportunities } from "../api/hooks";
 import type { CustomerSnapshot, Recommendation } from "../api/types";
+import type { PartnerProduct } from "../api/partners";
+import { Drawer } from "../components/Drawer";
 import { PRODUCT_COLORS } from "../components/charts/common";
 import { PlaceholderButton, PlaceholderPanel } from "../components/Placeholder";
 import { ErrorBox, Loading, Unavailable } from "../components/ui";
 import { date, impactAvailable, impactLabel, percentage } from "../lib/format";
 import { CUSTOMER_REASONS, OPTIONAL_PRODUCTS, PRODUCT_CTAS, PRODUCTS, productName } from "../lib/labels";
+import { ExploreTab } from "./product/ExploreTab";
 
 const DISCLAIMER = "Seeing a suggestion doesn't mean you're eligible for, or approved for, any product.";
 
@@ -20,11 +23,33 @@ export function GreenHubPage() {
   const customer = useCustomer(customerId);
   const actions = useNextActions(customerId, "app");
   const optional = useOptionalOpportunities(customerId, "");
-  const snapshot = customer.data;
+  const [selection, setSelection] = useState<{ customerId: string; product: PartnerProduct } | null>(null);
+  const snapshot = customer.data?.customer_id === customerId ? customer.data : undefined;
 
-  const shown = (actions.data ?? []).filter((row) => row.state === "RECOMMEND" && row.next_action?.action !== "SUPPRESS");
-  const extras = (optional.data?.opportunities ?? []).filter((row) => row.status === "OPPORTUNITY_SIGNAL");
+  // Both hooks keep previous results while a customer changes. Never render or open their rows as the new customer.
+  const actionRows = actions.data && !actions.isError && !actions.isPlaceholderData
+    && actions.data.every((row) => row.customer_id === customerId) ? actions.data : undefined;
+  const shown = (actionRows ?? []).filter((row) => row.state === "RECOMMEND" && row.next_action?.action !== "SUPPRESS");
+  const optionalRows = optional.data && !optional.isError && !optional.isPlaceholderData && optional.data.customer_id === customerId
+    ? optional.data.opportunities : [];
+  const extras = optionalRows.filter((row) => row.status === "OPPORTUNITY_SIGNAL");
   const firstName = snapshot && !snapshot.display_name.startsWith("Synthetic customer") ? snapshot.display_name.split(" ")[0] : null;
+  const selectedProduct = selection?.customerId === customerId && snapshot ? selection.product : null;
+  const selected = selectedProduct
+    ? actionRows?.find((row) => row.product === selectedProduct && row.state === "RECOMMEND" && row.next_action?.action !== "SUPPRESS")
+    : undefined;
+
+  useEffect(() => { setSelection(null); }, [customerId]);
+  useEffect(() => {
+    if (selection?.customerId !== customerId) return;
+    if (customer.isError || actions.isError) {
+      setSelection(null);
+      return;
+    }
+    if (snapshot && actionRows && !actionRows.some((row) => row.product === selection.product && row.state === "RECOMMEND" && row.next_action?.action !== "SUPPRESS")) {
+      setSelection(null);
+    }
+  }, [actions.isError, actionRows, customer.isError, customerId, selection, snapshot]);
 
   return (
     <div className="page hub">
@@ -45,7 +70,7 @@ export function GreenHubPage() {
       </header>
 
       {actions.isPending && <Loading label="Finding your green opportunities…" />}
-      {actions.data && shown.length === 0 && (
+      {actionRows && shown.length === 0 && (
         <div className="panel">
           <h2 className="panel-title">No green suggestions right now</h2>
           <p className="small muted">We only suggest something when your data clearly supports it. We'll check again when your data changes.</p>
@@ -54,7 +79,8 @@ export function GreenHubPage() {
 
       {snapshot && shown.length > 0 && (
         <div className="hub-grid">
-          {shown.map((row) => <HubCard key={row.product} row={row} snapshot={snapshot} />)}
+          {shown.map((row) => <HubCard key={row.product} row={row} snapshot={snapshot}
+            onExplore={(product) => setSelection({ customerId, product })} />)}
         </div>
       )}
 
@@ -87,14 +113,23 @@ export function GreenHubPage() {
       </section>
 
       <p className="xsmall muted" style={{ marginTop: 24 }}>{DISCLAIMER} Impact figures are modelled estimates, not measured savings.</p>
+
+      <Drawer open={!!selected} onClose={() => setSelection(null)}
+        label={selected && selectedProduct ? `${productName(selectedProduct)} partner options` : "Partner options"}
+        header={selected && selectedProduct ? <PartnerDrawerHeader product={selectedProduct} /> : null}>
+        {selected && selectedProduct && <ExploreTab product={selectedProduct} state={selected.state} />}
+      </Drawer>
     </div>
   );
 }
 
-function HubCard({ row, snapshot }: { row: Recommendation; snapshot: CustomerSnapshot }) {
+function HubCard({ row, snapshot, onExplore }: {
+  row: Recommendation; snapshot: CustomerSnapshot; onExplore: (product: PartnerProduct) => void;
+}) {
   const [why, setWhy] = useState(false);
   const reasons = (row.propensity?.reason_codes ?? []).map((code) => CUSTOMER_REASONS[code]).filter(Boolean);
   const cta = PRODUCT_CTAS[row.product];
+  const partnerProduct: PartnerProduct | null = row.product === "PAPERLESS_BANKING" ? null : row.product;
   return (
     <article className="hub-card">
       <div className="hub-card-top">
@@ -121,7 +156,9 @@ function HubCard({ row, snapshot }: { row: Recommendation; snapshot: CustomerSna
       )}
 
       <div className="row" style={{ marginTop: "auto" }}>
-        <PlaceholderButton feature={cta.backlog} primary>{cta.label}</PlaceholderButton>
+        {partnerProduct
+          ? <button type="button" className="btn btn-primary" onClick={() => onExplore(partnerProduct)}>{cta.label}</button>
+          : <PlaceholderButton feature={cta.backlog} primary>{cta.label}</PlaceholderButton>}
         <button type="button" className="btn btn-quiet" aria-expanded={why} onClick={() => setWhy((value) => !value)}>
           Why am I seeing this? <ChevronDown size={14} aria-hidden="true" style={{ transform: why ? "rotate(180deg)" : undefined }} />
         </button>
@@ -143,5 +180,17 @@ function HubCard({ row, snapshot }: { row: Recommendation; snapshot: CustomerSna
         </div>
       )}
     </article>
+  );
+}
+
+function PartnerDrawerHeader({ product }: { product: PartnerProduct }) {
+  return (
+    <>
+      <p className="small muted">General research · illustrative partner options</p>
+      <h2 className="drawer-title">{productName(product)}</h2>
+      <p className="small muted" style={{ marginTop: 8, marginBottom: 16 }}>
+        Illustrative options are for general research only — not personalized offers or eligibility decisions.
+      </p>
+    </>
   );
 }

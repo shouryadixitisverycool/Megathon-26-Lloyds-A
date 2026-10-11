@@ -1,4 +1,4 @@
-from greenpath.llm.service import ExplanationService
+from greenr.llm.service import ExplanationService
 
 
 def test_provider_deadline_is_used_unless_explicitly_overridden():

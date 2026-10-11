@@ -10,12 +10,12 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath import config
-from greenpath.contracts import ConfidenceStatus, Product
-from greenpath.evaluation.reports import leakage_audit, write_plots
-from greenpath.pipelines import run
-from greenpath.pipelines.runtime import ConfidenceScorer
-from greenpath.pipelines import runtime
+from greenr import config
+from greenr.contracts import ConfidenceStatus, Product
+from greenr.evaluation.reports import leakage_audit, write_plots
+from greenr.pipelines import run
+from greenr.pipelines.runtime import ConfidenceScorer
+from greenr.pipelines import runtime
 
 
 def test_strict_json_replaces_undefined_metrics(tmp_path):
@@ -27,9 +27,9 @@ def test_strict_json_replaces_undefined_metrics(tmp_path):
 
 
 def test_all_cli_generates_both_datasets_before_training(monkeypatch):
-    from greenpath.data_generation import __main__ as generation
-    from greenpath.evaluation import ml
-    from greenpath.pipelines import predict
+    from greenr.data_generation import __main__ as generation
+    from greenr.evaluation import ml
+    from greenr.pipelines import predict
     events = []
     monkeypatch.setattr(generation, "generate_dataset", lambda **kw: events.append(("data", kw)))
     for name in ("stage_env", "stage_train", "write_run_manifest", "update_timings"):
@@ -109,7 +109,7 @@ def test_evaluation_charts_are_standalone_valid_svg(tmp_path):
 
 
 def test_runtime_refuses_partial_trained_artifacts(monkeypatch, tmp_path):
-    from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
+    from greenr.pipelines.snapshot_provider import Customer360SnapshotProvider
     monkeypatch.setattr(Customer360SnapshotProvider, "from_parquet", lambda *args: object())
     monkeypatch.setattr(runtime, "load_all", lambda **kwargs: {p: object() for p in Product})
     monkeypatch.setattr(runtime, "load_detectors", lambda *args: {})
@@ -120,7 +120,7 @@ def test_runtime_refuses_partial_trained_artifacts(monkeypatch, tmp_path):
 
 
 def test_runtime_refuses_validated_confidence_without_model(monkeypatch, tmp_path):
-    from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
+    from greenr.pipelines.snapshot_provider import Customer360SnapshotProvider
     monkeypatch.setattr(Customer360SnapshotProvider, "from_parquet", lambda *args: object())
     monkeypatch.setattr(runtime, "load_all", lambda **kwargs: {p: object() for p in Product})
     monkeypatch.setattr(runtime, "load_detectors", lambda *args: {p: object() for p in Product})
@@ -130,7 +130,7 @@ def test_runtime_refuses_validated_confidence_without_model(monkeypatch, tmp_pat
 
 
 def test_feature_drift_separates_distribution_and_missingness():
-    from greenpath.evaluation.ml import feature_drift
+    from greenr.evaluation.ml import feature_drift
     name = "annual_mileage_km"
     report = feature_drift(pd.DataFrame({name: [1, 1, 1, 1]}),
                            pd.DataFrame({name: [10, 10, None, None]}))

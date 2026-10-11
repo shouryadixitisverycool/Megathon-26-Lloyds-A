@@ -1,6 +1,6 @@
 # Responsible AI Note
 
-GreenPath helps identify sustainability opportunities using synthetic banking data. The project team has selected jagruti-1.5b to explain results. Product rules, prediction models and the impact calculator produce those results. The LLM does not decide credit eligibility or calculate carbon savings.
+Greenr helps identify sustainability opportunities using synthetic banking data. The project team has selected jagruti-1.5b to explain results. Product rules, prediction models and the impact calculator produce those results. The LLM does not decide credit eligibility or calculate carbon savings.
 
 Our approach follows the trustworthiness principles discussed in [TrustLLM (Huang et al., ICML 2024)](https://proceedings.mlr.press/v235/huang24x.html). We use these principles to guide our safeguards and responsible AI practices.
 
@@ -13,6 +13,8 @@ Our approach follows the trustworthiness principles discussed in [TrustLLM (Huan
 - **Explainability:** Our SHAP files show how input features contribute to product take-up predictions. They follow [Lundberg and Lee's SHAP framework (NeurIPS 2017)](https://papers.nips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf). They explain the prediction model's raw score, rather than jagruti's reasoning or causal effects.
 
 - **Hallucinations:** The explanation service accepts only approved sentences and checks product names, reasons, numbers and units. Invalid responses use fixed templates. The LLM cannot invent or change impact estimates.
+
+- **Promo copy:** Short ads (push, banner, card, email block) are drafted only for a supported decision. They are sendable only when the existing consent, suppression, cooling-off and fatigue rules allow engagement; staff previews of blocked messages are labelled not sendable. Providers receive closed themes and limits, never customer amounts or identifiers. Provider copy may not contain digits or currency; the only number is the carbon-engine estimate, inserted and labelled by code. Blocklists reject eligibility/approval, savings/rate, absolute green ("carbon neutral", "net zero") and "we noticed your spending" claims, links and other products. Call-to-action and disclaimer are fixed text. Blocklists cannot prove copy is fair or free of every implied claim; real campaigns still need financial-promotion and anti-greenwashing review.
 
 - **Human oversight:** Reviewers can stop outreach, flag data problems and request review. Consent and contact limits are checked, and decisions are logged.
 
@@ -34,4 +36,4 @@ Our saved [offline explanation tests](reports/explanation_evaluation.json) passe
 
 These results document the behaviour of our explanation safeguards under the evaluated test cases.
 
-This note records GreenPath's responsible AI safeguards, evaluation evidence and approach to trustworthy sustainability insights. It is intended to support transparent, evidence-based recommendations for green financial products.
+This note records Greenr's responsible AI safeguards, evaluation evidence and approach to trustworthy sustainability insights. It is intended to support transparent, evidence-based recommendations for green financial products.

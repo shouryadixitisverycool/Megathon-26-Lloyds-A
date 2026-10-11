@@ -6,12 +6,12 @@ Python 3.12, `uv`, local disk and initial dependency-download access are require
 
 ```bash
 make all
-GREENPATH_PROVIDER=trained make app
+GREENR_PROVIDER=trained make app
 ```
 
 The Makefile serializes `all`: locked setup, full pipeline, fixture-mode pytest, offline LLM evaluation, fixture scenario evaluation, extension/system evaluation. Default `CUSTOMERS=4000`; customer count changes results. Small smoke runs are not comparable to the submission's 4,000-customer evidence.
 
-Individual targets: `make setup`, `make data`, `make perturbed`, `make train`, `make evaluate`, `make test`, `make test-trained`, `make evaluate-llm`, `make scenarios`, `make evaluate-system`, `make schemas`, `make build`. Train/evaluate require prior stage inputs; `make all` is the core end-to-end entrypoint. Optional product training/report regeneration is separate: `uv run --locked python -m greenpath.extensions.optional_models` after the core pipeline. `evaluate-system` benchmarks API/cache/fairness; it does not train the optional models.
+Individual targets: `make setup`, `make data`, `make perturbed`, `make train`, `make evaluate`, `make test`, `make test-trained`, `make evaluate-llm`, `make scenarios`, `make evaluate-system`, `make schemas`, `make build`. Train/evaluate require prior stage inputs; `make all` is the core end-to-end entrypoint. Optional product training/report regeneration is separate: `uv run --locked python -m greenr.extensions.optional_models` after the core pipeline. `evaluate-system` benchmarks API/cache/fairness; it does not train the optional models.
 
 ## Artifact Map
 
@@ -33,27 +33,27 @@ The pipeline reserves one third of initial validation customers as `confidence_r
 
 Source changes add event/availability provenance, source-update requests and product decision/explanation/history fields. Run `make schemas` after final integration and inspect generated diffs; this is separate from `make all`. Regenerate source data, processed snapshots, models, predictions, reports and manifest together after source-table/schema changes. Do not mix new schemas with old snapshots or partially regenerated reports. This docs-only pass does not write generated schemas.
 
-`GREENPATH_PROVIDER=fixture` gives deterministic GP personas; `trained` requires complete artifacts; `auto` defaults to trained when artifact evidence exists and otherwise fixtures. Incomplete trained artifacts raise errors rather than quietly changing the evidence source. `make test` explicitly sets fixture mode; this does not prove trained UI flows.
+`GREENR_PROVIDER=fixture` gives deterministic GP personas; `trained` requires complete artifacts; `auto` defaults to trained when artifact evidence exists and otherwise fixtures. Incomplete trained artifacts raise errors rather than quietly changing the evidence source. `make test` explicitly sets fixture mode; this does not prove trained UI flows.
 
-Without `GREENPATH_LLM_API_KEY`, explanations are templates. A keyed HTTP configuration additionally requires `GREENPATH_LLM_ENDPOINT`, `LLM_MODEL` and `LLM_MODEL_VERSION`. Optional settings: `PROMPT_VERSION`, `TEMPERATURE`, `MAX_OUTPUT_TOKENS`, `GREENPATH_LLM_INPUT_PRICE_PER_MILLION`, `GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION`. Keep keys outside committed files. Cost requires actual returned token usage and explicit pricing; absent data remains null.
+Without `GREENR_LLM_API_KEY`, explanations are templates. A keyed HTTP configuration additionally requires `GREENR_LLM_ENDPOINT`, `LLM_MODEL` and `LLM_MODEL_VERSION`. Optional settings: `PROMPT_VERSION`, `TEMPERATURE`, `MAX_OUTPUT_TOKENS`, `GREENR_LLM_INPUT_PRICE_PER_MILLION`, `GREENR_LLM_OUTPUT_PRICE_PER_MILLION`. Keep keys outside committed files. Cost requires actual returned token usage and explicit pricing; absent data remains null.
 
 Live-provider evidence: **not run without credentials**. Offline adversaries test validators/fallback, not a provider's quality or cost. System timings are local in-process FastAPI TestClient measurements excluding network, Streamlit rendering and live LLM latency.
 
 ## Authorized Live Evaluation
 
-`src/greenpath/llm/provider_manifest.json` selects OpenAI `https://api.openai.com/v1/chat/completions`, dated snapshot `gpt-4.1-mini-2025-04-14`, prompt `grounded-selection-v1`, temperature 0 and output bound 1600 tokens. Status is `selected_not_live_evaluated`. No paid run is included in `make all` or performed here. Only after explicit authorization, credentials and independently checked current pricing, run:
+`src/greenr/llm/provider_manifest.json` selects OpenAI `https://api.openai.com/v1/chat/completions`, dated snapshot `gpt-4.1-mini-2025-04-14`, prompt `grounded-selection-v1`, temperature 0 and output bound 1600 tokens. Status is `selected_not_live_evaluated`. No paid run is included in `make all` or performed here. Only after explicit authorization, credentials and independently checked current pricing, run:
 
 ```bash
-uv run --locked python -m greenpath.llm.live_evaluation --allow-paid-provider --cases 100 --output reports/live_explanation_evaluation.json
+uv run --locked python -m greenr.llm.live_evaluation --allow-paid-provider --cases 100 --output reports/live_explanation_evaluation.json
 ```
 
-The evaluator requires `GREENPATH_LLM_API_KEY` and `GREENPATH_LLM_INPUT_PRICE_PER_MILLION`, `GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION`, `GREENPATH_LLM_CACHED_INPUT_PRICE_PER_MILLION`. It stops on provider failure, records partial completion, and measures final grounded output including fallbacks rather than raw-model quality. Its separate cache experiment adds calls included in provider totals. Missing usage/cost remains null. See the LLM-owner docs for adapter details.
+The evaluator requires `GREENR_LLM_API_KEY` and `GREENR_LLM_INPUT_PRICE_PER_MILLION`, `GREENR_LLM_OUTPUT_PRICE_PER_MILLION`, `GREENR_LLM_CACHED_INPUT_PRICE_PER_MILLION`. It stops on provider failure, records partial completion, and measures final grounded output including fallbacks rather than raw-model quality. Its separate cache experiment adds calls included in provider totals. Missing usage/cost remains null. See the LLM-owner docs for adapter details.
 
 ## Source And State
 
 DESNZ 2025 is the reviewed hashed subset in `extensions/uk_factors_2025.json`; official 2026 availability is recorded but its numeric rows have not been reviewed/substituted. Updating vintage requires review, versioning and report/passport regeneration. PVGIS 5.3 consumes archived bytes or a matching fetched response with a reviewed SHA-256, retrieval time, explicit installation parameters, echoed metadata and annual energy units. There is no fallback regional yield; demand/self-consumption must still be supplied. The pipeline does not automatically fetch or review site-specific PVGIS evidence.
 
-Local factual updates require trained mode and `GREENPATH_DEMO_ADMIN_TOKEN` matched by `X-Demo-Admin-Token`. Keep the token outside committed files. Updates require actor/reason/source reference, idempotent request ID and coherent event/availability/cutoff timestamps. SQLite retains decisions, explanation runs, source overrides, feedback and active simulated campaigns across restarts. Preserve user state and use isolated memory paths for repeatable tests. Updates rescore deployed inference; they do not retrain or replace unchanged rolling evidence.
+Local factual updates require trained mode and `GREENR_DEMO_ADMIN_TOKEN` matched by `X-Demo-Admin-Token`. Keep the token outside committed files. Updates require actor/reason/source reference, idempotent request ID and coherent event/availability/cutoff timestamps. SQLite retains decisions, explanation runs, source overrides, feedback and active simulated campaigns across restarts. Preserve user state and use isolated memory paths for repeatable tests. Updates rescore deployed inference; they do not retrain or replace unchanged rolling evidence.
 
 ## Verification Ownership
 

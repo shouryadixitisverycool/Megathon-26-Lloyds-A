@@ -4,21 +4,21 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath.confidence.meta_model import (
+from greenr.confidence.meta_model import (
     FEATURE_COLUMNS,
     ConfidenceModel,
     build_confidence_features,
     perturbation_stability,
     to_results,
 )
-from greenpath.confidence.validation import (
+from greenr.confidence.validation import (
     ablation,
     stress_report,
     validate_confidence,
     write_confidence_report,
 )
-from greenpath.contracts.enums import ConfidenceBucket, ConfidenceStatus
-from greenpath.contracts.propensity import ConfidenceResult
+from greenr.contracts.enums import ConfidenceBucket, ConfidenceStatus
+from greenr.contracts.propensity import ConfidenceResult
 
 T = 0.3
 

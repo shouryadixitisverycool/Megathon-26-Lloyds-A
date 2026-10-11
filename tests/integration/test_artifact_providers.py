@@ -6,13 +6,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from greenpath import config
-from greenpath.contracts import ConfidenceResult, CustomerSnapshot as ScoringSnapshot
-from greenpath.contracts import PropensityResult as ScoringResult, TrustAssessment as ScoringTrust
-from greenpath.contracts.enums import ConfidenceBucket, ConfidenceStatus, Product, RecommendationState
-from greenpath.contracts.fixtures import load_model
-from greenpath.demo.artifacts import ArtifactRepository, default_repository
-from greenpath.recommendation.service import RecommendationService
+from greenr import config
+from greenr.contracts import ConfidenceResult, CustomerSnapshot as ScoringSnapshot
+from greenr.contracts import PropensityResult as ScoringResult, TrustAssessment as ScoringTrust
+from greenr.contracts.enums import ConfidenceBucket, ConfidenceStatus, Product, RecommendationState
+from greenr.contracts.fixtures import load_model
+from greenr.demo.artifacts import ArtifactRepository, default_repository
+from greenr.recommendation.service import RecommendationService
 
 
 class FakeRuntime:
@@ -104,7 +104,7 @@ def cached_repository(tmp_path, monkeypatch, runtime=None):
         path.mkdir(exist_ok=True)
         monkeypatch.setattr(config, setting, path)
     repository = ArtifactRepository(runtime or FakeRuntime())
-    from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
+    from greenr.pipelines.snapshot_provider import Customer360SnapshotProvider
     monkeypatch.setattr(Customer360SnapshotProvider, "from_parquet",
                         lambda *paths, **kwargs: repository.runtime.snapshots)
     repository._history_cache_dir = config.ARTIFACT_DIR / "history_cache"
@@ -201,8 +201,8 @@ def test_history_cache_failed_atomic_publish_does_not_break_history(tmp_path, mo
 
 
 def test_default_runtime_loads_only_current_frame_then_loads_history_lazily(tmp_path, monkeypatch):
-    from greenpath.pipelines import runtime as runtime_module
-    from greenpath.pipelines import snapshot_provider
+    from greenr.pipelines import runtime as runtime_module
+    from greenr.pipelines import snapshot_provider
     current = date(2026, 6, 30)
     earlier = date(2026, 5, 31)
     monkeypatch.setattr(config, "FEATURE_CUTOFF", current)
@@ -282,12 +282,12 @@ def test_validated_low_confidence_abstains_without_conflating_trust():
 
 def test_explicit_trained_scenario_exposes_available_co2e_through_api():
     from fastapi.testclient import TestClient
-    from greenpath.api.main import create_app
-    from greenpath.contracts.impact_detail import ImpactResult
+    from greenr.api.main import create_app
+    from greenr.contracts.impact_detail import ImpactResult
 
     runtime = FakeRuntime()
-    from greenpath.data_generation.scenarios import generate_scenario_table
-    from greenpath.pipelines.scenario_provider import ScenarioProvider
+    from greenr.data_generation.scenarios import generate_scenario_table
+    from greenr.pipelines.scenario_provider import ScenarioProvider
     table = generate_scenario_table([runtime.source.customer_id],
         effective_on=runtime.source.feature_cutoff, available_on=runtime.source.feature_cutoff)
     scenarios = ScenarioProvider(table[table["product"] == Product.EV_FINANCE])
@@ -314,8 +314,8 @@ def test_explicit_trained_scenario_exposes_available_co2e_through_api():
 
 def test_injected_scenarios_use_historical_cutoff_without_reading_raw(monkeypatch):
     import pandas as pd
-    from greenpath.data_generation.scenarios import generate_scenario_table
-    from greenpath.pipelines.scenario_provider import ScenarioProvider
+    from greenr.data_generation.scenarios import generate_scenario_table
+    from greenr.pipelines.scenario_provider import ScenarioProvider
     runtime = FakeRuntime()
     scenarios = ScenarioProvider(generate_scenario_table(["C10001"],
         effective_on=date(2026, 6, 30), available_on=date(2026, 6, 30)))
@@ -340,7 +340,7 @@ def test_auto_fixture_and_partial_artifacts_fail_visibly(tmp_path, monkeypatch):
 
 
 def test_trend_metrics_use_actual_scored_values_and_absent_outcomes_stay_absent():
-    from greenpath.api.portfolio import historical_trends
+    from greenr.api.portfolio import historical_trends
     repository = ArtifactRepository(FakeRuntime())
     trends = historical_trends(repository.list_snapshots(), repository.list_history())
     assert all(point.average_propensity == Decimal("0.8") for point in trends.observations)
@@ -354,7 +354,7 @@ def test_trend_metrics_use_actual_scored_values_and_absent_outcomes_stay_absent(
 
 def test_trained_api_warms_and_reuses_portfolio_summary():
     from fastapi.testclient import TestClient
-    from greenpath.api.main import create_app
+    from greenr.api.main import create_app
     repository = ArtifactRepository(FakeRuntime())
     with TestClient(create_app(repository)) as client:
         first = client.get("/portfolio/summary")
@@ -366,8 +366,8 @@ def test_trained_api_warms_and_reuses_portfolio_summary():
 
 
 def test_trend_high_confidence_uses_recommended_rows_and_paperless_fact_is_not_future_label():
-    from greenpath.api.portfolio import historical_trends
-    from greenpath.contracts.product import HistoryRecord
+    from greenr.api.portfolio import historical_trends
+    from greenr.contracts.product import HistoryRecord
     repository = ArtifactRepository(FakeRuntime())
     snapshot = repository.get_snapshot("C10001")
     snapshots = tuple(snapshot.model_copy(update={"customer_id": name, "source_snapshot": None}) for name in ("a", "b", "c"))
@@ -389,7 +389,7 @@ def test_trend_high_confidence_uses_recommended_rows_and_paperless_fact_is_not_f
 
 
 def test_summary_kpis_keep_supported_confidence_and_trust_counts_separate():
-    from greenpath.api.portfolio import summarize
+    from greenr.api.portfolio import summarize
     repository = ArtifactRepository(FakeRuntime())
     snapshots = repository.list_snapshots()
     service = RecommendationService(repository, repository, repository)

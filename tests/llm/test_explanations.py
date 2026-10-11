@@ -5,13 +5,13 @@ from decimal import Decimal
 
 import pytest
 
-from greenpath.contracts.product import (
+from greenr.contracts.product import (
     ELIGIBILITY_DISCLAIMER, DecisionEvidence, PropensityResult, RecommendationState, TrustAssessment, TrustIssue,
 )
-from greenpath.impact import Product
-from greenpath.llm import ExplanationService, ProviderExplanation
-from greenpath.llm.evaluation import FixedProvider, approved_output, run_evaluation, synthetic_recommendation
-from greenpath.llm.service import REASON_TEXT
+from greenr.impact import Product
+from greenr.llm import ExplanationService, ProviderExplanation
+from greenr.llm.evaluation import FixedProvider, approved_output, run_evaluation, synthetic_recommendation
+from greenr.llm.service import REASON_TEXT
 
 
 @pytest.mark.parametrize("product", list(Product))
@@ -131,11 +131,11 @@ def test_negative_carbon_keeps_sign_and_names_increase():
 
 @pytest.mark.parametrize("charging", [0.9, 0.1])
 def test_co2e_explanation_grounds_signed_numbers_and_rejects_co2_relabelling(charging):
-    from greenpath.contracts.customer import CustomerSnapshot
-    from greenpath.contracts.fixtures import load_model
-    from greenpath.impact.uk_adapter import UKImpactCalculator
-    from greenpath.data_generation.scenarios import generate_scenario_table
-    from greenpath.pipelines.scenario_provider import ScenarioProvider, UKImpactInput
+    from greenr.contracts.customer import CustomerSnapshot
+    from greenr.contracts.fixtures import load_model
+    from greenr.impact.uk_adapter import UKImpactCalculator
+    from greenr.data_generation.scenarios import generate_scenario_table
+    from greenr.pipelines.scenario_provider import ScenarioProvider, UKImpactInput
 
     snapshot = load_model("customer_snapshot_C10001", CustomerSnapshot)
     scenarios = ScenarioProvider(generate_scenario_table([snapshot.customer_id],
@@ -162,8 +162,8 @@ def test_co2e_explanation_grounds_signed_numbers_and_rejects_co2_relabelling(cha
 
 
 def test_structured_explanation_schemas_share_product_impact_units():
-    from greenpath.contracts.impact_detail import ImpactResult
-    from greenpath.llm.ports import ExplanationRequest
+    from greenr.contracts.impact_detail import ImpactResult
+    from greenr.llm.ports import ExplanationRequest
 
     units = ImpactResult.model_json_schema()["properties"]["units"]["enum"]
     assert units == ["kg CO2", "kg CO2/year", "kg CO2e/year"]
@@ -229,7 +229,7 @@ def test_cross_product_source_fails_boundary_validation():
 
 
 def test_vocabulary_matches_recommendation_engine():
-    from greenpath.recommendation.reasons import REASON_MESSAGES
+    from greenr.recommendation.reasons import REASON_MESSAGES
     assert set(REASON_MESSAGES) == set(REASON_TEXT)
 
 

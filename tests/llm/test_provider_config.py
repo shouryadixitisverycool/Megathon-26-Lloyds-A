@@ -6,26 +6,26 @@ import sys
 import httpx
 import pytest
 
-from greenpath.llm.evaluation import approved_output, synthetic_recommendation
-from greenpath.llm.http_provider import configured_provider, strict_response_schema
-from greenpath.llm.ports import ExplanationRequest
-from greenpath.llm.service import ExplanationService
-from greenpath.llm import live_evaluation
+from greenr.llm.evaluation import approved_output, synthetic_recommendation
+from greenr.llm.http_provider import configured_provider, strict_response_schema
+from greenr.llm.ports import ExplanationRequest
+from greenr.llm.service import ExplanationService
+from greenr.llm import live_evaluation
 
 
 @pytest.fixture(autouse=True)
 def clean_environment(monkeypatch):
-    for name in ("OPENAI_API_KEY", "GREENPATH_LLM_API_KEY", "GREENPATH_LLM_ENDPOINT",
+    for name in ("OPENAI_API_KEY", "GREENR_LLM_API_KEY", "GREENR_LLM_ENDPOINT",
                  "LLM_MODEL", "LLM_MODEL_VERSION", "PROMPT_VERSION", "TEMPERATURE",
-                 "MAX_OUTPUT_TOKENS", "GREENPATH_LLM_TOKEN_LIMIT_PARAMETER",
-                 "GREENPATH_LLM_TIMEOUT_SECONDS", "GREENPATH_LLM_INPUT_PRICE_PER_MILLION",
-                 "GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION", "GREENPATH_LLM_CACHED_INPUT_PRICE_PER_MILLION"):
+                 "MAX_OUTPUT_TOKENS", "GREENR_LLM_TOKEN_LIMIT_PARAMETER",
+                 "GREENR_LLM_TIMEOUT_SECONDS", "GREENR_LLM_INPUT_PRICE_PER_MILLION",
+                 "GREENR_LLM_OUTPUT_PRICE_PER_MILLION", "GREENR_LLM_CACHED_INPUT_PRICE_PER_MILLION"):
         monkeypatch.delenv(name, raising=False)
 
 
 def test_manifest_defaults_and_key_precedence(monkeypatch):
     assert configured_provider() is None
-    monkeypatch.setenv("GREENPATH_LLM_API_KEY", "fallback-only")
+    monkeypatch.setenv("GREENR_LLM_API_KEY", "fallback-only")
     provider = configured_provider()
     assert provider.api_key == "fallback-only"
     monkeypatch.setenv("OPENAI_API_KEY", "standard-only")
@@ -40,11 +40,11 @@ def test_manifest_defaults_and_key_precedence(monkeypatch):
 
 
 def test_explicit_environment_overrides(monkeypatch):
-    for name, value in {"OPENAI_API_KEY": "mock-only", "GREENPATH_LLM_ENDPOINT": "https://example.test",
+    for name, value in {"OPENAI_API_KEY": "mock-only", "GREENR_LLM_ENDPOINT": "https://example.test",
                         "LLM_MODEL": "custom-alias", "PROMPT_VERSION": "custom-prompt",
                         "TEMPERATURE": "0.2", "MAX_OUTPUT_TOKENS": "99",
-                        "GREENPATH_LLM_TOKEN_LIMIT_PARAMETER": "max_tokens",
-                        "GREENPATH_LLM_TIMEOUT_SECONDS": "7"}.items():
+                        "GREENR_LLM_TOKEN_LIMIT_PARAMETER": "max_tokens",
+                        "GREENR_LLM_TIMEOUT_SECONDS": "7"}.items():
         monkeypatch.setenv(name, value)
     provider = configured_provider()
     assert provider.model == provider.version == "custom-alias"
@@ -83,9 +83,9 @@ def test_luna_request_options_and_strict_nullable_schema(monkeypatch):
 
 def test_live_cli_accepts_alias_and_records_effective_overrides(monkeypatch, tmp_path):
     monkeypatch.setenv("OPENAI_API_KEY", "mock-secret")
-    monkeypatch.setenv("GREENPATH_LLM_TIMEOUT_SECONDS", "9")
+    monkeypatch.setenv("GREENR_LLM_TIMEOUT_SECONDS", "9")
     for kind in ("INPUT", "OUTPUT", "CACHED_INPUT"):
-        monkeypatch.setenv(f"GREENPATH_LLM_{kind}_PRICE_PER_MILLION", "1")
+        monkeypatch.setenv(f"GREENR_LLM_{kind}_PRICE_PER_MILLION", "1")
     def run(provider, *, count, timeout_seconds):
         assert provider.model == "gpt-6-luna"
         assert timeout_seconds == 9

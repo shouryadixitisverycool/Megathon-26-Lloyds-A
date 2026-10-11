@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath.contracts import Product
-from greenpath.models.propensity import PRODUCT_FEATURES
+from greenr.contracts import Product
+from greenr.models.propensity import PRODUCT_FEATURES
 from scripts import preprocess_data
 
 

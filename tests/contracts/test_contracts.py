@@ -11,7 +11,7 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from greenpath.contracts import (
+from greenr.contracts import (
     CONTRACT_VERSION,
     CustomerSnapshot,
     Explanation,
@@ -23,13 +23,13 @@ from greenpath.contracts import (
     RecommendationState,
     TrustAssessment,
 )
-from greenpath.contracts.export_schemas import (
+from greenr.contracts.export_schemas import (
     SCHEMA_DIR,
     TOP_LEVEL_CONTRACTS,
     build_schemas,
     render_schema,
 )
-from greenpath.contracts.fixtures import load_fixture
+from greenr.contracts.fixtures import load_fixture
 
 
 def _payload(name: str) -> dict[str, Any]:

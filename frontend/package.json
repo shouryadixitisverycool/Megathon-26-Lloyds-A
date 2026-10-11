@@ -1,9 +1,9 @@
 {
-  "name": "greenpath-frontend",
+  "name": "greenr-frontend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "React workspace for the GreenPath synthetic sustainability-opportunity API",
+  "description": "React workspace for the Greenr synthetic sustainability-opportunity API",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

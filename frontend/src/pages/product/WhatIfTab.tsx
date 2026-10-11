@@ -48,7 +48,7 @@ export function WhatIfTab({ row, snapshot }: { row: Recommendation; snapshot: Cu
         ) : (
           <Callout kind="info" title="Needs the trained models">
             These demo personas use fixed synthetic probabilities, so there's no model to probe. Start the API with
-            <code> GREENPATH_PROVIDER=trained</code> to use sensitivity analysis.
+            <code> GREENR_PROVIDER=trained</code> to use sensitivity analysis.
           </Callout>
         )}
       </section>

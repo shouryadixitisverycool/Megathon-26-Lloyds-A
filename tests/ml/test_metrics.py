@@ -10,7 +10,7 @@ import pytest
 from sklearn.calibration import calibration_curve as sk_calibration_curve
 from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
 
-from greenpath.evaluation import metrics as m
+from greenr.evaluation import metrics as m
 
 
 def _random_problem(seed: int = 7, n: int = 500) -> tuple[np.ndarray, np.ndarray]:

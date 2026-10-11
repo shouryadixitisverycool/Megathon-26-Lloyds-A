@@ -6,8 +6,8 @@ from copy import deepcopy
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath.api.main import create_app
-from greenpath.extensions.store import MemoryStore
+from greenr.api.main import create_app
+from greenr.extensions.store import MemoryStore
 
 
 @pytest.fixture
@@ -129,3 +129,24 @@ def test_fixture_sensitivity_is_unavailable_and_unknown_customers_fail_closed(cl
     assert client.post("/customers/GP-001/sensitivity", json={"product": "EV_FINANCE", "changes": {"annual_mileage_km": 5000}}).status_code == 409
     assert client.get("/customers/unknown/history").status_code == 404
     assert client.post("/customers/unknown/simulate", json={"product": "EV_FINANCE", "inputs": {}}).status_code == 404
+
+
+def test_promo_copy_is_withheld_until_the_communication_rules_allow_engagement(client):
+    path = "/customers/GP-001/promos/EV_FINANCE"
+    withheld = client.get(path).json()
+    assert withheld["status"] == "WITHHELD" and withheld["withheld_reason"] == "No recorded consent for the selected channel"
+    assert withheld["lines"] == []
+    preview = client.get(path, params={"format": "medium", "preview": True}).json()
+    assert preview["status"] == "PREVIEW" and 3 <= len(preview["lines"]) <= 5
+    assert client.get(path, params={"format": "push"}).json()["status"] == "WITHHELD"
+    allow(client)
+    one_liner = client.get(path).json()
+    assert one_liner["status"] == "AVAILABLE" and len(one_liner["lines"]) == 1
+    assert one_liner["cta_label"] == "Explore EV options" and one_liner["source"] == "template"
+    short = client.get(path, params={"format": "short"}).json()
+    assert 2 <= len(short["lines"]) <= 4 and short["data_timestamp"]
+    assert client.get(path, params={"format": "banner"}).status_code == 422
+    assert client.get("/customers/missing/promos/EV_FINANCE").status_code == 404
+    assert feedback(client, "NOT_INTERESTED", "promo-decline").status_code == 200
+    assert client.get(path).json()["withheld_reason"] == "60-day cooling-off after decline"
+    assert client.get("/promos/metrics").json()["requests"] >= 2

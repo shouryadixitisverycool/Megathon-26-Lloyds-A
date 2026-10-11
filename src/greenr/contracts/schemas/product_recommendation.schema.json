@@ -1,0 +1,1432 @@
+{
+  "$defs": {
+    "ActivityEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "title": "Basis",
+          "type": "string"
+        },
+        "conflicts": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Conflicts",
+          "type": "array"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "freshness": {
+          "title": "Freshness",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/$defs/Period"
+        },
+        "reference": {
+          "title": "Reference",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "field",
+        "value",
+        "reference",
+        "basis",
+        "observed_at",
+        "period",
+        "freshness"
+      ],
+      "title": "ActivityEvidence",
+      "type": "object"
+    },
+    "ConfidenceBucket": {
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ],
+      "title": "ConfidenceBucket",
+      "type": "string"
+    },
+    "ConfidenceResult": {
+      "additionalProperties": false,
+      "description": "Validated reliability of a displayed propensity (spec 16). Not eligibility.",
+      "properties": {
+        "bucket": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConfidenceBucket"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "limitation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Limitation"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ConfidenceStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "status",
+        "method_version"
+      ],
+      "title": "ConfidenceResult",
+      "type": "object"
+    },
+    "ConfidenceStatus": {
+      "enum": [
+        "VALIDATED",
+        "SUPPRESSED"
+      ],
+      "title": "ConfidenceStatus",
+      "type": "string"
+    },
+    "DecisionEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "fields": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "references": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "References",
+          "type": "array"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "DecisionEvidence",
+      "type": "object"
+    },
+    "EmissionsScenario": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "emissions_kg_co2": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Emissions Kg Co2"
+        },
+        "emissions_kg_co2e": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Emissions Kg Co2E"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "title": "EmissionsScenario",
+      "type": "object"
+    },
+    "FactorReference": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Activity Period"
+        },
+        "applicability": {
+          "title": "Applicability",
+          "type": "string"
+        },
+        "boundary": {
+          "title": "Boundary",
+          "type": "string"
+        },
+        "current_edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Edition"
+        },
+        "current_edition_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Edition Url"
+        },
+        "factor_id": {
+          "title": "Factor Id",
+          "type": "string"
+        },
+        "fuel": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fuel"
+        },
+        "geography": {
+          "title": "Geography",
+          "type": "string"
+        },
+        "original_unit": {
+          "title": "Original Unit",
+          "type": "string"
+        },
+        "original_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Original Value"
+        },
+        "source_checked_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Checked On"
+        },
+        "source_edition": {
+          "title": "Source Edition",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_limitation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Limitation"
+        },
+        "source_locator": {
+          "title": "Source Locator",
+          "type": "string"
+        },
+        "source_published_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Published On"
+        },
+        "source_publisher": {
+          "title": "Source Publisher",
+          "type": "string"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Sha256"
+        },
+        "source_title": {
+          "title": "Source Title",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        },
+        "verification_basis": {
+          "title": "Verification Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "factor_id",
+        "value",
+        "unit",
+        "original_value",
+        "original_unit",
+        "geography",
+        "boundary",
+        "applicability",
+        "source_id",
+        "source_url",
+        "source_title",
+        "source_publisher",
+        "source_edition",
+        "source_locator",
+        "source_sha256",
+        "verification_basis"
+      ],
+      "title": "FactorReference",
+      "type": "object"
+    },
+    "ImpactIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/IssueCode"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "field",
+        "message"
+      ],
+      "title": "ImpactIssue",
+      "type": "object"
+    },
+    "ImpactResult": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "baseline": {
+          "$ref": "#/$defs/EmissionsScenario"
+        },
+        "boundary": {
+          "title": "Boundary",
+          "type": "string"
+        },
+        "contract_version": {
+          "default": "1.0.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ActivityEvidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "exclusions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Exclusions",
+          "type": "array"
+        },
+        "factor_catalogue_sha256": {
+          "title": "Factor Catalogue Sha256",
+          "type": "string"
+        },
+        "factor_catalogue_version": {
+          "title": "Factor Catalogue Version",
+          "type": "string"
+        },
+        "factors": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/FactorReference"
+          },
+          "title": "Factors",
+          "type": "array"
+        },
+        "feature_cutoff": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Feature Cutoff"
+        },
+        "issues": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ImpactIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "method_release": {
+          "title": "Method Release",
+          "type": "string"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "passport_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Passport Id"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Period"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "product": {
+          "$ref": "#/$defs/Product"
+        },
+        "scenario": {
+          "$ref": "#/$defs/EmissionsScenario"
+        },
+        "secondary_metrics": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SecondaryActivityMetric"
+          },
+          "title": "Secondary Metrics",
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/ImpactStatus"
+        },
+        "synthetic_demo": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Synthetic Demo"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "units": {
+          "default": "kg CO2",
+          "enum": [
+            "kg CO2",
+            "kg CO2/year",
+            "kg CO2e/year"
+          ],
+          "title": "Units",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "product",
+        "status",
+        "baseline",
+        "scenario",
+        "factor_catalogue_version",
+        "factor_catalogue_sha256",
+        "boundary",
+        "assumptions",
+        "exclusions",
+        "method_version",
+        "method_release",
+        "timestamp"
+      ],
+      "title": "ImpactResult",
+      "type": "object"
+    },
+    "ImpactStatus": {
+      "enum": [
+        "AVAILABLE",
+        "UNAVAILABLE",
+        "NOT_CLAIMED"
+      ],
+      "title": "ImpactStatus",
+      "type": "string"
+    },
+    "IssueCode": {
+      "enum": [
+        "MISSING_INPUT",
+        "INVALID_INPUT",
+        "CONFLICTING_INPUT",
+        "STALE_INPUT",
+        "UNSUPPORTED_SCOPE",
+        "FACTOR_NOT_ESTABLISHED",
+        "INCOMPARABLE_BASELINE"
+      ],
+      "title": "IssueCode",
+      "type": "string"
+    },
+    "ModelType": {
+      "enum": [
+        "HEURISTIC",
+        "LOGISTIC",
+        "GRADIENT_BOOSTING"
+      ],
+      "title": "ModelType",
+      "type": "string"
+    },
+    "Period": {
+      "additionalProperties": false,
+      "description": "Inclusive start, exclusive end. Dates are explicit, not epoch numbers.",
+      "properties": {
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "Period",
+      "type": "object"
+    },
+    "PopulationExclusion": {
+      "enum": [
+        "ALREADY_HOLDS_PRODUCT",
+        "ALREADY_PAPERLESS",
+        "EXISTING_SOLAR"
+      ],
+      "title": "PopulationExclusion",
+      "type": "string"
+    },
+    "Product": {
+      "enum": [
+        "EV_FINANCE",
+        "GREEN_HOME",
+        "SOLAR_FINANCE",
+        "PAPERLESS_BANKING"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "ReasonCode": {
+      "enum": [
+        "HIGH_FUEL_SPEND",
+        "HIGH_ANNUAL_MILEAGE",
+        "ICE_VEHICLE_OWNER",
+        "OLDER_VEHICLE",
+        "HIGH_ELECTRICITY_USE",
+        "HOMEOWNER",
+        "MORTGAGE_CUSTOMER",
+        "NO_EXISTING_SOLAR",
+        "PAPER_STATEMENTS_ACTIVE",
+        "HIGH_DIGITAL_ENGAGEMENT",
+        "RECENT_HOME_IMPROVEMENT_SPEND",
+        "UTILITY_SPEND_RISING",
+        "EXISTING_VEHICLE_FINANCE",
+        "HIGH_GAS_USE",
+        "STATED_SUSTAINABILITY_PREFERENCE"
+      ],
+      "title": "ReasonCode",
+      "type": "string"
+    },
+    "RecommendationState": {
+      "enum": [
+        "RECOMMEND",
+        "DO_NOT_RECOMMEND",
+        "INSUFFICIENT_INFORMATION",
+        "CONFLICT_REQUIRES_REVIEW",
+        "NOT_APPLICABLE",
+        "SUPPRESSED"
+      ],
+      "title": "RecommendationState",
+      "type": "string"
+    },
+    "SecondaryActivityMetric": {
+      "additionalProperties": false,
+      "description": "Non-carbon activity, displayed independently of the carbon status/value.",
+      "properties": {
+        "evidence_references": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence References",
+          "type": "array"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "name": {
+          "enum": [
+            "paper_statements_avoided",
+            "paper_sheets_avoided"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "statements/year",
+            "sheets/year"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "unit",
+        "method_version",
+        "evidence_references"
+      ],
+      "title": "SecondaryActivityMetric",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "TrustIssueCategory": {
+      "enum": [
+        "COMPLETENESS",
+        "FRESHNESS",
+        "CONFLICT",
+        "OOD",
+        "CRITICAL_FIELD"
+      ],
+      "title": "TrustIssueCategory",
+      "type": "string"
+    },
+    "TrustIssueCode": {
+      "enum": [
+        "SHORT_TRANSACTION_HISTORY",
+        "HOME_OWNERSHIP_UNKNOWN",
+        "VEHICLE_RECORD_MISSING",
+        "VEHICLE_RECORD_STALE",
+        "MILEAGE_MISSING",
+        "MILEAGE_ESTIMATED",
+        "ENERGY_RECORDS_MISSING",
+        "ENERGY_RECORDS_INCOMPLETE",
+        "DIGITAL_RECORDS_MISSING",
+        "REGION_MISSING",
+        "SUSTAINABILITY_PREFERENCE_UNKNOWN",
+        "EV_RECORD_WITH_RECURRING_FUEL_SPEND",
+        "NON_OWNER_WITH_ACTIVE_MORTGAGE",
+        "PAPERLESS_FLAG_WITH_PAPER_STATEMENTS",
+        "INVALID_PRODUCT_RECORD",
+        "OUT_OF_DISTRIBUTION"
+      ],
+      "title": "TrustIssueCode",
+      "type": "string"
+    },
+    "TrustStatus": {
+      "enum": [
+        "HIGH",
+        "ADEQUATE",
+        "LOW",
+        "INSUFFICIENT"
+      ],
+      "title": "TrustStatus",
+      "type": "string"
+    },
+    "greenr__contracts__product__PropensityResult": {
+      "additionalProperties": false,
+      "properties": {
+        "calibration_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Calibration Version"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "confidence_limitation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence Limitation"
+        },
+        "confidence_validated": {
+          "default": false,
+          "title": "Confidence Validated",
+          "type": "boolean"
+        },
+        "decision_threshold": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0.60",
+          "title": "Decision Threshold"
+        },
+        "in_model_population": {
+          "default": true,
+          "title": "In Model Population",
+          "type": "boolean"
+        },
+        "model_version": {
+          "title": "Model Version",
+          "type": "string"
+        },
+        "population_exclusion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Population Exclusion"
+        },
+        "probability": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probability"
+        },
+        "product": {
+          "$ref": "#/$defs/Product"
+        },
+        "reason_codes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "source_result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/greenr__contracts__propensity__PropensityResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "synthetic_demo": {
+          "const": true,
+          "default": true,
+          "title": "Synthetic Demo",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "product",
+        "model_version"
+      ],
+      "title": "PropensityResult",
+      "type": "object"
+    },
+    "greenr__contracts__product__TrustAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "issues": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/greenr__contracts__product__TrustIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Score"
+        },
+        "source_assessment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/greenr__contracts__trust__TrustAssessment"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "enum": [
+            "TRUSTED",
+            "LIMITED",
+            "CONFLICT",
+            "OOD"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "version": {
+          "default": "demo-trust-fixture-v1",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "score",
+        "status"
+      ],
+      "title": "TrustAssessment",
+      "type": "object"
+    },
+    "greenr__contracts__product__TrustIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "INFO",
+            "WARNING",
+            "HIGH"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "field",
+        "severity",
+        "message"
+      ],
+      "title": "TrustIssue",
+      "type": "object"
+    },
+    "greenr__contracts__propensity__PropensityResult": {
+      "additionalProperties": false,
+      "description": "Calibrated take-up probability for one customer x product.\n\nPropensity estimates interest only. It does not estimate impact or eligibility.",
+      "properties": {
+        "calibration_method": {
+          "title": "Calibration Method",
+          "type": "string"
+        },
+        "calibration_version": {
+          "title": "Calibration Version",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/ConfidenceResult"
+        },
+        "contract_version": {
+          "default": "1.0.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "customer_id": {
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "evidence": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Evidence",
+          "type": "object"
+        },
+        "feature_cutoff": {
+          "format": "date",
+          "title": "Feature Cutoff",
+          "type": "string"
+        },
+        "feature_version": {
+          "title": "Feature Version",
+          "type": "string"
+        },
+        "in_model_population": {
+          "title": "In Model Population",
+          "type": "boolean"
+        },
+        "model_type": {
+          "$ref": "#/$defs/ModelType"
+        },
+        "model_version": {
+          "title": "Model Version",
+          "type": "string"
+        },
+        "outcome_window_end": {
+          "format": "date",
+          "title": "Outcome Window End",
+          "type": "string"
+        },
+        "population_exclusion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PopulationExclusion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "prediction_timestamp": {
+          "format": "date-time",
+          "title": "Prediction Timestamp",
+          "type": "string"
+        },
+        "product": {
+          "$ref": "#/$defs/Product"
+        },
+        "propensity": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Propensity",
+          "type": "number"
+        },
+        "raw_score": {
+          "title": "Raw Score",
+          "type": "number"
+        },
+        "reason_codes": {
+          "items": {
+            "$ref": "#/$defs/ReasonCode"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "customer_id",
+        "product",
+        "propensity",
+        "raw_score",
+        "model_type",
+        "model_version",
+        "calibration_method",
+        "calibration_version",
+        "feature_version",
+        "feature_cutoff",
+        "outcome_window_end",
+        "prediction_timestamp",
+        "in_model_population",
+        "confidence"
+      ],
+      "title": "PropensityResult",
+      "type": "object"
+    },
+    "greenr__contracts__trust__TrustAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "assessed_at": {
+          "format": "date-time",
+          "title": "Assessed At",
+          "type": "string"
+        },
+        "completeness": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Completeness",
+          "type": "number"
+        },
+        "contract_version": {
+          "default": "1.0.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "critical_fields_present": {
+          "title": "Critical Fields Present",
+          "type": "boolean"
+        },
+        "cross_source_consistency": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Cross Source Consistency",
+          "type": "number"
+        },
+        "customer_id": {
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "freshness": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Freshness",
+          "type": "number"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/greenr__contracts__trust__TrustIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "ood_score": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Ood Score",
+          "type": "number"
+        },
+        "product": {
+          "$ref": "#/$defs/Product"
+        },
+        "score": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Score",
+          "type": "number"
+        },
+        "status": {
+          "$ref": "#/$defs/TrustStatus"
+        }
+      },
+      "required": [
+        "customer_id",
+        "product",
+        "score",
+        "status",
+        "completeness",
+        "freshness",
+        "cross_source_consistency",
+        "critical_fields_present",
+        "ood_score",
+        "method_version",
+        "assessed_at"
+      ],
+      "title": "TrustAssessment",
+      "type": "object"
+    },
+    "greenr__contracts__trust__TrustIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/TrustIssueCategory"
+        },
+        "code": {
+          "$ref": "#/$defs/TrustIssueCode"
+        },
+        "fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        }
+      },
+      "required": [
+        "code",
+        "category",
+        "severity",
+        "message"
+      ],
+      "title": "TrustIssue",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "decision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Decision Id"
+    },
+    "eligibility_disclaimer": {
+      "default": "This is a synthetic demonstration of product relevance, not a credit eligibility or approval decision.",
+      "title": "Eligibility Disclaimer",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/DecisionEvidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "exclusions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Exclusions",
+      "type": "array"
+    },
+    "feature_cutoff": {
+      "format": "date-time",
+      "title": "Feature Cutoff",
+      "type": "string"
+    },
+    "impact": {
+      "$ref": "#/$defs/ImpactResult"
+    },
+    "product": {
+      "$ref": "#/$defs/Product"
+    },
+    "propensity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/greenr__contracts__product__PropensityResult"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provenance": {
+      "additionalProperties": true,
+      "title": "Provenance",
+      "type": "object"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "rules_version": {
+      "title": "Rules Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/RecommendationState"
+    },
+    "synthetic_demo": {
+      "const": true,
+      "default": true,
+      "title": "Synthetic Demo",
+      "type": "boolean"
+    },
+    "timestamp": {
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+    },
+    "trust": {
+      "$ref": "#/$defs/greenr__contracts__product__TrustAssessment"
+    }
+  },
+  "required": [
+    "customer_id",
+    "product",
+    "propensity",
+    "state",
+    "reason_codes",
+    "evidence",
+    "impact",
+    "trust",
+    "feature_cutoff",
+    "rules_version",
+    "timestamp"
+  ],
+  "title": "Recommendation",
+  "type": "object"
+}

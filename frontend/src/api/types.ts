@@ -1,4 +1,4 @@
-// Shapes returned by the GreenPath FastAPI service. Decimals arrive as JSON strings.
+// Shapes returned by the Greenr FastAPI service. Decimals arrive as JSON strings.
 
 export type Product = "EV_FINANCE" | "GREEN_HOME" | "SOLAR_FINANCE" | "PAPERLESS_BANKING";
 export type DecisionState =
@@ -253,6 +253,34 @@ export interface Explanation {
   confidence_text: string | null;
   action_text: string | null;
   missing_information: string[];
+}
+
+export type PromoFormat = "push" | "one_liner" | "short" | "medium";
+
+/** Promo copy; AVAILABLE when contact rules allow engagement, PREVIEW when only staff may view it. */
+export interface PromoCopy {
+  status: "AVAILABLE" | "PREVIEW" | "WITHHELD";
+  withheld_reason: string | null;
+  customer_id: string;
+  product: Product;
+  format: PromoFormat;
+  channel: Channel;
+  next_action: string;
+  lines: string[];
+  text: string | null;
+  cta_label: string | null;
+  disclaimer: string | null;
+  angles: string[];
+  source: "llm" | "template" | null;
+  template_id: string | null;
+  provider_version: string | null;
+  prompt_version: string | null;
+  fallback_reason: string | null;
+  reason_codes: string[];
+  impact_value: Decimalish;
+  units: string | null;
+  decision_id: string | null;
+  data_timestamp: string;
 }
 
 export interface ProductOpportunity {

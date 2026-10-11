@@ -88,7 +88,7 @@ Detailed impact contracts retain baseline/scenario, signed difference, units, as
 
 `llm/service.py`, `schema.py` and `http_provider.py` restrict optional generation to approved structured claims/sentence selection, with bounded HTTP calls, validation, fallback, cache and measurements. The API preserves headline, explanation, reasons, impact/confidence/action text and missing information. Raw merchant text and uncontrolled model features are not prompt input; the LLM cannot score, calculate or approve.
 
-`llm/provider_manifest.json` pins OpenAI Chat Completions, `gpt-4.1-mini-2025-04-14`, `grounded-selection-v1`, temperature 0 and 1600 output tokens. Status is selected, not live evaluated. `llm/live_evaluation.py` is implemented outside default gates and requires explicit paid authorization. See LLM-owner `LLM_EVAL.md` and `src/greenpath/llm/README.md`; no paid provider run is claimed.
+`llm/provider_manifest.json` pins OpenAI Chat Completions, `gpt-4.1-mini-2025-04-14`, `grounded-selection-v1`, temperature 0 and 1600 output tokens. Status is selected, not live evaluated. `llm/live_evaluation.py` is implemented outside default gates and requires explicit paid authorization. See LLM-owner `LLM_EVAL.md` and `src/greenr/llm/README.md`; no paid provider run is claimed.
 
 ## 21. LLM Programmatic Checks
 

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { customerPath } from "../../api/client";
-import { useHistory, usePreferences } from "../../api/hooks";
-import type { AuditEvent, Channel, CustomerSnapshot, Preferences, Recommendation } from "../../api/types";
+import { useHistory, usePreferences, usePromo } from "../../api/hooks";
+import type { AuditEvent, Channel, CustomerSnapshot, Preferences, PromoCopy, PromoFormat, Recommendation } from "../../api/types";
 import { useSubmit } from "../../api/useSubmit";
 import { DataTable } from "../../components/DataTable";
-import { Callout, Disclosure, ErrorBox, JsonView, Loading } from "../../components/ui";
+import { Callout, Disclosure, ErrorBox, JsonView, KV, Loading, ToneBadge } from "../../components/ui";
 import { dateTime, humanize, month, percentage } from "../../lib/format";
 import { CHANNEL_ORDER, CHANNELS, LIFECYCLE, productName, RESPONSES, REVIEW_ACTIONS, stateLabel } from "../../lib/labels";
 
@@ -12,6 +12,7 @@ export function EngageTab({ row, snapshot, channel }: { row: Recommendation; sna
   return (
     <div className="stack" style={{ gap: 32 }}>
       <ContactPreferences customerId={snapshot.customer_id} />
+      <SuggestedMessage row={row} channel={channel} />
       <RecordResponse row={row} channel={channel} />
       <History row={row} />
     </div>
@@ -56,6 +57,65 @@ function ContactPreferences({ customerId }: { customerId: string }) {
         </form>
       )}
     </section>
+  );
+}
+
+function SuggestedMessage({ row, channel }: { row: Recommendation; channel: Channel }) {
+  const banner = usePromo(row.customer_id, row.product, "one_liner", channel);
+  const card = usePromo(row.customer_id, row.product, "short", channel);
+  const withheld = banner.data?.status === "WITHHELD" ? banner.data : null;
+  return (
+    <section className="stack-sm">
+      <h3 className="subhead">Suggested message</h3>
+      <p className="small muted">
+        Short copy for a {CHANNELS[channel].toLowerCase()} banner or card. It is written only from the decision, its reasons and the carbon estimate, and only when outreach is allowed.
+      </p>
+      {(banner.isPending || card.isPending) && <Loading />}
+      {banner.isError && <ErrorBox error={banner.error} what="the suggested message" />}
+      {withheld && (
+        <Callout kind="note" title="No message suggested">
+          {withheld.withheld_reason}. Messages appear once the contact rules allow outreach on this channel.
+        </Callout>
+      )}
+      {!withheld && banner.data && card.data && (
+        <>
+          <div className="promo-grid">
+            <PromoPreview promo={banner.data} label="Banner" />
+            <PromoPreview promo={card.data} label="Card" />
+          </div>
+          <Disclosure title="Why this message">
+            <KV items={[
+              ["Themes", banner.data.angles.length ? banner.data.angles.join(", ") : "None beyond the product itself"],
+              ["Reason codes", row.reason_codes.join(", ") || "None"],
+              ["Next action", `${humanize(banner.data.next_action)} (${CHANNELS[channel]})`],
+              ["Data as of", dateTime(banner.data.data_timestamp)],
+            ]} />
+          </Disclosure>
+        </>
+      )}
+    </section>
+  );
+}
+
+const FORMAT_LABEL: Record<PromoFormat, string> = { push: "push", one_liner: "one line", short: "two to four lines", medium: "three to five lines" };
+
+function PromoPreview({ promo, label }: { promo: PromoCopy; label: string }) {
+  const written = promo.source === "llm";
+  return (
+    <figure className="promo-preview" data-format={promo.format}>
+      <figcaption className="row-between" style={{ gap: 8 }}>
+        <span className="small muted">{label} · {FORMAT_LABEL[promo.format]}</span>
+        <ToneBadge tone={written ? "supported" : "neutral"}
+          title={written ? `Written by ${promo.provider_version} and passed every copy check` : promo.fallback_reason ? `Template used: ${humanize(promo.fallback_reason)}` : undefined}>
+          {written ? "AI-written · checked" : "Template"}
+        </ToneBadge>
+      </figcaption>
+      <div className="promo-body">
+        {promo.lines.map((line, index) => <p key={index}>{line}</p>)}
+        <span className="promo-cta">{promo.cta_label}</span>
+      </div>
+      <p className="promo-disclaimer">{promo.disclaimer}</p>
+    </figure>
   );
 }
 

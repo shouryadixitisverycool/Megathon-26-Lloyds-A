@@ -4,12 +4,12 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from greenpath.contracts.product import (
+from greenr.contracts.product import (
     CustomerSnapshot, FeatureEvidence, PropensityResult, RecommendationState as State,
     TrustAssessment, TrustIssue,
 )
-from greenpath.impact import Product
-from greenpath.recommendation.service import RecommendationService
+from greenr.impact import Product
+from greenr.recommendation.service import RecommendationService
 
 NOW = datetime(2026, 7, 1, tzinfo=timezone.utc)
 

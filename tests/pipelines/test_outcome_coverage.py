@@ -5,9 +5,9 @@ from datetime import date
 import pandas as pd
 import pytest
 
-from greenpath.data_generation.outcome_coverage import generate_outcome_coverage
-from greenpath.pipelines.schemas import SchemaError
-from greenpath.pipelines.split import make_labels
+from greenr.data_generation.outcome_coverage import generate_outcome_coverage
+from greenr.pipelines.schemas import SchemaError
+from greenr.pipelines.split import make_labels
 
 CUTOFF = date(2026, 6, 30)
 

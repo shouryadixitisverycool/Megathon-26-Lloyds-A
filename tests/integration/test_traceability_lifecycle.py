@@ -8,14 +8,14 @@ import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath.api.main import create_app
-from greenpath.contracts.enums import Product
-from greenpath.contracts.customer import CustomerSnapshot
-from greenpath.contracts.trust import TrustAssessment
-from greenpath.contracts.fixtures import load_model
-from greenpath.demo.artifacts import ArtifactRepository
-from greenpath.extensions.store import MemoryStore
-from greenpath.models.propensity import ModelPropensityProvider, train_product
+from greenr.api.main import create_app
+from greenr.contracts.enums import Product
+from greenr.contracts.customer import CustomerSnapshot
+from greenr.contracts.trust import TrustAssessment
+from greenr.contracts.fixtures import load_model
+from greenr.demo.artifacts import ArtifactRepository
+from greenr.extensions.store import MemoryStore
+from greenr.models.propensity import ModelPropensityProvider, train_product
 
 
 @pytest.fixture(scope="module")
@@ -78,7 +78,7 @@ def test_every_served_decision_is_durable_and_explanation_runs_are_linked(tmp_pa
 
 
 def test_factual_update_reruns_deployed_models_and_survives_restart(bundles, tmp_path, monkeypatch):
-    monkeypatch.setenv("GREENPATH_DEMO_ADMIN_TOKEN", "test-admin")
+    monkeypatch.setenv("GREENR_DEMO_ADMIN_TOKEN", "test-admin")
     path = tmp_path / "memory.sqlite3"
     repo = ArtifactRepository(runtime(bundles))
     app = create_app(repo, memory_path=path)
@@ -138,7 +138,7 @@ def test_feedback_completion_is_not_factual_paperless_closure(bundles, tmp_path)
     ({"digital": {"is_paperless": True}, "feature_cutoff": "2099-01-01T00:00:00Z"}, 422),
 ])
 def test_source_updates_fail_closed(bundles, tmp_path, monkeypatch, changes, code):
-    monkeypatch.setenv("GREENPATH_DEMO_ADMIN_TOKEN", "test-admin")
+    monkeypatch.setenv("GREENR_DEMO_ADMIN_TOKEN", "test-admin")
     repo = ArtifactRepository(runtime(bundles))
     with TestClient(create_app(repo, memory_path=tmp_path / "memory.sqlite3")) as client:
         before = rows(client)
@@ -149,7 +149,7 @@ def test_source_updates_fail_closed(bundles, tmp_path, monkeypatch, changes, cod
 
 
 def test_failed_rescore_rolls_back_source_decisions_and_history(bundles, tmp_path, monkeypatch):
-    monkeypatch.setenv("GREENPATH_DEMO_ADMIN_TOKEN", "test-admin")
+    monkeypatch.setenv("GREENR_DEMO_ADMIN_TOKEN", "test-admin")
     repo = ArtifactRepository(runtime(bundles))
     app = create_app(repo, memory_path=tmp_path / "memory.sqlite3")
     with TestClient(app, raise_server_exceptions=False) as client:

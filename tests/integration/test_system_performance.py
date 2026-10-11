@@ -6,13 +6,13 @@ import tracemalloc
 
 import pytest
 
-from greenpath.extensions import evaluate
+from greenr.extensions import evaluate
 
 
 @pytest.mark.parametrize(("platform", "scale"), [("darwin", 1), ("linux", 1024)])
 def test_benchmark_memory_units_and_full_fixture_coverage(tmp_path, monkeypatch, platform, scale):
     monkeypatch.setenv("OPENAI_API_KEY", "not-a-live-key")
-    monkeypatch.setenv("GREENPATH_LLM_API_KEY", "not-a-live-key")
+    monkeypatch.setenv("GREENR_LLM_API_KEY", "not-a-live-key")
     monkeypatch.setattr(evaluate.sys, "platform", platform)
     monkeypatch.setattr(evaluate.resource, "getrusage", lambda who: SimpleNamespace(ru_maxrss=12345))
     create_app = evaluate.create_app

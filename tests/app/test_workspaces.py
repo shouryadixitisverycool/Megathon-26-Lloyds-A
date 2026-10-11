@@ -24,6 +24,8 @@ def workspace_api(api_fixture, monkeypatch):
             for row in rows:
                 row.update(priority={"score": None, "rank": 1}, next_action={"action": "REQUEST_CONSENT", "reason": "No channel consent"})
             body = {"opportunities": rows}
+        elif "/promos/" in path:
+            body = {"status": "WITHHELD", "withheld_reason": "No recorded consent for the selected channel", "lines": []}
         elif "/evidence-graph/" in path:
             body = {"nodes": [{"id": "decision", "label": "RECOMMEND"}], "edges": [], "limitation": "Evidence is not causality."}
         elif path == "/governance/diagnostics":

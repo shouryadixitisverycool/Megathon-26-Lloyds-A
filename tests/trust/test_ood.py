@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath.trust.ood import (
+from greenr.trust.ood import (
     DEFAULT_OOD_THRESHOLD,
     EXTREME_SCORE_FLOOR,
     OOD_VERSION,

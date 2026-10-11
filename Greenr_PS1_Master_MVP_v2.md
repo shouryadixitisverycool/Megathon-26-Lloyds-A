@@ -2294,7 +2294,7 @@ Do not split into unnecessary microservices.
 # 55. Repository structure
 
 ```text
-greenpath/
+greenr/
 │
 ├── app/
 │   ├── customer_ui/

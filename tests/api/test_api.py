@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath.contracts.product import (
+from greenr.contracts.product import (
     CONTRACT_VERSION,
     CustomerSnapshot,
     Explanation,
@@ -18,8 +18,8 @@ from greenpath.contracts.product import (
     RecommendationState,
     TrustAssessment,
 )
-from greenpath.api.main import create_app
-from greenpath.impact import Product, build_registry
+from greenr.api.main import create_app
+from greenr.impact import Product, build_registry
 
 
 API_NOW = datetime(2026, 1, 3, tzinfo=timezone.utc)
@@ -124,6 +124,57 @@ def test_health_and_snapshot_decimal_serialization(api_fixture):
     assert len(customers) == 6
     assert customers[0]["trust"]["score"] == "0.75"
     assert client.get("/customers/fake-0").json() == customers[0]
+
+
+def test_partner_catalogue_is_public_editorial_content_without_scoring(api_fixture, monkeypatch):
+    monkeypatch.delenv("GREENR_PARTNER_CATALOGUE", raising=False)
+    client, _, recommendations, explanations = api_fixture
+    response = client.get("/partners/catalogue")
+    assert response.status_code == 200
+    catalogue = response.json()
+    assert {category["product"] for category in catalogue["products"]} == {"EV_FINANCE", "SOLAR_FINANCE", "GREEN_HOME"}
+    for category in catalogue["products"]:
+        assert len(category["options"]) == 2
+        assert all(option["placeholder"] and option["promoted"] for option in category["options"])
+        assert all(option["destination_url"] is None and option["source"] is None for option in category["options"])
+    assert "customer_id" not in response.text
+    assert not recommendations.calls
+    assert not explanations.calls
+    assert client.post("/partners/catalogue", json={"request_id": "no-lead"}).status_code == 405
+
+
+def test_operator_can_choose_exactly_which_partner_products_are_promoted(api_fixture, monkeypatch, tmp_path):
+    monkeypatch.delenv("GREENR_PARTNER_CATALOGUE", raising=False)
+    client, _, recommendations, _ = api_fixture
+    catalogue = client.get("/partners/catalogue").json()
+    hidden = catalogue["products"][0]["options"][0]
+    hidden["promoted"] = False
+    selected = catalogue["products"][0]["options"][1]
+    selected["title"] = "Operator-selected partner product"
+    path = tmp_path / "selected-products.json"
+    path.write_text(json.dumps(catalogue))
+    monkeypatch.setenv("GREENR_PARTNER_CATALOGUE", str(path))
+    response = client.get("/partners/catalogue")
+    assert response.status_code == 200
+    options = response.json()["products"][0]["options"]
+    assert [option["id"] for option in options] == [selected["id"]]
+    assert options[0]["title"] == selected["title"]
+    assert hidden["id"] not in response.text
+    assert not recommendations.calls
+
+
+@pytest.mark.parametrize("contents", [None, "not valid json", "{}"])
+def test_unavailable_partner_catalogue_does_not_block_customer_evidence(api_fixture, monkeypatch, tmp_path, contents):
+    catalogue = tmp_path / "operator-catalogue.json"
+    if contents is not None:
+        catalogue.write_text(contents)
+    monkeypatch.setenv("GREENR_PARTNER_CATALOGUE", str(catalogue))
+    client, _, _, _ = api_fixture
+    response = client.get("/partners/catalogue")
+    assert response.status_code == 503
+    assert "Customer evidence remains available" in response.json()["detail"]
+    assert str(catalogue) not in response.text
+    assert client.get("/customers/fake-0/recommendations").status_code == 200
 
 
 def test_recommendations_alias_preserves_contract_and_numbers(api_fixture):

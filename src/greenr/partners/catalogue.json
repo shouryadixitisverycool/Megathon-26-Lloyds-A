@@ -1,0 +1,152 @@
+{
+  "version": "partner-concepts-v1",
+  "reviewed_on": "2026-10-11",
+  "disclaimer": "Illustrative partner concepts only. These are not live offers, and no eligibility, approval, price, saving or outcome is promised. Availability and suitability would need to be confirmed with a selected provider.",
+  "commercial_disclaimer": "Lloyds has not selected these concepts or agreed any referral or finance arrangements. A future proposal may include a referral fee on completion and, where separately agreed, finance or lease income; no arrangement or revenue exists here, and no revenue is guaranteed.",
+  "products": [
+    {
+      "product": "EV_FINANCE",
+      "title": "Make room for electric",
+      "subtitle": "Illustrative ways to explore an electric car for your everyday journeys.",
+      "hero_tag": "Electric journeys, your way",
+      "options": [
+        {
+          "id": "ev-compact-city",
+          "partner": "Demo mobility partner",
+          "relationship": "Illustrative concept only; no partner or commercial relationship has been selected or agreed.",
+          "title": "Compact city EV",
+          "summary": "A nimble electric-car concept for local trips, easy parking and a lighter daily routine.",
+          "highlights": [
+            "A compact feel for busy streets and tighter parking spaces",
+            "Designed around everyday local journeys",
+            "Home or public charging needs depend on your routine"
+          ],
+          "suitability": "May suit drivers whose routine is mostly local and who have convenient charging; this is an illustration, not a personal recommendation.",
+          "disclosure": "Illustrative concept, not a live vehicle or finance offer. No price, eligibility, approval or charging outcome is promised; any future provider and terms would need to be checked directly.",
+          "revenue_path": "Proposed referral fee on completion; optional finance or lease income only if separately agreed. No arrangement or revenue exists and no amount is guaranteed.",
+          "source": null,
+          "destination_url": null,
+          "cta_label": "Explore the concept",
+          "placeholder": true,
+          "promoted": true
+        },
+        {
+          "id": "ev-family-longer-trip",
+          "partner": "Demo mobility partner",
+          "relationship": "Illustrative concept only; no partner or commercial relationship has been selected or agreed.",
+          "title": "Room for the longer way round",
+          "summary": "A family-minded electric-car concept for shared plans, weekend escapes and the everyday in between.",
+          "highlights": [
+            "Space to bring family, friends and the things you need",
+            "A concept for mixed local and longer-distance journeys",
+            "Real-world range and charging depend on the vehicle and journey"
+          ],
+          "suitability": "May suit households looking for an electric car for varied journeys; needs, charging access and any vehicle fit must be assessed individually.",
+          "disclosure": "Illustrative concept, not a live vehicle or finance offer. No range, price, eligibility, approval or journey outcome is promised; any future provider and terms would need to be checked directly.",
+          "revenue_path": "Proposed referral fee on completion; optional finance or lease income only if separately agreed. No arrangement or revenue exists and no amount is guaranteed.",
+          "source": null,
+          "destination_url": null,
+          "cta_label": "Explore the concept",
+          "placeholder": true,
+          "promoted": true
+        }
+      ]
+    },
+    {
+      "product": "SOLAR_FINANCE",
+      "title": "Let your roof do more",
+      "subtitle": "Illustrative solar concepts for making a home ready for cleaner energy.",
+      "hero_tag": "A brighter way to power home",
+      "options": [
+        {
+          "id": "solar-panels",
+          "partner": "Demo solar partner",
+          "relationship": "Illustrative concept only; no partner or commercial relationship has been selected or agreed.",
+          "title": "Solar, simply",
+          "summary": "A rooftop solar concept that brings home generation into focus, shaped around your property.",
+          "highlights": [
+            "Explore how roof space might support home generation",
+            "Panel layout depends on orientation, shading and roof condition",
+            "A property survey would be needed before any installation"
+          ],
+          "suitability": "May suit a homeowner with a suitable roof and permission to make changes; property fit must be assessed by a future provider.",
+          "disclosure": "Illustrative concept, not an installation or finance offer. No system fit, output, saving, price, eligibility or approval is promised; a qualified provider would need to assess the property and explain its terms.",
+          "revenue_path": "Proposed referral fee on completion; optional finance or lease income only if separately agreed. No arrangement or revenue exists and no amount is guaranteed.",
+          "source": null,
+          "destination_url": null,
+          "cta_label": "Explore the concept",
+          "placeholder": true,
+          "promoted": true
+        },
+        {
+          "id": "solar-panels-battery",
+          "partner": "Demo solar partner",
+          "relationship": "Illustrative concept only; no partner or commercial relationship has been selected or agreed.",
+          "title": "Solar with a little more flexibility",
+          "summary": "Pair a solar concept with home storage to explore a more flexible approach to using energy at home.",
+          "highlights": [
+            "Consider panels and home storage together",
+            "Storage options depend on the home and its energy setup",
+            "A survey is needed to understand suitability and installation"
+          ],
+          "suitability": "May suit a homeowner interested in exploring solar and storage together; property, energy use and installation needs must be assessed.",
+          "disclosure": "Illustrative concept, not an installation or finance offer. No system fit, output, saving, price, eligibility or approval is promised; a qualified provider would need to assess the property and explain its terms.",
+          "revenue_path": "Proposed referral fee on completion; optional finance or lease income only if separately agreed. No arrangement or revenue exists and no amount is guaranteed.",
+          "source": null,
+          "destination_url": null,
+          "cta_label": "Explore the concept",
+          "placeholder": true,
+          "promoted": true
+        }
+      ]
+    },
+    {
+      "product": "GREEN_HOME",
+      "title": "A more comfortable home",
+      "subtitle": "Illustrative home-upgrade ideas for comfort and energy improvements.",
+      "hero_tag": "Thoughtful upgrades, warmer living",
+      "options": [
+        {
+          "id": "green-home-insulation",
+          "partner": "Demo home energy partner",
+          "relationship": "Illustrative concept only; no partner or commercial relationship has been selected or agreed.",
+          "title": "Comfort starts with insulation",
+          "summary": "A home-insulation concept focused on a more considered, comfortable living space.",
+          "highlights": [
+            "Explore insulation options for the character of your home",
+            "Different areas of a home may call for different approaches",
+            "A survey is needed to identify suitable measures"
+          ],
+          "suitability": "May suit a homeowner considering an insulation upgrade; building type, condition and permissions need to be assessed.",
+          "disclosure": "Illustrative concept, not an installation or finance offer. No suitability, comfort improvement, energy saving, price, eligibility or approval is promised; an appropriate assessment would be needed.",
+          "revenue_path": "Proposed referral fee on completion; optional finance or lease income only if separately agreed. No arrangement or revenue exists and no amount is guaranteed.",
+          "source": null,
+          "destination_url": null,
+          "cta_label": "Explore the concept",
+          "placeholder": true,
+          "promoted": true
+        },
+        {
+          "id": "green-home-heat-pump",
+          "partner": "Demo home energy partner",
+          "relationship": "Illustrative concept only; no partner or commercial relationship has been selected or agreed.",
+          "title": "Rethink how your home is heated",
+          "summary": "A heat-pump concept for exploring a different approach to everyday home comfort.",
+          "highlights": [
+            "Explore low-carbon heating for your home",
+            "System design depends on the building and existing heating",
+            "A specialist survey would be needed before any proposal"
+          ],
+          "suitability": "May suit a homeowner exploring a heating upgrade; building condition, system design and installation requirements need specialist assessment.",
+          "disclosure": "Illustrative concept, not an installation or finance offer. No suitability, comfort improvement, energy saving, price, eligibility or approval is promised; an appropriate assessment would be needed.",
+          "revenue_path": "Proposed referral fee on completion; optional finance or lease income only if separately agreed. No arrangement or revenue exists and no amount is guaranteed.",
+          "source": null,
+          "destination_url": null,
+          "cta_label": "Explore the concept",
+          "placeholder": true,
+          "promoted": true
+        }
+      ]
+    }
+  ]
+}

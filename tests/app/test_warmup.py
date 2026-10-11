@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import httpx
 import pytest
 
-from greenpath.app.client import APIClient, APIError, APIPreparing
+from greenr.app.client import APIClient, APIError, APIPreparing
 from test_app import displayed, start
 
 

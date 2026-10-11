@@ -4,13 +4,13 @@ from types import SimpleNamespace
 import numpy as np
 import pandas as pd
 
-from greenpath.confidence.meta_model import (
+from greenr.confidence.meta_model import (
     METHOD_VERSION,
     ConfidenceModel,
     perturbation_stability,
 )
-from greenpath.contracts import Product
-from greenpath.pipelines import runtime
+from greenr.contracts import Product
+from greenr.pipelines import runtime
 
 
 def feature_frame(n=200):
