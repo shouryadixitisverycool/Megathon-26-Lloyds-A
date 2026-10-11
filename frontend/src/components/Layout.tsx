@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
-import { FlaskConical, LayoutDashboard, Megaphone, Moon, RefreshCw, ShieldCheck, Sun, SunMoon, Users } from "lucide-react";
+import { FlaskConical, Moon, RefreshCw, Sun, SunMoon } from "lucide-react";
 import { useExplanationMetrics, useHealth } from "../api/hooks";
 import { aiEnabled, aiModel } from "../lib/ai";
 import { Callout, Loading } from "./ui";
@@ -86,38 +86,25 @@ export function Layout() {
 
   return (
     <div className="shell">
-      <div className="nav-rail">
-      <nav className="nav" aria-label="Workspaces">
-        <NavLink to="/customers" className="nav-brand">
-          <Logo />
-          <span>
-            <strong>GreenPath</strong>
-            <span>Sustainable opportunities</span>
-          </span>
-        </NavLink>
-        <div className="nav-links">
-          {LINKS.map(({ to, label, note, icon: Icon }) => (
-            <NavLink key={to} to={to} className="nav-link">
-              <Icon size={18} aria-hidden="true" />
-              <span>{label}<small>{note}</small></span>
-            </NavLink>
-          ))}
-        </div>
-        <div className="nav-foot">
-          <div className="nav-status" aria-live="polite">
-            <span><i className="dot" data-down={String(!healthy)} />{healthy ? "API connected" : "API unavailable"}</span>
-            {mode && <span>Data: <b>{mode === "trained" ? "Trained models" : mode === "fixture" ? "Demo personas" : mode}</b></span>}
-            {healthy && ai !== undefined && (
-              <span title={ai ? `AI explanations use ${aiModel(metrics.data) ?? "the configured model"}` : "No AI key is set on the API, so explanations use standard wording"}>
-                Explanations: <b>{ai ? "AI on" : "Standard wording"}</b>
-              </span>
-            )}
-            {health.data?.contract_version && <span>Contract {health.data.contract_version}</span>}
-            {health.data?.source_version && (
-              <span title={health.data.source_version} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                Source {health.data.source_version}
-              </span>
-            )}
+      <header className="masthead">
+        <div className="strip">
+          <div className="masthead-inner">
+            <nav className="strip-tabs" aria-label="Workspaces">
+              {LINKS.map(({ to, label, note }) => (
+                <NavLink key={to} to={to} className="strip-tab" title={note}>{label}</NavLink>
+              ))}
+            </nav>
+            <div className="strip-status" aria-live="polite">
+              <span><i className="dot" data-down={String(!healthy)} />{healthy ? "API connected" : "API unavailable"}</span>
+              {mode && <span>Data: <b>{mode === "trained" ? "Trained models" : mode === "fixture" ? "Demo personas" : mode}</b></span>}
+              {healthy && ai !== undefined && (
+                <span title={ai ? `AI explanations use ${aiModel(metrics.data) ?? "the configured model"}` : "No AI key is set on the API, so explanations use standard wording"}>
+                  Explanations: <b>{ai ? "AI on" : "Standard wording"}</b>
+                </span>
+              )}
+              {health.data?.contract_version && <span>Contract {health.data.contract_version}</span>}
+              {health.data?.source_version && <span className="strip-source" title={health.data.source_version}>Source {health.data.source_version}</span>}
+            </div>
           </div>
         </div>
         <div className="brandbar">
