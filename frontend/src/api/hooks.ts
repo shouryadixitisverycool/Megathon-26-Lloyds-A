@@ -1,5 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, customerPath, requestId } from "./client";
+import type { ExplanationMetrics } from "../lib/ai";
 import type {
   Channel, CounterfactualResult, CustomerIndexEntry, CustomerSnapshot, DemoReadiness, EvidenceGraph, Explanation,
   GovernanceDiagnostics, GreenPurpose, Health, OptionalOpportunitiesResponse, HistoryResponse, PlanResult, PortfolioSummary, PortfolioTrends,
@@ -196,7 +197,7 @@ export function useExplanationMetrics() {
   return useQuery({
     queryKey: ["explanation-metrics"],
     staleTime: STALE_MS,
-    queryFn: ({ signal }) => api.get<Record<string, unknown>>("/explanations/metrics", undefined, signal),
+    queryFn: ({ signal }) => api.get<ExplanationMetrics>("/explanations/metrics", undefined, signal),
   });
 }
 
