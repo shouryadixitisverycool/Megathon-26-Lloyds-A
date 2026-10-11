@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath.confidence.validation import baseline_diagnostics, validate_confidence, write_confidence_report
-from greenpath.contracts import Product
-from greenpath.pipelines import run
+from greenr.confidence.validation import baseline_diagnostics, validate_confidence, write_confidence_report
+from greenr.contracts import Product
+from greenr.pipelines import run
 
 
 def test_small_cohort_keeps_scoring_and_support_without_passing():

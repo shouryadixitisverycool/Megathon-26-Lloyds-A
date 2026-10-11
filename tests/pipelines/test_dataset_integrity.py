@@ -5,9 +5,9 @@ from datetime import date
 import pandas as pd
 import pytest
 
-from greenpath.pipelines import schemas
-from greenpath.pipelines.predict import _context
-from greenpath.pipelines.run import cutoff_context, raw_only
+from greenr.pipelines import schemas
+from greenr.pipelines.predict import _context
+from greenr.pipelines.run import cutoff_context, raw_only
 from tests.pipelines.fixtures_c360 import make_tables
 
 
@@ -142,8 +142,8 @@ def test_schema_type_errors_are_reported_before_availability_comparison():
 def test_manifest_refresh_hashes_current_2026_factor_bytes(monkeypatch, tmp_path):
     import json
 
-    from greenpath import config
-    from greenpath.pipelines import run
+    from greenr import config
+    from greenr.pipelines import run
 
     monkeypatch.setattr(config, "REPO_ROOT", tmp_path)
     for setting, folder in [("RAW_DIR", "raw"), ("PERTURBED_DIR", "perturbed"),

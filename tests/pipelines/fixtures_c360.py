@@ -15,7 +15,7 @@ from datetime import date
 import numpy as np
 import pandas as pd
 
-from greenpath.pipelines import schemas
+from greenr.pipelines import schemas
 
 CUTOFF = date(2026, 6, 30)
 D = pd.Timestamp

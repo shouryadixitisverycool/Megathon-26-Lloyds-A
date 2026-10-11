@@ -60,7 +60,7 @@ performance, token usage or predictive-quality claim follows from this report.
 Spec section 38 fields are populated: `headline`, `explanation`,
 `why_recommended`, `estimated_impact_text`, `confidence_text`, `action_text`,
 `eligibility_disclaimer`, and `missing_information`. `text` remains for concrete
-shipped API and Streamlit consumers. `greenpath.llm.schema.StructuredExplanation`
+shipped API and Streamlit consumers. `greenr.llm.schema.StructuredExplanation`
 requires populated fields in service output. The other agent integrated the same
 five string and two string-array fields into canonical product Explanation as
 optional/defaulted fields for shipped constructors. The contract file was not
@@ -80,20 +80,20 @@ Errors and rejected output still use the same approved deterministic fallback.
 
 ## Selected Versus Evaluated
 
-`src/greenpath/llm/provider_manifest.json` selects the user-requested identifier
+`src/greenr/llm/provider_manifest.json` selects the user-requested identifier
 `gpt-6-luna` at OpenAI's chat-completions endpoint. This is an alias, **not an
 exact dated snapshot pin**. Availability, structured-output support, request-option
 support, current pricing, latency and quality are unverified. The configured request
 uses `max_completion_tokens=1600` and omits temperature; these are configuration
 choices, not claims of documented support for this model. The response schema
 requires all object properties, forbids extra keys and permits explicit null impact.
-`src/greenpath/llm/config.env.example` contains matching nonsecret settings.
+`src/greenr/llm/config.env.example` contains matching nonsecret settings.
 
 Runtime and live evaluation read the manifest by default. `OPENAI_API_KEY` takes
-precedence over the fallback `GREENPATH_LLM_API_KEY`. With neither key, runtime
-remains deterministic/offline. Explicit `GREENPATH_LLM_ENDPOINT`, `LLM_MODEL`,
+precedence over the fallback `GREENR_LLM_API_KEY`. With neither key, runtime
+remains deterministic/offline. Explicit `GREENR_LLM_ENDPOINT`, `LLM_MODEL`,
 `LLM_MODEL_VERSION`, `PROMPT_VERSION`, `TEMPERATURE`, `MAX_OUTPUT_TOKENS`,
-`GREENPATH_LLM_TOKEN_LIMIT_PARAMETER` and `GREENPATH_LLM_TIMEOUT_SECONDS` override
+`GREENR_LLM_TOKEN_LIMIT_PARAMETER` and `GREENR_LLM_TIMEOUT_SECONDS` override
 manifest defaults. An empty `TEMPERATURE` omits that field. If only `LLM_MODEL`
 is overridden, its identifier is also used as the version label; this does not
 assert immutable snapshot identity. Errors or unsupported requests retain explicit
@@ -106,7 +106,7 @@ You can set `OPENAI_API_KEY` in your shell/secret manager, or explicitly load a
 repository-root `.env` with the existing `uv` launcher, without adding a dependency:
 
 ```bash
-uv run --locked --env-file .env uvicorn greenpath.api.main:app --reload
+uv run --locked --env-file .env uvicorn greenr.api.main:app --reload
 ```
 
 Keep `.env` untracked and never put keys in the manifest or example file. Starting
@@ -133,10 +133,10 @@ uv run --locked python scripts/evaluate_llm_live.py --allow-paid-provider --case
 ```
 
 Requirements: explicit paid-call opt-in, existing `OPENAI_API_KEY` (or fallback
-`GREENPATH_LLM_API_KEY`), and
-current user-configured `GREENPATH_LLM_INPUT_PRICE_PER_MILLION`,
-`GREENPATH_LLM_OUTPUT_PRICE_PER_MILLION`, and
-`GREENPATH_LLM_CACHED_INPUT_PRICE_PER_MILLION`. Prices must use one currency per
+`GREENR_LLM_API_KEY`), and
+current user-configured `GREENR_LLM_INPUT_PRICE_PER_MILLION`,
+`GREENR_LLM_OUTPUT_PRICE_PER_MILLION`, and
+`GREENR_LLM_CACHED_INPUT_PRICE_PER_MILLION`. Prices must use one currency per
 run; the report records them as configured, not independently verified prices.
 Use `--cases 100` through `--cases 200`. The evaluator freezes case order and
 covers all product/state combinations, signed/zero impact, confidence and multiple
@@ -162,6 +162,6 @@ live suite is not a jailbreak-resistance score.
 evaluation cases and mock-only live evaluator accounting/authorization checks.
 Focused `tests/app/test_app.py` and `tests/app/test_client_and_formatting.py`:
 **40 passed**. These measurements are local tests, not real-provider results.
-`GREENPATH_PROVIDER=fixture uv run --locked pytest tests/api/test_api.py`:
+`GREENR_PROVIDER=fixture uv run --locked pytest tests/api/test_api.py`:
 **20 passed**. Fixture mode avoids unrelated incomplete trained artifacts during
 API module initialization; it is not a trained-artifact integration run.

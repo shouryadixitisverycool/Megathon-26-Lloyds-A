@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath.data_generation.config import BASE_CONFIG
-from greenpath.data_generation.public_anchors import (
+from greenr.data_generation.config import BASE_CONFIG
+from greenr.data_generation.public_anchors import (
     ENERGY_ANCHOR, ENERGY_ANCHOR_SHA256, anchored_demand, anchor_manifest,
 )
 
@@ -24,7 +24,7 @@ def test_public_marginals_and_synthetic_associations(fuel):
 
 def test_anchor_is_pinned_in_config_hash():
     assert BASE_CONFIG.to_dict()["energy_anchor_sha256"] == ENERGY_ANCHOR_SHA256
-    from greenpath.data_generation import public_anchors
+    from greenr.data_generation import public_anchors
     assert hashlib.sha256(Path(public_anchors.__file__).with_name("public_energy_anchor.json").read_bytes()).hexdigest() == ENERGY_ANCHOR_SHA256
     with pytest.raises(ValueError, match="anchor hash"):
         replace(BASE_CONFIG, energy_anchor_sha256="changed")

@@ -1,8 +1,8 @@
-# Responsible AI Note — GreenPath
+# Responsible AI Note — Greenr
 
 ## Purpose and research basis
 
-GreenPath is a synthetic demonstration that identifies opportunities for sustainability conversations. It estimates simulated product take-up and potential physical impact; its outputs do not establish affordability, financial eligibility, approval or investment suitability. No real personal or confidential banking records are used.
+Greenr is a synthetic demonstration that identifies opportunities for sustainability conversations. It estimates simulated product take-up and potential physical impact; its outputs do not establish affordability, financial eligibility, approval or investment suitability. No real personal or confidential banking records are used.
 
 This note uses **TrustLLM: Trustworthiness in Large Language Models** (Huang et al., ICML 2024) [1] as a framework for assessing LLM usage. TrustLLM discusses eight dimensions: truthfulness, safety, fairness, robustness, privacy, machine ethics, transparency and accountability. Its empirical benchmark covers the first six; transparency and accountability are discussed without equivalent benchmark evaluations. We map these principles to our system's controls, while treating human oversight and data limitations as additional application-level concerns.
 
@@ -79,9 +79,9 @@ Before real deployment, the system requires independently observed outcome valid
 
 ## Implementation and evidence
 
-- [SHAP audit implementation](src/greenpath/models/propensity/shap_audit.py) and [saved audit files](reports/shap/).
-- [Explanation controls](src/greenpath/llm/service.py) and [offline explanation evaluation](reports/explanation_evaluation.json).
-- [Feature policy](src/greenpath/models/propensity/features.py) and [ML/subgroup evaluations](reports/ml_evaluation.json).
-- [Confidence validation](src/greenpath/confidence/validation.py) and [saved release report](reports/confidence_validation.json).
-- [Recommendation rules](src/greenpath/recommendation/service.py), [review and communication policies](src/greenpath/extensions/service.py), and [audit storage](src/greenpath/extensions/store.py).
+- [SHAP audit implementation](src/greenr/models/propensity/shap_audit.py) and [saved audit files](reports/shap/).
+- [Explanation controls](src/greenr/llm/service.py) and [offline explanation evaluation](reports/explanation_evaluation.json).
+- [Feature policy](src/greenr/models/propensity/features.py) and [ML/subgroup evaluations](reports/ml_evaluation.json).
+- [Confidence validation](src/greenr/confidence/validation.py) and [saved release report](reports/confidence_validation.json).
+- [Recommendation rules](src/greenr/recommendation/service.py), [review and communication policies](src/greenr/extensions/service.py), and [audit storage](src/greenr/extensions/store.py).
 - [Data card](DATA_CARD.md) and [evaluation report](EVALUATION_REPORT.md).

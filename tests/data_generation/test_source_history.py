@@ -4,14 +4,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath.data_generation.config import BASE_CONFIG, PRODUCTS
-from greenpath.data_generation.generator import (
+from greenr.data_generation.config import BASE_CONFIG, PRODUCTS
+from greenr.data_generation.generator import (
     NONE_DAY, TimeGrid, _customers, _day, _digital_usage, _population,
     _to_dt, _transactions, _vehicles, generate, write_dataset,
 )
-from greenpath.data_generation.merchants import build_catalogue
-from greenpath.data_generation.personas import build_personas
-from greenpath.data_generation.source_history import customer_history, vehicle_ownership
+from greenr.data_generation.merchants import build_catalogue
+from greenr.data_generation.personas import build_personas
+from greenr.data_generation.source_history import customer_history, vehicle_ownership
 
 
 def setup_population(n=1000):

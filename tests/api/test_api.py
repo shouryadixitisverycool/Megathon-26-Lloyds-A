@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from greenpath.contracts.product import (
+from greenr.contracts.product import (
     CONTRACT_VERSION,
     CustomerSnapshot,
     Explanation,
@@ -18,8 +18,8 @@ from greenpath.contracts.product import (
     RecommendationState,
     TrustAssessment,
 )
-from greenpath.api.main import create_app
-from greenpath.impact import Product, build_registry
+from greenr.api.main import create_app
+from greenr.impact import Product, build_registry
 
 
 API_NOW = datetime(2026, 1, 3, tzinfo=timezone.utc)

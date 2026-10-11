@@ -1,0 +1,15 @@
+{
+  "provider": "openai",
+  "endpoint": "https://api.openai.com/v1/chat/completions",
+  "model": "gpt-6-luna",
+  "model_version": "gpt-6-luna",
+  "prompt_version": "grounded-selection-v1",
+  "temperature": null,
+  "token_limit_parameter": "max_completion_tokens",
+  "max_output_tokens": 1600,
+  "timeout_seconds": 30.0,
+  "selection_status": "selected_not_live_evaluated",
+  "selection_rationale": "User-requested exact model identifier. This is an alias, not an exact dated snapshot pin. Availability, structured-output and request-option support, current pricing, latency and quality have not been verified live.",
+  "api_key_environment": "OPENAI_API_KEY",
+  "api_key_fallback_environment": "GREENR_LLM_API_KEY"
+}

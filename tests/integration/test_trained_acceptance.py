@@ -8,12 +8,12 @@ import pandas as pd
 
 from fastapi.testclient import TestClient
 
-from greenpath import config
-from greenpath.api.main import create_app
-from greenpath.contracts.product import RecommendationState as State
-from greenpath.data_generation.__main__ import generate_dataset
-from greenpath.impact import Product
-from greenpath.pipelines import run
+from greenr import config
+from greenr.api.main import create_app
+from greenr.contracts.product import RecommendationState as State
+from greenr.data_generation.__main__ import generate_dataset
+from greenr.impact import Product
+from greenr.pipelines import run
 
 
 def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
@@ -34,9 +34,9 @@ def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
     monkeypatch.setattr(run, "CATEGORISER_PATH", config.ARTIFACT_DIR / "transaction_categoriser.joblib")
     monkeypatch.setattr(run, "CATEGORISED_PATH", config.PROCESSED_DIR / "transactions_categorised.parquet")
     monkeypatch.setattr(run, "SPLIT_PATH", config.PROCESSED_DIR / "split_manifest.csv")
-    monkeypatch.delenv("GREENPATH_LLM_API_KEY", raising=False)
+    monkeypatch.delenv("GREENR_LLM_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    monkeypatch.setenv("GREENPATH_PROVIDER", "trained")
+    monkeypatch.setenv("GREENR_PROVIDER", "trained")
     # The four-way split needs enough rare-product positives for calibration;
     # validation remains below the 200-row confidence minimum.
     generate_dataset(customers=1000)
@@ -50,7 +50,7 @@ def test_fresh_small_training_api_acceptance(tmp_path, monkeypatch):
         assert any(e.basis == "SYNTHETIC_SCENARIO" for e in ev_impact.evidence)
         assert not repository.scenario_provider.get_scenario("C200001", Product.EV_FINANCE, config.FEATURE_CUTOFF)
         paperless_input = repository.get_impact_input("C10001", Product.PAPERLESS_BANKING)
-        from greenpath.pipelines.scenario_provider import UKImpactInput
+        from greenr.pipelines.scenario_provider import UKImpactInput
         # Ingestion delays leave an incomplete annual window; only an explicit forecast may fill it.
         source = paperless_input.snapshot
         assert source.data_quality.digital_months_present < 12

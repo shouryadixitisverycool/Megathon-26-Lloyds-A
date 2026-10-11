@@ -1,8 +1,8 @@
-# Responsible AI Note — GreenPath and Qwen2.5-1.5B
+# Responsible AI Note — Greenr and Qwen2.5-1.5B
 
 ## Purpose and scope
 
-GreenPath is a synthetic banking demonstration for identifying sustainability conversation opportunities. Product relevance rules, propensity models and a deterministic impact engine produce the underlying decisions and estimates. The language model explains approved outputs; it does not determine credit approval, affordability, investment suitability or environmental calculations.
+Greenr is a synthetic banking demonstration for identifying sustainability conversation opportunities. Product relevance rules, propensity models and a deterministic impact engine produce the underlying decisions and estimates. The language model explains approved outputs; it does not determine credit approval, affordability, investment suitability or environmental calculations.
 
 The project team identifies **Qwen2.5-1.5B** as its LLM. The reviewed repository evidence does not establish the exact deployed Hugging Face checkpoint, revision, quantization or a live Qwen evaluation. Published scores below concern **Qwen2.5-1.5B-Instruct**. The [Instruct checkpoint](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) and [base checkpoint](https://huggingface.co/Qwen/Qwen2.5-1.5B) are distinct; scores must be matched to the deployed variant before being presented as relevant model evidence.
 
@@ -14,7 +14,7 @@ For propensity-model explanations, we use the SHAP feature-attribution framework
 
 ## Published Qwen benchmark reference
 
-The original TrustLLM study does not report Qwen2.5 results. **Benchmarking Trustworthiness of SLMs: Pre-trained vs. Compressed** (Lin et al., 2026) applies a four-dimension TrustLLM evaluation and reports the following in Table IV. These are external research results, not GreenPath measurements. [Source: Table IV and Section IV-A](https://arxiv.org/html/2608.11981v1).
+The original TrustLLM study does not report Qwen2.5 results. **Benchmarking Trustworthiness of SLMs: Pre-trained vs. Compressed** (Lin et al., 2026) applies a four-dimension TrustLLM evaluation and reports the following in Table IV. These are external research results, not Greenr measurements. [Source: Table IV and Section IV-A](https://arxiv.org/html/2608.11981v1).
 
 | Evaluated model variant | Machine ethics | Privacy | Robustness | Fairness | Authors' overall average |
 |---|---:|---:|---:|---:|---:|
@@ -33,13 +33,13 @@ The study averages subtask accuracy within dimensions. Ethics uses ETHICS, Socia
 
 The demonstration uses generated customer data and public aggregate anchors, rather than real confidential banking records. Explanation prompts exclude raw merchant descriptions and uncontrolled feature or reason text. The provider receives approved structured claims and sentences.
 
-These controls minimise disclosure; they do not establish differential privacy or resistance to extraction attacks. The published privacy score provides a reason to retain strict prompt minimisation, not permission to share sensitive data. Project-specific privacy attack testing remains unmeasured. Evidence: [data card](DATA_CARD.md) and [explanation service](src/greenpath/llm/service.py).
+These controls minimise disclosure; they do not establish differential privacy or resistance to extraction attacks. The published privacy score provides a reason to retain strict prompt minimisation, not permission to share sensitive data. Project-specific privacy attack testing remains unmeasured. Evidence: [data card](DATA_CARD.md) and [explanation service](src/greenr/llm/service.py).
 
 ### Bias and fairness
 
 Default propensity features exclude age band, income band and region. Subgroup audits examine selection rates, false-positive and false-negative rates, calibration gaps and proxy-feature comparisons. These application diagnostics assess a different object from the published Qwen language-model fairness tasks.
 
-Spending, ownership and digital activity can retain demographic proxies. Saved evaluations contain disparities, and small synthetic groups limit interpretation. We do not infer unbiased recommendations from demographic exclusion or the Qwen fairness score. Evidence: [feature policy](src/greenpath/models/propensity/features.py) and [ML evaluation](reports/ml_evaluation.json).
+Spending, ownership and digital activity can retain demographic proxies. Saved evaluations contain disparities, and small synthetic groups limit interpretation. We do not infer unbiased recommendations from demographic exclusion or the Qwen fairness score. Evidence: [feature policy](src/greenr/models/propensity/features.py) and [ML evaluation](reports/ml_evaluation.json).
 
 ### Explainability and SHAP
 
@@ -49,7 +49,7 @@ The four saved product attribution files use exact linear interventional SHAP fo
 baseline + sum(SHAP feature contributions) = raw model output
 ```
 
-The absolute residual tolerance is `2e-5`. The files explain **raw, uncalibrated log-odds**, not percentage-point changes in calibrated probability. They do not explain Qwen's internal reasoning, the nonlinear probability calibrator or causal customer behaviour. Recommendation reason codes and source provenance provide additional traceability. Evidence: [SHAP implementation](src/greenpath/models/propensity/shap_audit.py) and [saved SHAP files](reports/shap/).
+The absolute residual tolerance is `2e-5`. The files explain **raw, uncalibrated log-odds**, not percentage-point changes in calibrated probability. They do not explain Qwen's internal reasoning, the nonlinear probability calibrator or causal customer behaviour. Recommendation reason codes and source provenance provide additional traceability. Evidence: [SHAP implementation](src/greenr/models/propensity/shap_audit.py) and [saved SHAP files](reports/shap/).
 
 ### Hallucination, truthfulness and safety
 
@@ -65,25 +65,25 @@ The saved evaluation reports the following results for **offline fixed responses
 | Unsupported delivered claims | 0 |
 | Template fallback | 63% |
 
-These figures evaluate the validator and fallback mechanism against a fixed adversarial test mix. They are neither Qwen benchmark results nor a production hallucination or fallback rate. Live Qwen quality and latency remain unmeasured in this evidence set. Evidence: [explanation service](src/greenpath/llm/service.py) and [offline evaluation](reports/explanation_evaluation.json).
+These figures evaluate the validator and fallback mechanism against a fixed adversarial test mix. They are neither Qwen benchmark results nor a production hallucination or fallback rate. Live Qwen quality and latency remain unmeasured in this evidence set. Evidence: [explanation service](src/greenr/llm/service.py) and [offline evaluation](reports/explanation_evaluation.json).
 
 ### Human oversight and accountability
 
 Reviewers can suppress engagement, flag data issues and request review. Communication policies check consent, do-not-contact preferences, cooling-off periods and contact fatigue. Decision and explanation events are retained for audit. Campaign execution simulates contact records and sends no messages.
 
-Feedback can suppress outreach; factual source changes require separately authorised updates and rerun the dependent calculations while retaining earlier evidence. These mechanisms support review and traceability, but effective oversight and reviewer overreliance have not been measured. Demo authorisation does not establish production access controls. Evidence: [review and communication policies](src/greenpath/extensions/service.py) and [audit storage](src/greenpath/extensions/store.py).
+Feedback can suppress outreach; factual source changes require separately authorised updates and rerun the dependent calculations while retaining earlier evidence. These mechanisms support review and traceability, but effective oversight and reviewer overreliance have not been measured. Demo authorisation does not establish production access controls. Evidence: [review and communication policies](src/greenr/extensions/service.py) and [audit storage](src/greenr/extensions/store.py).
 
 ### Data limitations and robustness
 
 Synthetic take-up labels encode generator assumptions rather than observed banking outcomes. Public aggregate energy data does not validate individual predictions. Customer-level splits, feature cutoffs, baseline comparisons and missing-data or shifted-generator scenarios provide scoped checks, with limited evidence of real-world generalisation.
 
-The current confidence validation suppresses confidence display for all four core products. Its gate checks whether confidence ranks empirical decision error; it does not establish calibrated probabilities of correctness. Thresholds are local policy choices, not TrustLLM requirements. Missing, conflicting, stale or anomalous evidence can withhold recommendations or trigger review. Evidence: [confidence report](reports/confidence_validation.json) and [recommendation service](src/greenpath/recommendation/service.py).
+The current confidence validation suppresses confidence display for all four core products. Its gate checks whether confidence ranks empirical decision error; it does not establish calibrated probabilities of correctness. Thresholds are local policy choices, not TrustLLM requirements. Missing, conflicting, stale or anomalous evidence can withhold recommendations or trigger review. Evidence: [confidence report](reports/confidence_validation.json) and [recommendation service](src/greenr/recommendation/service.py).
 
 Impact calculations retain assumptions, units, factor versions, boundaries and time horizons. Missing inputs remain unavailable. India operational CO2 and UK CO2e estimates remain separate; aggregation preserves compatible groups. Paperless carbon savings are not claimed. Scenario estimates do not establish realised savings or carbon-credit eligibility. See [carbon methods](CARBON_METHODS.md).
 
 ## Responsible-usage statement
 
-> GreenPath's responsible AI approach is guided by TrustLLM's trustworthiness framework. Published TrustLLM-based Qwen2.5-1.5B-Instruct results provide external model context, while our repository documents application safeguards and scoped offline evaluations. Our propensity-model SHAP artifacts follow Lundberg and Lee's feature-attribution framework. We constrain explanations to approved evidence, preserve uncertainty and support reviewer intervention. These measures do not constitute TrustLLM certification or a completed evaluation of our deployed Qwen model.
+> Greenr's responsible AI approach is guided by TrustLLM's trustworthiness framework. Published TrustLLM-based Qwen2.5-1.5B-Instruct results provide external model context, while our repository documents application safeguards and scoped offline evaluations. Our propensity-model SHAP artifacts follow Lundberg and Lee's feature-attribution framework. We constrain explanations to approved evidence, preserve uncertainty and support reviewer intervention. These measures do not constitute TrustLLM certification or a completed evaluation of our deployed Qwen model.
 
 Before making deployment-specific performance claims, record the exact checkpoint, revision, quantization, prompts and inference settings; run the relevant benchmarks on that configuration; and retain dataset versions, scoring methods, sample counts and failure examples. Separate model benchmark results from application tests. Real deployment also requires observed-outcome validation, privacy and subgroup assessments, secure access controls and evidence that human review works in practice.
 

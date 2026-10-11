@@ -8,13 +8,13 @@ import pytest
 from fastapi.testclient import TestClient
 from pydantic import BaseModel
 
-from greenpath.api.main import create_app
-from greenpath.api.portfolio import historical_analytics, impact_totals, portfolio_analytics
-from greenpath.contracts.enums import Product
-from greenpath.contracts.product import HistoryRecord
-from greenpath.extensions.contracts import CampaignRequest, CounterfactualRequest, PlanningRequest
-from greenpath.extensions.service import prioritise
-from greenpath.extensions.store import MemoryStore
+from greenr.api.main import create_app
+from greenr.api.portfolio import historical_analytics, impact_totals, portfolio_analytics
+from greenr.contracts.enums import Product
+from greenr.contracts.product import HistoryRecord
+from greenr.extensions.contracts import CampaignRequest, CounterfactualRequest, PlanningRequest
+from greenr.extensions.service import prioritise
+from greenr.extensions.store import MemoryStore
 
 
 @pytest.fixture
@@ -185,9 +185,9 @@ def test_http_campaign_capacity_persists_and_closure_requires_permission(tmp_pat
     blocked = client.post("/campaigns/optimise", json={**request, "request_id": "second"}).json()
     assert blocked["selected_count"] == 0 and blocked["capacity_budget"]["used"] == 1
     path = f"/campaigns/{campaign_id}/close"
-    monkeypatch.delenv("GREENPATH_DEMO_ADMIN_TOKEN", raising=False)
+    monkeypatch.delenv("GREENR_DEMO_ADMIN_TOKEN", raising=False)
     assert client.post(path, headers={"X-Demo-Admin-Token": "admin"}).status_code == 403
-    monkeypatch.setenv("GREENPATH_DEMO_ADMIN_TOKEN", "admin")
+    monkeypatch.setenv("GREENR_DEMO_ADMIN_TOKEN", "admin")
     assert client.post(path).status_code == 403
     assert client.post(path, headers={"X-Demo-Admin-Token": "wrong"}).status_code == 403
     assert len(service.store.active_campaigns()) == 1

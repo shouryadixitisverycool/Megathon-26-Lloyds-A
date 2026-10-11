@@ -5,13 +5,13 @@ from datetime import date
 import pytest
 import pandas as pd
 
-from greenpath.contracts.customer import CustomerSnapshot
-from greenpath.contracts.enums import Product
-from greenpath.contracts.fixtures import load_model
-from greenpath.data_generation.scenarios import generate_scenario_table
-from greenpath.impact.uk_adapter import UKImpactCalculator
-from greenpath.models.transaction_classifier import _rule_category, normalise_description
-from greenpath.pipelines.scenario_provider import ScenarioProvider, UKImpactInput
+from greenr.contracts.customer import CustomerSnapshot
+from greenr.contracts.enums import Product
+from greenr.contracts.fixtures import load_model
+from greenr.data_generation.scenarios import generate_scenario_table
+from greenr.impact.uk_adapter import UKImpactCalculator
+from greenr.models.transaction_classifier import _rule_category, normalise_description
+from greenr.pipelines.scenario_provider import ScenarioProvider, UKImpactInput
 
 
 def source():
@@ -113,7 +113,7 @@ def test_taxonomy_refunds_keep_activity_category_not_positive_consumption(descri
 
 
 def test_good_energy_catalogue_has_unspecified_utility_truth():
-    from greenpath.data_generation.merchants import _CATALOGUE
+    from greenr.data_generation.merchants import _CATALOGUE
     assert [row[1] for row in _CATALOGUE if row[0] == "GOOD ENERGY"] == ["UTILITIES"]
 
 

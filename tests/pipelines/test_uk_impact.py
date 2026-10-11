@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from greenpath.extensions.uk_impact import calculate, factor_catalogue
+from greenr.extensions.uk_impact import calculate, factor_catalogue
 
 
 EV = {"annual_mileage_km": 10000.0, "fuel_type": "PETROL", "ice_litres_per_100km": 6.0,

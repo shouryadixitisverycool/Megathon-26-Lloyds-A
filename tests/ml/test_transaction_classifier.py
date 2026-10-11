@@ -6,9 +6,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath.contracts import TransactionCategory
-from greenpath.evaluation.transaction import evaluate_categoriser, write_report
-from greenpath.models.transaction_classifier import (
+from greenr.contracts import TransactionCategory
+from greenr.evaluation.transaction import evaluate_categoriser, write_report
+from greenr.models.transaction_classifier import (
     CATEGORY_VALUES,
     METHOD_MODEL,
     METHOD_RULE,

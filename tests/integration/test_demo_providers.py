@@ -1,6 +1,6 @@
-from greenpath.contracts.product import APPROVED_FEATURES, RecommendationState
-from greenpath.demo.providers import DemoRepository
-from greenpath.impact import Product, build_registry
+from greenr.contracts.product import APPROVED_FEATURES, RecommendationState
+from greenr.demo.providers import DemoRepository
+from greenr.impact import Product, build_registry
 
 
 def test_demo_personas_are_stable_and_explicitly_synthetic():

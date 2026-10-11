@@ -5,12 +5,12 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from greenpath.impact import ImpactResult, ImpactStatus
-from greenpath.impact.catalogue import CATALOGUE_SHA256, FactorCatalogue
+from greenr.impact import ImpactResult, ImpactStatus
+from greenr.impact.catalogue import CATALOGUE_SHA256, FactorCatalogue
 
 
 def test_catalogue_checksum_and_original_units_are_preserved():
-    path = Path("src/greenpath/impact/factors/carbon_factors.v1.json")
+    path = Path("src/greenr/impact/factors/carbon_factors.v1.json")
     assert hashlib.sha256(path.read_bytes()).hexdigest() == CATALOGUE_SHA256
     catalogue = FactorCatalogue.load()
     assert catalogue.error is None and len(catalogue.factors) == 5

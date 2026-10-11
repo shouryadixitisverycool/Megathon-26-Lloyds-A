@@ -4,7 +4,7 @@ Updated 2026-10-10 from integrated source. Agent A data/ML/reliability is presen
 
 ## Boundaries
 
-- Canonical schemas: `src/greenpath/contracts/`; canonical protocols: `src/greenpath/ports.py`. `contracts/product.py` is the explicit product/API evidence view; `contracts/impact_detail.py` holds detailed calculator provenance. Mirror-named modules are import shims, not schema authorities.
+- Canonical schemas: `src/greenr/contracts/`; canonical protocols: `src/greenr/ports.py`. `contracts/product.py` is the explicit product/API evidence view; `contracts/impact_detail.py` holds detailed calculator provenance. Mirror-named modules are import shims, not schema authorities.
 - `pipelines/runtime.py` loads Customer 360, calibrated bundles, OOD and confidence decisions. `demo/artifacts.py` adapts numeric scoring inputs/results and per-product Trust without changing calibrated probability or surfacing suppressed confidence; source objects remain attached.
 - `recommendation/`, `impact/`, `llm/`, `api/`, `app/` and `demo/` implement product decisioning, provenance, grounded explanation, HTTP boundaries and fixture/trained composition. `extensions/` implements UK scenarios, memory, oversight, planning and optional products.
 - Fixture mode retains six GP personas, fixed probabilities and threshold 0.60. Trained mode uses validation-selected model thresholds, product population exclusions and source Trust. `auto` selects artifacts when present and fails visibly on incomplete artifacts.

@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 // The FastAPI service has no CORS policy, so the browser talks to it through this
 // same-origin proxy. Trained-mode portfolio scoring can take over a minute.
-const api = process.env.GREENPATH_API_URL ?? "http://127.0.0.1:8000";
+const api = process.env.GREENR_API_URL ?? "http://127.0.0.1:8000";
 const proxy = {
   "/api": {
     target: api,

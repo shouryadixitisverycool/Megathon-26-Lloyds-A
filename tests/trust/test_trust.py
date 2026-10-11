@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from greenpath import config
+from greenr import config
 
 
-from greenpath.contracts import (
+from greenr.contracts import (
     CustomerSnapshot,
     DataQualityEvidence,
     DigitalFacts,
@@ -28,23 +28,23 @@ from greenpath.contracts import (
     TrustStatus,
     VehicleFacts,
 )
-from greenpath.ports import TrustProvider
-from greenpath.trust.conflicts import (
+from greenr.ports import TrustProvider
+from greenr.trust.conflicts import (
     RECURRING_FUEL_MONTHLY_GBP,
     RECURRING_FUEL_TXN_MIN,
     cross_source_consistency,
     detect_conflicts,
     has_high_conflict,
 )
-from greenpath.trust.ood import OODDetector
-from greenpath.trust.provider import (
+from greenr.trust.ood import OODDetector
+from greenr.trust.provider import (
     TRUST_FRAME_COLUMNS,
     TrustScorer,
     TrustThresholds,
     TrustWeights,
     trust_frame,
 )
-from greenpath.trust.quality import (
+from greenr.trust.quality import (
     completeness,
     critical_fields_present,
     freshness,

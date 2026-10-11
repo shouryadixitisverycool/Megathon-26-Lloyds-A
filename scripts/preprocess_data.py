@@ -1,4 +1,4 @@
-"""Convert GreenPath raw Parquet tables into validated model-ready features."""
+"""Convert Greenr raw Parquet tables into validated model-ready features."""
 
 from __future__ import annotations
 
@@ -6,16 +6,16 @@ import argparse
 from datetime import date
 from pathlib import Path
 
-from greenpath import config
-from greenpath.contracts import Product
-from greenpath.models.propensity import PRODUCT_FEATURES
-from greenpath.models.propensity.features import prepare_matrix
-from greenpath.models.transaction_classifier import TransactionCategoriser
-from greenpath.pipelines import run
-from greenpath.pipelines.leakage_checks import LeakageError, run_all_checks
-from greenpath.pipelines.customer360 import build_customer360
-from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
-from greenpath.pipelines.split import make_labels, split_pipeline_customers, write_split_manifest
+from greenr import config
+from greenr.contracts import Product
+from greenr.models.propensity import PRODUCT_FEATURES
+from greenr.models.propensity.features import prepare_matrix
+from greenr.models.transaction_classifier import TransactionCategoriser
+from greenr.pipelines import run
+from greenr.pipelines.leakage_checks import LeakageError, run_all_checks
+from greenr.pipelines.customer360 import build_customer360
+from greenr.pipelines.snapshot_provider import Customer360SnapshotProvider
+from greenr.pipelines.split import make_labels, split_pipeline_customers, write_split_manifest
 
 
 def cutoff_date(value: str) -> date:

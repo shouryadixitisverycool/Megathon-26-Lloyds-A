@@ -6,16 +6,16 @@ import sys
 import httpx
 import pytest
 
-from greenpath.llm.evaluation import approved_output, confidence_recommendation, run_evaluation, synthetic_recommendation
-from greenpath.llm.evaluation import FixedProvider
-from greenpath.llm.http_provider import HTTPExplanationProvider
-from greenpath.llm.live_evaluation import live_cases, main, run_live_evaluation
-from greenpath.llm.ports import ExplanationRequest
-from greenpath.llm.service import ExplanationService
+from greenr.llm.evaluation import approved_output, confidence_recommendation, run_evaluation, synthetic_recommendation
+from greenr.llm.evaluation import FixedProvider
+from greenr.llm.http_provider import HTTPExplanationProvider
+from greenr.llm.live_evaluation import live_cases, main, run_live_evaluation
+from greenr.llm.ports import ExplanationRequest
+from greenr.llm.service import ExplanationService
 
 
 def test_public_fields_retain_legacy_text_and_grounded_confidence():
-    from greenpath.contracts.product import Explanation
+    from greenr.contracts.product import Explanation
 
     for suppressed in (False, True):
         result = ExplanationService().explain(confidence_recommendation(suppressed=suppressed))
@@ -82,7 +82,7 @@ def test_live_cli_requires_authorization_and_credentials(monkeypatch, tmp_path):
     with pytest.raises(SystemExit) as error:
         main()
     assert error.value.code == 2
-    monkeypatch.delenv("GREENPATH_LLM_API_KEY", raising=False)
+    monkeypatch.delenv("GREENR_LLM_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setattr(sys, "argv", ["live_evaluation", "--allow-paid-provider", "--output", str(tmp_path / "report.json")])
     with pytest.raises(SystemExit) as error:
@@ -125,12 +125,12 @@ def test_live_failure_stops_without_fabricated_zero_cost():
 
 
 def test_co2e_limit_wording_tracks_units():
-    from greenpath.contracts.customer import CustomerSnapshot
-    from greenpath.contracts.fixtures import load_model
-    from greenpath.impact import Product
-    from greenpath.impact.uk_adapter import UKImpactCalculator
-    from greenpath.data_generation.scenarios import generate_scenario_table
-    from greenpath.pipelines.scenario_provider import ScenarioProvider
+    from greenr.contracts.customer import CustomerSnapshot
+    from greenr.contracts.fixtures import load_model
+    from greenr.impact import Product
+    from greenr.impact.uk_adapter import UKImpactCalculator
+    from greenr.data_generation.scenarios import generate_scenario_table
+    from greenr.pipelines.scenario_provider import ScenarioProvider
 
     snapshot = load_model("customer_snapshot_C10001", CustomerSnapshot)
     scenarios = ScenarioProvider(generate_scenario_table([snapshot.customer_id],

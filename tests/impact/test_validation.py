@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from greenpath.impact import ImpactStatus, IssueCode, build_registry
-from greenpath.impact.catalogue import CATALOGUE_SHA256, GRID_FACTOR, FactorCatalogue
-from greenpath.impact.inputs import EVInput
+from greenr.impact import ImpactStatus, IssueCode, build_registry
+from greenr.impact.catalogue import CATALOGUE_SHA256, GRID_FACTOR, FactorCatalogue
+from greenr.impact.inputs import EVInput
 
 from .conftest import CASES, NOW
 from .test_formulas import change_period
@@ -235,7 +235,7 @@ def test_solar_unsupported_scope_abstains(payload, calculator, field, value):
 
 def test_missing_and_tampered_catalogues_abstain_without_network(payload, tmp_path):
     missing = FactorCatalogue.load(tmp_path / "missing.json")
-    source = Path("src/greenpath/impact/factors/carbon_factors.v1.json")
+    source = Path("src/greenr/impact/factors/carbon_factors.v1.json")
     changed = json.loads(source.read_text())
     changed["factors"][0]["value"] = "0.999"
     target = tmp_path / "tampered.json"

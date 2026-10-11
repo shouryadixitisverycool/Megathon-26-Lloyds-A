@@ -1,6 +1,6 @@
 # Leakage audit
 
-Automated checks run in `make train`; the run fails on any violation (implementation: `greenpath.pipelines.leakage_checks`, tests: `tests/pipelines/test_leakage_checks.py` include deliberately invalid examples that must fail).
+Automated checks run in `make train`; the run fails on any violation (implementation: `greenr.pipelines.leakage_checks`, tests: `tests/pipelines/test_leakage_checks.py` include deliberately invalid examples that must fail).
 
 | Area | Control | Result |
 |---|---|---|

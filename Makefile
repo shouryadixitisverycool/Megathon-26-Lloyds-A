@@ -10,10 +10,10 @@ setup:
 	uv sync --locked
 
 test:
-	OPENAI_API_KEY= GREENPATH_LLM_API_KEY= GREENPATH_PROVIDER=fixture uv run --locked pytest
+	OPENAI_API_KEY= GREENR_LLM_API_KEY= GREENR_PROVIDER=fixture uv run --locked pytest
 
 test-trained:
-	OPENAI_API_KEY= GREENPATH_LLM_API_KEY= GREENPATH_PROVIDER=fixture uv run --locked pytest \
+	OPENAI_API_KEY= GREENR_LLM_API_KEY= GREENR_PROVIDER=fixture uv run --locked pytest \
 		tests/integration/test_trained_acceptance.py tests/integration/test_trained_safety.py \
 		tests/integration/test_artifact_providers.py tests/integration/test_demo_providers.py \
 		tests/api/test_api.py::test_default_demo_wires_real_services_and_explicit_history
@@ -22,46 +22,46 @@ test-impact:
 	uv run --locked pytest tests/impact
 
 api:
-	uv run --locked uvicorn greenpath.api.main:app --host 127.0.0.1 --port 8000
+	uv run --locked uvicorn greenr.api.main:app --host 127.0.0.1 --port 8000
 
 app:
-	uv run --locked python -m greenpath.demo.run
+	uv run --locked python -m greenr.demo.run
 
 evaluate-llm:
-	uv run --locked python -m greenpath.llm.evaluate
+	uv run --locked python -m greenr.llm.evaluate
 
 pipeline:
-	uv run --locked python -m greenpath.pipelines.run all --customers $(CUSTOMERS)
+	uv run --locked python -m greenr.pipelines.run all --customers $(CUSTOMERS)
 
 data:
-	uv run --locked python -m greenpath.data_generation --customers $(CUSTOMERS)
+	uv run --locked python -m greenr.data_generation --customers $(CUSTOMERS)
 
 perturbed:
-	uv run --locked python -m greenpath.data_generation --perturbed --customers $(CUSTOMERS)
+	uv run --locked python -m greenr.data_generation --perturbed --customers $(CUSTOMERS)
 
 train:
-	uv run --locked python -m greenpath.pipelines.run train
+	uv run --locked python -m greenr.pipelines.run train
 
 evaluate:
-	uv run --locked python -m greenpath.pipelines.run evaluate
+	uv run --locked python -m greenr.pipelines.run evaluate
 
 schemas:
-	uv run --locked python -m greenpath.contracts.export_schemas
+	uv run --locked python -m greenr.contracts.export_schemas
 
 build:
 	uv build --wheel
 
 evaluate-system:
-	uv run --locked python -m greenpath.extensions.evaluate
+	uv run --locked python -m greenr.extensions.evaluate
 
 scenarios:
-	uv run --locked python -m greenpath.demo.evaluate
+	uv run --locked python -m greenr.demo.evaluate
 
 manifest:
-	uv run --locked python -m greenpath.pipelines.run manifest
+	uv run --locked python -m greenr.pipelines.run manifest
 
 train-optional:
-	uv run --locked python -m greenpath.extensions.optional_models
+	uv run --locked python -m greenr.extensions.optional_models
 
 optional-models: train-optional
 

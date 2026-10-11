@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from greenpath.config import FEATURE_CUTOFF, OUTCOME_WINDOW_END, PREDICTION_TIMESTAMP, TREND_CUTOFFS
-from greenpath.contracts import (
+from greenr.config import FEATURE_CUTOFF, OUTCOME_WINDOW_END, PREDICTION_TIMESTAMP, TREND_CUTOFFS
+from greenr.contracts import (
     ELIGIBILITY_MESSAGE,
     PRODUCT_IDS,
     CustomerSnapshot,
@@ -23,8 +23,8 @@ from greenpath.contracts import (
     RecommendationState,
     TrustAssessment,
 )
-from greenpath.contracts.base import Contract
-from greenpath.contracts.fixtures import (
+from greenr.contracts.base import Contract
+from greenr.contracts.fixtures import (
     APPROVED_FEATURES,
     FIXTURE_DIR,
     FixturePropensityProvider,
@@ -36,7 +36,7 @@ from greenpath.contracts.fixtures import (
     render_fixture,
     write_fixtures,
 )
-from greenpath.ports import CustomerSnapshotProvider, PropensityProvider, TrustProvider
+from greenr.ports import CustomerSnapshotProvider, PropensityProvider, TrustProvider
 
 FIXTURE_MODELS: dict[str, type[Contract]] = {
     "customer_snapshot_C10001": CustomerSnapshot,

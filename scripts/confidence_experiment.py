@@ -1,6 +1,6 @@
 """Isolated, canonical-cutoff confidence experiment (not the full release pipeline).
 
-Generate base/perturbed data with GREENPATH_WORKSPACE set to the same workspace,
+Generate base/perturbed data with GREENR_WORKSPACE set to the same workspace,
 then run this script's prepare, train and evaluate stages. Rates, product populations,
 calibration and the reserved confidence gate are the normal pipeline's unchanged rules.
 Historical/proxy/SHAP/UI certification is deliberately outside this focused experiment.
@@ -22,7 +22,7 @@ def main() -> None:
     source_root = Path(__file__).resolve().parents[1]
     if workspace == source_root or source_root in workspace.parents:
         parser.error("use an isolated workspace outside the source checkout")
-    os.environ["GREENPATH_WORKSPACE"] = str(workspace)
+    os.environ["GREENR_WORKSPACE"] = str(workspace)
 
     import json
     import hashlib
@@ -32,14 +32,14 @@ def main() -> None:
     import numpy as np
     import pandas as pd
 
-    from greenpath import config
-    from greenpath.contracts import Product
-    from greenpath.models.propensity import load_all, population_mask, save_all, train_product
-    from greenpath.models.transaction_classifier import TransactionCategoriser
-    from greenpath.pipelines import run, runtime
-    from greenpath.pipelines.customer360 import build_customer360
-    from greenpath.pipelines.snapshot_provider import Customer360SnapshotProvider
-    from greenpath.pipelines.split import make_labels, split_customers, write_split_manifest
+    from greenr import config
+    from greenr.contracts import Product
+    from greenr.models.propensity import load_all, population_mask, save_all, train_product
+    from greenr.models.transaction_classifier import TransactionCategoriser
+    from greenr.pipelines import run, runtime
+    from greenr.pipelines.customer360 import build_customer360
+    from greenr.pipelines.snapshot_provider import Customer360SnapshotProvider
+    from greenr.pipelines.split import make_labels, split_customers, write_split_manifest
 
     if config.REPO_ROOT != workspace:
         raise RuntimeError("workspace configuration was imported before isolation was set")
@@ -49,8 +49,8 @@ def main() -> None:
     frame_path = config.PROCESSED_DIR / f"customer360_{config.FEATURE_CUTOFF.isoformat()}.parquet"
 
     if args.stage == "prepare":
-        from greenpath.models.propensity import PRODUCT_FEATURES
-        from greenpath.pipelines.leakage_checks import LeakageError, run_all_checks
+        from greenr.models.propensity import PRODUCT_FEATURES
+        from greenr.pipelines.leakage_checks import LeakageError, run_all_checks
 
         tables = run.load_tables(config.RAW_DIR)
         run.log(f"loaded {len(tables['customers'])} customers; fitting normal merchant reference")
@@ -91,8 +91,8 @@ def main() -> None:
         labels = pd.read_parquet(config.PROCESSED_DIR / "labels.parquet")
         split = pd.read_csv(config.PROCESSED_DIR / "split_manifest.csv", dtype=str).set_index("customer_id")["split"]
         if args.stage == "train":
-            from greenpath.trust.ood import OODDetector
-            from greenpath.trust.selection import select_thresholds
+            from greenr.trust.ood import OODDetector
+            from greenr.trust.selection import select_thresholds
 
             bundles, detectors = {}, {}
             for p in Product:
@@ -111,7 +111,7 @@ def main() -> None:
             run.write_json(config.ARTIFACT_DIR / runtime.CONFIDENCE_DIR / "decisions.json", decisions)
             for product, decision in decisions.items():
                 run.log(f"{product}: {'SURFACED' if decision['surfaced'] else 'SUPPRESSED'}; {decision['validation']['reasons']}")
-            from greenpath.confidence.validation import ConfidenceValidation, write_confidence_report
+            from greenr.confidence.validation import ConfidenceValidation, write_confidence_report
 
             write_confidence_report({p: {**d, "validation": ConfidenceValidation(**d["validation"])}
                                      for p, d in decisions.items()},
@@ -119,11 +119,11 @@ def main() -> None:
                                     config.REPORTS_DIR / "confidence_validation.json")
 
         else:
-            from greenpath.confidence.meta_model import METHOD_VERSION, ConfidenceModel
-            from greenpath.confidence.validation import (
+            from greenr.confidence.meta_model import METHOD_VERSION, ConfidenceModel
+            from greenr.confidence.validation import (
                 ConfidenceValidation, baseline_diagnostics, validate_confidence, write_confidence_report,
             )
-            from greenpath.evaluation.ml import mask_columns
+            from greenr.evaluation.ml import mask_columns
 
             bundles, detectors = load_all(), runtime.load_detectors()
             decisions = json.loads((config.ARTIFACT_DIR / runtime.CONFIDENCE_DIR / "decisions.json").read_text())
@@ -176,7 +176,7 @@ def main() -> None:
                                     config.REPORTS_DIR / "confidence_validation.json")
             run.write_json(config.REPORTS_DIR / "confidence_experiment.json", decisions)
             source_hashes = {str(path.relative_to(source_root)): hashlib.sha256(path.read_bytes()).hexdigest()
-                             for path in sorted((source_root / "src" / "greenpath").rglob("*.py"))}
+                             for path in sorted((source_root / "src" / "greenr").rglob("*.py"))}
             source_hashes["scripts/confidence_experiment.py"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
             run.write_json(config.REPORTS_DIR / "experiment_source.json", {
                 "git_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=source_root, text=True).strip(),

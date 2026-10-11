@@ -1,10 +1,10 @@
-# GreenPath Evaluation Report
+# Greenr Evaluation Report
 
 > **Evidence status:** draft assembled from checked-in artifacts without rerunning the pipeline. All data, outcomes and personas are synthetic. The reported values do not establish real-world predictive performance, financial eligibility, realised adoption, or verified carbon reduction.
 
 ## 1. Executive summary
 
-GreenPath evaluates a synthetic sustainability-opportunity system across seven areas: data quality, propensity models and recommendation policy, transaction categorisation, sustainability impact, explanation grounding, system performance, and scenario behavior. The design uses customer-level train/validation/test separation, point-in-time features, explicit heuristic baselines, calibrated probabilities, abstention states, deterministic impact calculations, and grounded explanation validation.
+Greenr evaluates a synthetic sustainability-opportunity system across seven areas: data quality, propensity models and recommendation policy, transaction categorisation, sustainability impact, explanation grounding, system performance, and scenario behavior. The design uses customer-level train/validation/test separation, point-in-time features, explicit heuristic baselines, calibrated probabilities, abstention states, deterministic impact calculations, and grounded explanation validation.
 
 The strongest checked-in evidence is the explicit leakage control, baseline comparison, unseen-merchant categorisation evaluation, scenario coverage, and offline explanation validation. The principal limitations are synthetic labels, relatively small product-positive test cohorts, weak unseen-merchant performance for several transaction classes, no live-LLM evaluation, and slow trained startup/trend responses.
 
@@ -273,7 +273,7 @@ The intended clean-run entrypoint is:
 
 ```bash
 make all
-GREENPATH_PROVIDER=trained make app
+GREENR_PROVIDER=trained make app
 ```
 
 Python 3.12 and `uv.lock` constrain the environment. Generated manifests retain seeds, timeline, package versions, artifact hashes, input hashes, processed hashes and split-manifest hashes. Individual reports preserve model, calibration, rule, factor and prompt versions.
@@ -312,11 +312,11 @@ Python 3.12 and `uv.lock` constrain the environment. Generated manifests retain 
 | Area | Primary evidence |
 |---|---|
 | Data and assumptions | `DATA_CARD.md`, `DATASET_ENGINEERING.md`, `reports/dataset_quality.json` |
-| Splits and leakage | `LEAKAGE_AUDIT.md`, `reports/leakage_checks.json`, `src/greenpath/pipelines/split.py` |
+| Splits and leakage | `LEAKAGE_AUDIT.md`, `reports/leakage_checks.json`, `src/greenr/pipelines/split.py` |
 | ML metrics and baselines | `MODEL_CARD_*.md`, `reports/ml_evaluation.json`, `reports/predictions/` |
 | Confidence release | `reports/CONFIDENCE_VALIDATION.md`, `reports/confidence_validation.json` |
 | Transaction categorisation | `reports/TRANSACTION_CATEGORISATION.md`, `reports/transaction_eval.json` |
-| Sustainability impact | `CARBON_METHODS.md`, `src/greenpath/impact/`, `tests/impact/` |
+| Sustainability impact | `CARBON_METHODS.md`, `src/greenr/impact/`, `tests/impact/` |
 | Explanations | `LLM_EVAL.md`, `reports/explanation_evaluation.json`, `tests/llm/` |
 | Scenarios | `reports/scenario_evaluation.json`, `tests/recommendation/` |
 | System performance | `reports/system_performance.json`, `reports/pipeline_timings.json` |

@@ -6,10 +6,10 @@ from datetime import timedelta
 import httpx
 import pytest
 
-from greenpath.llm.evaluation import approved_output, synthetic_recommendation
-from greenpath.llm.http_provider import HTTPExplanationProvider, configured_provider
-from greenpath.llm.ports import ExplanationRequest
-from greenpath.llm.service import ExplanationService
+from greenr.llm.evaluation import approved_output, synthetic_recommendation
+from greenr.llm.http_provider import HTTPExplanationProvider, configured_provider
+from greenr.llm.ports import ExplanationRequest
+from greenr.llm.service import ExplanationService
 
 
 def provider(transport):
@@ -80,9 +80,9 @@ def test_http_claim_change_and_transport_error_use_template():
 
 def test_no_key_offline_and_empty_explicit_endpoint_rejected(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    monkeypatch.delenv("GREENPATH_LLM_API_KEY", raising=False)
+    monkeypatch.delenv("GREENR_LLM_API_KEY", raising=False)
     assert configured_provider() is None
-    monkeypatch.setenv("GREENPATH_LLM_API_KEY", "test-key")
-    monkeypatch.setenv("GREENPATH_LLM_ENDPOINT", "")
+    monkeypatch.setenv("GREENR_LLM_API_KEY", "test-key")
+    monkeypatch.setenv("GREENR_LLM_ENDPOINT", "")
     with pytest.raises(ValueError, match="require endpoint"):
         configured_provider()
