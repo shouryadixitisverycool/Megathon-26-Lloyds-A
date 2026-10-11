@@ -14,6 +14,8 @@ Our approach follows the trustworthiness principles discussed in [TrustLLM (Huan
 
 - **Hallucinations:** The explanation service accepts only approved sentences and checks product names, reasons, numbers and units. Invalid responses use fixed templates. The LLM cannot invent or change impact estimates.
 
+- **Promo copy:** Short ads (push, banner, card, email block) are drafted only for a supported decision. They are sendable only when the existing consent, suppression, cooling-off and fatigue rules allow engagement; staff previews of blocked messages are labelled not sendable. Providers receive closed themes and limits, never customer amounts or identifiers. Provider copy may not contain digits or currency; the only number is the carbon-engine estimate, inserted and labelled by code. Blocklists reject eligibility/approval, savings/rate, absolute green ("carbon neutral", "net zero") and "we noticed your spending" claims, links and other products. Call-to-action and disclaimer are fixed text. Blocklists cannot prove copy is fair or free of every implied claim; real campaigns still need financial-promotion and anti-greenwashing review.
+
 - **Human oversight:** Reviewers can stop outreach, flag data problems and request review. Consent and contact limits are checked, and decisions are logged.
 
 - **Data limitations:** Synthetic data provides a controlled environment for evaluating the system. Missing, conflicting or outdated evidence can block recommendations. Confidence display is currently withheld for all four core products. Environmental estimates depend on stated assumptions and represent potential savings rather than guaranteed outcomes.

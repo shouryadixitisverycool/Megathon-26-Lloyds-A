@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from greenpath import config
 from greenpath.contracts.enums import Product
 from greenpath.contracts.lifecycle import SourceUpdateRequest
+from greenpath.contracts.product import Recommendation
 from greenpath.extensions.contracts import (
     CampaignRequest, CounterfactualRequest, CustomerRequest, FeedbackRequest, PlanningRequest,
     PreferencesRequest, ReviewRequest, SensitivityRequest, SimulationRequest,
@@ -258,6 +259,23 @@ def attach_extensions(application, memory_path: Path | None = None):
             action, reason = communication(rec, service.store.history(customer_id), service.preferences(customer_id), channel)
             rec["next_action"] = {"action": action, "reason": reason, "channel": channel, "version": "next-action-rules-v1"}
         return {"opportunities": rows}
+
+    @router.get("/customers/{customer_id}/promos/{product}")
+    def promo(customer_id: str, product: Product,
+              format: str = Query("one_liner", pattern="^(push|one_liner|short|medium)$"),
+              channel: str = Query("app", pattern="^(app|email|phone|rm)$"), preview: bool = False):
+        # Targeting stays with the communication rules; copy is only sendable for an engage action.
+        # preview=true lets staff see copy for a supported decision that contact rules currently block.
+        rec = row(customer_id, product)
+        action, reason = communication(rec, service.store.history(customer_id), service.preferences(customer_id), channel)
+        recommendation = Recommendation.model_validate(rec)
+        promo = application.state.promo_service.generate(recommendation, action, reason, fmt=format,
+                                                         channel=channel, preview=preview)
+        return dump(promo)
+
+    @router.get("/promos/metrics")
+    def promo_metrics():
+        return application.state.promo_service.metrics()
 
     @router.get("/customers/{customer_id}/evidence-graph/{product}")
     def graph(customer_id: str, product: Product):

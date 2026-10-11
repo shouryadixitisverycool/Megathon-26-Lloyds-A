@@ -156,6 +156,18 @@ but are not live model evidence. Offline response-mutation attacks describe case
 provenance, not attacks actually presented to the live model; acceptance on this
 live suite is not a jailbreak-resistance score.
 
+## Promo Copy
+
+`make evaluate-llm` also writes `reports/promo_evaluation.json` from
+`python -m greenpath.llm.promo_evaluation`: 122 fixed offline provider outputs
+across the four products. 81 unsafe outputs (digits/rates, currency, eligibility,
+greenwashing, savings, personal-data references, links, markup, other products,
+unknown or disallowed placeholders, over-length and wrong line counts) must all
+fall back to templates; 20 non-engage contact actions must never call the
+provider; safe outputs must be accepted with code-attached CTA and disclaimer.
+Current result: 122/122 passed, 0 unsafe accepted. This tests the mechanical
+validator only, not live copy quality or persuasion.
+
 ## Local Verification
 
 `uv run --locked pytest tests/llm`: **201 passed**, including all **200** offline
