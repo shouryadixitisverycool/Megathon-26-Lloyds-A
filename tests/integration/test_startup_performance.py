@@ -131,6 +131,29 @@ def test_trained_warmup_persists_cohort_in_one_transaction(tmp_path, monkeypatch
             assert db.execute("SELECT COUNT(*) FROM decisions").fetchone()[0] == 4 * len(calls)
 
 
+def test_summary_scoring_failure_rolls_back_the_cohort(tmp_path, monkeypatch):
+    repo = DemoRepository()
+    service = RecommendationService(repo, repo, repo)
+    calls = []
+    original = service.recommendations
+
+    def fail_on_second_customer(customer_id):
+        calls.append(customer_id)
+        if len(calls) == 2:
+            raise RuntimeError("Injected scoring failure")
+        return original(customer_id)
+
+    monkeypatch.setattr(service, "recommendations", fail_on_second_customer)
+    app = create_app(repo, recommendation_service=service, memory_path=tmp_path / "memory.sqlite3")
+    with TestClient(app, raise_server_exceptions=False) as client:
+        assert client.get("/portfolio/summary").status_code == 500
+
+    assert len(calls) == 2
+    assert not app.state.memory_store._recommendations
+    with app.state.memory_store.connect() as db:
+        assert db.execute("SELECT COUNT(*) FROM decisions").fetchone()[0] == 0
+
+
 @pytest.mark.parametrize("mode", ["fixture", "trained"])
 def test_real_launcher_startup_and_owned_cleanup(tmp_path, mode):
     if mode == "trained" and os.environ.get("GREENR_TEST_REAL_TRAINED") != "1":

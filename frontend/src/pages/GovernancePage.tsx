@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useExplanationMetrics, useGovernance } from "../api/hooks";
+import { useDemoReadiness, useExplanationMetrics, useGovernance } from "../api/hooks";
 import type { Product } from "../api/types";
 import { BarList } from "../components/charts/BarList";
 import { LineChart } from "../components/charts/LineChart";
@@ -63,6 +63,7 @@ export function GovernancePage() {
           </section>
 
           <ReleaseStatus reports={reports} />
+          <DemoReadinessPanel />
 
           <div className="section">
             <div className="section-head">
@@ -390,6 +391,52 @@ function AiExplanations({ evaluation }: { evaluation?: any }) {
           </div>
         )}
       </div>
+    </section>
+  );
+}
+
+/** /demo/readiness: whether each product has a live, defensible example to demo. Loaded on request. */
+function DemoReadinessPanel() {
+  const [open, setOpen] = useState(false);
+  const readiness = useDemoReadiness(open);
+  const data = readiness.data;
+  const tone = (status: string) => (status === "READY" ? "supported" : status === "BLOCKED" ? "conflict" : "neutral");
+  return (
+    <section className="panel" style={{ marginTop: 16 }}>
+      <h2 className="panel-title">Demo readiness</h2>
+      <p className="panel-sub">
+        Checks the served models and evidence for a live example per product. A product is blocked until it has a supported
+        decision with validated confidence, so fixture mode and suppressed confidence always show as blocked.
+      </p>
+      <Disclosure title="Run the readiness check" hint="Can take a while in trained mode" onToggle={setOpen}>
+        {readiness.isPending && <SlowLoading label="Checking demo readiness…" />}
+        {readiness.isError && <ErrorBox error={readiness.error} what="demo readiness" />}
+        {data && (
+          <div className="stack">
+            <div className="row">
+              <ToneBadge tone={tone(data.status)}>Overall: {humanize(data.status)}</ToneBadge>
+              <span className="small muted">
+                {humanize(data.provider_mode)} mode
+                {data.live_checked_customers !== undefined && <>, {data.live_checked_customers} customers checked live</>}
+              </span>
+            </div>
+            <DataTable rows={PRODUCT_ORDER.filter((product) => data.products[product])} rowKey={(product) => product} caption="Readiness by product"
+              columns={[
+                { key: "product", header: "Product", render: (product) => productName(product) },
+                { key: "status", header: "Status", render: (product) => <ToneBadge tone={tone(data.products[product]!.status)}>{humanize(data.products[product]!.status)}</ToneBadge> },
+                { key: "scored", header: "Scored", numeric: true, render: (product) => data.products[product]!.coverage?.scored_customers ?? "–" },
+                { key: "above", header: "Above cut-off", numeric: true, render: (product) => data.products[product]!.coverage?.above_threshold ?? "–" },
+                { key: "validated", header: "Validated confidence", numeric: true, render: (product) => data.products[product]!.coverage?.validated_confidence ?? "–" },
+                { key: "example", header: "Example customer", render: (product) => data.products[product]!.candidate?.customer_id ?? "None" },
+              ]} />
+            {data.missing_features.length > 0 && (
+              <Callout kind="warn" title="Missing"><ul>{data.missing_features.map((item) => <li key={item}>{item}</li>)}</ul></Callout>
+            )}
+            {data.limitation && <p className="xsmall muted">{data.limitation}</p>}
+            <Disclosure title="Raw readiness report"><JsonView value={data} /></Disclosure>
+          </div>
+        )}
+      </Disclosure>
     </section>
   );
 }

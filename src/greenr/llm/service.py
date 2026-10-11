@@ -234,6 +234,13 @@ class ExplanationService:
             else:
                 items.append(sentence("confidence", "Model confidence is withheld because held-out reliability validation does not support displaying it."))
         else:
+            if propensity is not None:
+                # Fixture reasons: only applicable catalogue wording; unvalidated numbers stay out.
+                from greenr.models.propensity.reason_codes import REASON_CODE_CATALOGUE
+                for code in dict.fromkeys(propensity.reason_codes):
+                    definition = REASON_CODE_CATALOGUE.get(code)
+                    if definition is not None and rec.product in definition.applicable_products:
+                        items.append(sentence(f"model-reason:{code}", definition.rm_wording))
             items.append(sentence("confidence", "Model confidence is unavailable because no validated model source is attached to this decision."))
         impact = rec.impact
         if impact.status == ImpactStatus.AVAILABLE:

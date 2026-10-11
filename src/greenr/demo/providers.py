@@ -11,6 +11,7 @@ from greenr.contracts.product import (
     PropensityResult, RecommendationState, TrustAssessment, TrustIssue,
 )
 from greenr.impact import Product
+from greenr.models.propensity.reason_codes import derive_reason_codes
 
 FIXTURE_VERSION = "agent-b-synthetic-personas-v1"
 CUTOFF = datetime(2026, 1, 3, tzinfo=timezone.utc)
@@ -28,6 +29,69 @@ PERSONAS = (
     ("GP-005", "Nila Das", "East", "Self-employed", RecommendationState.SUPPRESSED),
     ("GP-006", "Dev Iyer", "South", "Retired", RecommendationState.DO_NOT_RECOMMEND),
 )
+EV, GH, SF, PB = (Product.EV_FINANCE, Product.GREEN_HOME, Product.SOLAR_FINANCE, Product.PAPERLESS_BANKING)
+# Fixed synthetic probabilities. GP-001 clears the 0.60 threshold for every product and
+# GP-006 misses it for every product; other personas are decided before propensity.
+PROBABILITIES = {
+    "GP-001": {EV: "0.84", GH: "0.71", SF: "0.66", PB: "0.79"},
+    "GP-002": {EV: "0.52", GH: "0.47", SF: "0.41", PB: "0.63"},
+    "GP-003": {EV: "0.69", GH: "0.58", SF: "0.49", PB: "0.74"},
+    "GP-004": {EV: "0.31", GH: "0.27", SF: "0.22", PB: "0.18"},
+    "GP-005": {EV: "0.76", GH: "0.68", SF: "0.61", PB: "0.72"},
+    "GP-006": {EV: "0.24", GH: "0.19", SF: "0.15", PB: "0.33"},
+}
+# Synthetic model inputs. Reason codes are derived from these by the controlled catalogue
+# (default thresholds), never written by hand. None means the input is not on record.
+MODEL_INPUTS = {
+    "GP-001": dict(has_investments=1, is_ice=1, fuel_type="PETROL", fuel_spend_90d_avg=165.0, annual_mileage_km=15800.0,
+                   vehicle_age_years=9.0, has_vehicle_finance=0, home_owner=1, has_mortgage=1,
+                   has_existing_solar=0, electricity_kwh_12m=4650.0, gas_kwh_12m=9800.0,
+                   home_improvement_spend_90d_avg=85.0, utilities_spend_trend=0.14,
+                   paper_statements_3m=3, app_logins_3m_avg=14.0, sustainability_preference=5),
+    "GP-002": dict(has_investments=None, is_ice=None, fuel_spend_90d_avg=None, annual_mileage_km=None, vehicle_age_years=None,
+                   has_vehicle_finance=0, home_owner=None, has_mortgage=None, has_existing_solar=None,
+                   electricity_kwh_12m=None, gas_kwh_12m=None, home_improvement_spend_90d_avg=0.0,
+                   utilities_spend_trend=None, paper_statements_3m=None, app_logins_3m_avg=6.0,
+                   sustainability_preference=3),
+    "GP-003": dict(has_investments=0, is_ice=1, fuel_type="DIESEL", fuel_spend_90d_avg=130.0, annual_mileage_km=11000.0,
+                   vehicle_age_years=6.0, has_vehicle_finance=0, home_owner=1, has_mortgage=0,
+                   has_existing_solar=0, electricity_kwh_12m=3600.0, gas_kwh_12m=13500.0,
+                   home_improvement_spend_90d_avg=20.0, utilities_spend_trend=0.12,
+                   paper_statements_3m=2, app_logins_3m_avg=11.0, sustainability_preference=4),
+    "GP-004": dict(has_investments=1, is_ice=0, fuel_type="EV", fuel_spend_90d_avg=0.0, annual_mileage_km=9000.0,
+                   vehicle_age_years=2.0, has_vehicle_finance=0, home_owner=1, has_mortgage=0,
+                   has_existing_solar=1, electricity_kwh_12m=2900.0, gas_kwh_12m=0.0,
+                   home_improvement_spend_90d_avg=0.0, utilities_spend_trend=-0.04,
+                   paper_statements_3m=0, app_logins_3m_avg=4.0, sustainability_preference=5),
+    "GP-005": dict(has_investments=0, is_ice=1, fuel_type="PETROL", fuel_spend_90d_avg=150.0, annual_mileage_km=13000.0,
+                   vehicle_age_years=10.0, has_vehicle_finance=1, home_owner=1, has_mortgage=1,
+                   has_existing_solar=0, electricity_kwh_12m=4200.0, gas_kwh_12m=12500.0,
+                   home_improvement_spend_90d_avg=60.0, utilities_spend_trend=0.05,
+                   paper_statements_3m=2, app_logins_3m_avg=9.0, sustainability_preference=3),
+    "GP-006": dict(has_investments=1, is_ice=1, fuel_type="PETROL", fuel_spend_90d_avg=45.0, annual_mileage_km=4000.0,
+                   vehicle_age_years=5.0, has_vehicle_finance=0, home_owner=1, has_mortgage=0,
+                   has_existing_solar=0, electricity_kwh_12m=2400.0, gas_kwh_12m=8000.0,
+                   home_improvement_spend_90d_avg=0.0, utilities_spend_trend=-0.02,
+                   paper_statements_3m=1, app_logins_3m_avg=1.0, sustainability_preference=2),
+}
+
+# Optional opportunities (Green Investments, Green Loans) mirror the trained rules in
+# extensions/optional_models.py; only the probabilities are fixed fixture values.
+OPTIONAL_THRESHOLD = 0.50
+OPTIONAL_PROBABILITIES = {
+    "GP-001": {"GREEN_INVESTMENTS": 0.64, "GREEN_LOANS": 0.71},
+    "GP-002": {"GREEN_INVESTMENTS": 0.38, "GREEN_LOANS": 0.44},
+    "GP-003": {"GREEN_INVESTMENTS": 0.52, "GREEN_LOANS": 0.57},
+    "GP-004": {"GREEN_INVESTMENTS": 0.58, "GREEN_LOANS": 0.12},
+    "GP-005": {"GREEN_INVESTMENTS": 0.33, "GREEN_LOANS": 0.62},
+    "GP-006": {"GREEN_INVESTMENTS": 0.21, "GREEN_LOANS": 0.09},
+}
+# Descriptive references use the catalogue defaults, not fitted training medians.
+OPTIONAL_DESCRIPTIVE = {
+    "GREEN_INVESTMENTS": (("app_logins_3m_avg", "HIGH_DIGITAL_ENGAGEMENT", 10.0),),
+    "GREEN_LOANS": (("home_improvement_spend_90d_avg", "RECENT_HOME_IMPROVEMENT_ACTIVITY", 50.0),
+                    ("gas_kwh_12m", "HIGH_HEATING_ENERGY_USE", 12000.0)),
+}
 
 
 class DemoRepository:
@@ -75,9 +139,10 @@ class DemoRepository:
                 feature_cutoff=CUTOFF, features=features, trust=trust,
             )
             for product in Product:
-                probability = Decimal("0.25") if customer_id == "GP-006" else Decimal("0.82")
+                codes, _ = derive_reason_codes(MODEL_INPUTS[customer_id], product)
                 self._propensities[(customer_id, product)] = PropensityResult(
-                    product=product, probability=probability,
+                    product=product, probability=Decimal(PROBABILITIES[customer_id][product]),
+                    reason_codes=tuple(code.value for code in codes),
                     model_version="synthetic-probability-fixture-v1",
                     calibration_version="synthetic-calibration-fixture-v1",
                 )
@@ -109,3 +174,52 @@ class DemoRepository:
 
     def list_history(self):
         return tuple(self._history)
+
+    def optional_opportunity(self, customer_id, opportunity, purpose=None):
+        """Fixture Green Investments / Green Loans signal, using the trained rule order."""
+        from greenr.extensions.optional_models import unavailable
+
+        inputs = MODEL_INPUTS[customer_id]
+        result = unavailable(opportunity, "INSUFFICIENT_INFORMATION", "", purpose)
+        result.update(model_version="synthetic-optional-fixture-v1", calibration_version="synthetic-calibration-fixture-v1",
+                      feature_version=FIXTURE_VERSION, cutoff=CUTOFF.date().isoformat(), reason_codes=[])
+
+        def evidence(code, field, value):
+            return {"code": code, "field": field, "value": value,
+                    "reference": f"synthetic:{FIXTURE_VERSION}:{customer_id}:{field}"}
+
+        if opportunity == "GREEN_INVESTMENTS":
+            holding, preference = inputs.get("has_investments"), inputs.get("sustainability_preference")
+            if holding is None or preference is None:
+                result["reason_codes"] = ["INVESTMENT_HOLDING_OR_PREFERENCE_UNKNOWN"]
+                return result
+            if holding != 1:
+                result.update(status="NOT_RELEVANT", reason_codes=["NO_EXISTING_INVESTMENT_ACTIVITY"])
+                return result
+            result["reason_codes"] = ["EXISTING_INVESTMENT_ACTIVITY", "STATED_SUSTAINABILITY_PREFERENCE"]
+            result["reason_evidence"] = [evidence("EXISTING_INVESTMENT_ACTIVITY", "has_investments", holding),
+                                         evidence("STATED_SUSTAINABILITY_PREFERENCE", "sustainability_preference", preference)]
+        else:
+            borrowing = [inputs.get("has_mortgage"), inputs.get("has_vehicle_finance")]
+            if 1 not in borrowing:
+                result.update(status="INSUFFICIENT_INFORMATION" if None in borrowing else "NOT_RELEVANT",
+                              reason_codes=["EXISTING_BORROWING_NOT_CONFIRMED"])
+                return result
+            if purpose is None:
+                result["reason_codes"] = ["DOCUMENTED_GREEN_PURPOSE_REQUIRED"]
+                return result
+            result["reason_codes"] = ["EXISTING_BORROWING_RELATIONSHIP", "DECLARED_GREEN_PURPOSE_" + purpose]
+            result["reason_evidence"] = [evidence("EXISTING_BORROWING_RELATIONSHIP", field, 1)
+                                         for field in ("has_mortgage", "has_vehicle_finance") if inputs.get(field) == 1]
+            result["reason_evidence"].append({"code": "DECLARED_GREEN_PURPOSE_" + purpose, "field": "purpose",
+                                              "value": purpose, "reference": "customer declaration"})
+        probability = OPTIONAL_PROBABILITIES[customer_id][opportunity]
+        result.update(probability=probability, threshold=OPTIONAL_THRESHOLD,
+                      status="OPPORTUNITY_SIGNAL" if probability >= OPTIONAL_THRESHOLD else "LOW_RELEVANCE")
+        for field, code, reference in OPTIONAL_DESCRIPTIVE[opportunity]:
+            value = inputs.get(field)
+            if value is not None and value > reference:
+                result["reason_codes"].append(code)
+                result["reason_evidence"].append({**evidence(code, field, value), "fixture_reference": reference,
+                                                  "limitation": "Descriptive association, not a causal driver or eligibility finding."})
+        return result

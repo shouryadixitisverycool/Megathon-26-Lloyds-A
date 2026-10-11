@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { CalendarDays, ChevronRight, CornerDownRight, MapPin, Users } from "lucide-react";
+import { ArrowUpRight, CalendarDays, ChevronRight, CornerDownRight, Eye, MapPin, Users } from "lucide-react";
 import { useCustomer, useCustomerIndex, useNextActions } from "../api/hooks";
 import type { Channel, CustomerSnapshot, DecisionState, Product, Recommendation } from "../api/types";
 import { Drawer } from "../components/Drawer";
@@ -16,6 +16,10 @@ import {
 } from "../lib/labels";
 import { trustTone } from "./CustomersPage";
 import { ProductDetail, ProductDetailHeader, type DetailTab } from "./product/ProductDetail";
+import { OptionalOpportunities } from "./OptionalOpportunities";
+import { PlaceholderButton } from "../components/Placeholder";
+import { PartnerIllustration } from "./product/PartnerIllustration";
+import type { PartnerProduct } from "../api/partners";
 
 const GROUP: Record<DecisionState, number> = {
   RECOMMEND: 0, CONFLICT_REQUIRES_REVIEW: 1, INSUFFICIENT_INFORMATION: 1,
@@ -152,6 +156,9 @@ export function CustomerPage() {
         </>
       )}
 
+      {snapshot && <OptionalOpportunities customerId={customerId} />}
+      {actions.data && <ExploreJourneys rows={rows} onExplore={(product) => setParam({ product, tab: "explore" })} />}
+
       {snapshot && <CustomerData snapshot={snapshot} />}
 
       <Drawer open={!!selected} onClose={close} label={selected ? `${productName(selected.product)} details` : "Details"}
@@ -159,6 +166,44 @@ export function CustomerPage() {
         {selected && snapshot && <ProductDetail row={selected} snapshot={snapshot} tab={tab} channel={channel} />}
       </Drawer>
     </div>
+  );
+}
+
+const EXPLORE_JOURNEYS: { product: PartnerProduct; label: string; note: string }[] = [
+  { product: "EV_FINANCE", label: "Explore EV", note: "Electric driving, at your pace" },
+  { product: "SOLAR_FINANCE", label: "Explore solar", note: "Make more of your roof" },
+  { product: "GREEN_HOME", label: "Explore green home", note: "Thoughtful home upgrades" },
+];
+
+function ExploreJourneys({ rows, onExplore }: { rows: Recommendation[]; onExplore: (product: PartnerProduct) => void }) {
+  return (
+    <section className="explore-journeys" aria-labelledby="explore-journeys-title">
+      <div className="explore-journeys-heading">
+        <div>
+          <span className="partner-eyebrow"><ArrowUpRight size={14} aria-hidden="true" /> Research, not a recommendation</span>
+          <h2 id="explore-journeys-title">Explore greener living</h2>
+          <p>Browse illustrative partner journeys. Nothing is sent or shared by exploring.</p>
+        </div>
+        <span className="partner-tag">Illustrative partner options</span>
+      </div>
+      <div className="explore-journey-grid">
+        {EXPLORE_JOURNEYS.map((journey) => {
+          const available = rows.some((row) => row.product === journey.product);
+          return (
+            <button key={journey.product} type="button" className="explore-journey" disabled={!available}
+              onClick={() => available && onExplore(journey.product)} aria-label={`${journey.label}: ${available ? "open research journey" : "unavailable because no product row is present"}`}>
+              <span className="explore-journey-art"><PartnerIllustration product={journey.product} compact /></span>
+              <span className="explore-journey-copy">
+                <b>{journey.label}</b>
+                <span>{available ? journey.note : "Unavailable: no matching product opportunity is present."}</span>
+              </span>
+              {available && <ChevronRight size={17} aria-hidden="true" />}
+            </button>
+          );
+        })}
+      </div>
+      <p className="explore-journeys-foot">Partner journeys are illustrative research only. They are not personalized offers, eligibility decisions, or permission to contact.</p>
+    </section>
   );
 }
 
@@ -192,6 +237,9 @@ function CustomerHeader({ snapshot }: { snapshot: CustomerSnapshot }) {
             <Info>Data trust describes how complete, current and consistent this customer's evidence is. It is separate from model confidence.</Info>
           </span>
         </div>
+        <Link to={`/customers/${encodeURIComponent(snapshot.customer_id)}/hub`} className="btn btn-sm" style={{ marginTop: 12 }}>
+          <Eye size={14} aria-hidden="true" /> Preview customer view
+        </Link>
       </div>
       <form className="field" style={{ minWidth: 220 }} onSubmit={(event) => {
         event.preventDefault();
@@ -305,6 +353,14 @@ function CustomerData({ snapshot }: { snapshot: CustomerSnapshot }) {
               ]} />
           </Disclosure>
         )}
+        <Disclosure title="Record a factual update" hint="Coming soon">
+          <p className="small muted">
+            Correct a fact on file (for example, the customer has gone paperless or bought an EV) and re-run the decisions without
+            rewriting past ones. The API route exists (<code>POST /customers/{"{id}"}/source-updates</code>) but needs the admin
+            token, so it waits for a server-side session design.
+          </p>
+          <div style={{ marginTop: 10 }}><PlaceholderButton feature="Factual source updates" small>Record an update</PlaceholderButton></div>
+        </Disclosure>
         <Disclosure title="Raw customer snapshot" hint="Exactly as returned by the API">
           <JsonView value={{ ...snapshot, source_snapshot: source ? "(shown under Source record)" : null }} />
         </Disclosure>

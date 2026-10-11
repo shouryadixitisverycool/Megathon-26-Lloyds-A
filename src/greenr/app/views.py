@@ -9,6 +9,7 @@ from greenr.app.presentation import (
     PRODUCTS, STATES, decimal_number, groups_chart, impact_label,
     opportunities_chart, percentage, trends_chart,
 )
+from greenr.app.partners import PARTNER_PRODUCTS, partner_showcase
 
 
 def safe_select(label, options, key, **kwargs):
@@ -20,6 +21,13 @@ def safe_select(label, options, key, **kwargs):
 def bullets(items):
     for item in items:
         st.markdown(f"- {item}")
+
+
+def clear_partner_selection():
+    """Drop offer state when the customer, category, or view changes."""
+    st.session_state["partner_product"] = None
+    st.session_state.pop("partner_offer_id", None)
+    st.session_state.pop("partner_preview_id", None)
 
 
 def customer_view(customers, load, save=None, provider_mode=None):
@@ -50,6 +58,8 @@ def customer_view(customers, load, save=None, provider_mode=None):
         if shortcuts:
             def showcase():
                 chosen = shortcuts[st.session_state["showcase_choice"]]
+                if chosen["customer_id"] != st.session_state.get("customer_id"):
+                    clear_partner_selection()
                 st.session_state["customer_id"] = chosen["customer_id"]
                 st.session_state["why_product"] = chosen["product"]
             safe_select("Showcase evidence", list(shortcuts), "showcase_choice")
@@ -66,10 +76,12 @@ def customer_view(customers, load, save=None, provider_mode=None):
             abstention_id = None
         if abstention_id:
             def abstention():
+                clear_partner_selection()
                 st.session_state["customer_id"] = abstention_id
             st.button("See responsible abstention", on_click=abstention, key="abstention", width="stretch")
         customer_id = safe_select("Customer", list(lookup), "customer_id",
-                                  format_func=lambda key: f"{key} · {lookup[key]['display_name']}")
+                                  format_func=lambda key: f"{key} · {lookup[key]['display_name']}",
+                                  on_change=clear_partner_selection)
     customer = load(f"/customers/{customer_id}")
     recommendations = load(f"/customers/{customer_id}/recommendations")["recommendations"]
     st.header(customer["display_name"], icon=":material/person:")
@@ -109,16 +121,31 @@ def customer_view(customers, load, save=None, provider_mode=None):
                 else:
                     st.caption("No defensible carbon estimate is available. An unavailable impact never means zero.")
                 def inspect_product(value=product):
+                    st.session_state["partner_product"] = value
+                    st.session_state.pop("partner_offer_id", None)
+                    st.session_state.pop("partner_preview_id", None)
+                def review_product(value=product):
+                    clear_partner_selection()
                     st.session_state["why_product"] = value
-                st.button(f"Explore {PRODUCTS.get(product, product)}", key=f"explore_{product}",
-                          on_click=inspect_product, width="stretch")
-                st.caption("Explore the product evidence, not financial eligibility or approval.")
+                if product in PARTNER_PRODUCTS:
+                    st.button(f"Explore {PRODUCTS.get(product, product)}", key=f"explore_{product}",
+                              on_click=inspect_product, width="stretch")
+                st.button("Review evidence", key=f"review_evidence_{product}",
+                          on_click=review_product, width="stretch")
+                if product in PARTNER_PRODUCTS:
+                    st.caption("Explore illustrative partner options, not financial eligibility or approval.")
+    by_product = {row["product"]: row for row in recommendations}
+    partner_product = st.session_state.get("partner_product")
+    if partner_product is not None:
+        if partner_product in PARTNER_PRODUCTS and partner_product in by_product:
+            partner_showcase(load, partner_product, by_product[partner_product].get("state", "UNKNOWN"))
+        else:
+            clear_partner_selection()
     optional_cards(customer_id, load)
     if not recommendations:
         st.info("The API returned no product decisions for this customer.")
         return
     st.header("Why this result?", icon=":material/fact_check:")
-    by_product = {row["product"]: row for row in recommendations}
     product = safe_select("Inspect a product", list(by_product), "why_product", format_func=lambda value: PRODUCTS.get(value, value))
     row = by_product[product]
     try:
