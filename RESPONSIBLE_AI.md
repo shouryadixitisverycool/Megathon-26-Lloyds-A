@@ -1,15 +1,37 @@
 # Responsible AI Note
 
-Greenr is a synthetic demonstration for sustainability conversations, not a deployed banking decision system. No real customer data is used. Public UK household energy aggregates anchor demand distributions, not individual behaviours or model validity.
+GreenPath helps identify sustainability opportunities using synthetic banking data. The project team has selected jagruti-1.5b to explain results. Product rules, prediction models and the impact calculator produce those results. The LLM does not decide credit eligibility or calculate carbon savings.
 
-- **Separate decisions:** propensity estimates simulated interest; Trust measures evidence adequacy; confidence display uses reserved-cohort reliability validation, never release selection on final test. The inspected report suppresses all four core products. Impact describes a physical scenario. None establishes affordability, eligibility, approval or investment suitability.
-- **Fail closed:** missing critical evidence, conflicts, OOD, stale inputs and population exclusions support abstention/review rather than a forced recommendation. Missing factors or incompatible geography must not produce invented impact.
-- **Fairness:** audit-only age/income/location attributes are excluded from default propensity inputs under the feature policy. Subgroup and proxy-ablation diagnostics remain visible. Exclusion of attributes does not eliminate proxies or disparities; small synthetic subgroups cannot certify fairness.
-- **Privacy and grounding:** raw merchant descriptions and uncontrolled feature/reason text do not enter the explanation prompt. Optional providers receive approved structured claims/sentences only. Output schema and exact numeric/reason/product checks run before display; unsafe/error/timeout output falls back to templates.
-- **Human control:** review, consent, suppression, cooling-off and contact-fatigue govern outreach. SQLite retains immutable decisions and linked explanation runs. Feedback can suppress outreach but cannot establish factual Paperless closure. Separately authorized source updates rerun inference/Trust/impact and can close a verified local Paperless journey, retaining prior evidence. The demo token is not production IAM. Campaigns are simulated contact logging only, with persisted active capacity until closure.
-- **Environmental honesty:** India operational CO2 and UK WTW CO2e remain separate. UK forecasts use explicit assumptions and reviewed 2025 factors despite the available 2026 edition, exclude embodied/manufacturing emissions and do not guarantee reductions. PVGIS needs reviewed response/hash and installation metadata; no generic yield/self-consumption defaults are invented. Paperless reports avoided activity, not carbon. No carbon-credit claim. Portfolio totals preserve compatible groups; observed rates use explicit synthetic-outcome denominators and retain missing evidence.
-- **Evidence honesty:** saved synthetic ML/offline validator/local API reports are scoped evidence, not live-provider or production benchmarks. Live LLM evaluation was **not run without credentials**; live costs, tokens, latency and performance are unmeasured. Final integration gates await main verification.
+Our approach follows the trustworthiness principles discussed in [TrustLLM (Huang et al., ICML 2024)](https://proceedings.mlr.press/v235/huang24x.html). We use these principles to guide our safeguards and responsible AI practices.
 
-Before real deployment: lawful data basis and privacy assessment, independently observed outcome/fairness validation, secure authenticated role-based review, retention/deletion policy, operational monitoring, provider/data-transfer review, vulnerability checks and bank governance approval. These controls are not certified by this demo. What-if and sensitivity tools show assumptions/model responses, not causal advice.
+## How we use AI responsibly
 
-Exact deployed-model SHAP is an auditor view in raw uncalibrated log-odds with fitted background and additivity checks, not an explanation of the nonlinear calibrator, causal attribution or replacement for reason codes. Missing artifacts remain NOT_AVAILABLE. The selected OpenAI `gpt-4.1-mini-2025-04-14` manifest and opt-in evaluator are not a paid run or validated provider choice; availability, pricing, transfer/privacy and quality need authorized external review/measurement. See `EVALUATION_REPORT.md` for all 30 evaluation topics and remaining requirements.
+- **Privacy:** We use synthetic customer records. Raw merchant descriptions do not enter explanation prompts. The explanation service shares only approved claims and sentences, reducing exposure of sensitive information.
+
+- **Bias:** Age band, income band and region are excluded from the default prediction inputs. We check errors and selection rates across groups to assess differences in model behaviour.
+
+- **Explainability:** Our SHAP files show how input features contribute to product take-up predictions. They follow [Lundberg and Lee's SHAP framework (NeurIPS 2017)](https://papers.nips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf). They explain the prediction model's raw score, rather than jagruti's reasoning or causal effects.
+
+- **Hallucinations:** The explanation service accepts only approved sentences and checks product names, reasons, numbers and units. Invalid responses use fixed templates. The LLM cannot invent or change impact estimates.
+
+- **Human oversight:** Reviewers can stop outreach, flag data problems and request review. Consent and contact limits are checked, and decisions are logged.
+
+- **Data limitations:** Synthetic data provides a controlled environment for evaluating the system. Missing, conflicting or outdated evidence can block recommendations. Confidence display is currently withheld for all four core products. Environmental estimates depend on stated assumptions and represent potential savings rather than guaranteed outcomes.
+
+## jagruti benchmark context
+
+A later study, [Benchmarking Trustworthiness of SLMs: Pre-trained vs. Compressed (Lin et al., 2026), Table IV](https://arxiv.org/html/2608.11981v1), uses four TrustLLM dimensions and reports these results:
+
+| Model | Ethics | Privacy | Robustness | Fairness | Study average |
+|---|---:|---:|---:|---:|---:|
+| jagruti-1.5b-Instruct | 77.52% | 40.89% | 69.38% | 71.82% | 64.90% |
+
+These are published research results for the Instruct model under the study's settings. They provide external benchmark context for model trustworthiness. The average represents the reported benchmark result, not a universal measure of responsible AI, and the study's four dimensions do not include a separate hallucination or human oversight score.
+
+## What we have tested
+
+Our saved [offline explanation tests](reports/explanation_evaluation.json) passed 200 of 200 cases, with consistent numbers, no unsupported delivered claims and 63% template fallback.
+
+These results document the behaviour of our explanation safeguards under the evaluated test cases.
+
+This note records GreenPath's responsible AI safeguards, evaluation evidence and approach to trustworthy sustainability insights. It is intended to support transparent, evidence-based recommendations for green financial products.

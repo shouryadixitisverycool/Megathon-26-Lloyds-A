@@ -6,6 +6,12 @@ Synthetic sustainability opportunity demo integrating Agent A's data, calibrated
 
 Requires Python 3.12 and `uv`; default explanations need no credentials.
 
+Make targets add `src` to `PYTHONPATH`. If a direct `uv run` command reports `No module named 'greenpath'` (for example, when macOS marks the editable installation's `.pth` file hidden), run it with an explicit source path:
+
+```bash
+PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}" uv run --locked python -m greenpath.pipelines.run all --customers 4000
+```
+
 ```bash
 make all
 make app
